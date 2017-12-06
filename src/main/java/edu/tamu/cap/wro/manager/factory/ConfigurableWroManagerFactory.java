@@ -30,7 +30,6 @@ public class ConfigurableWroManagerFactory extends CustomConfigurableWroManagerF
 //	}
 	
 	protected UriLocatorFactory newUriLocatorFactory() {
-		System.out.println("******** LOAD THE LOCATORS");
 		return new SimpleUriLocatorFactory().addLocator(new SassClassPathUriLocator(resourcePatternResolver)).addLocator(new ServletContextUriLocator()).addLocator(new ClasspathUriLocator()).addLocator(new UrlUriLocator());
 	}
 	

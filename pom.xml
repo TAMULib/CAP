@@ -278,6 +278,24 @@
 		            </excludes>
 		          </webResource>	            
 	          </webResources>
+	          <webResource>
+	            <filtering>false</filtering>
+	            <directory>node_modules/weaver-ui-core/app/resources/styles</directory>
+	            <targetPath>WEB-INF/classes</targetPath>
+	            <excludes>
+	              <exclude>**/*.css</exclude>
+	            </excludes>
+	          </webResource>
+	          <webResource>
+	            <filtering>false</filtering>
+	            <directory>node_modules/bootstrap-sass/assets</directory>
+	            <targetPath>WEB-INF/classes</targetPath>
+	            <excludes>
+	              <exclude>fonts/**</exclude>
+	              <exclude>images/**</exclude>
+	              <exclude>javascript/**</exclude>
+	            </excludes>
+	          </webResource>	          
 	        </configuration>
 	      </plugin>
 	
@@ -321,6 +339,24 @@
 		            </excludes>
 		          </webResource>	            
 	          </webResources>
+	          <webResource>
+	            <filtering>false</filtering>
+	            <directory>node_modules/weaver-ui-core/app/resources/styles</directory>
+	            <targetPath>WEB-INF/classes</targetPath>
+	            <excludes>
+	              <exclude>**/*.css</exclude>
+	            </excludes>
+	          </webResource>
+	          <webResource>
+	            <filtering>false</filtering>
+	            <directory>node_modules/bootstrap-sass/assets</directory>
+	            <targetPath>WEB-INF/classes</targetPath>
+	            <excludes>
+	              <exclude>fonts/**</exclude>
+	              <exclude>images/**</exclude>
+	              <exclude>javascript/**</exclude>
+	            </excludes>
+	          </webResource>	          
 	        </configuration>
 	      </plugin>
 		</plugins>

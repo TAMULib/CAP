@@ -1,4 +1,4 @@
-package edu.tamu.cap.config;
+package wro.config;
 
 import java.util.Properties;
 
@@ -19,7 +19,7 @@ import ro.isdc.wro.model.resource.processor.factory.ConfigurableProcessorsFactor
 import wro4j.http.handler.CustomRequestHandler;
 
 @Configuration
-public class WroConfiguration extends edu.tamu.weaver.wro.config.WroConfiguration {
+public class AppWroConfiguration {
     private static final String[] OTHER_WRO_PROP = new String[] { ConfigurableProcessorsFactory.PARAM_PRE_PROCESSORS, ConfigurableProcessorsFactory.PARAM_POST_PROCESSORS };
     
     @Autowired
@@ -28,12 +28,9 @@ public class WroConfiguration extends edu.tamu.weaver.wro.config.WroConfiguratio
     
     @Autowired
     private ResourcePatternResolver resourcePatternResolver;
-    
+
     @Bean
-    @Override
     public FilterRegistrationBean webResourceOptimizer(Environment env) {
-    	System.out.println("****** HI");
-    	
         FilterRegistrationBean fr = new FilterRegistrationBean();
         ConfigurableWroFilter filter = new ConfigurableWroFilter();
         Properties props = buildWroProperties(env);
@@ -44,7 +41,7 @@ public class WroConfiguration extends edu.tamu.weaver.wro.config.WroConfiguratio
         fr.setFilter(filter);
         fr.addUrlPatterns("/wro/*");
         
-        return null;
+        return fr;
     }
     
     private Properties buildWroProperties(Environment env) {
