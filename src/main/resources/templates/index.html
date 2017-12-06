@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<html lang="en" class="no-js">
+
+<head>
+
+  <script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    window.location.base = [[${base}]];
+    /*]]>*/
+  </script>
+
+
+  <base th:href="${ base + '/'}" />
+
+  <title>Cap :: Fedora User Interface</title>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="description" content="Fedora User Interface" />
+
+  <link rel="stylesheet" th:href="${@environment.getProperty('app.url')+'/wro/app.css'}" />  
+
+</head>
+
+<body>
+    <main>
+      <h1>CAP</h1>
+    </main>
+</body>
+
+</html>

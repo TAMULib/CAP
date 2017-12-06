@@ -1,0 +1,21 @@
+@import "./main";
+
+@import "overrides/all";
+@import "imports";
+
+body {
+  font-family: "Trebuchet MS", Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+  color: #70706f;
+}
+
+main {
+  display: block;
+  height: auto;
+  min-height: 100%;
+  margin-bottom: -50px;
+}
+
+main footer {
+  display: block;
+  margin-bottom: 65px;
+}
