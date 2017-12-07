@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.h2.server.web.WebServlet;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -36,6 +37,9 @@ import edu.tamu.weaver.validation.resolver.WeaverValidatedModelMethodProcessor;
 @EnableJpaRepositories(basePackages = { "edu.tamu.cap.model.repo", "edu.tamu.weaver.wro.model.repo" })
 public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
 
+	@Value("${app.ui.path}")
+    private String path;
+	
     @Autowired
     private Environment env;
 
@@ -82,10 +86,13 @@ public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
         Integer cachePeriod = devMode ? 0 : null;
         // @formatter:off
         registry.addResourceHandler("/**")
-                .addResourceLocations("classpath:/static/")
+                .addResourceLocations("classpath:static/")
+                .addResourceLocations(path + "/")
                 .setCachePeriod(cachePeriod)
                 .resourceChain(useResourceCache)
                 .addResolver(new VersionResourceResolver().addContentVersionStrategy("/**")).addTransformer(new AppCacheManifestTransformer());
+        registry.addResourceHandler("/node_modules/**")
+				.addResourceLocations("file:node_modules/");
         // @formatter:on
     }
 
