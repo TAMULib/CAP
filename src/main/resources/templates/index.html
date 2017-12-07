@@ -26,9 +26,7 @@
 </head>
 
 <body>
-<<<<<<< HEAD
-  <main ng-controller="AuthenticationController">
-
+  <main>
     <tamuheader title="CAP"></tamuheader>
 
     <alerts types="WARNING,ERROR"></alerts>
@@ -38,9 +36,7 @@
         <div class="col-md-12 appContent" ng-controller="AdminController">
           <nav class="userMenu pull-right">  
             <div>
-              <modal modal-id="assumeUserModal" modal-view="bower_components/core/app/views/modals/assumeUserModal.html" modal-header-class="modal-header-primary"></modal>
-              <modal modal-id="exportMetadataModal" modal-controller="ExportController" modal-view="views/modals/exportMetadataModal.html" modal-header-class="modal-header-primary"></modal>
-              <modal modal-id="batchPublishModal" modal-controller="BatchPublishController" modal-view="views/modals/batchPublishModal.html" modal-header-class="modal-header-primary"></modal>
+              <!-- <modal modal-id="assumeUserModal" modal-view="bower_components/core/app/views/modals/assumeUserModal.html" modal-header-class="modal-header-primary"></modal> -->
             </div>
 
             <div class="dropdown">
@@ -68,17 +64,8 @@
 
         </div>
       </div>
-=======
-  <main>
-    <div class="container-fluid main">
-      <div ng-view class="view"></div>
->>>>>>> master
     </div>
   </main>
-
-  <!-- build:js resources/scripts/bundle.js -->
-  <!-- Vendor Libraries -->
-
   <script src="node_modules/jquery/dist/jquery.min.js"></script>
   <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 
@@ -173,7 +160,6 @@
   <script src="node_modules/weaver-ui-core/app/controllers/registrationController.js"></script>
   <script src="node_modules/weaver-ui-core/app/controllers/userController.js"></script>
   <script src="node_modules/weaver-ui-core/app/controllers/errorpagecontroller.js"></script>
-<<<<<<< HEAD
   <!-- endbuild -->
 
   <!-- build:js resources/scripts/app_concat.js -->
@@ -183,11 +169,6 @@
   <!-- App Configuration -->
   <script src="config/appConfig.js"></script>
   <script src="config/apiMapping.js"></script>
-=======
-
-
-  <!-- App Libraries -->
->>>>>>> master
 
   <!-- Application Start -->
   <script src="app.js"></script>
@@ -199,18 +180,11 @@
   <!-- Services -->
 
   <!-- Repos -->
-<<<<<<< HEAD
   <script src="repo/abstractAppRepo.js"></script>
   
   <!-- Models -->
   <script src="model/abstractAppModel.js"></script>
   
-=======
-  <!-- <script src="repo/abstractAppRepo.js"></script> -->
-
-  <!-- Models -->
-
->>>>>>> master
   <!-- Constants -->
 
   <!-- Factories -->
@@ -218,6 +192,7 @@
   <!-- filters -->
 
   <!-- Controllers -->
+  <script src="controllers/adminController.js"></script>  
   
   <!-- endbuild -->
 

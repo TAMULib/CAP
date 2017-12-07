@@ -1,2 +1,4 @@
 // CONVENTION: must match model name, case sensitive
-var apiMapping = {};
+var apiMapping = {
+  User: {}
+};

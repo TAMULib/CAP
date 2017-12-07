@@ -1,11 +1,8 @@
 
-// $primary: #500000;
-// $secondary: #3c0000;
-// $baseFontSize: 14pt;
-// $linkColor: #337ab7;
 
-// @import "main";
-// @import "theme-base";
+@import "variables/all";
+@import "main";
+@import "theme-base";
 
 @import "overrides/all";
 @import "imports";
