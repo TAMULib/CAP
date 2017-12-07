@@ -83,6 +83,7 @@ public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
         // @formatter:off
         registry.addResourceHandler("/**")
                 .addResourceLocations("classpath:/static/")
+                .addResourceLocations("classpath:/webapp/app/")
                 .setCachePeriod(cachePeriod)
                 .resourceChain(useResourceCache)
                 .addResolver(new VersionResourceResolver().addContentVersionStrategy("/**")).addTransformer(new AppCacheManifestTransformer());
