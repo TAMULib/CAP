@@ -1,11 +1,11 @@
 
 
 @import "variables/all";
-@import "main";
 @import "theme-base";
 
 @import "overrides/all";
 @import "imports";
+@import "main";
 
 body {
   font-family: Arial, Helvetica, Sans-Serif;
