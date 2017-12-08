@@ -2,10 +2,10 @@ var appConfig = {
   
     'version': '1.0.x',
 
-    'allowAnonymous': true,
+    'allowAnonymous': false,
     'anonymousRole': 'ROLE_ANONYMOUS',
 
-    'authService': window.location.protocol + '//' + window.location.host + window.location.base + '/mock/auth',
+    'authService': 'https://labs.library.tamu.edu/auth3',
     'webService': window.location.protocol + '//' + window.location.host + window.location.base,
 
     'storageType': 'session',
@@ -18,7 +18,7 @@ var appConfig = {
         'debug': true
     },
 
-    'stompDebug': true,
+    'stompDebug': false,
 
     /*
       Determines the type of connection stomp will attempt to make with the service.

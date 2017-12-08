@@ -4,7 +4,8 @@ cap.config(function ($locationProvider, $routeProvider) {
   
       $routeProvider.
       when('/', {
-          templateUrl: 'views/home.html'
+          templateUrl: 'views/dashboard.html',
+          controller: 'DashboardController'
       }).
   
       // Error Routes
