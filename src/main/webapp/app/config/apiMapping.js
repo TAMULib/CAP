@@ -23,8 +23,8 @@ var apiMapping = {
         'method': 'delete'
     }
   },
-  Ir: {
-    channel: '/channel/fedora',
+  IR: {
+    channel: '/channel/ir',
     all: {
         'endpoint': '/private/queue',
         'controller': 'ir',

@@ -2,8 +2,23 @@
     <h1>Dashboard</h1>
     <hr>
 
+    <button ng-click="createIr('foo','bar')" class="btn btn-default">New</button>
 
-
+    <table ng-table="tableParams" show-filter="true" class="table table-hover table-condensed">
+      <tbody>
+        <tr ng-repeat="ir in $data">
+          <td data-title="'Name'">
+            {{ir.name}}
+          </td>
+          <td data-title="'URI'">
+              {{ir.uri}}
+          </td>
+          <td data-title="'Actions'">
+              <a href="ir/{{ir.name}}">view</a>
+          </td>
+        </tr>
+      </tbody>
+  </table>
 
 </div>
 

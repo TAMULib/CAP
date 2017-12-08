@@ -1,5 +1,6 @@
 var cap = angular.module('cap', [
-  'ngRoute'
+  'ngRoute',
+  'ngTable'  
 ]);
 
 cap.model = core.model;
@@ -18,9 +19,7 @@ setUpApp(function (connected) {
       try {
           // If the app is already bootstrapped then an error will be thrown
           // caution: if module is not found app will result in blank page with no stack trace!!!
-          angular.bootstrap(document, ['core', 'cap',
-              'ui.bootstrap'
-          ]);
+          angular.bootstrap(document, ['core', 'cap', 'ui.bootstrap']);
       } catch (e) {
           console.error(e);
           /*

@@ -1,10 +1,13 @@
 package edu.tamu.cap.controller;
 
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
-import static edu.tamu.weaver.response.ApiAction.DELETE;
+
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,26 +30,28 @@ public class IRController {
     
     @RequestMapping("/create")
     @PreAuthorize("hasRole('USER')")
-	public ApiResponse createIRs() {
-        return new ApiResponse(SUCCESS, irRepo.findAll());
+	public ApiResponse createIRs(@RequestBody Map<String, String> data) {
+    	irRepo.create(data.get("name"), data.get("uri"));
+        return new ApiResponse(SUCCESS);
 	}
     
     @RequestMapping("/update")
     @PreAuthorize("hasRole('USER')")
 	public ApiResponse updateIR(IR ir) {
-        return null;
+    	irRepo.update(ir);
+        return new ApiResponse(SUCCESS);
 	}
     
-    @RequestMapping("/delete")
+    @RequestMapping("/delete/{id}")
     @PreAuthorize("hasRole('USER')")
-	public ApiResponse deleteIR(Long id) {
+	public ApiResponse deleteIR(@PathVariable Long id) {
     	irRepo.delete(irRepo.read(id));
         return new ApiResponse(SUCCESS);
 	}
     
     @RequestMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
-	public ApiResponse getIR(Long id) {
+	public ApiResponse getIR(@PathVariable Long id) {
         return new ApiResponse(SUCCESS, irRepo.read(id));
 	}
 
