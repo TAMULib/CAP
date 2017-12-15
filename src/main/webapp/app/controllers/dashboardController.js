@@ -13,17 +13,18 @@ cap.controller("DashboardController", function($controller, $scope, NgTableParam
       name: name,
       uri: uri
     });
+    $scope.closeModal();
   };
 
   IRRepo.ready().then(function() {
     $scope.setTable = function () {
       $scope.tableParams = new NgTableParams({
-        page: 0,
-        count: 10,
+        count: $scope.irs.length,
         sorting: {
           name: 'asc'
         }
     }, {
+      counts: [],
       total: 0,
       getData: function (params) {
         return $scope.irs;
