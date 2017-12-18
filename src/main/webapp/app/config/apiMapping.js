@@ -25,6 +25,7 @@ var apiMapping = {
   },
   IR: {
     channel: '/channel/ir',
+    validations: true,
     all: {
         'endpoint': '/private/queue',
         'controller': 'ir',

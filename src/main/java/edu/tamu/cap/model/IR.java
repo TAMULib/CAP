@@ -12,7 +12,8 @@ package edu.tamu.cap.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
-import edu.tamu.weaver.data.model.BaseEntity;
+import edu.tamu.cap.model.validation.IRValidator;
+import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 /**
  * 
@@ -21,19 +22,22 @@ import edu.tamu.weaver.data.model.BaseEntity;
  *
  */
 @Entity
-public class IR extends BaseEntity {
+public class IR extends ValidatingBaseEntity {
 
     @Column(unique = true)
     private String name;
     
-    @Column(unique = true)
-    private String URI;
+    @Column
+    private String uri;
 
-    public IR() {}
+    public IR() {
+    	setModelValidator(new IRValidator());
+    }
     
     public IR(String name, String uri) {
+    	this();
     	setName(name);
-    	setURI(uri);
+    	setUri(uri);
     }
 
 	public String getName() {
@@ -44,12 +48,12 @@ public class IR extends BaseEntity {
 		this.name = name;
 	}
 
-	public String getURI() {
-		return URI;
+	public String getUri() {
+		return uri;
 	}
 
-	public void setURI(String uRI) {
-		URI = uRI;
+	public void setUri(String uri) {
+		this.uri = uri;
 	}
 
   

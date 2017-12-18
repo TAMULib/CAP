@@ -4,17 +4,41 @@ cap.controller("DashboardController", function($controller, $scope, NgTableParam
       $scope: $scope
   }));
 
+  $scope.newIr = {};
 
   $scope.irs = IRRepo.getAll();
 
-  $scope.createIr = function(name, uri) {
-    console.log(name, uri);
-    IRRepo.create({
-      name: name,
-      uri: uri
+  $scope.irForm = {
+    validations: IRRepo.getValidations(),
+    getResults: IRRepo.getValidationResults
+  };
+
+  $scope.createIr = function() {
+    console.log($scope.newIr);
+    IRRepo.create($scope.newIr).then(function(res) {
+      if(angular.fromJson(res.body).meta.status === "SUCCESS") {
+        $scope.resetCreateForm();
+      }
     });
+  };
+
+  $scope.resetCreateForm = function() {
+
+    angular.extend($scope.newIr, {
+      name: "",
+      uri: ""
+    });
+    IRRepo.clearValidationResults();    
+    for (var key in $scope.irForm) {
+      if ($scope.irForm[key] !== undefined && !$scope.irForm[key].$pristine && $scope.irForm[key].$setPristine) {
+        $scope.irForm[key].$setPristine();
+      }
+    }
+
     $scope.closeModal();
   };
+
+  $scope.resetCreateForm();
 
   IRRepo.ready().then(function() {
     $scope.setTable = function () {
@@ -31,12 +55,10 @@ cap.controller("DashboardController", function($controller, $scope, NgTableParam
         }
       });
     };
-    console.log($scope.irs);
     $scope.setTable();
-  });
+  }); 
 
   IRRepo.listen([ApiResponseActions.CREATE, ApiResponseActions.DELETE], function (arg) {
-    console.log("HEARD IT", arg);
     $scope.setTable();
   });
 

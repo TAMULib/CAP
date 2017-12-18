@@ -4,6 +4,4 @@ import edu.tamu.cap.model.IR;
 
 public interface IRRepoCustom {
 	
-	public IR create(String name, String uri);
-
 }
