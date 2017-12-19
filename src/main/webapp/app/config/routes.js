@@ -4,8 +4,8 @@ cap.config(function ($locationProvider, $routeProvider) {
   
       $routeProvider.
       when('/', {
-        templateUrl: 'views/dashboard.html',
-        controller: 'DashboardController'
+        templateUrl: 'views/irManagement.html',
+        controller: 'IrManagementController'
       }).
       when('/home', {
         redirectTo: '/',        

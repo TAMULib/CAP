@@ -1,18 +1,18 @@
-cap.controller("DashboardController", function($controller, $scope, $location, NgTableParams, ApiResponseActions, IRRepo) {
+cap.controller("IrManagementController", function($controller, $scope, $location, NgTableParams, ApiResponseActions, IRRepo) {
 
   angular.extend(this, $controller('CoreAdminController', {
       $scope: $scope
   }));
 
+  $scope.irs = IRRepo.getAll();  
+
   var blankIr = {
     name: "",
     uri: ""
   }
-  $scope.newIr = angular.copy(blankIr);
+  $scope.irToCreate = angular.copy(blankIr);
   $scope.irToDelete = {};
   $scope.irToEdit = {};
-
-  $scope.irs = IRRepo.getAll();
 
   $scope.irForms = {
     validations: IRRepo.getValidations(),
@@ -32,7 +32,7 @@ cap.controller("DashboardController", function($controller, $scope, $location, N
   $scope.resetIrForms();  
 
   $scope.createIr = function() {
-    IRRepo.create($scope.newIr).then(function(res) {
+    IRRepo.create($scope.irToCreate).then(function(res) {
       if(angular.fromJson(res.body).meta.status === "SUCCESS") {
         $scope.cancelCreateIr();
       }
@@ -40,7 +40,7 @@ cap.controller("DashboardController", function($controller, $scope, $location, N
   };
   
   $scope.cancelCreateIr = function() {
-    angular.extend($scope.newIr, blankIr);
+    angular.extend($scope.irToCreate, blankIr);
     $scope.resetIrForms();
   }
 
