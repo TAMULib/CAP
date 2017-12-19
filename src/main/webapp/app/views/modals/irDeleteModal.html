@@ -1,0 +1,14 @@
+<form name="irForm.create" ng-submit="deleteIr(irToDelete)" novalidate>
+    <div class="modal-header {{attr.modalHeaderClass}}">
+      <button type="button" class="close modal-close" aria-label="Close" ng-click="cancelDeleteIr()"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title">Conferm Removal</h4>
+    </div>
+    <div class="modal-body">
+      <h3>Are you sure you want to remove:</h3>
+      <p>{{irToDelete.name}}</p>
+    </div>     
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default" ng-click="cancelDeleteIr()">Cancel</button>
+      <button type="submit" class="btn btn-danger">Confirm</button>
+    </div>
+</form>  
