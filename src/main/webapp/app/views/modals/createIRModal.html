@@ -1,33 +1,104 @@
-<form name="irForms.create" ng-submit="createIr()" novalidate>
+<form name="irForms.create" ng-submit="createIr()" novalidate class="ir-forms-create">
   <div class="modal-header {{attr.modalHeaderClass}}">
     <button type="button" class="close modal-close" aria-label="Close" ng-click="cancelCreateIr()"><span aria-hidden="true">&times;</span></button>
     <h4 class="modal-title">Create IR</h4>
   </div>
   <div class="modal-body">
 
-    <validationmessage results="irForms.getResults()"></validationmessage>      
+    <validationmessage results="irForms.getResults()"></validationmessage>
     
-    <validatedinput
-      model="irToCreate"
-      property="name"
-      label="Name"
-      placeholder="Name of the new IR"
-      form="irForms.create"
-      validations="irForms.validations"
-      results="irForms.getResults()"
-      autocomplete="off">
-    </validatedinput>
-    
-    <validatedinput
-      model="irToCreate"
-      property="uri"
-      label="URI"
-      placeholder="URI of the new IR"
-      form="irForms.create"
-      validations="irForms.validations"
-      results="irForms.getResults()"
-      autocomplete="off">
-    </validatedinput>
+    <uib-tabset active="activeJustified" justified="true">
+      <uib-tab index="0" heading="General">
+        <div class="row">
+          <div class="col-sm-10 col-sm-offset-1">                  
+            <validatedinput
+              model="irToCreate"
+              property="name"
+              label="Name"
+              placeholder="Name of the new IR"
+              form="irForms.create"
+              validations="irForms.validations"
+              results="irForms.getResults()"
+              autocomplete="off">
+            </validatedinput>
+            
+            <validatedinput
+              model="irToCreate"
+              property="uri"
+              label="URI"
+              placeholder="URI of the new IR"
+              form="irForms.create"
+              validations="irForms.validations"
+              results="irForms.getResults()"
+              autocomplete="off">
+            </validatedinput>
+          </div>
+        </div>  
+      </uib-tab>
+
+      <uib-tab index="1" heading="Authentication">
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-1">                  
+              <validatedinput
+                model="irToCreate"
+                property="username"
+                label="Username"
+                placeholder="Username of the new IR"
+                form="irForms.create"
+                validations="irForms.validations"
+                results="irForms.getResults()"
+                autocomplete="off">
+              </validatedinput>
+              
+              <validatedinput
+                model="irToCreate"
+                property="password"
+                label="Password"
+                placeholder="Password of the new IR"
+                form="irForms.create"
+                validations="irForms.validations"
+                results="irForms.getResults()"
+                autocomplete="off">
+              </validatedinput>
+          </div>
+        </div>
+      </uib-tab>
+
+      <uib-tab index="2" heading="Test">
+        <div class="row">    
+            <div class="col-sm-3 col-sm-offset-1">                  
+              <button class="btn btn-success" ng-click="testIrConnection(irToCreate)" ng-disabled="irForms.create.uri.$invalid">Test Connection</button>
+            </div>
+            <div class="col-sm-8">                  
+              <ul ng-if="irToTest || irToTest.testingStatus === 'FINISHED'" class="list-unstyled">
+                <li>
+                  <span ng-if="irToTest.testingPing === 'PENDING'" class="glyphicon glyphicon-repeat spinning"></span>
+                  <span ng-if="irToTest.testingPing === 'SUCCESS'" class="glyphicon glyphicon-check text-success"></span>
+                  <span ng-if="irToTest.testingPing === 'ERROR'" class="glyphicon glyphicon-ban-circle text-danger"></span>
+                  Pinging {{irToCreate.uri}}
+                </li>
+                <li>
+                  <span ng-if="irToTest.testingAuth === 'PENDING'" class="glyphicon glyphicon-repeat spinning"></span>
+                  <span ng-if="irToTest.testingAuth === 'SUCCESS'" class="glyphicon glyphicon-check text-success"></span>
+                  <span ng-if="irToTest.testingAuth === 'ERROR'" class="glyphicon glyphicon-ban-circle text-danger"></span>
+                  Testing Authentication
+                </li>
+                <li>
+                  <span ng-if="irToTest.testingContent === 'PENDING'" class="glyphicon glyphicon-repeat spinning"></span>
+                  <span ng-if="irToTest.testingContent === 'SUCCESS'" class="glyphicon glyphicon-check text-success"></span>
+                  <span ng-if="irToTest.testingContent === 'ERROR'" class="glyphicon glyphicon-ban-circle text-danger"></span>
+                  Retrieving Top Level Content
+                </li>
+                <li ng-if="irToTest.testingStatus === 'FINISHED'">
+                  <h3 ng-if="irToTest.testingPing==='SUCCESS'&&irToTest.testingAuth==='SUCCESS'&&irToTest.testingContent==='SUCCESS'" class="text-success">Success!</h3>
+                  <h3 ng-if="irToTest.testingPing==='ERROR'||irToTest.testingAuth==='ERROR'||irToTest.testingContent==='ERROR'" class="text-danger">Failed!</h3>
+                </li>
+              </ul>
+            </div>
+        </div>
+      </uib-tab>
+
+    </uib-tabset>
     
   </div>     
   <div class="modal-footer">

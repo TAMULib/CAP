@@ -1,4 +1,4 @@
-cap.controller("IrManagementController", function($controller, $scope, $location, NgTableParams, ApiResponseActions, IRRepo) {
+cap.controller("IrManagementController", function($controller, $scope, $q, $location, $timeout, NgTableParams, ApiResponseActions, IRRepo) {
 
   angular.extend(this, $controller('CoreAdminController', {
       $scope: $scope
@@ -6,11 +6,7 @@ cap.controller("IrManagementController", function($controller, $scope, $location
 
   $scope.irs = IRRepo.getAll();  
 
-  var blankIr = {
-    name: "",
-    uri: ""
-  }
-  $scope.irToCreate = angular.copy(blankIr);
+  $scope.irToCreate = IRRepo.getScaffold();
   $scope.irToDelete = {};
   $scope.irToEdit = {};
 
@@ -26,6 +22,7 @@ cap.controller("IrManagementController", function($controller, $scope, $location
         $scope.irForms[key].$setPristine();
       }
     }
+    delete $scope.irToTest;
     $scope.closeModal();    
   };
 
@@ -40,7 +37,7 @@ cap.controller("IrManagementController", function($controller, $scope, $location
   };
   
   $scope.cancelCreateIr = function() {
-    angular.extend($scope.irToCreate, blankIr);
+    angular.extend($scope.irToCreate, IRRepo.getScaffold());
     $scope.resetIrForms();
   }
 
@@ -81,6 +78,29 @@ cap.controller("IrManagementController", function($controller, $scope, $location
         $scope.cancelDeleteIr();
       }
     });
+  };
+
+  $scope.testIrConnection = function(irToTest) {
+    $scope.irToTest = angular.copy(irToTest);
+    
+    $scope.irToTest={
+      testingStatus: "PENDING",
+      testingPing: "PENDING",
+      testingAuth: "PENDING",
+      testingContent: "PENDING"
+    }
+    
+    IRRepo.testPing($scope.irToTest).then(function(pingRes) {
+      $scope.irToTest.testingPing = angular.fromJson(pingRes.body).meta.status;
+      return IRRepo.testAuth($scope.irToTest).then(function(authRes) {
+        $scope.irToTest.testingAuth = angular.fromJson(authRes.body).meta.status;
+        return IRRepo.testContent($scope.irToTest).then(function(contentRes) { 
+          $scope.irToTest.testingContent = angular.fromJson(contentRes.body).meta.status;
+          $scope.irToTest.testingStatus = "FINISHED";
+        });
+      });
+    });
+
   };
 
   IRRepo.ready().then(function() {

@@ -1,6 +1,7 @@
 package edu.tamu.cap.controller;
 
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
+import static edu.tamu.weaver.response.ApiStatus.ERROR;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
@@ -58,6 +59,24 @@ public class IRController {
 	public ApiResponse deleteIR(@RequestBody @WeaverValidatedModel IR ir) {
         logger.info("Deleating IR:  " + ir.getName());
     	irRepo.delete(ir);
+        return new ApiResponse(SUCCESS);
+	}
+    
+    @RequestMapping(value="/test/ping", method=RequestMethod.POST)
+    @PreAuthorize("hasRole('USER')")
+	public ApiResponse testIRPing(@RequestBody @WeaverValidatedModel IR ir) {
+        return new ApiResponse(SUCCESS);
+	}
+    
+    @RequestMapping(value="/test/auth", method=RequestMethod.POST)
+    @PreAuthorize("hasRole('USER')")
+	public ApiResponse testIRAuth(@RequestBody @WeaverValidatedModel IR ir) {
+        return new ApiResponse(SUCCESS);
+	}
+    
+    @RequestMapping(value="/test/content", method=RequestMethod.POST)
+    @PreAuthorize("hasRole('USER')")
+	public ApiResponse testIRContent(@RequestBody @WeaverValidatedModel IR ir) {
         return new ApiResponse(SUCCESS);
 	}
     

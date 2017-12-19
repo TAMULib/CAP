@@ -45,6 +45,21 @@ var apiMapping = {
         'endpoint': '/private/queue',
         'controller': 'ir',
         'method': 'delete'
+    },
+    testPing: {
+        'endpoint': '/private/queue',
+        'controller': 'ir',
+        'method': 'test/ping'
+    },
+    testAuth: {
+        'endpoint': '/private/queue',
+        'controller': 'ir',
+        'method': 'test/auth'
+    },
+    testContent: {
+        'endpoint': '/private/queue',
+        'controller': 'ir',
+        'method': 'test/content'
     }
   }
 };
