@@ -1,0 +1,38 @@
+<form name="irForms.edit" ng-submit="updateIr()" novalidate>
+    <div class="modal-header {{attr.modalHeaderClass}}">
+        <button type="button" class="close modal-close" aria-label="Close" ng-click="cancelEditIr()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Edit IR</h4>
+    </div>
+    <div class="modal-body">
+
+        <validationmessage results="irForms.getResults()"></validationmessage>      
+        
+        <validatedinput
+            model="irToEdit"
+            property="name"
+            label="Name"
+            placeholder="Name of the IR"
+            form="irForms.edit"
+            validations="irForms.validations"
+            results="irForms.getResults()"
+            autocomplete="off">
+        </validatedinput>
+        
+        <validatedinput
+            model="irToEdit"
+            property="uri"
+            label="URI"
+            placeholder="URI of the IR"
+            form="irForms.edit"
+            validations="irForms.validations"
+            results="irForms.getResults()"
+            autocomplete="off">
+        </validatedinput>
+        
+    </div>     
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-class="{'btn-default': irForms.edit.$pristine, 'btn-warning': !irForms.edit.$pristine}" ng-click="cancelEditIr()">Cancel</button>
+        <button type="submit" class="btn btn-success" ng-disabled="irForms.edit.$invalid">Edit</button>
+    </div>
+</form>
+    

@@ -2,6 +2,7 @@ package edu.tamu.cap.controller;
 
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
 
 import org.slf4j.Logger;
@@ -43,11 +44,12 @@ public class IRController {
         return new ApiResponse(SUCCESS, irRepo.create(ir));
 	}
     
-    @RequestMapping("/update")
+    @RequestMapping(value="/update", method=RequestMethod.POST)
     @PreAuthorize("hasRole('USER')")
-	public ApiResponse updateIR(IR ir) {
-    	irRepo.update(ir);
-        return new ApiResponse(SUCCESS);
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
+	public ApiResponse updateIR(@RequestBody @WeaverValidatedModel IR ir) {
+        logger.info("Updating IR:  " + ir.getName());
+        return new ApiResponse(SUCCESS,irRepo.update(ir));
 	}
     
     @RequestMapping(value="/delete", method=RequestMethod.POST)

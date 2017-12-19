@@ -4,31 +4,65 @@ cap.controller("DashboardController", function($controller, $scope, $location, N
       $scope: $scope
   }));
 
-  $scope.newIr = {};
+  var blankIr = {
+    name: "",
+    uri: ""
+  }
+  $scope.newIr = angular.copy(blankIr);
   $scope.irToDelete = {};
   $scope.irToEdit = {};
 
   $scope.irs = IRRepo.getAll();
 
-  $scope.irForm = {
+  $scope.irForms = {
     validations: IRRepo.getValidations(),
     getResults: IRRepo.getValidationResults
   };
 
+  $scope.resetIrForms = function() {
+    IRRepo.clearValidationResults();
+    for (var key in $scope.irForms) {
+      if ($scope.irForms[key] !== undefined && !$scope.irForms[key].$pristine && $scope.irForms[key].$setPristine) {
+        $scope.irForms[key].$setPristine();
+      }
+    }
+    $scope.closeModal();    
+  };
+
+  $scope.resetIrForms();  
+
   $scope.createIr = function() {
     IRRepo.create($scope.newIr).then(function(res) {
       if(angular.fromJson(res.body).meta.status === "SUCCESS") {
-        $scope.resetCreateForm();
+        $scope.cancelCreateIr();
       }
     });
   };
+  
+  $scope.cancelCreateIr = function() {
+    angular.extend($scope.newIr, blankIr);
+    $scope.resetIrForms();
+  }
 
   $scope.viewIr = function(ir) {
     $location.path("ir/"+ir.name);
   };
 
   $scope.editIr = function(ir) {
-    console.log("edit");
+    $scope.irToEdit = ir;
+    $scope.openModal('#irEditModal');
+  };
+
+  $scope.updateIr = function() {
+    $scope.irToEdit.save().then(function() {
+      $scope.cancelEditIr();
+    });
+  };
+
+  $scope.cancelEditIr = function(ir) {
+    $scope.irToEdit.refresh();
+    $scope.irToEdit = {};        
+    $scope.resetIrForms();
   };
 
   $scope.confirmDeleteIr = function(ir) {
@@ -48,24 +82,6 @@ cap.controller("DashboardController", function($controller, $scope, $location, N
       }
     });
   };
-
-  $scope.resetCreateForm = function() {
-
-    angular.extend($scope.newIr, {
-      name: "",
-      uri: ""
-    });
-    IRRepo.clearValidationResults();    
-    for (var key in $scope.irForm) {
-      if ($scope.irForm[key] !== undefined && !$scope.irForm[key].$pristine && $scope.irForm[key].$setPristine) {
-        $scope.irForm[key].$setPristine();
-      }
-    }
-
-    $scope.closeModal();
-  };
-
-  $scope.resetCreateForm();
 
   IRRepo.ready().then(function() {
     $scope.setTable = function () {

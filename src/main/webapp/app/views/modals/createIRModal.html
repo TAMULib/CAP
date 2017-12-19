@@ -1,20 +1,21 @@
-<form name="irForm.create" ng-submit="createIr()" novalidate>
+<form name="irForms.create" ng-submit="createIr()" novalidate>
   <div class="modal-header {{attr.modalHeaderClass}}">
-    <button type="button" class="close modal-close" aria-label="Close" ng-click="resetCreateForm()"><span aria-hidden="true">&times;</span></button>
+    <button type="button" class="close modal-close" aria-label="Close" ng-click="cancelCreateIr()"><span aria-hidden="true">&times;</span></button>
     <h4 class="modal-title">Create IR</h4>
   </div>
   <div class="modal-body">
 
-    <validationmessage results="irForm.getResults()"></validationmessage>      
+    <validationmessage results="irForms.getResults()"></validationmessage>      
     
     <validatedinput
-			model="newIr"
-			property="name"
-			label="Name"
-			placeholder="Name of the new IR"
-			form="irForm.create"
-			validations="irForm.validations"
-      results="irForm.getResults()">
+      model="newIr"
+      property="name"
+      label="Name"
+      placeholder="Name of the new IR"
+      form="irForms.create"
+      validations="irForms.validations"
+      results="irForms.getResults()"
+      autocomplete="off">
     </validatedinput>
     
     <validatedinput
@@ -22,15 +23,16 @@
       property="uri"
       label="URI"
       placeholder="URI of the new IR"
-      form="irForm.create"
-      validations="irForm.validations"
-      results="irForm.getResults()">
+      form="irForms.create"
+      validations="irForms.validations"
+      results="irForms.getResults()"
+      autocomplete="off">
     </validatedinput>
     
   </div>     
   <div class="modal-footer">
-    <button type="button" class="btn btn-default" ng-click="resetCreateForm()">Cancel</button>
-    <button type="submit" class="btn btn-success" ng-disabled="irForm.create.$invalid">Create</button>
+    <button type="button" class="btn" ng-class="{'btn-default': irForms.create.$pristine, 'btn-warning': !irForms.create.$pristine}" ng-click="cancelCreateIr()">Cancel</button>
+    <button type="submit" class="btn btn-success" ng-disabled="irForms.create.$invalid">Create</button>
   </div>
 </form>
-    
+      

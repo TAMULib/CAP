@@ -13,7 +13,6 @@ public class IRValidator extends BaseModelValidator {
 
         String uriProperty = "uri";
         this.addInputValidator(new InputValidator(InputValidationType.required, "IR requires a URI", uriProperty, true));
-        
         this.addInputValidator(new InputValidator(InputValidationType.pattern, "IR requires a valid URI", uriProperty, ValidationUtility.URL_REGEX));
         
     }
