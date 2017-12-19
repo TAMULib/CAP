@@ -1,10 +1,12 @@
-cap.controller("DashboardController", function($controller, $scope, NgTableParams, ApiResponseActions, IRRepo) {
+cap.controller("DashboardController", function($controller, $scope, $location, NgTableParams, ApiResponseActions, IRRepo) {
 
   angular.extend(this, $controller('CoreAdminController', {
       $scope: $scope
   }));
 
   $scope.newIr = {};
+  $scope.irToDelete = {};
+  $scope.irToEdit = {};
 
   $scope.irs = IRRepo.getAll();
 
@@ -14,10 +16,35 @@ cap.controller("DashboardController", function($controller, $scope, NgTableParam
   };
 
   $scope.createIr = function() {
-    console.log($scope.newIr);
     IRRepo.create($scope.newIr).then(function(res) {
       if(angular.fromJson(res.body).meta.status === "SUCCESS") {
         $scope.resetCreateForm();
+      }
+    });
+  };
+
+  $scope.viewIr = function(ir) {
+    $location.path("ir/"+ir.name);
+  };
+
+  $scope.editIr = function(ir) {
+    console.log("edit");
+  };
+
+  $scope.confirmDeleteIr = function(ir) {
+    $scope.irToDelete = ir;
+    $scope.openModal('#irDeleteModal');
+  };
+
+  $scope.cancelDeleteIr = function(ir) {
+    $scope.irToDelete = {};        
+    $scope.closeModal();
+  };
+
+  $scope.deleteIr = function(ir) {
+    IRRepo.delete(ir).then(function(res) {
+      if(angular.fromJson(res.body).meta.status === "SUCCESS") {
+        $scope.cancelDeleteIr();
       }
     });
   };

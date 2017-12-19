@@ -2,7 +2,10 @@ package edu.tamu.cap.controller;
 
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +27,8 @@ public class IRController {
 	@Autowired
 	IRRepo irRepo;
 	
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
     @RequestMapping("/all")
     @PreAuthorize("hasRole('USER')")
 	public ApiResponse allIRs() {
@@ -34,6 +39,7 @@ public class IRController {
     @PreAuthorize("hasRole('USER')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
 	public ApiResponse createIRs(@RequestBody @WeaverValidatedModel IR ir) {
+        logger.info("Creating IR:  " + ir.getName());
         return new ApiResponse(SUCCESS, irRepo.create(ir));
 	}
     
@@ -44,10 +50,12 @@ public class IRController {
         return new ApiResponse(SUCCESS);
 	}
     
-    @RequestMapping("/delete/{id}")
+    @RequestMapping(value="/delete", method=RequestMethod.POST)
     @PreAuthorize("hasRole('USER')")
-	public ApiResponse deleteIR(@PathVariable Long id) {
-    	irRepo.delete(irRepo.read(id));
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
+	public ApiResponse deleteIR(@RequestBody @WeaverValidatedModel IR ir) {
+        logger.info("Deleating IR:  " + ir.getName());
+    	irRepo.delete(ir);
         return new ApiResponse(SUCCESS);
 	}
     

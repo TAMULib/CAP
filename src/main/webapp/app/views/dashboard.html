@@ -1,10 +1,10 @@
-<div class="row">
+<div class="row dashboard">
     <h1>Institutional Repositories</h1>
     <hr>
 
     <div class="col-xs-12">
 
-      <div class="panel panel-default documents-container">
+      <div class="panel panel-default ir-container">
 
         <div class="panel-heading clearfix">
           <modal  modal-id="createIRModal"
@@ -17,7 +17,7 @@
         </div>
 
         <div class="panel-body">
-          <table ng-table="tableParams" class="table table-hover">
+          <table ng-table="tableParams" class="table table-hover ir-table">
             <tbody>
               <tr ng-repeat="ir in $data">
                 <td data-title="'Name'">
@@ -26,8 +26,10 @@
                 <td data-title="'URI'">
                     {{ir.uri}}
                 </td>
-                <td data-title="'Actions'">
-                    <a href="ir/{{ir.name}}">view</a>
+                <td data-title="'Actions'" class="actions">
+                    <span title="view" ng-click="viewIr(ir)" class="glyphicon glyphicon-eye-open action"></span>
+                    <span title="edit" ng-click="editIr(ir)" class="glyphicon glyphicon-pencil action"></span>
+                    <span title="delete" ng-click="confirmDeleteIr(ir)" class="glyphicon glyphicon-trash action"></span>
                 </td>
               </tr>
             </tbody>
@@ -36,7 +38,11 @@
       </div>
     </div>
     
-
+    <modal  modal-id="irDeleteModal"
+            modal-view="views/modals/irDeleteModal.html"
+            modal-header-class="modal-header-danger"
+            wvr-modal-backdrop="static">
+    </modal>
 </div>
 
 
