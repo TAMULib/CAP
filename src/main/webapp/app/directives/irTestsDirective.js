@@ -54,7 +54,6 @@ cap.directive("irtests", function(IRRepo, $q) {
               };
               $scope.testFinished = status;
             });
-            return chain;
             
           };
         }
