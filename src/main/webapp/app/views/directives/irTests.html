@@ -1,0 +1,19 @@
+<div class="row">    
+    <div class="col-sm-3 col-sm-offset-1">                  
+        <button type="button" class="btn btn-success" ng-click="testIrConnection()" ng-disabled="!ir.uri">Test Connection</button>
+    </div>
+    <div class="col-sm-8">                  
+        <ul ng-if="ir || testFinished" class="list-unstyled">
+            <li ng-repeat="irTest in irTests track by $index">
+                <span ng-if="irTests[$index].status === 'PENDING'" class="glyphicon glyphicon-repeat spinning"></span>
+                <span ng-if="irTests[$index].status === 'SUCCESS'" class="glyphicon glyphicon-check text-success"></span>
+                <span ng-if="irTests[$index].status === 'ERROR'" class="glyphicon glyphicon-ban-circle text-danger"></span>
+                {{irTest.name}}
+            </li>
+            <li ng-if="testFinished">
+                <h3 ng-if="testFinished==='SUCCESS'" class="text-success">Success!</h3>
+                <h3 ng-if="testFinished==='ERROR'" class="text-danger">Failed!</h3>
+            </li>
+        </ul>
+    </div>
+</div>
