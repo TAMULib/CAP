@@ -80,29 +80,6 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
     });
   };
 
-  $scope.testIrConnection = function(irToTest) {
-    $scope.irToTest = angular.copy(irToTest);
-    
-    $scope.irToTest={
-      testingStatus: "PENDING",
-      testingPing: "PENDING",
-      testingAuth: "PENDING",
-      testingContent: "PENDING"
-    }
-    
-    IRRepo.testPing($scope.irToTest).then(function(pingRes) {
-      $scope.irToTest.testingPing = angular.fromJson(pingRes.body).meta.status;
-      return IRRepo.testAuth($scope.irToTest).then(function(authRes) {
-        $scope.irToTest.testingAuth = angular.fromJson(authRes.body).meta.status;
-        return IRRepo.testContent($scope.irToTest).then(function(contentRes) { 
-          $scope.irToTest.testingContent = angular.fromJson(contentRes.body).meta.status;
-          $scope.irToTest.testingStatus = "FINISHED";
-        });
-      });
-    });
-
-  };
-
   IRRepo.ready().then(function() {
     $scope.setTable = function () {
       $scope.tableParams = new NgTableParams({

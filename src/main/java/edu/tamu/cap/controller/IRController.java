@@ -4,8 +4,17 @@ import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static edu.tamu.weaver.response.ApiStatus.ERROR;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+
 import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
 
+import org.fcrepo.client.FcrepoClient;
+import org.fcrepo.client.FcrepoOperationFailedException;
+import org.fcrepo.client.FcrepoResponse;
+import org.fcrepo.client.GetBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +74,18 @@ public class IRController {
     @RequestMapping(value="/test/ping", method=RequestMethod.POST)
     @PreAuthorize("hasRole('USER')")
 	public ApiResponse testIRPing(@RequestBody @WeaverValidatedModel IR ir) {
-        return new ApiResponse(SUCCESS);
+    	
+    	FcrepoClient client = FcrepoClient.client().build();
+    	ApiResponse res = null;
+    	
+    	try {
+			FcrepoResponse response = new GetBuilder(new URI(ir.getUri()), client).perform();
+			res = new ApiResponse(SUCCESS, "Pinged with status code: "+response.getStatusCode());
+		} catch (FcrepoOperationFailedException | URISyntaxException e) {
+			res = new ApiResponse(ERROR, e.getMessage());
+		}    	
+    	
+        return res;
 	}
     
     @RequestMapping(value="/test/auth", method=RequestMethod.POST)

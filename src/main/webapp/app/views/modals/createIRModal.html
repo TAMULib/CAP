@@ -65,37 +65,7 @@
       </uib-tab>
 
       <uib-tab index="2" heading="Test">
-        <div class="row">    
-            <div class="col-sm-3 col-sm-offset-1">                  
-              <button class="btn btn-success" ng-click="testIrConnection(irToCreate)" ng-disabled="irForms.create.uri.$invalid">Test Connection</button>
-            </div>
-            <div class="col-sm-8">                  
-              <ul ng-if="irToTest || irToTest.testingStatus === 'FINISHED'" class="list-unstyled">
-                <li>
-                  <span ng-if="irToTest.testingPing === 'PENDING'" class="glyphicon glyphicon-repeat spinning"></span>
-                  <span ng-if="irToTest.testingPing === 'SUCCESS'" class="glyphicon glyphicon-check text-success"></span>
-                  <span ng-if="irToTest.testingPing === 'ERROR'" class="glyphicon glyphicon-ban-circle text-danger"></span>
-                  Pinging {{irToCreate.uri}}
-                </li>
-                <li>
-                  <span ng-if="irToTest.testingAuth === 'PENDING'" class="glyphicon glyphicon-repeat spinning"></span>
-                  <span ng-if="irToTest.testingAuth === 'SUCCESS'" class="glyphicon glyphicon-check text-success"></span>
-                  <span ng-if="irToTest.testingAuth === 'ERROR'" class="glyphicon glyphicon-ban-circle text-danger"></span>
-                  Testing Authentication
-                </li>
-                <li>
-                  <span ng-if="irToTest.testingContent === 'PENDING'" class="glyphicon glyphicon-repeat spinning"></span>
-                  <span ng-if="irToTest.testingContent === 'SUCCESS'" class="glyphicon glyphicon-check text-success"></span>
-                  <span ng-if="irToTest.testingContent === 'ERROR'" class="glyphicon glyphicon-ban-circle text-danger"></span>
-                  Retrieving Top Level Content
-                </li>
-                <li ng-if="irToTest.testingStatus === 'FINISHED'">
-                  <h3 ng-if="irToTest.testingPing==='SUCCESS'&&irToTest.testingAuth==='SUCCESS'&&irToTest.testingContent==='SUCCESS'" class="text-success">Success!</h3>
-                  <h3 ng-if="irToTest.testingPing==='ERROR'||irToTest.testingAuth==='ERROR'||irToTest.testingContent==='ERROR'" class="text-danger">Failed!</h3>
-                </li>
-              </ul>
-            </div>
-        </div>
+       <irtests ir="irToCreate"></irtests>
       </uib-tab>
 
     </uib-tabset>
