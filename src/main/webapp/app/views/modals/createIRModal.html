@@ -65,7 +65,7 @@
       </uib-tab>
 
       <uib-tab index="2" heading="Test">
-       <irtests ir="irToCreate"></irtests>
+        <irtests ir="irToCreate" results="testResults"></irtests>
       </uib-tab>
 
     </uib-tabset>
@@ -73,7 +73,7 @@
   </div>     
   <div class="modal-footer">
     <button type="button" class="btn" ng-class="{'btn-default': irForms.create.$pristine, 'btn-warning': !irForms.create.$pristine}" ng-click="cancelCreateIr()">Cancel</button>
-    <button type="submit" class="btn btn-success" ng-disabled="irForms.create.$invalid">Create</button>
+    <button type="submit" class="btn btn-success" ng-disabled="irForms.create.$invalid||testResults.status!=='SUCCESS'">Create</button>
   </div>
 </form>
       

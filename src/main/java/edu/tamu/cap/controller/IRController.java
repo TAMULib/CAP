@@ -5,12 +5,14 @@ import static edu.tamu.weaver.response.ApiStatus.ERROR;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
 import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
 
+import org.apache.commons.io.IOUtils;
 import org.fcrepo.client.FcrepoClient;
 import org.fcrepo.client.FcrepoOperationFailedException;
 import org.fcrepo.client.FcrepoResponse;
@@ -74,7 +76,6 @@ public class IRController {
     @RequestMapping(value="/test/ping", method=RequestMethod.POST)
     @PreAuthorize("hasRole('USER')")
 	public ApiResponse testIRPing(@RequestBody @WeaverValidatedModel IR ir) {
-    	
     	FcrepoClient client = FcrepoClient.client().build();
     	ApiResponse res = null;
     	
@@ -84,20 +85,37 @@ public class IRController {
 		} catch (FcrepoOperationFailedException | URISyntaxException e) {
 			res = new ApiResponse(ERROR, e.getMessage());
 		}    	
-    	
         return res;
 	}
     
     @RequestMapping(value="/test/auth", method=RequestMethod.POST)
     @PreAuthorize("hasRole('USER')")
 	public ApiResponse testIRAuth(@RequestBody @WeaverValidatedModel IR ir) {
-        return new ApiResponse(SUCCESS);
+    	FcrepoClient client = FcrepoClient.client().credentials(ir.getUsername(), ir.getPassword()).build();
+    	ApiResponse res = null;
+    	try {
+			FcrepoResponse response = new GetBuilder(new URI(ir.getUri()), client).perform();
+			res = new ApiResponse(response.getStatusCode()!=200?ERROR:SUCCESS, "Authentication failed with status code: "+response.getStatusCode());
+		} catch (FcrepoOperationFailedException | URISyntaxException e) {
+			res = new ApiResponse(ERROR, e.getMessage());
+		}    	
+    	
+        return res;
 	}
     
     @RequestMapping(value="/test/content", method=RequestMethod.POST)
     @PreAuthorize("hasRole('USER')")
 	public ApiResponse testIRContent(@RequestBody @WeaverValidatedModel IR ir) {
-        return new ApiResponse(SUCCESS);
+    	FcrepoClient client = (ir.getUsername()==null||ir.getPassword()==null)?FcrepoClient.client().build():FcrepoClient.client().credentials(ir.getUsername(), ir.getPassword()).build();
+    	ApiResponse res = null;
+    	try {
+			FcrepoResponse response = new GetBuilder(new URI(ir.getUri()), client).perform();
+			String resBody = IOUtils.toString(response.getBody(), "UTF-8");
+			res = new ApiResponse(resBody.contains("fedora:RepositoryRoot")?SUCCESS:ERROR, "Get content failed with status code: "+response.getStatusCode());
+		} catch (FcrepoOperationFailedException | URISyntaxException | IOException e) {
+			res = new ApiResponse(ERROR, e.getMessage());
+		}    	
+        return res;
 	}
     
     @RequestMapping("/{id}")

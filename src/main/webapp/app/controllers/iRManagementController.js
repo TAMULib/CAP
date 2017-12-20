@@ -9,6 +9,7 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
   $scope.irToCreate = IRRepo.getScaffold();
   $scope.irToDelete = {};
   $scope.irToEdit = {};
+  $scope.testResults = {};
 
   $scope.irForms = {
     validations: IRRepo.getValidations(),
