@@ -11,8 +11,11 @@ package edu.tamu.cap.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 import edu.tamu.cap.model.validation.IRValidator;
+import edu.tamu.cap.service.ir.IRType;
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 /**
@@ -24,6 +27,10 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 @Entity
 public class IR extends ValidatingBaseEntity {
 
+	@Column
+	@Enumerated(EnumType.STRING)
+    private IRType type;
+	
     @Column(unique = true)
     private String name;
     
@@ -40,11 +47,20 @@ public class IR extends ValidatingBaseEntity {
     	setModelValidator(new IRValidator());
     }
     
-    public IR(String name, String uri) {
+    public IR(IRType type, String name, String uri) {
     	this();
+    	setType(type);
     	setName(name);
     	setUri(uri);
     }
+
+	public IRType getType() {
+		return type;
+	}
+
+	public void setType(IRType type) {
+		this.type = type;
+	}
 
 	public String getName() {
 		return name;

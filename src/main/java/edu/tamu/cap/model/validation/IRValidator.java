@@ -8,7 +8,10 @@ import edu.tamu.weaver.validation.validators.InputValidator;
 public class IRValidator extends BaseModelValidator {
 
     public IRValidator() {
-        String nameProperty = "name";
+    	String typeProperty = "type";
+        this.addInputValidator(new InputValidator(InputValidationType.required, "A repository requires a type", typeProperty, true));
+    	
+    	String nameProperty = "name";
         this.addInputValidator(new InputValidator(InputValidationType.required, "A repository requires a name", nameProperty, true));
 
         String uriProperty = "uri";
