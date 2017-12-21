@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import edu.tamu.cap.exceptions.IRVerificationException;
 import edu.tamu.weaver.response.ApiResponse;
 
 @RestController
@@ -18,7 +19,13 @@ public class IRControllerAdvice {
 	@ResponseStatus(value=HttpStatus.OK)
 	@ExceptionHandler(FcrepoOperationFailedException.class)
 	public ApiResponse handleFcrepoOperationFailedException(FcrepoOperationFailedException e) {
-		return new ApiResponse(ERROR, e.getLocalizedMessage());
+		return new ApiResponse(ERROR, e.getMessage());
+	}
+	
+	@ResponseStatus(value=HttpStatus.OK)
+	@ExceptionHandler(IRVerificationException.class)
+	public ApiResponse handleIRVerificationException(IRVerificationException e) {
+		return new ApiResponse(ERROR, e.getMessage());
 	}
 	
 }

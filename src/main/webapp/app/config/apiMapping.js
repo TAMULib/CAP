@@ -46,6 +46,11 @@ var apiMapping = {
         'controller': 'ir',
         'method': 'delete'
     },
+    getTypes: {
+      'endpoint': '/private/queue',
+      'controller': 'ir',
+      'method': 'types'
+    },
     testPing: {
         'endpoint': '/private/queue',
         'controller': 'ir',

@@ -4,8 +4,9 @@ cap.service("AbstractAppRepo", function () {
 
         this.scaffold = {}
         
-        this.getScaffold = function() {
-            return angular.copy(this.scaffold);
+        this.getScaffold = function(defaults) {
+            if(!defaults) defaults = {};
+            return angular.copy(angular.extend(this.scaffold, defaults));
         }
 
         this.isInScaffold = function(property) {

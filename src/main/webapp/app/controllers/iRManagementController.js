@@ -5,11 +5,23 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
   }));
 
   $scope.irs = IRRepo.getAll();  
+  $scope.iRTypes = [];
 
-  $scope.irToCreate = IRRepo.getScaffold();
+  console.log($scope.iRTypes);
+  
+  IRRepo.getTypes($scope.iRTypes).then(function() {
+    $scope.irToCreate = IRRepo.getScaffold({
+      type: $scope.iRTypes[0].value
+    });
+  });
+
+
+  
   $scope.irToDelete = {};
   $scope.irToEdit = {};
   $scope.testResults = {};
+
+  
 
   $scope.irForms = {
     validations: IRRepo.getValidations(),

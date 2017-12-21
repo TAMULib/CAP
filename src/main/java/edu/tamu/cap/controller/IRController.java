@@ -25,9 +25,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import edu.tamu.cap.controller.aspect.InjectIRService;
 import edu.tamu.cap.model.IR;
 import edu.tamu.cap.model.repo.IRRepo;
 import edu.tamu.cap.service.ir.IRService;
+import edu.tamu.cap.service.ir.IRType;
 import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
@@ -72,31 +74,34 @@ public class IRController {
         return new ApiResponse(SUCCESS);
 	}
     
+    @RequestMapping(value="/types", method=RequestMethod.GET)
+    @PreAuthorize("hasRole('USER')")
+	public ApiResponse testIRPing() {
+    	return new ApiResponse(SUCCESS, IRType.getValues());
+	}
+    
     @RequestMapping(value="/test/ping", method=RequestMethod.POST)
     @PreAuthorize("hasRole('USER')")
     @InjectIRService
-	public ApiResponse testIRPing(IRService irService,@RequestBody @WeaverValidatedModel IR ir) throws FcrepoOperationFailedException, URISyntaxException {
-    	irService.ping(ir);
+	public ApiResponse testIRPing(@RequestBody @WeaverValidatedModel IR ir, IRService irService) throws Exception {
+    	irService.verifyPing(ir);
     	return new ApiResponse(SUCCESS, "Ping was successful!");
 	}
     
     @RequestMapping(value="/test/auth", method=RequestMethod.POST)
     @PreAuthorize("hasRole('USER')")
-	public ApiResponse testIRAuth(@RequestBody @WeaverValidatedModel IR ir) throws FcrepoOperationFailedException, URISyntaxException {
-    	FcrepoClient client = FcrepoClient.client().credentials(ir.getUsername(), ir.getPassword()).build();
-    	FcrepoResponse response = new GetBuilder(new URI(ir.getUri()), client).perform();
-        return new ApiResponse(response.getStatusCode()!=200?ERROR:SUCCESS, "Get content returned a status code: "+response.getStatusCode());
+    @InjectIRService
+	public ApiResponse testIRAuth(@RequestBody @WeaverValidatedModel IR ir, IRService irService) throws Exception {
+    	irService.verifyAuth(ir);
+        return new ApiResponse(SUCCESS);
 	}
     
     @RequestMapping(value="/test/content", method=RequestMethod.POST)
     @PreAuthorize("hasRole('USER')")
-	public ApiResponse testIRContent(@RequestBody @WeaverValidatedModel IR ir) throws IOException, FcrepoOperationFailedException, URISyntaxException {
-    	FcrepoClient client = (ir.getUsername()==null||ir.getPassword()==null)?FcrepoClient.client().build():FcrepoClient.client().credentials(ir.getUsername(), ir.getPassword()).build();
-    	FcrepoResponse response = new GetBuilder(new URI(ir.getUri()), client).perform();
-		String resBody = IOUtils.toString(response.getBody(), "UTF-8");
-		boolean isFCRoot = resBody.contains("fedora:RepositoryRoot");
-		String message = isFCRoot ? "Get content returned a status code: "+response.getStatusCode() : "URI is not a Fedora Root.";
-        return new ApiResponse(isFCRoot?SUCCESS:ERROR, message);
+    @InjectIRService
+	public ApiResponse testIRContent(@RequestBody @WeaverValidatedModel IR ir, IRService irService) throws Exception {
+    	irService.verifyRoot(ir);
+        return new ApiResponse(SUCCESS);
 	}
     
     @RequestMapping("/{id}")

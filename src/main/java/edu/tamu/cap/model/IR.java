@@ -29,30 +29,30 @@ public class IR extends ValidatingBaseEntity {
 
 	@Column
 	@Enumerated(EnumType.STRING)
-    private IRType type;
-	
-    @Column(unique = true)
-    private String name;
-    
-    @Column
-    private String uri;
-    
-    @Column
-    private String username;
-    
-    @Column
-    private String password;
+	private IRType type;
 
-    public IR() {
-    	setModelValidator(new IRValidator());
-    }
-    
-    public IR(IRType type, String name, String uri) {
-    	this();
-    	setType(type);
-    	setName(name);
-    	setUri(uri);
-    }
+	@Column(unique = true)
+	private String name;
+
+	@Column
+	private String uri;
+
+	@Column
+	private String username;
+
+	@Column
+	private String password;
+
+	public IR() {
+		setModelValidator(new IRValidator());
+	}
+
+	public IR(IRType type, String name, String uri) {
+		this();
+		setType(type);
+		setName(name);
+		setUri(uri);
+	}
 
 	public IRType getType() {
 		return type;
