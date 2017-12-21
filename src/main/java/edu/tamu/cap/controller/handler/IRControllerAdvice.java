@@ -16,16 +16,16 @@ import edu.tamu.weaver.response.ApiResponse;
 @ControllerAdvice
 public class IRControllerAdvice {
 
-	@ResponseStatus(value=HttpStatus.OK)
+	@ResponseStatus(value = HttpStatus.OK)
 	@ExceptionHandler(FcrepoOperationFailedException.class)
 	public ApiResponse handleFcrepoOperationFailedException(FcrepoOperationFailedException e) {
 		return new ApiResponse(ERROR, e.getMessage());
 	}
-	
-	@ResponseStatus(value=HttpStatus.OK)
+
+	@ResponseStatus(value = HttpStatus.OK)
 	@ExceptionHandler(IRVerificationException.class)
 	public ApiResponse handleIRVerificationException(IRVerificationException e) {
 		return new ApiResponse(ERROR, e.getMessage());
 	}
-	
+
 }

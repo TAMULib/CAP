@@ -52,10 +52,6 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
     $scope.resetIrForms();
   };
 
-  $scope.viewIr = function(ir) {
-    $location.path("ir/"+ir.name);
-  };
-
   $scope.editIr = function(ir) {
     $scope.irToEdit = ir;
     $scope.openModal('#irEditModal');

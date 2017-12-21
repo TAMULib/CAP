@@ -37,7 +37,7 @@ public class IR extends ValidatingBaseEntity {
 
 	@Column
 	private String rootUri;
-	
+
 	@Transient
 	private String contextUri;
 
@@ -84,8 +84,7 @@ public class IR extends ValidatingBaseEntity {
 	}
 
 	public String getContextUri() {
-		// This is root uri intentionally.
-		return rootUri;
+		return this.contextUri == null ? this.rootUri : this.contextUri;
 	}
 
 	public void setContextUri(String contextUri) {

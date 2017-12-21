@@ -2,10 +2,10 @@ cap.repo("IRRepo", function($q, WsApi) {
   var iRRepo = this;
 
   iRRepo.scaffold = {
-    name: "",
-    rootUri: "",
-    username: "",
-    password: "",
+    name: "Test",
+    rootUri: "http://localhost:8080/fcrepo/rest/",
+    username: "fedoraAdmin",
+    password: "secret3",
     type: ""
   };
 
@@ -18,18 +18,13 @@ cap.repo("IRRepo", function($q, WsApi) {
   };
 
   iRRepo.findByName = function(name) {
-    var ir = {};
     var irs = iRRepo.getAll();
-    iRRepo.ready().then(function() {
-      for(var i in irs) {
-        var foundIR = irs[i];
-        if(foundIR.name === name) {
-          angular.extend(ir, foundIR);
-          break;
-        }
+    for(var i in irs) {
+      var ir = irs[i];
+      if(ir.name === name) {
+        return ir;
       }
-    });
-    return ir;
+    }
   };
 
   iRRepo.testPing = function(ir) {

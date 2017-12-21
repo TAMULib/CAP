@@ -1,4 +1,4 @@
-<h1>{{ir.name}}</h1>
+<h1>{{ir.name}} ({{ir.contextUri}})</h1>
 
 <hr />
 
@@ -9,8 +9,8 @@
 <h3>Children</h3>
 <div class="container">
   <ul class="list-unstyled">
-    <li ng-repeat="container in ir.getContainers()">
-      <a href="{{container}}">{{container}}</a>
+    <li ng-repeat="containerUri in ir.getContainers()">
+      <a href="" ng-click="loadContainer(containerUri)">{{containerUri}}</a>
     </li>
   </ul>
 </div>

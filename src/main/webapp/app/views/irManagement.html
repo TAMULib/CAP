@@ -28,7 +28,7 @@
                     {{ir.rootUri}}
                 </td>
                 <td data-title="'Actions'" class="actions">
-                    <span title="view" ng-click="viewIr(ir)" class="glyphicon glyphicon-eye-open action"></span>
+                    <a href="/ir/{{ir.name}}?context={{ir.rootUri}}" title="view" class="glyphicon glyphicon-eye-open action"></a>
                     <span title="edit" ng-click="editIr(ir)" class="glyphicon glyphicon-pencil action"></span>
                     <span title="delete" ng-click="confirmDeleteIr(ir)" class="glyphicon glyphicon-trash action"></span>
                 </td>

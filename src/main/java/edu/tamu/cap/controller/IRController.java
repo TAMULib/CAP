@@ -27,92 +27,91 @@ import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 @RestController
 @RequestMapping("/ir")
 public class IRController {
-	
+
 	@Autowired
 	private IRRepo irRepo;
-	
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-	
-    @RequestMapping("/all")
-    @PreAuthorize("hasRole('USER')")
+
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	@RequestMapping("/all")
+	@PreAuthorize("hasRole('USER')")
 	public ApiResponse allIRs() {
-        return new ApiResponse(SUCCESS, irRepo.findAll());
+		return new ApiResponse(SUCCESS, irRepo.findAll());
 	}
-    
-    @RequestMapping(value="/create", method=RequestMethod.POST)
-    @PreAuthorize("hasRole('USER')")
-    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
+
+	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	@PreAuthorize("hasRole('USER')")
+	@WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
 	public ApiResponse createIRs(@RequestBody @WeaverValidatedModel IR ir) {
-        logger.info("Creating IR:  " + ir.getName());
-        return new ApiResponse(SUCCESS, irRepo.create(ir));
+		logger.info("Creating IR:  " + ir.getName());
+		return new ApiResponse(SUCCESS, irRepo.create(ir));
 	}
-    
-    @RequestMapping(value="/update", method=RequestMethod.POST)
-    @PreAuthorize("hasRole('USER')")
-    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
+
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	@PreAuthorize("hasRole('USER')")
+	@WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
 	public ApiResponse updateIR(@RequestBody @WeaverValidatedModel IR ir) {
-        logger.info("Updating IR:  " + ir.getName());
-        return new ApiResponse(SUCCESS,irRepo.update(ir));
+		logger.info("Updating IR:  " + ir.getName());
+		return new ApiResponse(SUCCESS, irRepo.update(ir));
 	}
-    
-    @RequestMapping(value="/delete", method=RequestMethod.POST)
-    @PreAuthorize("hasRole('USER')")
-    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
+
+	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	@PreAuthorize("hasRole('USER')")
+	@WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
 	public ApiResponse deleteIR(@RequestBody @WeaverValidatedModel IR ir) {
-        logger.info("Deleating IR:  " + ir.getName());
-    	irRepo.delete(ir);
-        return new ApiResponse(SUCCESS);
+		logger.info("Deleating IR:  " + ir.getName());
+		irRepo.delete(ir);
+		return new ApiResponse(SUCCESS);
 	}
-    
-    @RequestMapping(value="/types", method=RequestMethod.GET)
-    @PreAuthorize("hasRole('USER')")
+
+	@RequestMapping(value = "/types", method = RequestMethod.GET)
+	@PreAuthorize("hasRole('USER')")
 	public ApiResponse testIRPing() {
-    	return new ApiResponse(SUCCESS, IRType.getValues());
+		return new ApiResponse(SUCCESS, IRType.getValues());
 	}
-    
-    @RequestMapping(value="/container", method=RequestMethod.POST)
-    @PreAuthorize("hasRole('USER')")
-    @InjectIRService
+
+	@RequestMapping(value = "/container", method = RequestMethod.POST)
+	@PreAuthorize("hasRole('USER')")
+	@InjectIRService
 	public ApiResponse createContainer(@RequestBody @WeaverValidatedModel IR ir, IRService irService) throws Exception {
-    	return new ApiResponse(SUCCESS, irService.createContainer(ir));
+		return new ApiResponse(SUCCESS, irService.createContainer(ir));
 	}
-    
-    @RequestMapping(value="/containers", method=RequestMethod.POST)
-    @PreAuthorize("hasRole('USER')")
-    @InjectIRService
+
+	@RequestMapping(value = "/containers", method = RequestMethod.POST)
+	@PreAuthorize("hasRole('USER')")
+	@InjectIRService
 	public ApiResponse getContainers(@RequestBody @WeaverValidatedModel IR ir, IRService irService) throws Exception {
-    	return new ApiResponse(SUCCESS, irService.getContainers(ir));
+		return new ApiResponse(SUCCESS, irService.getContainers(ir));
 	}
-    
-    
-    @RequestMapping(value="/test/ping", method=RequestMethod.POST)
-    @PreAuthorize("hasRole('USER')")
-    @InjectIRService
+
+	@RequestMapping(value = "/test/ping", method = RequestMethod.POST)
+	@PreAuthorize("hasRole('USER')")
+	@InjectIRService
 	public ApiResponse testIRPing(@RequestBody @WeaverValidatedModel IR ir, IRService irService) throws Exception {
-    	irService.verifyPing(ir);
-    	return new ApiResponse(SUCCESS, "Ping was successful!");
+		irService.verifyPing(ir);
+		return new ApiResponse(SUCCESS, "Ping was successful!");
 	}
-    
-    @RequestMapping(value="/test/auth", method=RequestMethod.POST)
-    @PreAuthorize("hasRole('USER')")
-    @InjectIRService
+
+	@RequestMapping(value = "/test/auth", method = RequestMethod.POST)
+	@PreAuthorize("hasRole('USER')")
+	@InjectIRService
 	public ApiResponse testIRAuth(@RequestBody @WeaverValidatedModel IR ir, IRService irService) throws Exception {
-    	irService.verifyAuth(ir);
-        return new ApiResponse(SUCCESS);
+		irService.verifyAuth(ir);
+		return new ApiResponse(SUCCESS);
 	}
-    
-    @RequestMapping(value="/test/content", method=RequestMethod.POST)
-    @PreAuthorize("hasRole('USER')")
-    @InjectIRService
+
+	@RequestMapping(value = "/test/content", method = RequestMethod.POST)
+	@PreAuthorize("hasRole('USER')")
+	@InjectIRService
 	public ApiResponse testIRContent(@RequestBody @WeaverValidatedModel IR ir, IRService irService) throws Exception {
-    	irService.verifyRoot(ir);
-        return new ApiResponse(SUCCESS);
+		irService.verifyRoot(ir);
+		return new ApiResponse(SUCCESS);
 	}
-    
-    @RequestMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
+
+	@RequestMapping("/{id}")
+	@PreAuthorize("hasRole('USER')")
 	public ApiResponse getIR(@PathVariable Long id) {
-        return new ApiResponse(SUCCESS, irRepo.read(id));
+		return new ApiResponse(SUCCESS, irRepo.read(id));
 	}
 
 }

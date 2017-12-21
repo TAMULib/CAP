@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public enum IRType {
-	FEDORA("Fedora"),
-	DSPACE("DSpace");
+	FEDORA("Fedora"), DSPACE("DSpace");
 
 	private final String gloss;
 
