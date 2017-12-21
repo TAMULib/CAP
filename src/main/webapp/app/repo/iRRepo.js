@@ -1,9 +1,9 @@
 cap.repo("IRRepo", function($q, WsApi) {
   var iRRepo = this;
 
-  this.scaffold = {
+  iRRepo.scaffold = {
     name: "",
-    uri: "",
+    rootUri: "",
     username: "",
     password: "",
     type: ""
@@ -15,6 +15,21 @@ cap.repo("IRRepo", function($q, WsApi) {
       angular.extend(types, angular.fromJson(res.body).payload['ArrayList<HashMap>']);
     });
     return typesPromise;
+  };
+
+  iRRepo.findByName = function(name) {
+    var ir = {};
+    var irs = iRRepo.getAll();
+    iRRepo.ready().then(function() {
+      for(var i in irs) {
+        var foundIR = irs[i];
+        if(foundIR.name === name) {
+          angular.extend(ir, foundIR);
+          break;
+        }
+      }
+    });
+    return ir;
   };
 
   iRRepo.testPing = function(ir) {

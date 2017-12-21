@@ -6,8 +6,6 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
 
   $scope.irs = IRRepo.getAll();  
   $scope.iRTypes = [];
-
-  console.log($scope.iRTypes);
   
   IRRepo.getTypes($scope.iRTypes).then(function() {
     $scope.irToCreate = IRRepo.getScaffold({
@@ -52,7 +50,7 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
   $scope.cancelCreateIr = function() {
     angular.extend($scope.irToCreate, IRRepo.getScaffold());
     $scope.resetIrForms();
-  }
+  };
 
   $scope.viewIr = function(ir) {
     $location.path("ir/"+ir.name);

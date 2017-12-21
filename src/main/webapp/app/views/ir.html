@@ -1,2 +1,16 @@
-<h1>{{name}}</h1>
-<hr>
+<h1>{{ir.name}}</h1>
+
+<hr />
+
+<button class="btn btn-success" ng-click="ir.createContainer()">Create Container</button>
+
+<hr />
+
+<h3>Children</h3>
+<div class="container">
+  <ul class="list-unstyled">
+    <li ng-repeat="container in ir.getContainers()">
+      <a href="{{container}}">{{container}}</a>
+    </li>
+  </ul>
+</div>

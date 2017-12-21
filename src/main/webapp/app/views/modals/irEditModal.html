@@ -9,27 +9,39 @@
         <uib-tabset active="activeJustified" justified="true">
             <uib-tab index="0" heading="General">
                 <div class="row">
-                <div class="col-sm-10 col-sm-offset-1">  
-                    <validatedinput
-                        model="irToEdit"
-                        property="name"
-                        label="Name"
-                        placeholder="Name of the IR"
-                        form="irForms.edit"
-                        validations="irForms.validations"
-                        results="irForms.getResults()"
-                        autocomplete="off">
-                    </validatedinput>
-                    <validatedinput
-                        model="irToEdit"
-                        property="uri"
-                        label="URI"
-                        placeholder="URI of the IR"
-                        form="irForms.edit"
-                        validations="irForms.validations"
-                        results="irForms.getResults()"
-                        autocomplete="off">
-                    </validatedinput>
+                <div class="col-sm-10 col-sm-offset-1">
+                  <validatedselect
+                    model="irToEdit"
+                    property="type"
+                    options="iRTypes"
+                    optionproperty="gloss"
+                    optionvalue="value"
+                    label="Type"
+                    placeholder="Type of the new IR"
+                    form="irForms.edit"
+                    validations="irForms.validations"
+                    results="irForms.getResults()">
+                  </validatedselect>  
+                  <validatedinput
+                    model="irToEdit"
+                    property="name"
+                    label="Name"
+                    placeholder="Name of the IR"
+                    form="irForms.edit"
+                    validations="irForms.validations"
+                    results="irForms.getResults()"
+                    autocomplete="off">
+                  </validatedinput>
+                  <validatedinput
+                    model="irToEdit"
+                    property="rootUri"
+                    label="Root URI"
+                    placeholder="Root URI of the IR"
+                    form="irForms.edit"
+                    validations="irForms.validations"
+                    results="irForms.getResults()"
+                    autocomplete="off">
+                  </validatedinput>
                 </div>
             </div>  
         </uib-tab>

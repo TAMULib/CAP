@@ -4,6 +4,7 @@ cap.controller("IrController", function($controller, $scope, IRRepo,  $routePara
       $scope: $scope
   }));
 
-  $scope.name =  $routeParams.irName;
+  $scope.ir = IRRepo.findByName(decodeURI($routeParams.irName));
+  
 
 });

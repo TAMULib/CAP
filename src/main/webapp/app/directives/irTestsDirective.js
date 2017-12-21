@@ -13,12 +13,12 @@ cap.directive("irtests", function(IRRepo, $q) {
 
         $scope.irTests = [
           {
-            name: "Pinging "+$scope.ir.uri,
+            name: "Pinging "+$scope.ir.rootUri,
             key: "testingPing",
             execute: IRRepo.testPing,
             status: "PENDING"
           }
-        ]
+        ];
     
         if($scope.ir.username && $scope.ir.password) {
           $scope.irTests.push({
@@ -52,7 +52,7 @@ cap.directive("irtests", function(IRRepo, $q) {
               status=test.status;
               break;
             }
-          };
+          }
           $scope.results.status = status;
         });
         

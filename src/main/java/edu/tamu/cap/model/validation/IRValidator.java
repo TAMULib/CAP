@@ -14,9 +14,9 @@ public class IRValidator extends BaseModelValidator {
     	String nameProperty = "name";
         this.addInputValidator(new InputValidator(InputValidationType.required, "A repository requires a name", nameProperty, true));
 
-        String uriProperty = "uri";
-        this.addInputValidator(new InputValidator(InputValidationType.required, "A repository requires a URI", uriProperty, true));
-        this.addInputValidator(new InputValidator(InputValidationType.pattern, "A repository requires a valid URI", uriProperty, ValidationUtility.URL_REGEX));
+        String rootUriProperty = "rootUri";
+        this.addInputValidator(new InputValidator(InputValidationType.required, "A repository requires a URI", rootUriProperty, true));
+        this.addInputValidator(new InputValidator(InputValidationType.pattern, "A repository requires a valid URI", rootUriProperty, ValidationUtility.URL_REGEX));
         
         String usernameProperty = "username";
         int usernameMin = 2;

@@ -1,20 +1,10 @@
 package edu.tamu.cap.controller;
 
-import static edu.tamu.weaver.response.ApiStatus.ERROR;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import org.apache.commons.io.IOUtils;
-import org.fcrepo.client.FcrepoClient;
-import org.fcrepo.client.FcrepoOperationFailedException;
-import org.fcrepo.client.FcrepoResponse;
-import org.fcrepo.client.GetBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +29,7 @@ import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 public class IRController {
 	
 	@Autowired
-	IRRepo irRepo;
+	private IRRepo irRepo;
 	
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
@@ -79,6 +69,21 @@ public class IRController {
 	public ApiResponse testIRPing() {
     	return new ApiResponse(SUCCESS, IRType.getValues());
 	}
+    
+    @RequestMapping(value="/container", method=RequestMethod.POST)
+    @PreAuthorize("hasRole('USER')")
+    @InjectIRService
+	public ApiResponse createContainer(@RequestBody @WeaverValidatedModel IR ir, IRService irService) throws Exception {
+    	return new ApiResponse(SUCCESS, irService.createContainer(ir));
+	}
+    
+    @RequestMapping(value="/containers", method=RequestMethod.POST)
+    @PreAuthorize("hasRole('USER')")
+    @InjectIRService
+	public ApiResponse getContainers(@RequestBody @WeaverValidatedModel IR ir, IRService irService) throws Exception {
+    	return new ApiResponse(SUCCESS, irService.getContainers(ir));
+	}
+    
     
     @RequestMapping(value="/test/ping", method=RequestMethod.POST)
     @PreAuthorize("hasRole('USER')")
