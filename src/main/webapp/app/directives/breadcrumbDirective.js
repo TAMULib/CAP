@@ -1,4 +1,4 @@
-cap.directive("breadcrumbs", function(IRRepo, $q, breadcrumbService) {
+cap.directive("breadcrumbs", function(IRRepo, $q, $route, BreadcrumbService) {
     return {
       templateUrl: "views/directives/breadcrumbs.html",
       restrict: "E",
@@ -7,16 +7,20 @@ cap.directive("breadcrumbs", function(IRRepo, $q, breadcrumbService) {
           nav: "&"
       },
       link: function($scope, attr, elem) {
-        $scope.breadcrumbs = breadcrumbService.getBreadcrumbs();
-
+        $scope.breadcrumbs = BreadcrumbService.getBreadcrumbs();
+        BreadcrumbService.registerBreadcrumbView($route.current.$$route.templateUrl);
       }
     };
   });
 
-  cap.service("breadcrumbService", function($rootScope, StorageService) {
+  cap.service("BreadcrumbService", function($rootScope, StorageService) {
+
+    var breadcrumbService = this;
+
+    var registeredBreadcrumbView = [];
 
     var storedCrumbs = angular.fromJson(StorageService.get("breadcrumbs"));
-    console.log(storedCrumbs);
+    
     var sendToStorage = function() {
         StorageService.set("breadcrumbs",angular.toJson(breadcrumbs));
     }
@@ -28,24 +32,42 @@ cap.directive("breadcrumbs", function(IRRepo, $q, breadcrumbService) {
     sendToStorage();
 
     var un = $rootScope.$on("$routeChangeStart", function(e, next, current) {
-        
-        var context = current.params.context;
-        var nextContext = next.params.context;
-        var containedIndex = breadcrumbs.indexOf(nextContext);
-        if(containedIndex===-1) {
-            breadcrumbs.push(context);
-            sendToStorage();
+        if(breadcrumbService.isABreadcrumbView(next.$$route.templateUrl)) {
+            var context = current.params.context;
+            var nextContext = next.params.context;
+            var containedIndex = breadcrumbs.indexOf(nextContext);
+            if(containedIndex===-1) {
+                breadcrumbs.push(context);
+                sendToStorage();
+            } else {
+                breadcrumbs.length = containedIndex;
+                sendToStorage();
+            }
         } else {
-            breadcrumbs.length = containedIndex;
+            breadcrumbs.length = 0;
             sendToStorage();
+            un();
         }
-
-        
-            
     });
 
-    this.getBreadcrumbs = function() {
+    breadcrumbService.getBreadcrumbs = function() {
         return breadcrumbs;
-    }
+    };
+
+    breadcrumbService.registerBreadcrumbView = function(view) {
+        registeredBreadcrumbView.push(view);
+    };
+
+    breadcrumbService.isABreadcrumbView = function(view) {
+        var found = false;
+        for(var i in registeredBreadcrumbView) {
+            var registeredView = registeredBreadcrumbView[i];
+            if(registeredView===view) {
+                found = true;
+                break;
+            }
+        }
+        return found;
+    };
 
   });
