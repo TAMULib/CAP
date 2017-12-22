@@ -16,12 +16,11 @@ cap.controller("IrController", function($controller, $scope, IRRepo, $routeParam
       $location.search("context", $scope.ir.contextUri);     
     }
 
-    $scope.loadContainer = function(containerUri) {
-      $scope.ir.contextUri = containerUri;
-      $location.search("context", containerUri); 
-    };
   });
-
   
+  $scope.loadContainer = function(containerUri) {
+    $scope.ir.contextUri = containerUri;
+    $location.search("context", containerUri);
+  };
 
 });

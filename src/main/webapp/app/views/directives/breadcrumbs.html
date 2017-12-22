@@ -1,0 +1,8 @@
+<ol class="breadcrumb">
+    <li ng-repeat="crumb in breadcrumbs track by $index">
+        <a href="" ng-click="nav({containerUri:crumb})">{{crumb | breadcrumb:ir }}</a>
+    </li>
+    <li class="active">
+        {{ir.contextUri | breadcrumb:ir }}
+    </li>
+</ol>

@@ -2,12 +2,12 @@ cap.service("AbstractAppRepo", function () {
   
     return function AbstractAppRepo() {
 
-        this.scaffold = {}
+        this.scaffold = {};
         
         this.getScaffold = function(defaults) {
             if(!defaults) defaults = {};
             return angular.copy(angular.extend(this.scaffold, defaults));
-        }
+        };
 
         this.isInScaffold = function(property) {
             var propertyFound = false;
@@ -20,7 +20,7 @@ cap.service("AbstractAppRepo", function () {
                 }
             }
             return propertyFound;
-        }
+        };
 
         return this;
     };

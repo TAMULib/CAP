@@ -58,5 +58,5 @@ cap.directive("irtests", function(IRRepo, $q) {
         
       };
     }
-  }
+  };
 });
