@@ -3,11 +3,7 @@
 
 <breadcrumbs nav="loadContainer(containerUri)" ir="ir"></breadcrumbs>
 
-<button class="btn btn-success" ng-click="ir.createContainer()">Create Container</button>
-
-<hr />
-
-<h3>Children</h3>
+<h3>Children <button class="btn btn-success btn-xs" ng-click="ir.createContainer()"><span class="glyphicon glyphicon-plus"></span></button> </h3>
 <div class="container">
   <ul class="list-unstyled">
     <li ng-repeat="containerUri in ir.getContainers()">
