@@ -1,72 +1,70 @@
-<h1>{{ir.name}}</h1>
-<hr />
+<div class="page-header">
+  <h1>{{ir.name}} <small>({{ir.rootUri}})</small></h1>
+</div>
 
 <breadcrumbs nav="loadContainer(containerUri)" ir="ir"></breadcrumbs>
 
 <div class="panel panel-default">
   <div class="panel-heading">
-    <div class="btn-group pull-right" uib-dropdown keyboard-nav>
+    <div class="btn-group pull-right" ng-show="propertiesExpanded" uib-dropdown keyboard-nav>
       <button id="simple-btn-keyboard-nav" type="button" class="btn btn-success btn-xs" uib-dropdown-toggle>
         Actions <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
         <li role="menuitem"><a href="#">Add Propert</a></li>
         <li role="menuitem"><a href="#">Remove Properties</a></li>
+        <li class="divider"></li>
+        <li ng-click="propertiesExpanded=false"><a href="#">Collapse</a></li>
       </ul>
     </div>
-    <h3 class="panel-title">Properties</h3>
+    <button class="btn btn-default btn-xs pull-right" ng-click="propertiesExpanded=true" ng-hide="propertiesExpanded">Expand</button>
+    <h3 class="panel-title">Properties <span class="badge">0</span></h3>
   </div>
   <div class="panel-body" ng-show="propertiesExpanded">
-  </div>
-  <div class="panel-footer clearfix">
-    <button class="btn btn-default btn-xs pull-right" ng-click="propertiesExpanded=true" ng-hide="propertiesExpanded">Expand</button>
-    <button class="btn btn-default btn-xs pull-right"  ng-click="propertiesExpanded=false" ng-show="propertiesExpanded">Collapse</button>
   </div>
 </div>
 
 <div class="panel panel-default" ng-init="selected=[]">
   <div class="panel-heading clearfix">
-    <div class="btn-group pull-right" uib-dropdown keyboard-nav>
+    <div class="btn-group pull-right" ng-show="childrenExpanded||!containerUris.length" uib-dropdown keyboard-nav>
       <button id="simple-btn-keyboard-nav" type="button" class="btn btn-success btn-xs" uib-dropdown-toggle>
         Actions <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
           <li role="menuitem" ng-click="ir.createContainer()"><a href="#">Add Child</a></li>
           <li role="menuitem" ng-click="removeContainers=true;"><a href="#">Remove Children</a></li>
+          <li class="divider"></li>
+          <li ng-click="childrenExpanded=false"><a href="#">Collapse</a></li>
       </ul>
     </div>
     <button class="btn btn-danger btn-xs pull-right" ng-show="removeContainers" ng-click="removeContainers=false;selected.length=0">Confirm Delete</button>
-    <h3 class="panel-title">Children</h3>
+    <button class="btn btn-default btn-xs pull-right" ng-click="childrenExpanded=true" ng-hide="childrenExpanded||!containerUris.length">Expand</button>
+    <h3 class="panel-title">Children <span class="badge">{{containerUris.length}}</span></h3>
   </div>
   <ol class="list-group" ng-show="childrenExpanded">
-    <li class="list-group-item" ng-repeat="containerUri in ir.getContainers()" ng-class="{'list-group-item-danger': selected.indexOf(containerUri)!==-1}">
+    <li class="list-group-item" ng-repeat="containerUri in containerUris = (ir.getContainers())" ng-class="{'list-group-item-danger': selected.indexOf(containerUri)!==-1}">
       <a href="" ng-click="loadContainer(containerUri)">{{containerUri}}</a>
       <input ng-show="removeContainers" type="checkbox" class="pull-right" ng-checked="selected.indexOf(containerUri)!==-1" ng-click="selected.indexOf(containerUri)===-1?selected.push(containerUri):selected.splice(selected.indexOf(containerUri),1)">
     </li>
   </ol>
-  <div class="panel-footer clearfix">
-    <button class="btn btn-default btn-xs pull-right" ng-click="childrenExpanded=true" ng-hide="childrenExpanded">Expand</button>
-    <button class="btn btn-default btn-xs pull-right"  ng-click="childrenExpanded=false" ng-show="childrenExpanded">Collapse</button>
-  </div>
 </div>
 
 <div class="panel panel-default">
   <div class="panel-heading">
-    <div class="btn-group pull-right" uib-dropdown keyboard-nav>
+    <div class="btn-group pull-right" ng-show="resourcesExpanded" uib-dropdown keyboard-nav>
       <button id="simple-btn-keyboard-nav" type="button" class="btn btn-success btn-xs" uib-dropdown-toggle>
         Actions <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
         <li role="menuitem"><a href="#">Add Resource</a></li>
         <li role="menuitem"><a href="#">Remove Resources</a></li>
+        <li class="divider"></li>
+        <li ng-click="resourcesExpanded=false"><a href="#">Collapse</a></li>
       </ul>
     </div>
-    <h3 class="panel-title">Resources</h3>
+    <button class="btn btn-default btn-xs pull-right" ng-click="resourcesExpanded=true" ng-hide="resourcesExpanded">Expand</button>
+    <h3 class="panel-title">Resources <span class="badge">0</span></h3>
   </div>
   <div class="panel-body" ng-show="resourcesExpanded">
-  </div>
-  <div class="panel-footer clearfix">
-    <button class="btn btn-default btn-xs pull-right" ng-click="resourcesExpanded=true" ng-hide="resourcesExpanded">Expand</button>
-    <button class="btn btn-default btn-xs pull-right"  ng-click="resourcesExpanded=false" ng-show="resourcesExpanded">Collapse</button>
   </div>
 </div>
