@@ -1,6 +1,6 @@
 cap.run(function($route, $rootScope, $location) {
 
-  angular.element("body").fadeIn(1000);
+  angular.element("body").css('opacity',0).animate({opacity:1}, 1000);
 
   // Add runtime tasks here
 
