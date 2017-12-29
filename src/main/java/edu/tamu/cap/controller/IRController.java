@@ -5,6 +5,11 @@ import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 
+import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.cap.controller.aspect.InjectIRService;
 import edu.tamu.cap.model.IR;
@@ -30,6 +38,9 @@ public class IRController {
 
 	@Autowired
 	private IRRepo irRepo;
+	
+	@Autowired
+    private ObjectMapper objectMapper;
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -82,6 +93,26 @@ public class IRController {
 	@InjectIRService
 	public ApiResponse getContainers(@RequestBody @WeaverValidatedModel IR ir, IRService irService) throws Exception {
 		return new ApiResponse(SUCCESS, irService.getContainers(ir));
+	}
+	
+	@RequestMapping(value = "/containers/delete", method = RequestMethod.POST)
+	@PreAuthorize("hasRole('USER')")
+	@InjectIRService
+	public ApiResponse deleteContainers(IRService irService, @RequestBody Map<String, Object> data) throws Exception {
+				
+		IR ir = objectMapper.convertValue(data.get("ir"), IR.class);
+        
+		List<String> containerUris = (List<String>) data.get("containerUris");
+		
+        containerUris.forEach(uri->{
+        	System.out.println("Deleting specific container " + uri);
+			try {
+				irService.deleteContainer(ir, uri);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		});
+		return new ApiResponse(SUCCESS);
 	}
 
 	@RequestMapping(value = "/test/ping", method = RequestMethod.POST)

@@ -12,6 +12,7 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.NodeIterator;
 import org.apache.jena.rdf.model.RDFNode;
+import org.fcrepo.client.DeleteBuilder;
 import org.fcrepo.client.FcrepoClient;
 import org.fcrepo.client.FcrepoOperationFailedException;
 import org.fcrepo.client.FcrepoResponse;
@@ -65,6 +66,12 @@ public class FedoraService implements IRService {
 		URI location = response.getLocation();
 		logger.debug("Container creation status and location: {}, {}", response.getStatusCode(), location);
 		return location;
+	}
+	
+	@Override
+	public void deleteContainer(IR ir, String uri) throws Exception {
+		FcrepoResponse response = new DeleteBuilder(new URI(uri), buildClient(ir)).perform();
+		logger.debug("Resource deletion status: {}", response.getStatusCode());
 	}
 
 	private FcrepoClient buildClient(IR ir) {

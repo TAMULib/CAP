@@ -56,6 +56,11 @@ var apiMapping = {
       'controller': 'ir',
       'method': 'container'
     },
+    deleteContainers: {
+      'endpoint': '/private/queue',
+      'controller': 'ir',
+      'method': 'containers/delete'
+    },
     getContainers: {
       'endpoint': '/private/queue',
       'controller': 'ir',

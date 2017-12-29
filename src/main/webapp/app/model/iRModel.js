@@ -15,6 +15,20 @@ cap.model("IR", function(WsApi) {
       return createPromise;
     };
 
+    ir.removeContainers = function(containerUris) {
+      console.log("removing", containerUris);
+      var removePromise = WsApi.fetch(ir.getMapping().deleteContainers, {
+        data: {
+          ir: ir,
+          containerUris: containerUris
+        }
+      });
+      removePromise.then(function() {
+        ir.getContainers(true);
+      });
+      return removePromise;
+    };
+
     ir.getContainers = function(forceUpdate) {
       if((ir.contextUri !== lastContextUri)||forceUpdate) {
         lastContextUri = ir.contextUri;

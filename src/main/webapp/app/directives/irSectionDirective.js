@@ -26,9 +26,10 @@ cap.directive("irsection", function(IrSectionService) {
             }
 
             $scope.confirmDelete = function() {
-                $scope.removeAction({"items": $scope.selectedListElements})
-                $scope.removeListElements=false;
-                $scope.selectedListElements.length=0;          
+                $scope.removeAction({"items": $scope.selectedListElements}).then(function() {
+                  $scope.removeListElements=false;
+                  $scope.selectedListElements.length=0;          
+                });
             }
 
             var un = $scope.$watch("list.length", function(newLength, oldLength) {
