@@ -8,7 +8,7 @@
                 <li role="menuitem" ng-click="addAction()"><a href="#">Add {{type}}</a></li>
                 <li ng-show="list.length" role="menuitem" ng-click="removeListElements=true;"><a href="#">Remove {{type}}</a></li>
                 <li ng-show="contentExpanded" class="divider"></li>
-                <li ng-show="contentExpanded" ng-click="contentExpanded=false"><a href="#">Collapse</a></li>
+                <li ng-show="contentExpanded" ng-click="manuallyCollapse()"><a href="#">Collapse</a></li>
             </ul>
         </div>
         <div ng-show="removeListElements" class="btn-group pull-right">
@@ -17,7 +17,7 @@
                 <span class="glyphicon glyphicon-remove"></span>
             </button>
         </div>
-        <button class="btn btn-default btn-xs pull-right" ng-click="contentExpanded=true" ng-hide="contentExpanded||!list.length">Expand</button>
+        <button class="btn btn-default btn-xs pull-right" ng-click="manuallyExpande()" ng-hide="contentExpanded||!list.length">Expand</button>
         <h3 class="panel-title">{{title}} <span class="badge">{{list.length || 0}}</span></h3>
     </div>
     <ol class="list-group" ng-show="contentExpanded">

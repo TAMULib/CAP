@@ -1,4 +1,4 @@
-cap.directive("irsection", function() {
+cap.directive("irsection", function(IrSectionService) {
     return {
         templateUrl: "views/directives/irSection.html",
         restrict: "E",
@@ -12,7 +12,19 @@ cap.directive("irsection", function() {
             removeAction: "&"
         },
         link: function($scope, attr, elem) {
+            
             $scope.selectedListElements = [];
+
+            $scope.manuallyCollapse = function() {
+                $scope.contentExpanded = false;
+                IrSectionService.setManuallyCollapsed($scope.title, true);
+            }
+
+            $scope.manuallyExpande = function() {
+                $scope.contentExpanded = true;
+                IrSectionService.setManuallyCollapsed($scope.title, false);
+            }
+
             $scope.confirmDelete = function() {
                 $scope.removeAction({"items": $scope.selectedListElements})
                 $scope.removeListElements=false;
@@ -21,11 +33,28 @@ cap.directive("irsection", function() {
 
             var un = $scope.$watch("list.length", function(newLength, oldLength) {
                 if(newLength>0) {
-                    $scope.contentExpanded = true;
+                    console.log(IrSectionService.getManuallyCollapsed($scope.title));
+                    $scope.contentExpanded = IrSectionService.getManuallyCollapsed($scope.title) ? false : true;
                     un();
                 }
             });
 
         }
     }
+});
+
+cap.service("IrSectionService", function() {
+
+    var irSectionServ = this;
+
+    var manuallyCollapsed = {};
+
+    irSectionServ.setManuallyCollapsed = function(title, collapsed) {
+        manuallyCollapsed[title] = collapsed;
+    }
+
+    irSectionServ.getManuallyCollapsed = function(title) {
+        return manuallyCollapsed[title];
+    }
+
 });
