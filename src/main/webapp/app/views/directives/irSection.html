@@ -5,14 +5,14 @@
                 Actions <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
-                <li role="menuitem" ng-click="ir.createContainer()"><a href="#">Add {{type}}</a></li>
+                <li role="menuitem" ng-click="addAction()"><a href="#">Add {{type}}</a></li>
                 <li ng-show="list.length" role="menuitem" ng-click="removeListElements=true;"><a href="#">Remove {{type}}</a></li>
                 <li ng-show="contentExpanded" class="divider"></li>
                 <li ng-show="contentExpanded" ng-click="contentExpanded=false"><a href="#">Collapse</a></li>
             </ul>
         </div>
         <div ng-show="removeListElements" class="btn-group pull-right">
-            <button class="btn btn-danger btn-xs" ng-click="removeListElements=false;selectedListElements.length=0">Confirm Delete</button>
+            <button class="btn btn-danger btn-xs" ng-click="confirmDelete()">Confirm Delete</button>
             <button class="btn btn-default btn-xs" ng-click="removeListElements=false;selectedListElements.length=0">
                 <span class="glyphicon glyphicon-remove"></span>
             </button>

@@ -7,10 +7,17 @@ cap.directive("irsection", function() {
             title: "=",
             type: "=",
             list: "=",
-            listElementAction: "&"
+            listElementAction: "&",
+            addAction: "&",
+            removeAction: "&"
         },
         link: function($scope, attr, elem) {
             $scope.selectedListElements = [];
+            $scope.confirmDelete = function() {
+                $scope.removeAction({"items": $scope.selectedListElements})
+                $scope.removeListElements=false;
+                $scope.selectedListElements.length=0;
+            }
         }
     }
 });

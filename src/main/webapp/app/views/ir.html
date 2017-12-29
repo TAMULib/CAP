@@ -9,7 +9,9 @@
   title="'Properties'"
   type="'property'"
   list="ir.getProperties()"
-  list-element-action="loadContainer(le)">
+  list-element-action="loadContainer(le)"
+  add-action="ir.createProperty()"
+  removeAction="ir.removeProperties(items)">
 </irsection>
 
 <irsection
@@ -17,7 +19,9 @@
   title="'Children'"
   type="'child'"
   list="ir.getContainers()"
-  list-element-action="loadContainer(le)">
+  list-element-action="loadContainer(le)"
+  add-action="ir.createContainer()"
+  removeAction="ir.removeContainers(items)">
 </irsection>
 
 <irsection
@@ -25,5 +29,7 @@
   title="'Resources'"
   type="'resource'"
   list="ir.getResources()"
-  list-element-action="loadContainer(le)">
+  list-element-action="loadContainer(le)"
+  add-action="ir.createResource()"
+  removeAction="ir.removeResources(items)">
 </irsection>
