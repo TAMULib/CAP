@@ -31,22 +31,21 @@ cap.directive("breadcrumbs", function(IRRepo, $q, $route, BreadcrumbService) {
     var breadcrumbs = storedCrumbs;
     sendToStorage();
 
-    var un = $rootScope.$on("$routeChangeStart", function(e, next, current) {
+    $rootScope.$on("$routeChangeStart", function(e, next, current) {
         if(breadcrumbService.isABreadcrumbView(next.$$route.templateUrl)) {
             var context = current.params.context;
             var nextContext = next.params.context;
             var containedIndex = breadcrumbs.indexOf(nextContext);
-            if(containedIndex===-1) {
+            if(context && containedIndex===-1) {
                 breadcrumbs.push(context);
                 sendToStorage();
-            } else {
+            } else if(context) {
                 breadcrumbs.length = containedIndex;
                 sendToStorage();
             }
         } else {
             breadcrumbs.length = 0;
             sendToStorage();
-            un();
         }
     });
 

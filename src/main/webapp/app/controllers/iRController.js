@@ -19,7 +19,6 @@ cap.controller("IrController", function($controller, $scope, IRRepo, $routeParam
   });
   
   $scope.loadContainer = function(containerUri) {
-    console.log(containerUri);
     $scope.ir.contextUri = containerUri;
     $location.search("context", containerUri);
   };
