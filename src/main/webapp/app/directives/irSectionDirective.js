@@ -33,7 +33,6 @@ cap.directive("irsection", function(IrSectionService) {
 
             var un = $scope.$watch("list.length", function(newLength, oldLength) {
                 if(newLength>0) {
-                    console.log(IrSectionService.getManuallyCollapsed($scope.title));
                     $scope.contentExpanded = IrSectionService.getManuallyCollapsed($scope.title) ? false : true;
                     un();
                 }
