@@ -18,7 +18,7 @@
             </button>
         </div>
         <button class="btn btn-default btn-xs pull-right" ng-click="contentExpanded=true" ng-hide="contentExpanded||!list.length">Expand</button>
-        <h3 class="panel-title">{{title}} <span class="badge">{{list.length}}</span></h3>
+        <h3 class="panel-title">{{title}} <span class="badge">{{list.length || 0}}</span></h3>
     </div>
     <ol class="list-group" ng-show="contentExpanded">
         <li class="list-group-item" ng-repeat="le in list track by $index" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le)!==-1}">
