@@ -7,8 +7,6 @@ import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.cap.controller.aspect.InjectIRService;
@@ -105,7 +102,6 @@ public class IRController {
 		List<String> containerUris = (List<String>) data.get("containerUris");
 		
         containerUris.forEach(uri->{
-        	System.out.println("Deleting specific container " + uri);
 			try {
 				irService.deleteContainer(ir, uri);
 			} catch (Exception e) {

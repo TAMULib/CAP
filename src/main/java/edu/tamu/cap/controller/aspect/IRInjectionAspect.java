@@ -9,6 +9,8 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,10 +29,12 @@ public class IRInjectionAspect {
 	
 	@Autowired
     private ObjectMapper objectMapper;
+	
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Around("@annotation(edu.tamu.cap.controller.aspect.InjectIRService)")
 	public ApiResponse runWithInjectedIRService(ProceedingJoinPoint joinPoint) throws Throwable {
-		System.out.println("\n\n***Injecting an IR Service at joinPoint "+ joinPoint.toLongString());
+		logger.debug("Injecting an IR Service at joinPoint: {}", joinPoint.toString());
 		Optional<IR> ir = getIRArgument(joinPoint.getArgs());
 		if (ir.isPresent() && ir.get().getType() != null) {
 			return (ApiResponse) joinPoint.proceed(injectIrService(joinPoint, ir.get().getType()));
@@ -41,29 +45,19 @@ public class IRInjectionAspect {
 	}
 
 	private Optional<IR> getIRArgument(Object[] arguments) {
-		
-		System.out.println("\n\n Aspect \n\n");
-		
 		Optional<IR> ir = Optional.empty();
 		for (Object argument : arguments) {
 			if (argument.getClass().isAssignableFrom(IR.class)) {
 				ir = Optional.of((IR) argument);
-				System.out.println("IR to inject will be the entirety of request body: " + ir.toString());
+				logger.debug("IR to inject will be the entirety of request body: {}", ir.toString());
 				
 			} else  if(argument instanceof Map) {
-				Map<String, Object> data = (Map<String, Object>) argument;
-				
-				
-				System.out.println("data.keySet() "+data.keySet().size());
-				data.keySet().forEach(key->{
-					System.out.println("key.toString() "+key.toString());
-				});
-				
+				Map<String, Object> data = (Map<String, Object>) argument;				
 				ir = Optional.of((IR) objectMapper.convertValue(data.get("ir"), IR.class));
-				System.out.println("IR to inject will be just the ir node on request body: " + ir.toString());
+				logger.debug("IR to inject will be just the ir node on request body: {}", ir.toString());
 			}
 		}
-		System.out.println("Based on injection logic, will return ir: " + ir );
+		logger.debug("Based on injection logic, will return ir: {}", ir.toString());
 		return ir;
 	}
 
