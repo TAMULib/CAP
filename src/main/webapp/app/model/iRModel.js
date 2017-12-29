@@ -5,9 +5,12 @@ cap.model("IR", function(WsApi) {
     var lastContextUri = "";
     var containers = [];
 
-    ir.createContainer = function() {
+    ir.createContainer = function(createForm) {
       var createPromise = WsApi.fetch(ir.getMapping().createContainer, {
-        data: ir
+        data: {
+          ir: ir,
+          name: createForm.name
+        }
       });
       createPromise.then(function() {
         ir.getContainers(true);
@@ -16,7 +19,6 @@ cap.model("IR", function(WsApi) {
     };
 
     ir.removeContainers = function(containerUris) {
-      console.log("removing", containerUris);
       var removePromise = WsApi.fetch(ir.getMapping().deleteContainers, {
         data: {
           ir: ir,

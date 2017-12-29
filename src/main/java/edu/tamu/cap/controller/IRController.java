@@ -81,8 +81,12 @@ public class IRController {
 	@RequestMapping(value = "/container", method = RequestMethod.POST)
 	@PreAuthorize("hasRole('USER')")
 	@InjectIRService
-	public ApiResponse createContainer(@RequestBody @WeaverValidatedModel IR ir, IRService irService) throws Exception {
-		return new ApiResponse(SUCCESS, irService.createContainer(ir));
+	public ApiResponse createContainer(IRService irService, @RequestBody Map<String, Object> data) throws Exception {
+		
+		IR ir = objectMapper.convertValue(data.get("ir"), IR.class);
+		String name = objectMapper.convertValue(data.get("name"), String.class);
+		irService.createContainer(ir, name);
+		return new ApiResponse(SUCCESS);
 	}
 
 	@RequestMapping(value = "/containers", method = RequestMethod.POST)

@@ -20,9 +20,16 @@
   type="'child'"
   list="ir.getContainers()"
   list-element-action="loadContainer(le)"
-  add-action="ir.createContainer()"
+  add-action="openModal('#createContainer')"
   remove-action="ir.removeContainers(items)">
 </irsection>
+
+<modal modal-id="createContainer" 
+       modal-view="views/modals/irCreateContainer.html" 
+       modal-header-class="modal-header-primary"
+       wvr-modal-backdrop="static">
+</modal>
+
 
 <irsection
   ir="ir"

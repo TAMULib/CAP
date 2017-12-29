@@ -1,9 +1,16 @@
 package edu.tamu.cap.service.ir;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.RandomAccessFile;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +19,13 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.NodeIterator;
 import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.system.StreamRDF;
+import org.apache.jena.riot.system.StreamRDFWriter;
+import org.apache.jena.vocabulary.DC;
+import org.apache.jena.vocabulary.RDF;
 import org.fcrepo.client.DeleteBuilder;
 import org.fcrepo.client.FcrepoClient;
 import org.fcrepo.client.FcrepoOperationFailedException;
@@ -60,9 +74,22 @@ public class FedoraService implements IRService {
 	}
 
 	@Override
-	public URI createContainer(IR ir) throws FcrepoOperationFailedException, URISyntaxException {
+	public URI createContainer(IR ir, String name) throws FcrepoOperationFailedException, URISyntaxException { 
+		
 		FcrepoClient client = buildClient(ir);
-		FcrepoResponse response = new PostBuilder(new URI(ir.getContextUri()), client).perform();
+		
+		
+		PostBuilder post = new PostBuilder(new URI(ir.getContextUri()), client);
+		
+		if(name != null) {
+			Model model = ModelFactory.createDefaultModel();
+			model.createResource().addProperty(DC.title, name);
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			RDFDataMgr.write(out, model, Lang.TURTLE);
+			post.body(new ByteArrayInputStream(out.toByteArray()), "text/turtle");
+		}
+		
+		FcrepoResponse response = post.perform();
 		URI location = response.getLocation();
 		logger.debug("Container creation status and location: {}, {}", response.getStatusCode(), location);
 		return location;
@@ -73,7 +100,7 @@ public class FedoraService implements IRService {
 		FcrepoResponse response = new DeleteBuilder(new URI(uri), buildClient(ir)).perform();
 		logger.debug("Resource deletion status: {}", response.getStatusCode());
 	}
-
+	
 	private FcrepoClient buildClient(IR ir) {
 		return (ir.getUsername() == null || ir.getPassword() == null) ? FcrepoClient.client().build() : FcrepoClient.client().credentials(ir.getUsername(), ir.getPassword()).build();
 	}

@@ -17,6 +17,13 @@ cap.controller("IrController", function($controller, $scope, IRRepo, $routeParam
     }
 
   });
+
+  $scope.createContainer = function(form) {
+    $scope.ir.createContainer(form)
+      .then(function() {
+        $scope.closeModal();
+      });
+  };
   
   $scope.loadContainer = function(containerUri) {
     $scope.ir.contextUri = containerUri;
