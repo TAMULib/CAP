@@ -14,6 +14,9 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.NodeIterator;
 import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.ResIterator;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.vocabulary.DC;
@@ -116,7 +119,7 @@ public class FedoraService implements IRService {
 		FcrepoResponse response = new GetBuilder(new URI(ir.getContextUri()), client).accept("application/rdf+xml").perform();
 		Model model = createRdfModel(response.getBody());
 
-		return getObjects(model);
+		return getStatements(model);
 	}
 
 	private Model createRdfModel(InputStream stream) {
@@ -125,13 +128,20 @@ public class FedoraService implements IRService {
 		return model;
 	}
 	
-	private List<String> getObjects(Model model) {
-		return getObjects(model, null);
+	
+	private List<String> getStatements(Model model) {
+		List<String> statements = new ArrayList<String>();
+		model.listStatements().forEachRemaining(statement->{			
+			statements.add(statement.asTriple().getObject().toString());
+		});
+		
+		return statements;	
 	}
 
 	private List<String> getObjects(Model model, String predicate) {		
 		List<String> children = new ArrayList<String>();
-		NodeIterator nodeItr = predicate != null ? model.listObjectsOfProperty(model.getProperty(predicate)) : model.listObjects();
+		
+		NodeIterator nodeItr = model.listObjectsOfProperty(model.getProperty(predicate));
 		while (nodeItr.hasNext()) {
 			RDFNode node = nodeItr.next();
 			if (node.isResource()) {
