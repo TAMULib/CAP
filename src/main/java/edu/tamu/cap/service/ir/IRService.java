@@ -13,7 +13,8 @@ public interface IRService {
 	
 	public URI createContainer(IR ir, String name) throws Exception;
 	public void deleteContainer(IR ir, String uri) throws Exception;
-	
 	public List<String> getContainers(IR ir) throws Exception;
+	
+	public List<String> getProperties(IR ir) throws Exception;
 
 }

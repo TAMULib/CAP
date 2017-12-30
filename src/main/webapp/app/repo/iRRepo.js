@@ -17,6 +17,21 @@ cap.repo("IRRepo", function($q, WsApi) {
     return typesPromise;
   };
 
+  iRRepo.getProperties = function(ir, uri) {
+
+    if(uri) {
+      ir = angular.extend(angular.copy(ir, {
+        contextUri: uri
+      }));
+    }
+
+    var propertiesPromise = WsApi.fetch(iRRepo.mapping.getProperties, {
+      data: ir
+    });
+
+    return propertiesPromise;
+  };
+
   iRRepo.findByName = function(name) {
     var irs = iRRepo.getAll();
     for(var i in irs) {

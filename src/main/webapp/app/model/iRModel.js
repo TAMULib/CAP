@@ -1,9 +1,10 @@
-cap.model("IR", function(WsApi) {
+cap.model("IR", function(WsApi, IRRepo) {
   return function IR() {
 
     var ir = this;
-    var lastContextUri = "";
+    var contextLoadedByUri = {};
     var containers = [];
+    var properties = [];
 
     ir.createContainer = function(createForm) {
       var createPromise = WsApi.fetch(ir.getMapping().createContainer, {
@@ -32,8 +33,8 @@ cap.model("IR", function(WsApi) {
     };
 
     ir.getContainers = function(forceUpdate) {
-      if((ir.contextUri !== lastContextUri)||forceUpdate) {
-        lastContextUri = ir.contextUri;
+      if((ir.contextUri !== contextLoadedByUri.containers)||forceUpdate) {
+        contextLoadedByUri.containers = ir.contextUri;
         containers.length = 0;
         WsApi.fetch(ir.getMapping().getContainers, {
           data: ir
@@ -42,6 +43,17 @@ cap.model("IR", function(WsApi) {
         });
       }
       return containers;
+    };
+
+    ir.getProperties = function(forceUpdate) {
+      if((ir.contextUri !== contextLoadedByUri.properties)||forceUpdate) {
+        contextLoadedByUri.properties = ir.contextUri;
+        properties.length = 0;
+        IRRepo.getProperties(ir).then(function(res) {
+          angular.extend(properties, angular.fromJson(res.body).payload['ArrayList<String>']);
+        });
+      }
+      return properties;
     };
 
     return ir;

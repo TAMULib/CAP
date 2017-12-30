@@ -177,7 +177,9 @@
 		  <artifactId>fcrepo-java-client</artifactId>
 		  <version>0.3.0</version>
 		</dependency>
+	
 	</dependencies>
+	
 	
 	<repositories>
 

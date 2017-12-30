@@ -66,6 +66,11 @@ var apiMapping = {
       'controller': 'ir',
       'method': 'containers'
     },
+    getProperties: {
+      'endpoint': '/private/queue',
+      'controller': 'ir',
+      'method': 'properties'
+    },
     testPing: {
         'endpoint': '/private/queue',
         'controller': 'ir',
