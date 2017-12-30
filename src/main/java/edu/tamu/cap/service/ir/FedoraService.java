@@ -18,6 +18,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.NodeIterator;
+import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.riot.Lang;
@@ -78,12 +79,12 @@ public class FedoraService implements IRService {
 		
 		FcrepoClient client = buildClient(ir);
 		
-		
 		PostBuilder post = new PostBuilder(new URI(ir.getContextUri()), client);
 		
 		if(name != null) {
 			Model model = ModelFactory.createDefaultModel();
-			model.createResource().addProperty(DC.title, name);
+			model.createResource("")
+				.addProperty(DC.title, name);
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			RDFDataMgr.write(out, model, Lang.TURTLE);
 			post.body(new ByteArrayInputStream(out.toByteArray()), "text/turtle");
