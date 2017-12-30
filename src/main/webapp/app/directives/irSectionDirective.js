@@ -18,19 +18,19 @@ cap.directive("irsection", function(IrSectionService) {
           $scope.manuallyCollapse = function() {
             $scope.contentExpanded = false;
             IrSectionService.setManuallyCollapsed($scope.title, true);
-          }
+          };
 
           $scope.manuallyExpande = function() {
             $scope.contentExpanded = true;
             IrSectionService.setManuallyCollapsed($scope.title, false);
-          }
+          };
 
           $scope.confirmDelete = function() {
             $scope.removeAction({"items": $scope.selectedListElements}).then(function() {
               $scope.removeListElements=false;
               $scope.selectedListElements.length=0;          
             });
-          }
+          };
 
           var un = $scope.$watch("list.length", function(newLength, oldLength) {
             if(newLength>0) {
@@ -40,7 +40,7 @@ cap.directive("irsection", function(IrSectionService) {
           });
 
         }
-    }
+    };
 });
 
 cap.service("IrSectionService", function() {
@@ -51,10 +51,10 @@ cap.service("IrSectionService", function() {
 
     irSectionServ.setManuallyCollapsed = function(title, collapsed) {
       manuallyCollapsed[title] = collapsed;
-    }
+    };
 
     irSectionServ.getManuallyCollapsed = function(title) {
       return manuallyCollapsed[title];
-    }
+    };
 
 });

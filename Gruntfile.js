@@ -245,12 +245,12 @@ module.exports = function (grunt) {
       grunt.loadNpmTasks('grunt-contrib-uglify');
       grunt.loadNpmTasks('grunt-contrib-symlink');
   
-      grunt.registerTask('default', [/*'jshint',*/ 'copy:styles', 'clean', 'symlink']);
+      grunt.registerTask('default', ['jshint', 'copy:styles', 'clean', 'symlink']);
   
       grunt.registerTask('watch', ['watch']);
   
-      grunt.registerTask('develop', [/*'jshint',*/ 'concat', 'usemin', 'copy:styles', 'clean', 'symlink', 'watch']);
+      grunt.registerTask('develop', ['jshint', 'concat', 'usemin', 'copy:styles', 'clean', 'symlink', 'watch']);
   
-      grunt.registerTask('deploy', [/*'jshint',*/ 'concat', 'uglify', 'usemin', 'clean', 'copy']);
+      grunt.registerTask('deploy', ['jshint', 'concat', 'uglify', 'usemin', 'clean', 'copy']);
   
   };
