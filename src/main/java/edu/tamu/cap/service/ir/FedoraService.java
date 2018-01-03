@@ -7,7 +7,9 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.jena.rdf.model.Model;
@@ -114,12 +116,25 @@ public class FedoraService implements IRService {
 	}
 	
 	@Override
-	public List<String> getProperties(IR ir) throws Exception {
+	public Map<String, List<String>> getMetadata(IR ir) throws Exception {
 		FcrepoClient client = buildClient(ir);
 		FcrepoResponse response = new GetBuilder(new URI(ir.getContextUri()), client).accept("application/rdf+xml").perform();
 		Model model = createRdfModel(response.getBody());
-
-		return getStatements(model);
+		
+		Map<String, List<String>> metadata = new HashMap<String, List<String>>();
+		
+		model.listStatements().forEachRemaining(statement->{
+			
+			String label = statement.asTriple().getPredicate().toString();
+			String value = statement.asTriple().getObject().toString();
+			
+			if(metadata.get(label) == null) metadata.put(label, new ArrayList<String>());
+			
+			metadata.get(label).add(value);
+			
+		});
+		
+		return metadata;
 	}
 
 	private Model createRdfModel(InputStream stream) {

@@ -115,11 +115,11 @@ public class IRController {
 		return new ApiResponse(SUCCESS);
 	}
 	
-	@RequestMapping(value = "/properties", method = RequestMethod.POST)
+	@RequestMapping(value = "/metadata", method = RequestMethod.POST)
 	@PreAuthorize("hasRole('USER')")
 	@InjectIRService
 	public ApiResponse getProperties(@RequestBody @WeaverValidatedModel IR ir, IRService irService) throws Exception {
-		return new ApiResponse(SUCCESS, irService.getProperties(ir));
+		return new ApiResponse(SUCCESS, irService.getMetadata(ir));
 	}
 
 	@RequestMapping(value = "/test/ping", method = RequestMethod.POST)

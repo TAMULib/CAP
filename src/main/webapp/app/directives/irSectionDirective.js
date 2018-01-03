@@ -32,8 +32,17 @@ cap.directive("irsection", function(IrSectionService) {
             });
           };
 
-          var un = $scope.$watch("list.length", function(newLength, oldLength) {
-            if(newLength>0) {
+          $scope.getListLength = function() {
+            var l= 0;
+            if($scope.list) {
+              l = Array.isArray($scope.list) ? $scope.list.length : Object.keys($scope.list).length;
+            }
+            return l;
+          };
+
+          var un = $scope.$watchCollection("list", function() {
+            if($scope.getListLength()) {
+              $scope.isArray = Array.isArray($scope.list);
               $scope.contentExpanded = IrSectionService.getManuallyCollapsed($scope.title) ? false : true;
               un();
             }

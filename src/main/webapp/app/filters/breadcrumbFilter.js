@@ -7,7 +7,7 @@ cap.filter("breadcrumb", function(IRRepo) {
 
     return function(input,ir) {
         var output = input;
-        console.log(!titles[input]);
+        // console.log(!titles[input]);
         if(!titles[input]) {
             titles[input] = true;
             IRRepo.getProperties(ir, input);

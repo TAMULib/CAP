@@ -4,7 +4,7 @@ cap.model("IR", function(WsApi, IRRepo) {
     var ir = this;
     var contextLoadedByUri = {};
     var containers = [];
-    var properties = [];
+    var properties = {};
 
     ir.createContainer = function(createForm) {
       var createPromise = WsApi.fetch(ir.getMapping().createContainer, {
@@ -48,9 +48,12 @@ cap.model("IR", function(WsApi, IRRepo) {
     ir.getProperties = function(forceUpdate) {
       if((ir.contextUri !== contextLoadedByUri.properties)||forceUpdate) {
         contextLoadedByUri.properties = ir.contextUri;
-        properties.length = 0;
+        angular.forEach(properties, function(v,k) {
+          delete properties[k];
+        });
         IRRepo.getProperties(ir).then(function(res) {
-          angular.extend(properties, angular.fromJson(res.body).payload['ArrayList<String>']);
+          angular.extend(properties, angular.fromJson(res.body).payload['HashMap']);
+          console.log(properties);
         });
       }
       return properties;

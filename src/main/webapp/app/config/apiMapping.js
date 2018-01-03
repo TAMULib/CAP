@@ -69,7 +69,7 @@ var apiMapping = {
     getProperties: {
       'endpoint': '/private/queue',
       'controller': 'ir',
-      'method': 'properties'
+      'method': 'metadata'
     },
     testPing: {
         'endpoint': '/private/queue',
