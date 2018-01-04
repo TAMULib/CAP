@@ -4,6 +4,7 @@ import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 
 import java.util.Arrays;
 
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,14 +20,14 @@ public class IRProxyController {
 
 	@RequestMapping(value = "/container", method = RequestMethod.POST)
 	@PreAuthorize("hasRole('USER')")
-	public ApiResponse createContainer(IRService irService, @PayloadArgName("contextUri") String contextUri, @PayloadArgName("name") String name) throws Exception {
+	public ApiResponse createContainer(IRService irService, @Param("contextUri") String contextUri, @PayloadArgName("name") String name) throws Exception {
 		irService.createContainer(contextUri, name);
 		return new ApiResponse(SUCCESS);
 	}
 
-	@RequestMapping(value = "/containers", method = RequestMethod.POST)
+	@RequestMapping(value = "/containers", method = RequestMethod.GET)
 	@PreAuthorize("hasRole('USER')")
-	public ApiResponse getContainers(IRService irService, String contextUri) throws Exception {
+	public ApiResponse getContainers(IRService irService, @Param("contextUri") String contextUri) throws Exception {
 		return new ApiResponse(SUCCESS, irService.getContainers(contextUri));
 	}
 
@@ -43,9 +44,9 @@ public class IRProxyController {
 		return new ApiResponse(SUCCESS);
 	}
 
-	@RequestMapping(value = "/metadata", method = RequestMethod.POST)
+	@RequestMapping(value = "/metadata", method = RequestMethod.GET)
 	@PreAuthorize("hasRole('USER')")
-	public ApiResponse getProperties(IRService irService, String contextUri) throws Exception {
+	public ApiResponse getProperties(IRService irService, @Param("contextUri") String contextUri) throws Exception {
 		return new ApiResponse(SUCCESS, irService.getMetadata(contextUri));
 	}
 

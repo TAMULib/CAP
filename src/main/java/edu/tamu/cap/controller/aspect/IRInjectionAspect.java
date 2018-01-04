@@ -1,6 +1,7 @@
 package edu.tamu.cap.controller.aspect;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.nio.charset.StandardCharsets;
@@ -111,7 +112,7 @@ public class IRInjectionAspect {
 			int i = 0;
 			for (Parameter parameter : method.getParameters()) {
 				Optional<PayloadArgName> payloadArgName = Optional.ofNullable(parameter.getAnnotation(PayloadArgName.class));
-				if (!parameter.getType().equals(IRService.class)) {
+				if (!parameter.getType().equals(IRService.class) && injectArgument(parameter)) {
 					if (payloadNode.isPresent()) {
 						arguments[i] = getArgumentFromBody(parameter.getType(), payloadArgName, payloadNode.get());
 					} else {
@@ -121,6 +122,15 @@ public class IRInjectionAspect {
 				i++;
 			}
 		}
+	}
+
+	private boolean injectArgument(Parameter parameter) {
+		Annotation[] annotations = parameter.getAnnotations();
+		boolean inject = annotations.length == 0;
+		if (annotations.length == 1) {
+			inject = Optional.ofNullable(parameter.getAnnotation(PayloadArgName.class)).isPresent();
+		}
+		return inject;
 	}
 
 	private Method getMethodFromJoinPoint(ProceedingJoinPoint joinPoint) {

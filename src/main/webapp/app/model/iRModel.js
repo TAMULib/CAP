@@ -7,13 +7,16 @@ cap.model("IR", function(WsApi, IRRepo, api) {
     var properties = {};
 
     ir.createContainer = function(createForm) {
+      console.log(ir);
       var createPromise = WsApi.fetch(api.IRProxy.createContainer, {
         pathValues: {
           irid: ir.id,
           type: ir.type
         },
+        query: {
+          contextUri: ir.contextUri
+        },
         data: {
-          contextUri: ir.contextUri,
           name: createForm.name
         }
       });
@@ -28,6 +31,9 @@ cap.model("IR", function(WsApi, IRRepo, api) {
         pathValues: {
           irid: ir.id,
           type: ir.type
+        },
+        query: {
+          contextUri: ir.contextUri
         },
         data: containerUris
       });
@@ -46,7 +52,9 @@ cap.model("IR", function(WsApi, IRRepo, api) {
             irid: ir.id,
             type: ir.type
           },
-          data: ir.contextUri
+          query: {
+            contextUri: ir.contextUri
+          } 
         }).then(function(res) {
           angular.extend(containers, angular.fromJson(res.body).payload['ArrayList<String>']);
         });
@@ -62,7 +70,6 @@ cap.model("IR", function(WsApi, IRRepo, api) {
         });
         IRRepo.getProperties(ir).then(function(res) {
           angular.extend(properties, angular.fromJson(res.body).payload['HashMap']);
-          console.log(properties);
         });
       }
       return properties;

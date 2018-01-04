@@ -30,7 +30,9 @@ cap.repo("IRRepo", function($q, WsApi, api) {
         irid: ir.id,
         type: ir.type
       },
-      data: ir.contextUri
+      query: {
+        contextUri: ir.contextUri
+      } 
     });
 
     return propertiesPromise;
