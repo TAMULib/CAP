@@ -31,10 +31,10 @@ var apiMapping = {
       'controller': 'ir-proxy',
       'method': ':type/:irid/container'
     },
-    deleteContainers: {
+    deleteContainer: {
       'endpoint': '/private/queue',
       'controller': 'ir-proxy',
-      'method': ':type/:irid/containers/delete'
+      'method': ':type/:irid/container/delete'
     },
     getContainers: {
       'endpoint': '/private/queue',

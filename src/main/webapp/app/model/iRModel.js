@@ -7,8 +7,8 @@ cap.model("IR", function(WsApi, IRRepo, api) {
     var properties = {};
 
     ir.createContainer = function(createForm) {
-      console.log(ir);
       var createPromise = WsApi.fetch(api.IRProxy.createContainer, {
+        method: "POST",
         pathValues: {
           irid: ir.id,
           type: ir.type
@@ -27,20 +27,30 @@ cap.model("IR", function(WsApi, IRRepo, api) {
     };
 
     ir.removeContainers = function(containerUris) {
-      var removePromise = WsApi.fetch(api.IRProxy.deleteContainers, {
-        pathValues: {
-          irid: ir.id,
-          type: ir.type
-        },
-        query: {
-          contextUri: ir.contextUri
-        },
-        data: containerUris
+
+      var promises = [];
+
+      angular.forEach(containerUris, function(containerUri) {
+        var removePromise = WsApi.fetch(api.IRProxy.deleteContainer, {
+          method: "DELETE",
+          pathValues: {
+            irid: ir.id,
+            type: ir.type
+          },
+          query: {
+            contextUri: containerUri
+          }
+        });
+        promises.push(removePromise);
       });
-      removePromise.then(function() {
+
+      var allRemovePromses = $q.all(promises);
+
+      allRemovePromses.then(function() {
         ir.getContainers(true);
       });
-      return removePromise;
+
+      return allRemovePromses;
     };
 
     ir.getContainers = function(forceUpdate) {

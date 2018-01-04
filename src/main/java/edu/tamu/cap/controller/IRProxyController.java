@@ -31,16 +31,14 @@ public class IRProxyController {
 		return new ApiResponse(SUCCESS, irService.getContainers(contextUri));
 	}
 
-	@RequestMapping(value = "/containers/delete", method = RequestMethod.POST)
+	@RequestMapping(value = "/container/delete", method = RequestMethod.DELETE)
 	@PreAuthorize("hasRole('USER')")
-	public ApiResponse deleteContainers(IRService irService, String[] containerUris) throws Exception {
-		Arrays.asList(containerUris).forEach(uri -> {
-			try {
-				irService.deleteContainer(uri);
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		});
+	public ApiResponse deleteContainer(IRService irService, String containerUri) throws Exception {
+		try {
+			irService.deleteContainer(containerUri);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		return new ApiResponse(SUCCESS);
 	}
 
