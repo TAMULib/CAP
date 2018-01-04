@@ -1,4 +1,4 @@
-cap.repo("IRRepo", function($q, WsApi, api) {
+cap.repo("IRRepo", function($q, WsApi, api, HttpMethodVerbs) {
   var iRRepo = this;
 
   iRRepo.scaffold = {
@@ -26,6 +26,7 @@ cap.repo("IRRepo", function($q, WsApi, api) {
     }
 
     var propertiesPromise = WsApi.fetch(api.IRProxy.getProperties, {
+      method: HttpMethodVerbs.GET,
       pathValues: {
         irid: ir.id,
         type: ir.type

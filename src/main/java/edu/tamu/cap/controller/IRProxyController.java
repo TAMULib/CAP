@@ -31,9 +31,9 @@ public class IRProxyController {
 		return new ApiResponse(SUCCESS, irService.getContainers(contextUri));
 	}
 
-	@RequestMapping(value = "/container/delete", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/container", method = RequestMethod.DELETE)
 	@PreAuthorize("hasRole('USER')")
-	public ApiResponse deleteContainer(IRService irService, String containerUri) throws Exception {
+	public ApiResponse deleteContainer(IRService irService, @Param("containerUri") String containerUri) throws Exception {
 		try {
 			irService.deleteContainer(containerUri);
 		} catch (Exception e) {

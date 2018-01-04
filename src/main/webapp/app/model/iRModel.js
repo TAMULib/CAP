@@ -1,4 +1,4 @@
-cap.model("IR", function(WsApi, IRRepo, api) {
+cap.model("IR", function($q, WsApi, IRRepo, api, HttpMethodVerbs) {
   return function IR() {
 
     var ir = this;
@@ -8,7 +8,7 @@ cap.model("IR", function(WsApi, IRRepo, api) {
 
     ir.createContainer = function(createForm) {
       var createPromise = WsApi.fetch(api.IRProxy.createContainer, {
-        method: "POST",
+        method: HttpMethodVerbs.POST,
         pathValues: {
           irid: ir.id,
           type: ir.type
@@ -32,13 +32,13 @@ cap.model("IR", function(WsApi, IRRepo, api) {
 
       angular.forEach(containerUris, function(containerUri) {
         var removePromise = WsApi.fetch(api.IRProxy.deleteContainer, {
-          method: "DELETE",
+          method: HttpMethodVerbs.DELETE,
           pathValues: {
             irid: ir.id,
             type: ir.type
           },
           query: {
-            contextUri: containerUri
+            containerUri: containerUri
           }
         });
         promises.push(removePromise);
@@ -58,6 +58,7 @@ cap.model("IR", function(WsApi, IRRepo, api) {
         contextLoadedByUri.containers = ir.contextUri;
         containers.length = 0;
         WsApi.fetch(api.IRProxy.getContainers, {
+          method: HttpMethodVerbs.GET,
           pathValues: {
             irid: ir.id,
             type: ir.type
