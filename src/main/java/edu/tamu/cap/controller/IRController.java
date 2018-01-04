@@ -5,9 +5,6 @@ import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 
-import java.util.List;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import edu.tamu.cap.controller.aspect.InjectIRService;
 import edu.tamu.cap.model.IR;
 import edu.tamu.cap.model.repo.IRRepo;
-import edu.tamu.cap.service.ir.IRService;
 import edu.tamu.cap.service.ir.IRType;
 import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
@@ -35,9 +28,6 @@ public class IRController {
 
 	@Autowired
 	private IRRepo irRepo;
-	
-	@Autowired
-    private ObjectMapper objectMapper;
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -76,74 +66,6 @@ public class IRController {
 	@PreAuthorize("hasRole('USER')")
 	public ApiResponse testIRPing() {
 		return new ApiResponse(SUCCESS, IRType.getValues());
-	}
-
-	@RequestMapping(value = "/container", method = RequestMethod.POST)
-	@PreAuthorize("hasRole('USER')")
-	@InjectIRService
-	public ApiResponse createContainer(IRService irService, @RequestBody Map<String, Object> data) throws Exception {
-		
-		IR ir = objectMapper.convertValue(data.get("ir"), IR.class);
-		String name = objectMapper.convertValue(data.get("name"), String.class);
-		irService.createContainer(ir, name);
-		return new ApiResponse(SUCCESS);
-	}
-
-	@RequestMapping(value = "/containers", method = RequestMethod.POST)
-	@PreAuthorize("hasRole('USER')")
-	@InjectIRService
-	public ApiResponse getContainers(@RequestBody @WeaverValidatedModel IR ir, IRService irService) throws Exception {
-		return new ApiResponse(SUCCESS, irService.getContainers(ir));
-	}
-	
-	@RequestMapping(value = "/containers/delete", method = RequestMethod.POST)
-	@PreAuthorize("hasRole('USER')")
-	@InjectIRService
-	public ApiResponse deleteContainers(IRService irService, @RequestBody Map<String, Object> data) throws Exception {
-				
-		IR ir = objectMapper.convertValue(data.get("ir"), IR.class);
-        
-		List<String> containerUris = (List<String>) data.get("containerUris");
-		
-        containerUris.forEach(uri->{
-			try {
-				irService.deleteContainer(ir, uri);
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		});
-		return new ApiResponse(SUCCESS);
-	}
-	
-	@RequestMapping(value = "/metadata", method = RequestMethod.POST)
-	@PreAuthorize("hasRole('USER')")
-	@InjectIRService
-	public ApiResponse getProperties(@RequestBody @WeaverValidatedModel IR ir, IRService irService) throws Exception {
-		return new ApiResponse(SUCCESS, irService.getMetadata(ir));
-	}
-
-	@RequestMapping(value = "/test/ping", method = RequestMethod.POST)
-	@PreAuthorize("hasRole('USER')")
-	@InjectIRService
-	public ApiResponse testIRPing(@RequestBody @WeaverValidatedModel IR ir, IRService irService) throws Exception {
-		irService.verifyPing(ir);
-		return new ApiResponse(SUCCESS, "Ping was successful!");
-	}
-
-	@RequestMapping(value = "/test/auth", method = RequestMethod.POST)
-	@PreAuthorize("hasRole('USER')")
-	@InjectIRService
-	public ApiResponse testIRAuth(@RequestBody @WeaverValidatedModel IR ir, IRService irService) throws Exception {
-		irService.verifyAuth(ir);
-		return new ApiResponse(SUCCESS);
-	}
-
-	@RequestMapping(value = "/test/content", method = RequestMethod.POST)
-	@PreAuthorize("hasRole('USER')")
-	@InjectIRService
-	public ApiResponse testIRContent(@RequestBody @WeaverValidatedModel IR ir, IRService irService) throws Exception {
-		irService.verifyRoot(ir);
-		return new ApiResponse(SUCCESS);
 	}
 
 	@RequestMapping("/{id}")

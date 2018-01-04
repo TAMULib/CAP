@@ -23,6 +23,45 @@ var apiMapping = {
         'method': 'delete'
     }
   },
+  IRProxy: {
+    channel: '/channel/ir-proxy',
+    validations: false,
+    createContainer: {
+      'endpoint': '/private/queue',
+      'controller': 'ir-proxy',
+      'method': ':type/:irid/container'
+    },
+    deleteContainers: {
+      'endpoint': '/private/queue',
+      'controller': 'ir-proxy',
+      'method': ':type/:irid/container'
+    },
+    getContainers: {
+      'endpoint': '/private/queue',
+      'controller': 'ir-proxy',
+      'method': ':type/:irid/containers'
+    },
+    getProperties: {
+      'endpoint': '/private/queue',
+      'controller': 'ir-proxy',
+      'method': ':type/:irid/metadata'
+    },
+    testPing: {
+        'endpoint': '/private/queue',
+        'controller': 'ir-proxy',
+        'method': ':type/test/ping'
+    },
+    testAuth: {
+        'endpoint': '/private/queue',
+        'controller': 'ir-proxy',
+        'method': ':type/test/auth'
+    },
+    testContent: {
+        'endpoint': '/private/queue',
+        'controller': 'ir-proxy',
+        'method': ':type/test/content'
+    }
+  },
   IR: {
     channel: '/channel/ir',
     validations: true,
@@ -50,41 +89,6 @@ var apiMapping = {
       'endpoint': '/private/queue',
       'controller': 'ir',
       'method': 'types'
-    },
-    createContainer: {
-      'endpoint': '/private/queue',
-      'controller': 'ir',
-      'method': 'container'
-    },
-    deleteContainers: {
-      'endpoint': '/private/queue',
-      'controller': 'ir',
-      'method': 'containers/delete'
-    },
-    getContainers: {
-      'endpoint': '/private/queue',
-      'controller': 'ir',
-      'method': 'containers'
-    },
-    getProperties: {
-      'endpoint': '/private/queue',
-      'controller': 'ir',
-      'method': 'metadata'
-    },
-    testPing: {
-        'endpoint': '/private/queue',
-        'controller': 'ir',
-        'method': 'test/ping'
-    },
-    testAuth: {
-        'endpoint': '/private/queue',
-        'controller': 'ir',
-        'method': 'test/auth'
-    },
-    testContent: {
-        'endpoint': '/private/queue',
-        'controller': 'ir',
-        'method': 'test/content'
     }
   }
 };

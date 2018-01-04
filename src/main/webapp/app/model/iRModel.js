@@ -1,4 +1,4 @@
-cap.model("IR", function(WsApi, IRRepo) {
+cap.model("IR", function(WsApi, IRRepo, api) {
   return function IR() {
 
     var ir = this;
@@ -7,9 +7,12 @@ cap.model("IR", function(WsApi, IRRepo) {
     var properties = {};
 
     ir.createContainer = function(createForm) {
-      var createPromise = WsApi.fetch(ir.getMapping().createContainer, {
+      var createPromise = WsApi.fetch(api.IRProxy.createContainer, {
+        pathValues: {
+          irid: ir.id,
+          type: ir.type
+        },
         data: {
-          ir: ir,
           name: createForm.name
         }
       });
@@ -20,9 +23,12 @@ cap.model("IR", function(WsApi, IRRepo) {
     };
 
     ir.removeContainers = function(containerUris) {
-      var removePromise = WsApi.fetch(ir.getMapping().deleteContainers, {
+      var removePromise = WsApi.fetch(api.IRProxy.deleteContainers, {
+        pathValues: {
+          irid: ir.id,
+          type: ir.type
+        },
         data: {
-          ir: ir,
           containerUris: containerUris
         }
       });
@@ -36,8 +42,11 @@ cap.model("IR", function(WsApi, IRRepo) {
       if((ir.contextUri !== contextLoadedByUri.containers)||forceUpdate) {
         contextLoadedByUri.containers = ir.contextUri;
         containers.length = 0;
-        WsApi.fetch(ir.getMapping().getContainers, {
-          data: ir
+        WsApi.fetch(api.IRProxy.getContainers, {
+          pathValues: {
+            irid: ir.id,
+            type: ir.type
+          }
         }).then(function(res) {
           angular.extend(containers, angular.fromJson(res.body).payload['ArrayList<String>']);
         });
