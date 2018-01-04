@@ -75,9 +75,9 @@ public class FedoraService implements IRService {
 
 		FcrepoClient client = buildClient();
 
-		PostBuilder post = new PostBuilder(new URI(ir.getContextUri()), client);
+		PostBuilder post = new PostBuilder(new URI(contextUri), client);
 
-		if (name != null) {
+		if (!name.isEmpty()) {
 			Model model = ModelFactory.createDefaultModel();
 			model.createResource("").addProperty(DC.title, name);
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -104,7 +104,7 @@ public class FedoraService implements IRService {
 	@Override
 	public List<String> getContainers(String contextUri) throws Exception {
 		FcrepoClient client = buildClient();
-		FcrepoResponse response = new GetBuilder(new URI(ir.getContextUri()), client).accept("application/rdf+xml").perform();
+		FcrepoResponse response = new GetBuilder(new URI(contextUri), client).accept("application/rdf+xml").perform();
 		Model model = createRdfModel(response.getBody());
 
 		// model.write(System.out, "JSON-LD");
@@ -114,9 +114,9 @@ public class FedoraService implements IRService {
 	}
 
 	@Override
-	public Map<String, List<String>> getMetadata() throws Exception {
+	public Map<String, List<String>> getMetadata(String contextUri) throws Exception {
 		FcrepoClient client = buildClient();
-		FcrepoResponse response = new GetBuilder(new URI(ir.getContextUri()), client).accept("application/rdf+xml").perform();
+		FcrepoResponse response = new GetBuilder(new URI(contextUri), client).accept("application/rdf+xml").perform();
 		Model model = createRdfModel(response.getBody());
 
 		Map<String, List<String>> metadata = new HashMap<String, List<String>>();
@@ -142,14 +142,14 @@ public class FedoraService implements IRService {
 		return model;
 	}
 
-//	private List<String> getStatements(Model model) {
-//		List<String> statements = new ArrayList<String>();
-//		model.listStatements().forEachRemaining(statement -> {
-//			statements.add(statement.asTriple().getObject().toString());
-//		});
-//
-//		return statements;
-//	}
+	// private List<String> getStatements(Model model) {
+	// List<String> statements = new ArrayList<String>();
+	// model.listStatements().forEachRemaining(statement -> {
+	// statements.add(statement.asTriple().getObject().toString());
+	// });
+	//
+	// return statements;
+	// }
 
 	private List<String> getObjects(Model model, String predicate) {
 		List<String> children = new ArrayList<String>();

@@ -34,7 +34,7 @@ var apiMapping = {
     deleteContainers: {
       'endpoint': '/private/queue',
       'controller': 'ir-proxy',
-      'method': ':type/:irid/container'
+      'method': ':type/:irid/containers/delete'
     },
     getContainers: {
       'endpoint': '/private/queue',
@@ -48,18 +48,18 @@ var apiMapping = {
     },
     testPing: {
         'endpoint': '/private/queue',
-        'controller': 'ir-proxy',
-        'method': ':type/test/ping'
+        'controller': 'ir-test',
+        'method': ':type/ping'
     },
     testAuth: {
         'endpoint': '/private/queue',
-        'controller': 'ir-proxy',
-        'method': ':type/test/auth'
+        'controller': 'ir-test',
+        'method': ':type/auth'
     },
     testContent: {
         'endpoint': '/private/queue',
-        'controller': 'ir-proxy',
-        'method': ':type/test/content'
+        'controller': 'ir-test',
+        'method': ':type/content'
     }
   },
   IR: {

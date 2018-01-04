@@ -29,7 +29,8 @@ cap.repo("IRRepo", function($q, WsApi, api) {
       pathValues: {
         irid: ir.id,
         type: ir.type
-      }
+      },
+      data: ir.contextUri
     });
 
     return propertiesPromise;

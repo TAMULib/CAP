@@ -16,7 +16,7 @@ public interface IRService {
 	public void deleteContainer(String targetUri) throws Exception;
 	public List<String> getContainers(String contextUri) throws Exception;
 	
-	public Map<String, List<String>> getMetadata() throws Exception;
+	public Map<String, List<String>> getMetadata(String contextUri) throws Exception;
 	
 	public void setIr(IR ir);
 

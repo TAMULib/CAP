@@ -13,6 +13,7 @@ cap.model("IR", function(WsApi, IRRepo, api) {
           type: ir.type
         },
         data: {
+          contextUri: ir.contextUri,
           name: createForm.name
         }
       });
@@ -28,9 +29,7 @@ cap.model("IR", function(WsApi, IRRepo, api) {
           irid: ir.id,
           type: ir.type
         },
-        data: {
-          containerUris: containerUris
-        }
+        data: containerUris
       });
       removePromise.then(function() {
         ir.getContainers(true);
@@ -46,7 +45,8 @@ cap.model("IR", function(WsApi, IRRepo, api) {
           pathValues: {
             irid: ir.id,
             type: ir.type
-          }
+          },
+          data: ir.contextUri
         }).then(function(res) {
           angular.extend(containers, angular.fromJson(res.body).payload['ArrayList<String>']);
         });

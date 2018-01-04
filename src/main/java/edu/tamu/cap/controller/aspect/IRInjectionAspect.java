@@ -3,12 +3,16 @@ package edu.tamu.cap.controller.aspect;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.IOUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -23,6 +27,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import edu.tamu.cap.controller.aspect.annotation.PayloadArgName;
 import edu.tamu.cap.exceptions.IRInjectionException;
 import edu.tamu.cap.model.IR;
 import edu.tamu.cap.model.repo.IRRepo;
@@ -46,100 +51,40 @@ public class IRInjectionAspect {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	@Around("execution(* edu.tamu.cap.controller.IRProxyController.*(..))")
-	public ApiResponse runWithInjectedIRService(ProceedingJoinPoint joinPoint) throws Throwable {
+	private static final List<String> REQUES_METHODS_WITH_PAYLOAD = Arrays.asList(new String[] { "POST", "PUT", "PATCH" });
+
+	@Around("execution(* edu.tamu.cap.controller.TestIRSettingsController.*(..))")
+	public ApiResponse testIRSettingsInjection(ProceedingJoinPoint joinPoint) throws Throwable {
 		logger.debug("Injecting an IR Service at joinPoint: {}", joinPoint.toString());
-		injectRequestPayload(joinPoint);
+		// inject appropriate IR service
 		injectIrService(joinPoint);
 		return (ApiResponse) joinPoint.proceed(joinPoint.getArgs());
 	}
 
-	private void injectRequestPayload(ProceedingJoinPoint joinPoint) throws JsonProcessingException, IOException, IRInjectionException {
-		JsonNode payloadNode = objectMapper.readTree(request.getInputStream());
+	@Around("execution(* edu.tamu.cap.controller.IRProxyController.*(..))")
+	public ApiResponse irProxyInjection(ProceedingJoinPoint joinPoint) throws Throwable {
+		logger.debug("Injecting an IR Service at joinPoint: {}", joinPoint.toString());
+		// inject applicable endpoint arguments from request body
+		injectRequestPayload(joinPoint);
+		// inject appropriate IR service
+		injectIrService(joinPoint);
+		return (ApiResponse) joinPoint.proceed(joinPoint.getArgs());
+	}
+
+	private void injectIrService(ProceedingJoinPoint joinPoint) throws IRInjectionException, JsonProcessingException, IOException {
 		Object[] arguments = joinPoint.getArgs();
-		MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
-		Method method = methodSignature.getMethod();
-		int i = 0;
-		for (Parameter parameter : method.getParameters()) {
-			if (!parameter.getType().equals(IRService.class)) {
-				arguments[i] = getArgumentFromBody(parameter.getType(), payloadNode);
-			}
-			i++;
-		}
-	}
-
-	private Object getArgumentFromBody(Class<?> argClass, JsonNode payloadNode) throws IRInjectionException {
-		Optional<Object> argValue = mapObjectFromNode(argClass, payloadNode);
-		if (!argValue.isPresent()) {
-			Iterator<JsonNode> iterator = payloadNode.elements();
-			while (iterator.hasNext()) {
-				argValue = mapObjectFromNode(argClass, iterator.next());
-			}
-		}
-		if (!argValue.isPresent()) {
-			throw new IRInjectionException("No " + argClass.getSimpleName() + " argument!");
-		}
-		return argValue.get();
-	}
-
-	private Optional<Object> mapObjectFromNode(Class<?> argClass, JsonNode node) {
-		Optional<Object> argValue = Optional.empty();
-		try {
-			if (!argClass.equals(IRService.class)) {
-				if (argClass.equals(String.class)) {
-					argValue = Optional.of(node.asText());
-				} else {
-					argValue = Optional.of(objectMapper.convertValue(node, argClass));
-				}
-			}
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		return argValue;
-	}
-
-	private IR getIRArgument(ProceedingJoinPoint joinPoint) throws IRInjectionException {
-		Optional<IR> ir = Optional.empty();
-		Object[] arguments = joinPoint.getArgs();
-		MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
-		Method method = methodSignature.getMethod();
-		int i = 0;
-		for (Parameter parameter : method.getParameters()) {
-			if (parameter.getType().equals(IR.class)) {
-				ir = Optional.of((IR) arguments[i]);
-			}
-			i++;
-		}
-		if (!ir.isPresent()) {
-			throw new IRInjectionException("No IR model type available!");
-		}
-		return ir.get();
-	}
-
-	private void injectIrService(ProceedingJoinPoint joinPoint) throws IRInjectionException {
-		Object[] arguments = joinPoint.getArgs();
-		MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
-		Method method = methodSignature.getMethod();
+		Method method = getMethodFromJoinPoint(joinPoint);
 		Optional<IRService> irService = Optional.empty();
 		int i = 0;
 		for (Parameter parameter : method.getParameters()) {
 			if (parameter.getType().equals(IRService.class)) {
 				IRService irs = SpringContext.bean(getIRType().getGloss());
-
-				Long irid = null;
-
-				try {
-					irid = getIRId();
-				} catch (NumberFormatException e) {
-					e.printStackTrace();
-				}
-
-				if (irid != null) {
-					irs.setIr(irRepo.read(irid));
+				Optional<Long> irid = getIRId();
+				if (irid.isPresent()) {
+					irs.setIr(irRepo.read(irid.get()));
 				} else {
-					irs.setIr(getIRArgument(joinPoint));
+					irs.setIr(getIRFromRequest());
 				}
-
 				irService = Optional.of(irs);
 				break;
 			}
@@ -152,16 +97,102 @@ public class IRInjectionAspect {
 		}
 	}
 
+	private IR getIRFromRequest() throws JsonProcessingException, IOException, IRInjectionException {
+		JsonNode payloadNode = objectMapper.readTree(request.getInputStream());
+		return (IR) getArgumentFromBody(IR.class, Optional.empty(), payloadNode);
+	}
+
+	private void injectRequestPayload(ProceedingJoinPoint joinPoint) throws IOException, IRInjectionException {
+		if (REQUES_METHODS_WITH_PAYLOAD.contains(request.getMethod())) {
+			String payload = IOUtils.toString(request.getInputStream(), StandardCharsets.UTF_8.name());
+			Optional<JsonNode> payloadNode = getPayloadNode(payload);
+			Object[] arguments = joinPoint.getArgs();
+			Method method = getMethodFromJoinPoint(joinPoint);
+			int i = 0;
+			for (Parameter parameter : method.getParameters()) {
+				Optional<PayloadArgName> payloadArgName = Optional.ofNullable(parameter.getAnnotation(PayloadArgName.class));
+				if (!parameter.getType().equals(IRService.class)) {
+					if (payloadNode.isPresent()) {
+						arguments[i] = getArgumentFromBody(parameter.getType(), payloadArgName, payloadNode.get());
+					} else {
+						arguments[i] = objectMapper.convertValue(payload, parameter.getType());
+					}
+				}
+				i++;
+			}
+		}
+	}
+
+	private Method getMethodFromJoinPoint(ProceedingJoinPoint joinPoint) {
+		MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+		return methodSignature.getMethod();
+	}
+
+	private Optional<JsonNode> getPayloadNode(String payload) {
+		Optional<JsonNode> payloadNode = Optional.empty();
+		try {
+			payloadNode = Optional.of(objectMapper.readTree(payload));
+		} catch (IOException e) {
+			logger.debug("Payload is a string literal!");
+		}
+		return payloadNode;
+	}
+
+	private Object getArgumentFromBody(Class<?> argClass, Optional<PayloadArgName> payloadArgName, JsonNode payloadNode) throws IRInjectionException {
+		Optional<Object> argValue = mapObjectFromNode(argClass, payloadNode);
+		if (!argValue.isPresent()) {
+			Iterator<Map.Entry<String, JsonNode>> iterator = payloadNode.fields();
+			while (iterator.hasNext()) {
+				Map.Entry<String, JsonNode> jsonNodeEntry = iterator.next();
+				if (!payloadArgName.isPresent() || (payloadArgName.isPresent() && jsonNodeEntry.getKey().equals(payloadArgName.get().value()))) {
+					argValue = mapObjectFromNode(argClass, jsonNodeEntry.getValue());
+				}
+			}
+		}
+		if (!argValue.isPresent()) {
+			if (argClass.equals(String.class)) {
+				argValue = Optional.of("");
+			} else {
+				throw new IRInjectionException("No " + argClass.getSimpleName() + " argument!");
+			}
+		}
+		return argValue.get();
+	}
+
+	private Optional<Object> mapObjectFromNode(Class<?> argClass, JsonNode node) {
+		Optional<Object> argValue = Optional.empty();
+		try {
+			if (!argClass.equals(IRService.class)) {
+				if (argClass.equals(String.class)) {
+					if (node.isTextual()) {
+						argValue = Optional.of(node.asText());
+					}
+				} else {
+					argValue = Optional.of(objectMapper.convertValue(node, argClass));
+				}
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return argValue;
+	}
+
 	private IRType getIRType() {
 		return IRType.valueOf(getPathVariable("type"));
 	}
 
-	private Long getIRId() {
-		return Long.parseLong(getPathVariable("irid"));
+	private Optional<Long> getIRId() {
+		Optional<Long> id = Optional.empty();
+		try {
+			id = Optional.of(Long.parseLong(getPathVariable("irid")));
+		} catch (NumberFormatException e) {
+			logger.debug("Id not provided in path!");
+		}
+		return id;
 	}
 
+	@SuppressWarnings("unchecked")
 	private String getPathVariable(String pathKey) {
-		@SuppressWarnings("unchecked")
 		Map<String, String> pathVariables = (Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
 		return pathVariables.get(pathKey);
 	}
