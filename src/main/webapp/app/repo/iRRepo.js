@@ -1,4 +1,4 @@
-cap.repo("IRRepo", function($q, WsApi) {
+cap.repo("IRRepo", function($q, WsApi, api, HttpMethodVerbs) {
   var iRRepo = this;
 
   iRRepo.scaffold = {
@@ -17,6 +17,28 @@ cap.repo("IRRepo", function($q, WsApi) {
     return typesPromise;
   };
 
+  iRRepo.getProperties = function(ir, uri) {
+
+    if(uri) {
+      ir = angular.extend(angular.copy(ir, {
+        contextUri: uri
+      }));
+    }
+
+    var propertiesPromise = WsApi.fetch(api.IRProxy.getProperties, {
+      method: HttpMethodVerbs.GET,
+      pathValues: {
+        irid: ir.id,
+        type: ir.type
+      },
+      query: {
+        contextUri: ir.contextUri
+      } 
+    });
+
+    return propertiesPromise;
+  };
+
   iRRepo.findByName = function(name) {
     var irs = iRRepo.getAll();
     for(var i in irs) {
@@ -28,19 +50,28 @@ cap.repo("IRRepo", function($q, WsApi) {
   };
 
   iRRepo.testPing = function(ir) {
-    return WsApi.fetch(iRRepo.mapping.testPing, {
+    return WsApi.fetch(api.IRProxy.testPing, {
+      pathValues: {
+        type: ir.type
+      },
       data: ir
     });
   };
 
   iRRepo.testAuth = function(ir) {
-    return WsApi.fetch(iRRepo.mapping.testAuth, {
+    return WsApi.fetch(api.IRProxy.testAuth, {
+      pathValues: {
+        type: ir.type
+      },
       data: ir
     });
   };
 
   iRRepo.testContent = function(ir) {
-    return WsApi.fetch(iRRepo.mapping.testContent, {
+    return WsApi.fetch(api.IRProxy.testContent, {
+      pathValues: {
+        type: ir.type
+      },
       data: ir
     });
   };

@@ -23,7 +23,7 @@ cap.directive("breadcrumbs", function(IRRepo, $q, $route, BreadcrumbService) {
     
     var sendToStorage = function() {
         StorageService.set("breadcrumbs",angular.toJson(breadcrumbs));
-    }
+    };
 
     if(!storedCrumbs) {
         storedCrumbs = [];

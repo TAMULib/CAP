@@ -1,12 +1,12 @@
 <div class="panel panel-default">
     <div class="panel-heading clearfix">
-        <div class="btn-group pull-right" ng-show="(contentExpanded||!list.length)&&!removeListElements" uib-dropdown keyboard-nav>
+        <div class="btn-group pull-right" ng-show="(contentExpanded||!getListLength())&&!removeListElements" uib-dropdown keyboard-nav>
             <button type="button" class="btn btn-success btn-xs" uib-dropdown-toggle>
                 Actions <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
                 <li role="menuitem" ng-click="addAction()"><a href="#">Add {{type}}</a></li>
-                <li ng-show="list.length" role="menuitem" ng-click="removeListElements=true;"><a href="#">Remove {{type}}</a></li>
+                <li ng-show="getListLength()" role="menuitem" ng-click="removeListElements=true;"><a href="#">Remove {{type}}</a></li>
                 <li ng-show="contentExpanded" class="divider"></li>
                 <li ng-show="contentExpanded" ng-click="manuallyCollapse()"><a href="#">Collapse</a></li>
             </ul>
@@ -17,13 +17,22 @@
                 <span class="glyphicon glyphicon-remove"></span>
             </button>
         </div>
-        <button class="btn btn-default btn-xs pull-right" ng-click="manuallyExpande()" ng-hide="contentExpanded||!list.length">Expand</button>
-        <h3 class="panel-title">{{title}} <span class="badge">{{list.length || 0}}</span></h3>
+        <button class="btn btn-default btn-xs pull-right" ng-click="manuallyExpande()" ng-hide="contentExpanded||!getListLength()">Expand</button>
+        <h3 class="panel-title">{{title}} <span class="badge">{{getListLength() || 0}}</span></h3>
     </div>
-    <ol class="list-group" ng-show="contentExpanded">
-        <li class="list-group-item" ng-repeat="le in list track by $index" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le)!==-1}">
+
+    <ol ng-if="isArray" class="list-group" ng-show="contentExpanded">
+        <li  class="list-group-item" ng-repeat="le in list track by $index" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le)!==-1}">
                 <a href="" ng-click="listElementAction({'le':le})">{{le}}</a>
             <input ng-show="removeListElements" type="checkbox" class="pull-right" ng-checked="selectedListElements.indexOf(le)!==-1" ng-click="selectedListElements.indexOf(le)===-1?selectedListElements.push(le):selectedListElements.splice(selectedListElements.indexOf(le),1)">
         </li>
     </ol>
+
+    <div ng-if="!isArray" class="panel-body" ng-show="contentExpanded">
+        <dl class="dl-horizontal" ng-repeat="(label, values) in list track by $index">
+            <dt>{{label | metadataLabel }}</dt>
+            <dd ng-repeat="v in values track by $index">{{v.split("^^")[0]}}</dd>
+        </dl>
+    </div>
+
 </div>

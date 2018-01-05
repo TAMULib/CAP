@@ -1,21 +1,37 @@
 package edu.tamu.cap.controller.aspect;
 
+import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.io.IOUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerMapping;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import edu.tamu.cap.controller.aspect.annotation.PayloadArgName;
 import edu.tamu.cap.exceptions.IRInjectionException;
 import edu.tamu.cap.model.IR;
+import edu.tamu.cap.model.repo.IRRepo;
 import edu.tamu.cap.service.ir.IRService;
 import edu.tamu.cap.service.ir.IRType;
 import edu.tamu.weaver.context.SpringContext;
@@ -24,58 +40,53 @@ import edu.tamu.weaver.response.ApiResponse;
 @Aspect
 @Component
 public class IRInjectionAspect {
-	
+
 	@Autowired
-    private ObjectMapper objectMapper;
+	private IRRepo irRepo;
 
-	@Around("@annotation(edu.tamu.cap.controller.aspect.InjectIRService)")
-	public ApiResponse runWithInjectedIRService(ProceedingJoinPoint joinPoint) throws Throwable {
-		System.out.println("\n\n***Injecting an IR Service at joinPoint "+ joinPoint.toLongString());
-		Optional<IR> ir = getIRArgument(joinPoint.getArgs());
-		if (ir.isPresent() && ir.get().getType() != null) {
-			return (ApiResponse) joinPoint.proceed(injectIrService(joinPoint, ir.get().getType()));
-		} else {
-			throw new IRInjectionException("No IR model type available!");
-		}
+	@Autowired
+	private ObjectMapper objectMapper;
 
+	@Autowired
+	private HttpServletRequest request;
+
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	private static final List<String> REQUES_METHODS_WITH_PAYLOAD = Arrays.asList(new String[] { "POST", "PUT", "PATCH" });
+
+	@Around("execution(* edu.tamu.cap.controller.TestIRSettingsController.*(..))")
+	public ApiResponse testIRSettingsInjection(ProceedingJoinPoint joinPoint) throws Throwable {
+		logger.debug("Injecting an IR Service at joinPoint: {}", joinPoint.toString());
+		// inject appropriate IR service
+		injectIrService(joinPoint);
+		return (ApiResponse) joinPoint.proceed(joinPoint.getArgs());
 	}
 
-	private Optional<IR> getIRArgument(Object[] arguments) {
-		
-		System.out.println("\n\n Aspect \n\n");
-		
-		Optional<IR> ir = Optional.empty();
-		for (Object argument : arguments) {
-			if (argument.getClass().isAssignableFrom(IR.class)) {
-				ir = Optional.of((IR) argument);
-				System.out.println("IR to inject will be the entirety of request body: " + ir.toString());
-				
-			} else  if(argument instanceof Map) {
-				Map<String, Object> data = (Map<String, Object>) argument;
-				
-				
-				System.out.println("data.keySet() "+data.keySet().size());
-				data.keySet().forEach(key->{
-					System.out.println("key.toString() "+key.toString());
-				});
-				
-				ir = Optional.of((IR) objectMapper.convertValue(data.get("ir"), IR.class));
-				System.out.println("IR to inject will be just the ir node on request body: " + ir.toString());
-			}
-		}
-		System.out.println("Based on injection logic, will return ir: " + ir );
-		return ir;
+	@Around("execution(* edu.tamu.cap.controller.IRProxyController.*(..))")
+	public ApiResponse irProxyInjection(ProceedingJoinPoint joinPoint) throws Throwable {
+		logger.debug("Injecting an IR Service at joinPoint: {}", joinPoint.toString());
+		// inject applicable endpoint arguments from request body
+		injectRequestPayload(joinPoint);
+		// inject appropriate IR service
+		injectIrService(joinPoint);
+		return (ApiResponse) joinPoint.proceed(joinPoint.getArgs());
 	}
 
-	private Object[] injectIrService(ProceedingJoinPoint joinPoint, IRType irType) throws IRInjectionException {
+	private void injectIrService(ProceedingJoinPoint joinPoint) throws IRInjectionException, JsonProcessingException, IOException {
 		Object[] arguments = joinPoint.getArgs();
-		MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
-		Method method = methodSignature.getMethod();
+		Method method = getMethodFromJoinPoint(joinPoint);
 		Optional<IRService> irService = Optional.empty();
 		int i = 0;
 		for (Parameter parameter : method.getParameters()) {
 			if (parameter.getType().equals(IRService.class)) {
-				irService = Optional.of(SpringContext.bean(irType.getGloss()));
+				IRService irs = SpringContext.bean(getIRType().getGloss());
+				Optional<Long> irid = getIRId();
+				if (irid.isPresent()) {
+					irs.setIr(irRepo.read(irid.get()));
+				} else {
+					irs.setIr(getIRFromRequest());
+				}
+				irService = Optional.of(irs);
 				break;
 			}
 			i++;
@@ -85,7 +96,115 @@ public class IRInjectionAspect {
 		} else {
 			throw new IRInjectionException("No IR service argument!");
 		}
-		return arguments;
+	}
+
+	private IR getIRFromRequest() throws JsonProcessingException, IOException, IRInjectionException {
+		JsonNode payloadNode = objectMapper.readTree(request.getInputStream());
+		return (IR) getArgumentFromBody(IR.class, Optional.empty(), payloadNode);
+	}
+
+	private void injectRequestPayload(ProceedingJoinPoint joinPoint) throws IOException, IRInjectionException {
+		if (REQUES_METHODS_WITH_PAYLOAD.contains(request.getMethod())) {
+			String payload = IOUtils.toString(request.getInputStream(), StandardCharsets.UTF_8.name());
+			Optional<JsonNode> payloadNode = getPayloadNode(payload);
+			Object[] arguments = joinPoint.getArgs();
+			Method method = getMethodFromJoinPoint(joinPoint);
+			int i = 0;
+			for (Parameter parameter : method.getParameters()) {
+				Optional<PayloadArgName> payloadArgName = Optional.ofNullable(parameter.getAnnotation(PayloadArgName.class));
+				if (!parameter.getType().equals(IRService.class) && injectArgument(parameter)) {
+					if (payloadNode.isPresent()) {
+						arguments[i] = getArgumentFromBody(parameter.getType(), payloadArgName, payloadNode.get());
+					} else {
+						arguments[i] = objectMapper.convertValue(payload, parameter.getType());
+					}
+				}
+				i++;
+			}
+		}
+	}
+
+	private boolean injectArgument(Parameter parameter) {
+		Annotation[] annotations = parameter.getAnnotations();
+		boolean inject = annotations.length == 0;
+		if (annotations.length == 1) {
+			inject = Optional.ofNullable(parameter.getAnnotation(PayloadArgName.class)).isPresent();
+		}
+		return inject;
+	}
+
+	private Method getMethodFromJoinPoint(ProceedingJoinPoint joinPoint) {
+		MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+		return methodSignature.getMethod();
+	}
+
+	private Optional<JsonNode> getPayloadNode(String payload) {
+		Optional<JsonNode> payloadNode = Optional.empty();
+		try {
+			payloadNode = Optional.of(objectMapper.readTree(payload));
+		} catch (IOException e) {
+			logger.debug("Payload is a string literal!");
+		}
+		return payloadNode;
+	}
+
+	private Object getArgumentFromBody(Class<?> argClass, Optional<PayloadArgName> payloadArgName, JsonNode payloadNode) throws IRInjectionException {
+		Optional<Object> argValue = mapObjectFromNode(argClass, payloadNode);
+		if (!argValue.isPresent()) {
+			Iterator<Map.Entry<String, JsonNode>> iterator = payloadNode.fields();
+			while (iterator.hasNext()) {
+				Map.Entry<String, JsonNode> jsonNodeEntry = iterator.next();
+				if (!payloadArgName.isPresent() || (payloadArgName.isPresent() && jsonNodeEntry.getKey().equals(payloadArgName.get().value()))) {
+					argValue = mapObjectFromNode(argClass, jsonNodeEntry.getValue());
+				}
+			}
+		}
+		if (!argValue.isPresent()) {
+			if (argClass.equals(String.class)) {
+				argValue = Optional.of("");
+			} else {
+				throw new IRInjectionException("No " + argClass.getSimpleName() + " argument!");
+			}
+		}
+		return argValue.get();
+	}
+
+	private Optional<Object> mapObjectFromNode(Class<?> argClass, JsonNode node) {
+		Optional<Object> argValue = Optional.empty();
+		try {
+			if (!argClass.equals(IRService.class)) {
+				if (argClass.equals(String.class)) {
+					if (node.isTextual()) {
+						argValue = Optional.of(node.asText());
+					}
+				} else {
+					argValue = Optional.of(objectMapper.convertValue(node, argClass));
+				}
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return argValue;
+	}
+
+	private IRType getIRType() {
+		return IRType.valueOf(getPathVariable("type"));
+	}
+
+	private Optional<Long> getIRId() {
+		Optional<Long> id = Optional.empty();
+		try {
+			id = Optional.of(Long.parseLong(getPathVariable("irid")));
+		} catch (NumberFormatException e) {
+			logger.debug("Id not provided in path!");
+		}
+		return id;
+	}
+
+	@SuppressWarnings("unchecked")
+	private String getPathVariable(String pathKey) {
+		Map<String, String> pathVariables = (Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+		return pathVariables.get(pathKey);
 	}
 
 }
