@@ -2,6 +2,7 @@ cap.directive("irsection", function(IrSectionService) {
     return {
         templateUrl: "views/directives/irSection.html",
         restrict: "E",
+        transclude: true,
         scope: {
           ir: "=",
           title: "=",
@@ -11,7 +12,11 @@ cap.directive("irsection", function(IrSectionService) {
           addAction: "&",
           removeAction: "&"
         },
-        link: function($scope, attr, elem) {
+        link: function($scope, elem, attr, ctrl, transclude) {
+
+          transclude($scope, function(clone, $scope) {
+            elem.find('.transclude').replaceWith(clone);
+          });
             
           $scope.selectedListElements = [];
 

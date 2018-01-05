@@ -21,18 +21,6 @@
         <h3 class="panel-title">{{title}} <span class="badge">{{getListLength() || 0}}</span></h3>
     </div>
 
-    <ol ng-if="isArray" class="list-group" ng-show="contentExpanded">
-        <li  class="list-group-item" ng-repeat="le in list track by $index" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le)!==-1}">
-                <a href="" ng-click="listElementAction({'le':le})">{{le}}</a>
-            <input ng-show="removeListElements" type="checkbox" class="pull-right" ng-checked="selectedListElements.indexOf(le)!==-1" ng-click="selectedListElements.indexOf(le)===-1?selectedListElements.push(le):selectedListElements.splice(selectedListElements.indexOf(le),1)">
-        </li>
-    </ol>
-
-    <div ng-if="!isArray" class="panel-body" ng-show="contentExpanded">
-        <dl class="dl-horizontal" ng-repeat="(label, values) in list track by $index">
-            <dt>{{label | metadataLabel }}</dt>
-            <dd ng-repeat="v in values track by $index">{{v.split("^^")[0]}}</dd>
-        </dl>
-    </div>
+    <div class="transclude" ng-transclude></div>
 
 </div>

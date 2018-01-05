@@ -17,9 +17,7 @@ cap.model("IRContext", function(WsApi, HttpMethodVerbs) {
       });
 
       loadPromise.then(function(res) {
-
         angular.extend(irContext, angular.fromJson(res.body).payload.IRContext);
-        console.log(res.body, irContext);
       });
 
       return loadPromise;
