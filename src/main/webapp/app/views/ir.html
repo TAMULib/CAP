@@ -13,7 +13,7 @@
   add-action="ir.createProperty()"
   remove-action="ir.removeProperties(items)">
   <div class="panel-body" ng-show="contentExpanded">
-      <dl class="dl-horizontal" ng-repeat="(label, values) in list track by $index">
+      <dl class="dl-horizontal" ng-repeat="(label, values) in list | mapProperties">
         <dt>{{label | metadataLabel }}</dt>
         <dd ng-repeat="v in values track by $index">{{v.split("^^")[0]}}</dd>
       </dl>
