@@ -12,7 +12,7 @@ cap.config(function ($locationProvider, $routeProvider) {
       }).
       when('/ir/:irName', {
           templateUrl: 'views/ir.html',
-          controller: 'IrController'
+          controller: 'IrContextController'
       }).
   
       // Error Routes

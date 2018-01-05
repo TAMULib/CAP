@@ -8,7 +8,7 @@
   ir="ir"
   title="'Properties'"
   type="'property'"
-  list="ir.getProperties()"
+  list="context.properties"
   list-element-action="loadContainer(le)"
   add-action="ir.createProperty()"
   remove-action="ir.removeProperties(items)">
@@ -18,7 +18,7 @@
   ir="ir"
   title="'Children'"
   type="'child'"
-  list="ir.getContainers()"
+  list="context.children"
   list-element-action="loadContainer(le)"
   add-action="openModal('#createContainer')"
   remove-action="ir.removeContainers(items)">
@@ -35,7 +35,7 @@
   ir="ir"
   title="'Resources'"
   type="'resource'"
-  list="ir.getResources()"
+  list="context.resources"
   list-element-action="loadContainer(le)"
   add-action="ir.createResource()"
   remove-action="ir.removeResources(items)">

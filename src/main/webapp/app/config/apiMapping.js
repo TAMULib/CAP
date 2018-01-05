@@ -23,33 +23,21 @@ var apiMapping = {
         'method': 'delete'
     }
   },
-  IRProxy: {
-    channel: '/channel/ir-proxy',
+  IRContext: {
+    channel: '/channel/ir-context',
     validations: false,
-    createContainer: {
+    lazy: true,
+    load: {
       'endpoint': '/private/queue',
-      'controller': 'ir-proxy',
-      'method': ':type/:irid/container'
-    },
-    deleteContainer: {
-      'endpoint': '/private/queue',
-      'controller': 'ir-proxy',
-      'method': ':type/:irid/container'
-    },
-    getContainers: {
-      'endpoint': '/private/queue',
-      'controller': 'ir-proxy',
-      'method': ':type/:irid/containers'
-    },
-    getProperties: {
-      'endpoint': '/private/queue',
-      'controller': 'ir-proxy',
-      'method': ':type/:irid/metadata'
-    },
+      'controller': 'ir-context',
+      'method': ':type/:irid'
+    }
+  },
+  TestIRSettings: {
     testPing: {
-        'endpoint': '/private/queue',
-        'controller': 'ir-test',
-        'method': ':type/ping'
+      'endpoint': '/private/queue',
+      'controller': 'ir-test',
+      'method': ':type/ping'
     },
     testAuth: {
         'endpoint': '/private/queue',

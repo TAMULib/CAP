@@ -40,6 +40,7 @@ cap.directive("irtests", function(IRRepo, $q) {
         angular.forEach($scope.irTests, function (test) {
           chain = chain.then(function() {
             return test.execute($scope.ir).then(function(res) {
+              console.log(res);
               test.status = angular.fromJson(res.body).meta.status;
             });
           });

@@ -13,7 +13,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.Transient;
 
 import edu.tamu.cap.model.validation.IRValidator;
 import edu.tamu.cap.service.ir.IRType;
@@ -38,9 +37,6 @@ public class IR extends ValidatingBaseEntity {
 	@Column
 	private String rootUri;
 
-	@Transient
-	private String contextUri;
-
 	@Column
 	private String username;
 
@@ -56,7 +52,6 @@ public class IR extends ValidatingBaseEntity {
 		setType(type);
 		setName(name);
 		setRootUri(rootUri);
-		setContextUri(rootUri);
 	}
 
 	public IRType getType() {
@@ -81,14 +76,6 @@ public class IR extends ValidatingBaseEntity {
 
 	public void setRootUri(String rootUri) {
 		this.rootUri = rootUri;
-	}
-
-	public String getContextUri() {
-		return this.contextUri == null ? this.rootUri : this.contextUri;
-	}
-
-	public void setContextUri(String contextUri) {
-		this.contextUri = contextUri;
 	}
 
 	public String getUsername() {

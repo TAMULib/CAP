@@ -10,6 +10,7 @@ cap.filter("breadcrumb", function(IRRepo) {
     
         if(!titles[input]) {
             titles[input] = true;
+            if(IRRepo.getProperties)
             IRRepo.getProperties(ir, input).then(function(res) {
                 var payload = angular.fromJson(res.body).payload;
                 var metadataMap = payload ? payload.HashMap  : {};

@@ -7,15 +7,15 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.NodeIterator;
-import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.ResIterator;
+import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.vocabulary.DC;
@@ -31,15 +31,21 @@ import org.springframework.stereotype.Service;
 
 import edu.tamu.cap.exceptions.IRVerificationException;
 import edu.tamu.cap.model.IR;
+import edu.tamu.cap.model.response.IRContext;
+import edu.tamu.cap.model.response.Triple;
 
 @Service("Fedora")
-public class FedoraService implements IRService {
+public class FedoraService implements IRService<Model> {
+
+	private final static String LDP_CONTAINS_PREDICATE = "http://www.w3.org/ns/ldp#contains";
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private IR ir;
 
-	private final static String LDP_CONTAINS_PREDICATE = "http://www.w3.org/ns/ldp#contains";
+	public FedoraService() {
+
+	}
 
 	@Override
 	public void verifyPing() throws FcrepoOperationFailedException, URISyntaxException, IRVerificationException {
@@ -71,12 +77,9 @@ public class FedoraService implements IRService {
 	}
 
 	@Override
-	public URI createContainer(String contextUri, String name) throws FcrepoOperationFailedException, URISyntaxException {
-
+	public IRContext createContainer(String contextUri, String name) throws FcrepoOperationFailedException, URISyntaxException {
 		FcrepoClient client = buildClient();
-
 		PostBuilder post = new PostBuilder(new URI(contextUri), client);
-
 		if (!name.isEmpty()) {
 			Model model = ModelFactory.createDefaultModel();
 			model.createResource("").addProperty(DC.title, name);
@@ -84,11 +87,25 @@ public class FedoraService implements IRService {
 			RDFDataMgr.write(out, model, Lang.TURTLE);
 			post.body(new ByteArrayInputStream(out.toByteArray()), "text/turtle");
 		}
-
 		FcrepoResponse response = post.perform();
 		URI location = response.getLocation();
 		logger.debug("Container creation status and location: {}, {}", response.getStatusCode(), location);
-		return location;
+		Model model = createRdfModel(response.getBody());
+		return buildIRContext(model);
+	}
+
+	@Override
+	public IRContext getContainer(String contextUri) throws Exception {
+		FcrepoClient client = buildClient();
+		FcrepoResponse response = new GetBuilder(new URI(contextUri), client).accept("application/rdf+xml").perform();
+		Model model = createRdfModel(response.getBody());
+		return buildIRContext(model);
+	}
+
+	@Override
+	public IRContext updateContainer(String contextUri) throws Exception {
+		// TODO: do this
+		return null;
 	}
 
 	@Override
@@ -97,76 +114,101 @@ public class FedoraService implements IRService {
 		logger.debug("Resource deletion status: {}", response.getStatusCode());
 	}
 
-	private FcrepoClient buildClient() {
-		return (ir.getUsername() == null || ir.getPassword() == null) ? FcrepoClient.client().build() : FcrepoClient.client().credentials(ir.getUsername(), ir.getPassword()).build();
+	@Override
+	public void setIr(IR ir) {
+		this.ir = ir;
 	}
 
 	@Override
-	public List<String> getContainers(String contextUri) throws Exception {
-		FcrepoClient client = buildClient();
-		FcrepoResponse response = new GetBuilder(new URI(contextUri), client).accept("application/rdf+xml").perform();
-		Model model = createRdfModel(response.getBody());
-
-		// model.write(System.out, "JSON-LD");
-		// model.write(System.out, "RDF/XML");
-
-		return getObjects(model, LDP_CONTAINS_PREDICATE);
+	public IRContext buildIRContext(Model model) {
+		IRContext irContext = new IRContext();
+		irContext.setName(getName(model));
+		irContext.setProperties(getProperties(model));
+		irContext.setMetadata(getMetadata(model));
+		irContext.setContainers(getContainers(model));
+		irContext.setResources(getResources(model));
+		return irContext;
 	}
 
 	@Override
-	public Map<String, List<String>> getMetadata(String contextUri) throws Exception {
-		FcrepoClient client = buildClient();
-		FcrepoResponse response = new GetBuilder(new URI(contextUri), client).accept("application/rdf+xml").perform();
-		Model model = createRdfModel(response.getBody());
+	public String getName(Model model) {
+		Optional<String> name = Optional.empty();
+		ResIterator titleResources = model.listResourcesWithProperty(DC.title);
+		while (titleResources.hasNext()) {
+			name = Optional.of(titleResources.next().getProperty(DC.title).asTriple().getObject().toString());
+			break;
+		}
+		if (!name.isPresent()) {
+			StmtIterator statements = model.listStatements();
+			while (statements.hasNext()) {
+				String subject = statements.next().asTriple().getSubject().toString();
+				name = Optional.of(subject.equals(ir.getRootUri()) ? "Root" : subject);
+				break;
+			}
+		}
+		return name.get();
+	}
 
-		Map<String, List<String>> metadata = new HashMap<String, List<String>>();
-
-		model.listStatements().forEachRemaining(statement -> {
-
-			String label = statement.asTriple().getPredicate().toString();
-			String value = statement.asTriple().getObject().toString();
-
-			if (metadata.get(label) == null)
-				metadata.put(label, new ArrayList<String>());
-
-			metadata.get(label).add(value);
+	@Override
+	public List<Triple> getProperties(Model model) {
+		List<String> predicates = Arrays.asList(new String[] {
 
 		});
+		return getPropertiesByPredicate(model, predicates);
+	}
 
-		return metadata;
+	@Override
+	public List<Triple> getMetadata(Model model) {
+		List<String> predicates = Arrays.asList(new String[] { DC.contributor.getURI(), DC.coverage.getURI(), DC.creator.getURI(), DC.date.getURI(), DC.description.getURI(), DC.format.getURI(), DC.identifier.getURI(), DC.language.getURI(), DC.publisher.getURI(), DC.relation.getURI(), DC.rights.getURI(), DC.source.getURI(), DC.subject.getURI(), DC.title.getURI(), DC.type.getURI(), DC.contributor.getURI(), DC.contributor.getURI() });
+		return getPropertiesByPredicate(model, predicates);
+	}
+
+	@Override
+	public List<Triple> getContainers(Model model) {
+		List<String> predicates = Arrays.asList(new String[] { LDP_CONTAINS_PREDICATE });
+		return getPropertiesByPredicate(model, predicates);
+	}
+
+	@Override
+	public List<Triple> getResources(Model model) {
+		List<String> predicates = Arrays.asList(new String[] { LDP_CONTAINS_PREDICATE });
+		return getPropertiesByPredicate(model, predicates);
+	}
+
+	public List<Triple> getPropertiesByPredicate(Model model, List<String> filterPredicates) {
+		List<Triple> properties = new ArrayList<Triple>();
+		model.listStatements().forEachRemaining(statement -> {
+
+			String predicate = statement.asTriple().getPredicate().toString();
+
+			if (filterPredicates.isEmpty() || (!filterPredicates.isEmpty() && filterPredicates.contains(predicate))) {
+				String subject = statement.asTriple().getSubject().toString();
+				String object = statement.asTriple().getObject().toString();
+
+				Triple triple = new Triple();
+				triple.setSubject(subject);
+				triple.setPredicate(predicate);
+				triple.setObject(object);
+
+				properties.add(triple);
+			}
+
+		});
+		return properties;
+	}
+
+	private FcrepoClient buildClient() {
+		return (ir.getUsername() == null || ir.getPassword() == null) ? FcrepoClient.client().build() : FcrepoClient.client().credentials(ir.getUsername(), ir.getPassword()).build();
 	}
 
 	private Model createRdfModel(InputStream stream) {
 		Model model = ModelFactory.createDefaultModel();
 		model.read(stream, null, "RDF/XML");
+
+		// model.write(System.out, "JSON-LD");
+		// model.write(System.out, "RDF/XML");
+
 		return model;
-	}
-
-	// private List<String> getStatements(Model model) {
-	// List<String> statements = new ArrayList<String>();
-	// model.listStatements().forEachRemaining(statement -> {
-	// statements.add(statement.asTriple().getObject().toString());
-	// });
-	//
-	// return statements;
-	// }
-
-	private List<String> getObjects(Model model, String predicate) {
-		List<String> children = new ArrayList<String>();
-
-		NodeIterator nodeItr = model.listObjectsOfProperty(model.getProperty(predicate));
-		while (nodeItr.hasNext()) {
-			RDFNode node = nodeItr.next();
-			if (node.isResource()) {
-				children.add(node.asResource().getURI());
-			}
-		}
-		return children;
-	}
-
-	@Override
-	public void setIr(IR ir) {
-		this.ir = ir;
 	}
 
 }

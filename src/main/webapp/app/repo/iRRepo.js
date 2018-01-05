@@ -17,27 +17,27 @@ cap.repo("IRRepo", function($q, WsApi, api, HttpMethodVerbs) {
     return typesPromise;
   };
 
-  iRRepo.getProperties = function(ir, uri) {
+  // iRRepo.getProperties = function(ir, uri) {
 
-    if(uri) {
-      ir = angular.extend(angular.copy(ir, {
-        contextUri: uri
-      }));
-    }
+  //   if(uri) {
+  //     ir = angular.extend(angular.copy(ir, {
+  //       contextUri: uri
+  //     }));
+  //   }
 
-    var propertiesPromise = WsApi.fetch(api.IRProxy.getProperties, {
-      method: HttpMethodVerbs.GET,
-      pathValues: {
-        irid: ir.id,
-        type: ir.type
-      },
-      query: {
-        contextUri: ir.contextUri
-      } 
-    });
+  //   var propertiesPromise = WsApi.fetch(api.IRProxy.getProperties, {
+  //     method: HttpMethodVerbs.GET,
+  //     pathValues: {
+  //       irid: ir.id,
+  //       type: ir.type
+  //     },
+  //     query: {
+  //       contextUri: ir.contextUri
+  //     } 
+  //   });
 
-    return propertiesPromise;
-  };
+  //   return propertiesPromise;
+  // };
 
   iRRepo.findByName = function(name) {
     var irs = iRRepo.getAll();
@@ -50,7 +50,8 @@ cap.repo("IRRepo", function($q, WsApi, api, HttpMethodVerbs) {
   };
 
   iRRepo.testPing = function(ir) {
-    return WsApi.fetch(api.IRProxy.testPing, {
+    console.log(ir.type);
+    return WsApi.fetch(api.TestIRSettings.testPing, {
       pathValues: {
         type: ir.type
       },
@@ -59,7 +60,7 @@ cap.repo("IRRepo", function($q, WsApi, api, HttpMethodVerbs) {
   };
 
   iRRepo.testAuth = function(ir) {
-    return WsApi.fetch(api.IRProxy.testAuth, {
+    return WsApi.fetch(api.TestIRSettings.testAuth, {
       pathValues: {
         type: ir.type
       },
@@ -68,7 +69,7 @@ cap.repo("IRRepo", function($q, WsApi, api, HttpMethodVerbs) {
   };
 
   iRRepo.testContent = function(ir) {
-    return WsApi.fetch(api.IRProxy.testContent, {
+    return WsApi.fetch(api.TestIRSettings.testContent, {
       pathValues: {
         type: ir.type
       },

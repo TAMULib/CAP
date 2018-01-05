@@ -1,4 +1,4 @@
-cap.controller("IrController", function($controller, $scope, IRRepo, $routeParams, $location, $route) {
+cap.controller("IrContextController", function($controller, $scope, IRRepo, $routeParams, $location, $route, IRContext) {
   
   angular.extend(this, $controller('CoreAdminController', {
       $scope: $scope
@@ -9,6 +9,12 @@ cap.controller("IrController", function($controller, $scope, IRRepo, $routeParam
   IRRepo.ready().then(function() {
     
     $scope.ir = IRRepo.findByName(decodeURI($routeParams.irName));  
+    
+    $scope.context = new IRContext({
+      ir: IRRepo.findByName(decodeURI($routeParams.irName)),
+      contextURI: $routeParams.context
+    });
+    
     
     if(contextUri !== undefined) {
       $scope.ir.contextUri = decodeURI(contextUri);
