@@ -18,17 +18,17 @@ import edu.tamu.weaver.response.ApiResponse;
 @RequestMapping("ir-proxy/{type}/{irid}")
 public class IRProxyController {
 
+	@RequestMapping(value = "/containers", method = RequestMethod.GET)
+	@PreAuthorize("hasRole('USER')")
+	public ApiResponse getContainers(IRService irService, @Param("contextUri") String contextUri) throws Exception {
+		return new ApiResponse(SUCCESS, irService.getContainers(contextUri));
+	}
+	
 	@RequestMapping(value = "/container", method = RequestMethod.POST)
 	@PreAuthorize("hasRole('USER')")
 	public ApiResponse createContainer(IRService irService, @Param("contextUri") String contextUri, @PayloadArgName("name") String name) throws Exception {
 		irService.createContainer(contextUri, name);
 		return new ApiResponse(SUCCESS);
-	}
-
-	@RequestMapping(value = "/containers", method = RequestMethod.GET)
-	@PreAuthorize("hasRole('USER')")
-	public ApiResponse getContainers(IRService irService, @Param("contextUri") String contextUri) throws Exception {
-		return new ApiResponse(SUCCESS, irService.getContainers(contextUri));
 	}
 
 	@RequestMapping(value = "/container", method = RequestMethod.DELETE)
