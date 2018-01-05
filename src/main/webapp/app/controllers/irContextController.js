@@ -32,7 +32,10 @@ cap.controller("IrContextController", function($controller, $scope, IRRepo, $rou
   };
   
   $scope.loadContainer = function(containerUri) {
-    $scope.ir.contextUri = containerUri;
+    $scope.context = new IRContext({
+      ir: IRRepo.findByName(decodeURI($routeParams.irName)),
+      contextURI: containerUri
+    });
     $location.search("context", containerUri);
   };
 
