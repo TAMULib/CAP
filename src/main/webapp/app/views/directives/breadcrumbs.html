@@ -2,7 +2,8 @@
     <li ng-repeat="crumb in breadcrumbs track by $index">
         <a href="" ng-click="nav({containerUri:crumb})">{{crumb | breadcrumb:ir }}</a>
     </li>
+    <br ng-if="breadcrumbs.length">
     <li class="active">
-        {{ir.contextUri | breadcrumb:ir }}
+        <h3><span ng-if="breadcrumbs.length" class="glyphicon glyphicon-share-alt"></span> {{ir.contextUri | breadcrumb:ir }}</h3>
     </li>
 </ol>

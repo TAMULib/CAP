@@ -77,7 +77,7 @@ public class FedoraService implements IRService<Model> {
 	}
 
 	@Override
-	public IRContext createContainer(String contextUri, String name) throws FcrepoOperationFailedException, URISyntaxException {
+	public IRContext createContainer(String contextUri, String name) throws Exception {
 		FcrepoClient client = buildClient();
 		PostBuilder post = new PostBuilder(new URI(contextUri), client);
 		if (!name.isEmpty()) {
@@ -90,8 +90,7 @@ public class FedoraService implements IRService<Model> {
 		FcrepoResponse response = post.perform();
 		URI location = response.getLocation();
 		logger.debug("Container creation status and location: {}, {}", response.getStatusCode(), location);
-		Model model = createRdfModel(response.getBody());
-		return buildIRContext(model);
+		return getContainer(contextUri);
 	}
 
 	@Override
@@ -151,8 +150,15 @@ public class FedoraService implements IRService<Model> {
 
 	@Override
 	public List<Triple> getProperties(Model model) {
-		List<String> predicates = Arrays.asList(new String[] {
 
+		List<String> predicates = Arrays.asList(new String[] {
+				// "https://fedora.info/definitions/v4/2016/10/18/repository#hasParent",
+				// "https://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+				// "http://fedora.info/definitions/v4/repository#writable",
+				// "http://fedora.info/definitions/v4/repository#lastModified",
+				// "http://fedora.info/definitions/v4/repository#created",
+				// "http://fedora.info/definitions/v4/repository#lastModifiedBy",
+				// "http://fedora.info/definitions/v4/repository#createdBy"
 		});
 		return getPropertiesByPredicate(model, predicates);
 	}

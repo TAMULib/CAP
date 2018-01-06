@@ -19,12 +19,6 @@ import edu.tamu.weaver.response.ApiResponse;
 @RequestMapping("ir-context/{type}/{irid}")
 public class IRContextController {
 
-	@RequestMapping(method = POST)
-	@PreAuthorize("hasRole('USER')")
-	public ApiResponse create(IRService<?> irService, @Param("contextUri") String contextUri, @PayloadArgName("name") String name) throws Exception {
-		return new ApiResponse(SUCCESS, irService.createContainer(contextUri, name));
-	}
-
 	@RequestMapping(method = GET)
 	@PreAuthorize("hasRole('USER')")
 	public ApiResponse get(IRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
@@ -37,7 +31,13 @@ public class IRContextController {
 		return new ApiResponse(SUCCESS, irService.updateContainer(contextUri));
 	}
 
-	@RequestMapping(method = DELETE)
+	@RequestMapping(value = "/container", method = POST)
+	@PreAuthorize("hasRole('USER')")
+	public ApiResponse create(IRService<?> irService, @Param("contextUri") String contextUri, @PayloadArgName("name") String name) throws Exception {
+		return new ApiResponse(SUCCESS, irService.createContainer(contextUri, name));
+	}
+
+	@RequestMapping(value = "/container", method = DELETE)
 	@PreAuthorize("hasRole('USER')")
 	public ApiResponse delete(IRService<?> irService, @Param("containerUri") String containerUri) throws Exception {
 		try {

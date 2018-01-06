@@ -31,6 +31,11 @@ var apiMapping = {
       'endpoint': '/private/queue',
       'controller': 'ir-context',
       'method': ':type/:irid'
+    },
+    container: {
+      'endpoint': '/private/queue',
+      'controller': 'ir-context',
+      'method': ':type/:irid/container'
     }
   },
   TestIRSettings: {

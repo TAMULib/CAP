@@ -1,26 +1,27 @@
-<div class="panel panel-default">
-    <div class="panel-heading clearfix">
-        <div class="btn-group pull-right" ng-show="(contentExpanded||!getListLength())&&!removeListElements" uib-dropdown keyboard-nav>
-            <button type="button" class="btn btn-success btn-xs" uib-dropdown-toggle>
-                Actions <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
-                <li role="menuitem" ng-click="addAction()"><a href="#">Add {{type}}</a></li>
-                <li ng-show="getListLength()" role="menuitem" ng-click="removeListElements=true;"><a href="#">Remove {{type}}</a></li>
-                <li ng-show="contentExpanded" class="divider"></li>
-                <li ng-show="contentExpanded" ng-click="manuallyCollapse()"><a href="#">Collapse</a></li>
-            </ul>
-        </div>
-        <div ng-show="removeListElements" class="btn-group pull-right">
-            <button class="btn btn-danger btn-xs" ng-click="confirmDelete()">Confirm Delete</button>
-            <button class="btn btn-default btn-xs" ng-click="removeListElements=false;selectedListElements.length=0">
-                <span class="glyphicon glyphicon-remove"></span>
-            </button>
-        </div>
-        <button class="btn btn-default btn-xs pull-right" ng-click="manuallyExpande()" ng-hide="contentExpanded||!getListLength()">Expand</button>
-        <h3 class="panel-title">{{title}} <span class="badge">{{getListLength() || 0}}</span></h3>
-    </div>
 
-    <div class="transclude" ng-transclude></div>
+<div class="panel panel-default">
+  <div class="panel-heading clearfix">
+    <div class="btn-group pull-right" ng-show="(contentExpanded||!getListLength())&&!removeListElements" uib-dropdown keyboard-nav>
+      <button type="button" class="btn btn-success btn-xs" uib-dropdown-toggle>
+        Actions <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
+        <li role="menuitem" ng-click="addAction()"><a href="#">Add {{type}}</a></li>
+        <li ng-show="getListLength()" role="menuitem" ng-click="removeListElements=true;"><a href="#">Remove {{type}}</a></li>
+        <li ng-show="contentExpanded" class="divider"></li>
+        <li ng-show="contentExpanded" ng-click="manuallyCollapse()"><a href="#">Collapse</a></li>
+      </ul>
+    </div>
+    <div ng-show="removeListElements" class="btn-group pull-right">
+      <button class="btn btn-danger btn-xs" ng-click="confirmDelete()">Confirm Delete</button>
+      <button class="btn btn-default btn-xs" ng-click="removeListElements=false;selectedListElements.length=0">
+        <span class="glyphicon glyphicon-remove"></span>
+      </button>
+    </div>
+    <button class="btn btn-default btn-xs pull-right" ng-click="manuallyExpande()" ng-hide="contentExpanded||!getListLength()">Expand</button>
+    <h3 class="panel-title">{{title}} <span class="badge">{{getListLength() || 0}}</span></h3>
+  </div>
+
+  <div class="transclude" ng-transclude></div>
 
 </div>

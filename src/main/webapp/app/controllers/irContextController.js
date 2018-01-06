@@ -21,14 +21,14 @@ cap.controller("IrContextController", function($controller, $scope, IRRepo, $rou
       $location.search("context", $scope.ir.contextUri);     
     }
 
-  });
+    $scope.createContainer = function(form) {
+      $scope.context.createContainer(form)
+        .then(function() {
+          $scope.closeModal();
+        });
+    };
 
-  $scope.createContainer = function(form) {
-    $scope.ir.createContainer(form)
-      .then(function() {
-        $scope.closeModal();
-      });
-  };
+  });
   
   $scope.loadContainer = function(containerUri) {
     $scope.context = new IRContext({
