@@ -6,8 +6,12 @@
 
 <div class="container">
   
-  <h4>Properties</h4>
-  <div class="container">        
+  <h4>
+    Properties 
+    <span class="glyphicon glyphicon-plus clickable" ng-click="propertiesCollapsed=false" ng-show="propertiesCollapsed"></span>
+    <span class="glyphicon glyphicon-minus clickable" ng-click="propertiesCollapsed=true" ng-show="!propertiesCollapsed"></span>
+  </h4>
+  <div class="container" ng-show="!propertiesCollapsed">        
     <div class="row">
       <dl class="dl-horizontal" ng-repeat="triple in context.properties | unique:'predicate'">
         <dt><a href="{{triple.predicate}}">{{triple.predicate | metadataLabel }}</a></dt>
@@ -20,7 +24,7 @@
 
   <div class="row">
     <irsection
-      ir="ir"
+      context="context"
       title="'Metadata'"
       type="'metadatum'"
       list="context.metadata"
@@ -40,15 +44,15 @@
 
   <div class="row">    
     <irsection
-      ir="ir"
+      context="context"
       title="'Children'"
       type="'child'"
-      list="context.children"
+      list="context.containers"
       list-element-action="loadContainer(le)"
       add-action="openModal('#createContainer')"
       remove-action="context.removeContainers(items)">
       <ol class="list-group" ng-show="contentExpanded">
-        <li  class="list-group-item" ng-repeat="le in list track by $index" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le)!==-1}">
+        <li  class="list-group-item" ng-repeat="le in list | filterContainers:context" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le)!==-1}">
           <a href="" ng-click="listElementAction({'le':le.object})">{{le.object}}</a>
           <input ng-show="removeListElements" type="checkbox" class="pull-right" ng-checked="selectedListElements.indexOf(le)!==-1" ng-click="selectedListElements.indexOf(le)===-1?selectedListElements.push(le):selectedListElements.splice(selectedListElements.indexOf(le),1)">
         </li>
@@ -58,13 +62,19 @@
 
   <div class="row">    
     <irsection
-      ir="ir"
+      context="context"
       title="'Resources'"
       type="'resource'"
       list="context.resources"
       list-element-action="loadContainer(le)"
       add-action="ir.createResource()"
       remove-action="ir.removeResources(items)">
+      <ol class="list-group" ng-show="contentExpanded">
+        <li class="list-group-item" ng-repeat="le in list | filterResources:context" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le)!==-1}">
+          <a href="" ng-click="listElementAction({'le':le.object})">{{le.object}}</a>
+          <input ng-show="removeListElements" type="checkbox" class="pull-right" ng-checked="selectedListElements.indexOf(le)!==-1" ng-click="selectedListElements.indexOf(le)===-1?selectedListElements.push(le):selectedListElements.splice(selectedListElements.indexOf(le),1)">
+        </li>
+      </ol>
     </irsection>
   </div>
 </div>

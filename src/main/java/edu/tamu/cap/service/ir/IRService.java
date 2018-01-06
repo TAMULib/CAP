@@ -27,6 +27,8 @@ public interface IRService<M> {
 	public IRContext buildIRContext(M model);
 
 	public String getName(M model);
+	
+	public boolean isResource(M model);
 
 	public List<Triple> getProperties(M model);
 

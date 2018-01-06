@@ -9,6 +9,8 @@ public class IRContext implements Serializable {
 
 	private String name;
 
+	private boolean resource;
+
 	private List<Triple> properties;
 
 	private List<Triple> metadata;
@@ -19,7 +21,7 @@ public class IRContext implements Serializable {
 
 	public IRContext() {
 
-	};
+	}
 
 	public String getName() {
 		return name;
@@ -27,6 +29,14 @@ public class IRContext implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public boolean isResource() {
+		return resource;
+	}
+
+	public void setResource(boolean resource) {
+		this.resource = resource;
 	}
 
 	public List<Triple> getProperties() {
@@ -45,12 +55,12 @@ public class IRContext implements Serializable {
 		this.metadata = metadata;
 	}
 
-	public List<Triple> getChildren() {
+	public List<Triple> getContainers() {
 		return containers;
 	}
 
-	public void setContainers(List<Triple> children) {
-		this.containers = children;
+	public void setContainers(List<Triple> containers) {
+		this.containers = containers;
 	}
 
 	public List<Triple> getResources() {
@@ -59,6 +69,6 @@ public class IRContext implements Serializable {
 
 	public void setResources(List<Triple> resources) {
 		this.resources = resources;
-	}
+	};
 
 }

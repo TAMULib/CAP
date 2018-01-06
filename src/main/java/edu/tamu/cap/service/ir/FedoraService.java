@@ -122,6 +122,7 @@ public class FedoraService implements IRService<Model> {
 	public IRContext buildIRContext(Model model) {
 		IRContext irContext = new IRContext();
 		irContext.setName(getName(model));
+		irContext.setResource(isResource(model));
 		irContext.setProperties(getProperties(model));
 		irContext.setMetadata(getMetadata(model));
 		irContext.setContainers(getContainers(model));
@@ -146,6 +147,12 @@ public class FedoraService implements IRService<Model> {
 			}
 		}
 		return name.get();
+	}
+
+	@Override
+	public boolean isResource(Model model) {
+		List<String> predicates = Arrays.asList(new String[] { "http://fedora.info/definitions/v4/repository#Binary" });
+		return getPropertiesByPredicate(model, predicates).size() > 0;
 	}
 
 	@Override
@@ -212,7 +219,7 @@ public class FedoraService implements IRService<Model> {
 		model.read(stream, null, "RDF/XML");
 
 		// model.write(System.out, "JSON-LD");
-		// model.write(System.out, "RDF/XML");
+		model.write(System.out, "RDF/XML");
 
 		return model;
 	}

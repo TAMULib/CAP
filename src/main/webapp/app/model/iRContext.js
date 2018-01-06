@@ -21,12 +21,39 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
 
       loadPromise.then(function(res) {
         angular.extend(irContext, angular.fromJson(res.body).payload.IRContext);
-        console.log(irContext);
       });
 
       return loadPromise;
 
     });
+
+    var children = {};
+
+    irContext.getChildContext = function(triple) {
+
+      if(!children[triple.object]) {
+
+        children[triple.object] = {};
+
+        var loadPromise = WsApi.fetch(irContext.getMapping().load, {
+          method: HttpMethodVerbs.GET,
+          pathValues: {
+            type: irContext.ir.type,
+            irid: irContext.ir.id
+          },
+          query: {
+            contextUri: triple.object
+          }
+        });
+  
+        loadPromise.then(function(res) {
+          angular.extend(children[triple.object], angular.fromJson(res.body).payload.IRContext);
+        });
+
+      }
+      
+      return children[triple.object];
+    };
 
     irContext.createContainer = function(createForm) {
       var createPromise = WsApi.fetch(irContext.getMapping().container, {

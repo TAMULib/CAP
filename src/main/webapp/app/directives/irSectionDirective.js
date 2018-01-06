@@ -4,7 +4,7 @@ cap.directive("irsection", function(IrSectionService) {
         restrict: "E",
         transclude: true,
         scope: {
-          ir: "=",
+          context: "=",
           title: "=",
           type: "=",
           list: "=",
