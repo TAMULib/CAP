@@ -13,9 +13,29 @@
   add-action="ir.createProperty()"
   remove-action="ir.removeProperties(items)">
   <div class="panel-body" ng-show="contentExpanded">
-      <dl class="dl-horizontal" ng-repeat="(label, values) in list | mapProperties">
-        <dt>{{label | metadataLabel }}</dt>
-        <dd ng-repeat="v in values track by $index">{{v.split("^^")[0]}}</dd>
+      <dl class="dl-horizontal" ng-repeat="triple in list | unique:'predicate'">
+        <dt><a href="{{triple.predicate}}">{{triple.predicate | metadataLabel }}</a></dt>
+        <dd ng-repeat="t in list | filter:{predicate:triple.predicate}:true">
+            {{t.object.split("^^")[0]}}
+        </dd>
+      </dl>
+  </div>
+</irsection>
+
+<irsection
+  ir="ir"
+  title="'Metadata'"
+  type="'metadatum'"
+  list="context.metadata"
+  list-element-action="loadContainer(le)"
+  add-action="ir.createProperty()"
+  remove-action="ir.removeProperties(items)">
+  <div class="panel-body" ng-show="contentExpanded">
+      <dl class="dl-horizontal" ng-repeat="triple in list | unique:'predicate'">
+        <dt><a href="{{triple.predicate}}">{{triple.predicate | metadataLabel }}</a></dt>
+        <dd ng-repeat="t in list | filter:{predicate:triple.predicate}:true">
+            {{t.object.split("^^")[0]}}
+        </dd>
       </dl>
   </div>
 </irsection>

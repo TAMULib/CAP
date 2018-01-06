@@ -11,7 +11,6 @@ cap.config(function ($locationProvider, $routeProvider) {
         redirectTo: '/',        
       }).
       when('/ir/:irName', {
-        reloadOnSearch: false,
         templateUrl: 'views/ir.html',
         controller: 'IrContextController'
       }).

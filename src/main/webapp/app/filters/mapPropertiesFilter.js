@@ -4,6 +4,7 @@ cap.filter("mapProperties", function() {
   var output = {};
 
   return function(input) {
+    
     var prepOutput = {};
 
     angular.forEach(input, function(triple) {
@@ -13,9 +14,10 @@ cap.filter("mapProperties", function() {
 
     if(!angular.equals(prepOutput, output)) {
       angular.extend(output, prepOutput);
+      console.log(output);
     }
 
-    return output;
+    return input;
   };
 
 });

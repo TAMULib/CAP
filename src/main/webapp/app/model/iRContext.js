@@ -12,12 +12,13 @@ cap.model("IRContext", function(WsApi, HttpMethodVerbs) {
           irid: irContext.ir.id
         },
         query: {
-          contextUri: irContext.contextURI
+          contextUri: irContext.uri
         }
       });
 
       loadPromise.then(function(res) {
         angular.extend(irContext, angular.fromJson(res.body).payload.IRContext);
+        console.log(irContext);
       });
 
       return loadPromise;
