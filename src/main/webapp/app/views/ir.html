@@ -4,22 +4,20 @@
 
 <breadcrumbs nav="loadContainer(containerUri)" context="context"></breadcrumbs>
 
-<div class="container">
+<div class="container-fluid">
   
   <h4>
     Properties 
     <span class="glyphicon glyphicon-plus clickable" ng-click="propertiesCollapsed=false" ng-show="propertiesCollapsed"></span>
     <span class="glyphicon glyphicon-minus clickable" ng-click="propertiesCollapsed=true" ng-show="!propertiesCollapsed"></span>
   </h4>
-  <div class="container" ng-show="!propertiesCollapsed">        
-    <div class="row">
-      <dl class="dl-horizontal" ng-repeat="triple in context.properties | unique:'predicate'">
-        <dt><a href="{{triple.predicate}}">{{triple.predicate | metadataLabel }}</a></dt>
-        <dd ng-repeat="t in context.properties | filter:{predicate:triple.predicate}:true">
-            {{t.object.split("^^")[0]}}
-        </dd>
-      </dl>
-    </div>
+  <div class="row" ng-show="!propertiesCollapsed">
+    <dl class="dl-horizontal" ng-repeat="triple in context.properties | unique:'predicate'">
+      <dt><a href="{{triple.predicate}}">{{triple.predicate | metadataLabel }}</a></dt>
+      <dd ng-repeat="t in context.properties | filter:{predicate:triple.predicate}:true">
+          {{t.object.split("^^")[0]}}
+      </dd>
+    </dl>
   </div>
 
   <div class="row">
@@ -31,14 +29,13 @@
       list-element-action="loadContainer(le)"
       add-action="ir.createProperty()"
       remove-action="ir.removeProperties(items)">
-      <div class="panel-body" ng-show="contentExpanded">
-          <dl class="dl-horizontal" ng-repeat="triple in list | unique:'predicate'">
-            <dt><a href="{{triple.predicate}}">{{triple.predicate | metadataLabel }}</a></dt>
-            <dd ng-repeat="t in list | filter:{predicate:triple.predicate}:true">
-                {{t.object.split("^^")[0]}}
-            </dd>
-          </dl>
-      </div>
+      <br ng-show="contentExpanded">
+      <dl ng-show="contentExpanded" class="dl-horizontal" ng-repeat="triple in list | unique:'predicate'">
+        <dt><a href="{{triple.predicate}}">{{triple.predicate | metadataLabel }}</a></dt>
+        <dd ng-repeat="t in list | filter:{predicate:triple.predicate}:true">
+            {{t.object.split("^^")[0]}}
+        </dd>
+      </dl>
     </irsection>
   </div>
 
