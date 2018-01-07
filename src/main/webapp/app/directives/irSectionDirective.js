@@ -39,13 +39,14 @@ cap.directive("irsection", function(IrSectionService) {
 
           $scope.getListLength = function() {
             var l= 0;
-            if($scope.list) {
-              l = Array.isArray($scope.list) ? $scope.list.length : Object.keys($scope.list).length;
+            var list = $scope.filteredList||$scope.list;
+            if(list) {
+              l = Array.isArray(list) ? list.length : Object.keys(list).length;
             }
             return l;
           };
 
-          var un = $scope.$watchCollection("list", function() {
+          var un = $scope.$watchCollection("filteredList||list", function() {
             if($scope.getListLength()) {
               $scope.isArray = Array.isArray($scope.list);
               $scope.contentExpanded = IrSectionService.getManuallyCollapsed($scope.title) ? false : true;
