@@ -176,7 +176,7 @@ public class ArgumentResolver {
         try {
             id = Optional.of(Long.parseLong(getPathVariable("irid")));
         } catch (NumberFormatException e) {
-            logger.debug("Id not provided in path!");
+            logger.info("Id not provided in path!");
         }
         return id;
     }

@@ -192,15 +192,10 @@ public class FedoraService implements IRService<Model> {
     }
 
     private Triple craftTriple(Statement statement) {
-        String predicate = statement.asTriple().getPredicate().toString();
         String subject = statement.asTriple().getSubject().toString();
+        String predicate = statement.asTriple().getPredicate().toString();
         String object = statement.asTriple().getObject().toString();
-
-        Triple triple = new Triple();
-        triple.setSubject(subject);
-        triple.setPredicate(predicate);
-        triple.setObject(object);
-        return triple;
+        return Triple.of(subject, predicate, object);
     }
 
     private String getName(Model model) {
