@@ -89,13 +89,21 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
             type: irContext.ir.type
           },
           query: {
-            containerUri: containerTriple.object
+            containerUri: containerTriple.subject
           }
         });
 
         removePromise.then(function(res) {
           var children = irContext.children;
-          children.splice(children.indexOf(containerTriple), 1);
+          for(var i in children) {
+            if (children.hasOwnProperty(i)) {
+              var child = children[i];
+              if (child.triple.object === containerTriple.subject) {
+                children.splice(i, 1);
+                break;
+              }
+            }
+          }
         });
 
         promises.push(removePromise);

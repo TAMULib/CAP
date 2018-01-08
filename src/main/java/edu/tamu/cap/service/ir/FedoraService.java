@@ -39,12 +39,14 @@ public class FedoraService implements IRService<Model> {
 
     private final static String LDP_CONTAINS_PREDICATE = "http://www.w3.org/ns/ldp#contains";
 
-    private final static String FEDORA_BINARY_PREDICATE = "http://fedora.info/definitions/v4/repository#Binary";
+    private final static String W3_TYPE_PREDICATE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
+
+    private final static String FEDORA_BINRAY_PREDICATE = "http://fedora.info/definitions/v4/repository#Binary";
 
     // @formatter:off
     private final static List<String> FEDORA_PROPERTY_PREDICATES = Arrays.asList(new String[] {
-         "https://fedora.info/definitions/v4/2016/10/18/repository#hasParent",
-         "https://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+         "http://fedora.info/definitions/v4/2016/10/18/repository#hasParent",
+         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
          "http://fedora.info/definitions/v4/repository#writable",
          "http://fedora.info/definitions/v4/repository#lastModified",
          "http://fedora.info/definitions/v4/repository#created",
@@ -128,7 +130,7 @@ public class FedoraService implements IRService<Model> {
     @Override
     public IRContext getContainer(String contextUri) throws Exception {
         FcrepoClient client = buildClient();
-        FcrepoResponse response = new GetBuilder(new URI(contextUri), client).accept("application/rdf+xml").perform();
+        FcrepoResponse response = new GetBuilder(new URI(contextUri + "/fcr:metadata"), client).accept("application/rdf+xml").perform();
         Model model = createRdfModel(response.getBody());
         return buildIRContext(model);
     }
@@ -154,6 +156,7 @@ public class FedoraService implements IRService<Model> {
     public IRContext buildIRContext(Model model) {
         IRContext irContext = new IRContext();
         irContext.setName(getName(model));
+        irContext.setTriple(getTriple(model));
 
         model.listStatements().forEachRemaining(statement -> {
 
@@ -163,13 +166,15 @@ public class FedoraService implements IRService<Model> {
 
             switch (predicate) {
             case LDP_CONTAINS_PREDICATE:
-                irContext.addContainer(triple);
+                irContext.addChild(new IRContext(triple));
                 break;
-            case FEDORA_BINARY_PREDICATE:
-                irContext.addResource(triple);
+            case W3_TYPE_PREDICATE:
+                if (triple.getObject().equals(FEDORA_BINRAY_PREDICATE)) {
+                    irContext.setResource(true);
+                }
                 break;
             default:
-                // TODO: figure out why these aren't matching all default properties
+                // TODO: figure out how to get fedora properties
                 if (FEDORA_PROPERTY_PREDICATES.contains(predicate)) {
 
                 }
@@ -187,15 +192,10 @@ public class FedoraService implements IRService<Model> {
     }
 
     private Triple craftTriple(Statement statement) {
-        String predicate = statement.asTriple().getPredicate().toString();
         String subject = statement.asTriple().getSubject().toString();
+        String predicate = statement.asTriple().getPredicate().toString();
         String object = statement.asTriple().getObject().toString();
-
-        Triple triple = new Triple();
-        triple.setSubject(subject);
-        triple.setPredicate(predicate);
-        triple.setObject(object);
-        return triple;
+        return Triple.of(subject, predicate, object);
     }
 
     private String getName(Model model) {
@@ -216,6 +216,16 @@ public class FedoraService implements IRService<Model> {
         return name.get();
     }
 
+    private Triple getTriple(Model model) {
+        Optional<Triple> triple = Optional.empty();
+        StmtIterator statements = model.listStatements();
+        while (statements.hasNext()) {
+            triple = Optional.of(craftTriple(statements.next()));
+            break;
+        }
+        return triple.get();
+    }
+
     private FcrepoClient buildClient() {
         return (ir.getUsername() == null || ir.getPassword() == null) ? FcrepoClient.client().build() : FcrepoClient.client().credentials(ir.getUsername(), ir.getPassword()).build();
     }
@@ -225,7 +235,7 @@ public class FedoraService implements IRService<Model> {
         model.read(stream, null, "RDF/XML");
 
         // model.write(System.out, "JSON-LD");
-        model.write(System.out, "RDF/XML");
+        // model.write(System.out, "RDF/XML");
 
         return model;
     }
