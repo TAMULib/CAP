@@ -1,5 +1,5 @@
 var appConfig = {
-  
+
     'version': '1.0.x',
 
     'allowAnonymous': false,

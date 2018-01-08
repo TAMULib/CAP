@@ -10,21 +10,26 @@ public class IRContext implements Serializable {
 
     private String name;
 
+    private Triple triple;
+
     private boolean resource;
 
     private List<Triple> properties;
 
     private List<Triple> metadata;
 
-    private List<Triple> containers;
-
-    private List<Triple> resources;
+    private List<IRContext> children;
 
     public IRContext() {
+        super();
         properties = new ArrayList<Triple>();
         metadata = new ArrayList<Triple>();
-        containers = new ArrayList<Triple>();
-        resources = new ArrayList<Triple>();
+        children = new ArrayList<IRContext>();
+    }
+
+    public IRContext(Triple triple) {
+        this();
+        this.triple = triple;
     }
 
     public String getName() {
@@ -33,6 +38,14 @@ public class IRContext implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Triple getTriple() {
+        return triple;
+    }
+
+    public void setTriple(Triple triple) {
+        this.triple = triple;
     }
 
     public boolean isResource() {
@@ -67,28 +80,16 @@ public class IRContext implements Serializable {
         metadata.add(metadatum);
     }
 
-    public List<Triple> getContainers() {
-        return containers;
+    public List<IRContext> getChildren() {
+        return children;
     }
 
-    public void setContainers(List<Triple> containers) {
-        this.containers = containers;
+    public void setChildren(List<IRContext> children) {
+        this.children = children;
     }
 
-    public void addContainer(Triple container) {
-        containers.add(container);
-    }
-
-    public List<Triple> getResources() {
-        return resources;
-    }
-
-    public void setResources(List<Triple> resources) {
-        this.resources = resources;
-    }
-
-    public void addResource(Triple resource) {
-        resources.add(resource);
+    public void addChild(IRContext child) {
+        children.add(child);
     }
 
 }

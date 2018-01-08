@@ -17,28 +17,6 @@ cap.repo("IRRepo", function($q, WsApi, api, HttpMethodVerbs) {
     return typesPromise;
   };
 
-  // iRRepo.getProperties = function(ir, uri) {
-
-  //   if(uri) {
-  //     ir = angular.extend(angular.copy(ir, {
-  //       contextUri: uri
-  //     }));
-  //   }
-
-  //   var propertiesPromise = WsApi.fetch(api.IRProxy.getProperties, {
-  //     method: HttpMethodVerbs.GET,
-  //     pathValues: {
-  //       irid: ir.id,
-  //       type: ir.type
-  //     },
-  //     query: {
-  //       contextUri: ir.contextUri
-  //     } 
-  //   });
-
-  //   return propertiesPromise;
-  // };
-
   iRRepo.findByName = function(name) {
     var irs = iRRepo.getAll();
     for(var i in irs) {
@@ -50,7 +28,6 @@ cap.repo("IRRepo", function($q, WsApi, api, HttpMethodVerbs) {
   };
 
   iRRepo.testPing = function(ir) {
-    console.log(ir.type);
     return WsApi.fetch(api.TestIRSettings.testPing, {
       pathValues: {
         type: ir.type
@@ -76,6 +53,6 @@ cap.repo("IRRepo", function($q, WsApi, api, HttpMethodVerbs) {
       data: ir
     });
   };
-  
+
   return iRRepo;
 });
