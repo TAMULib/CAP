@@ -15,20 +15,25 @@ cap.directive("breadcrumbs", function($rootScope, $q, $route, $filter, IRRepo, B
             $scope.trimCrumb = function(crumb) {
                 return BreadcrumbService.trimCrumb(crumb);
             };
-            
-            $q.all([
-                IRRepo.ready(),
-                $scope.context.ready()
-            ]).then(function(){
-                currentContext = angular.copy($scope.context);
-                var un = $rootScope.$on("$routeChangeStart", function(e, next, current) {
-                    if(BreadcrumbService.isABreadcrumbView(next.$$route.templateUrl)) {
-                        BreadcrumbService.updateBreadcrumb(currentContext, next.params.context);
-                    } else {
-                        BreadcrumbService.clearBreadcrumbs();
-                    }   
+
+            var un = $scope.$watch("context", function() {
+                if($scope.context) {
                     un();
-                });
+                    $q.all([
+                        IRRepo.ready(),
+                        $scope.context.ready()
+                    ]).then(function(){
+                        currentContext = angular.copy($scope.context);
+                        var un = $rootScope.$on("$routeChangeStart", function(e, next, current) {
+                            if(BreadcrumbService.isABreadcrumbView(next.$$route.templateUrl)) {
+                                BreadcrumbService.updateBreadcrumb(currentContext, next.params.context);
+                            } else {
+                                BreadcrumbService.clearBreadcrumbs();
+                            }   
+                            un();
+                        });
+                    });
+                }
             });
 
         }
