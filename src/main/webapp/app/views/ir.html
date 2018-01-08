@@ -27,7 +27,7 @@
       type="'metadatum'"
       list="context.metadata"
       list-element-action="loadContainer(le)"
-      add-action="ir.createProperty()"
+      add-action="openModal('#addMetadata')"
       remove-action="ir.removeProperties(items)">
       <br ng-show="contentExpanded">
       <dl ng-show="contentExpanded" class="dl-horizontal" ng-repeat="triple in list | unique:'predicate'">
@@ -78,7 +78,14 @@
 
 <modal  
   modal-id="createContainer" 
-  modal-view="views/modals/irCreateContainer.html" 
+  modal-view="views/modals/createContainerModal.html" 
+  modal-header-class="modal-header-primary"
+  wvr-modal-backdrop="static">
+</modal>
+
+<modal  
+  modal-id="addMetadata" 
+  modal-view="views/modals/addMetadataModal.html" 
   modal-header-class="modal-header-primary"
   wvr-modal-backdrop="static">
 </modal>
