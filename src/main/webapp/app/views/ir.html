@@ -64,7 +64,7 @@
       type="'resource'"
       list="context.children"
       list-element-action="loadContainer(le)"
-      add-action="ir.createResource()"
+      add-action="openModal('#uploadResource')"
       remove-action="ir.removeResources(items)">
       <ol class="list-group" ng-show="contentExpanded">
         <li  class="list-group-item" ng-repeat="le in filteredList = (list | filterResources:context)" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le.triple)!==-1}">
@@ -79,6 +79,13 @@
 <modal
   modal-id="createContainer"
   modal-view="views/modals/createContainerModal.html"
+  modal-header-class="modal-header-primary"
+  wvr-modal-backdrop="static">
+</modal>
+
+<modal
+  modal-id="uploadResource"
+  modal-view="views/modals/uploadResource.html"
   modal-header-class="modal-header-primary"
   wvr-modal-backdrop="static">
 </modal>
