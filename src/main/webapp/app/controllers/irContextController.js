@@ -6,8 +6,12 @@ cap.controller("IrContextController", function($controller, $scope, IRRepo, $rou
 
   var contextUri = $routeParams.context;
 
+  $scope.irForm = {};
+
   IRRepo.ready().then(function() {
     
+    
+
     $scope.ir = IRRepo.findByName(decodeURI($routeParams.irName));  
     
     $scope.context = new IRContext({
@@ -27,6 +31,32 @@ cap.controller("IrContextController", function($controller, $scope, IRRepo, $rou
           $scope.closeModal();
         });
     };
+
+    $scope.resetCreateContainer = function() {
+      $scope.irForm.createContainer = {
+        name: ""
+      };
+      $scope.closeModal();
+    };
+
+    $scope.resetCreateContainer();
+
+    $scope.uploadResource = function(form) {
+      $scope.context.createResource(form)
+        .then(function() {
+          $scope.closeModal();
+        });
+    };
+
+    $scope.resetUploadResource = function() {
+      if($scope.irForm.uploadResource) {
+        delete $scope.irForm.uploadResource.file;
+      }
+      $scope.closeModal();
+    };
+
+    $scope.resetCreateContainer();
+    $scope.resetUploadResource();
 
   });
   
