@@ -1,4 +1,4 @@
-<form name="irForm.addMetadata" ng-submit="addMetadata(irForm.createContainer)" novalidate>
+<form class="add-metadata-model" name="irForm.addMetadata" ng-submit="addMetadata(irForm.createContainer)" novalidate>
     <div class="modal-header {{attr.modalHeaderClass}}">
       <button type="button" class="close modal-close" aria-label="Close" ng-click="cancelDeleteIr()"><span aria-hidden="true">&times;</span></button>
       <h4 class="modal-title">Add Metadata</h4>
@@ -19,7 +19,7 @@
                 </div>
             </div>
             <div class="col-xs-2">
-                <div class="form-group">
+                <div class="form-group add-field-group">
                     <button class="btn btn-success" ng-click="irForm.addMetadata.entries.push({label:'',value:''})"><span class="glyphicon glyphicon-plus"></span></button>
                 </div>
             </div>
