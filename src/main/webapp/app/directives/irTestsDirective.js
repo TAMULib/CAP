@@ -19,7 +19,7 @@ cap.directive("irtests", function(IRRepo, $q) {
             status: "PENDING"
           }
         ];
-    
+
         if($scope.ir.username && $scope.ir.password) {
           $scope.irTests.push({
             name: "Testing Authentication",
@@ -28,7 +28,7 @@ cap.directive("irtests", function(IRRepo, $q) {
             status: "PENDING"
           });
         }
-    
+
         $scope.irTests.push({
           name: "Retrieving Top Level Content",
           key: "testingContent",
@@ -40,7 +40,6 @@ cap.directive("irtests", function(IRRepo, $q) {
         angular.forEach($scope.irTests, function (test) {
           chain = chain.then(function() {
             return test.execute($scope.ir).then(function(res) {
-              console.log(res);
               test.status = angular.fromJson(res.body).meta.status;
             });
           });
@@ -56,7 +55,7 @@ cap.directive("irtests", function(IRRepo, $q) {
           }
           $scope.results.status = status;
         });
-        
+
       };
     }
   };

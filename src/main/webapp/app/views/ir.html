@@ -5,9 +5,9 @@
 <breadcrumbs nav="loadContainer(containerUri)" context="context"></breadcrumbs>
 
 <div class="container-fluid">
-  
+
   <h4>
-    Properties 
+    Properties
     <span class="glyphicon glyphicon-plus clickable" ng-click="propertiesCollapsed=false" ng-show="propertiesCollapsed"></span>
     <span class="glyphicon glyphicon-minus clickable" ng-click="propertiesCollapsed=true" ng-show="!propertiesCollapsed"></span>
   </h4>
@@ -39,53 +39,53 @@
     </irsection>
   </div>
 
-  <div class="row">    
+  <div class="row" ng-if="!context.resource">
     <irsection
       context="context"
       title="'Children'"
       type="'child'"
-      list="context.containers"
+      list="context.children"
       list-element-action="loadContainer(le)"
       add-action="openModal('#createContainer')"
       remove-action="context.removeContainers(items)">
       <ol class="list-group" ng-show="contentExpanded">
-        <li  class="list-group-item" ng-repeat="le in filteredList = (list | filterContainers:context)" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le)!==-1}">
-          <a href="" ng-click="listElementAction({'le':le.object})">{{le.object}}</a>
-          <input ng-show="removeListElements" type="checkbox" class="pull-right" ng-checked="selectedListElements.indexOf(le)!==-1" ng-click="selectedListElements.indexOf(le)===-1?selectedListElements.push(le):selectedListElements.splice(selectedListElements.indexOf(le),1)">
+        <li  class="list-group-item" ng-repeat="le in filteredList = (list | filterContainers:context)" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le.triple)!==-1}">
+          <a href="" ng-click="listElementAction({'le':le.triple.subject})">{{le.name || le.triple.object}}</a>
+          <input ng-show="removeListElements" type="checkbox" class="pull-right" ng-checked="selectedListElements.indexOf(le.triple)!==-1" ng-click="selectedListElements.indexOf(le.triple)===-1?selectedListElements.push(le.triple):selectedListElements.splice(selectedListElements.indexOf(le.triple),1)">
         </li>
       </ol>
     </irsection>
   </div>
 
-  <div class="row">    
+  <div class="row" ng-if="!context.resource">
     <irsection
       context="context"
       title="'Resources'"
       type="'resource'"
-      list="context.resources"
+      list="context.children"
       list-element-action="loadContainer(le)"
       add-action="ir.createResource()"
       remove-action="ir.removeResources(items)">
       <ol class="list-group" ng-show="contentExpanded">
-        <li class="list-group-item" ng-repeat="le in filteredList = (list | filterResources:context)" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le)!==-1}">
-          <a href="" ng-click="listElementAction({'le':le.object})">{{le.object}}</a>
-          <input ng-show="removeListElements" type="checkbox" class="pull-right" ng-checked="selectedListElements.indexOf(le)!==-1" ng-click="selectedListElements.indexOf(le)===-1?selectedListElements.push(le):selectedListElements.splice(selectedListElements.indexOf(le),1)">
+        <li  class="list-group-item" ng-repeat="le in filteredList = (list | filterResources:context)" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le.triple)!==-1}">
+          <a href="" ng-click="listElementAction({'le':le.triple.subject})">{{le.name || le.triple.object}}</a>
+          <input ng-show="removeListElements" type="checkbox" class="pull-right" ng-checked="selectedListElements.indexOf(le.triple)!==-1" ng-click="selectedListElements.indexOf(le.triple)===-1?selectedListElements.push(le.triple):selectedListElements.splice(selectedListElements.indexOf(le.triple),1)">
         </li>
       </ol>
     </irsection>
   </div>
 </div>
 
-<modal  
-  modal-id="createContainer" 
-  modal-view="views/modals/createContainerModal.html" 
+<modal
+  modal-id="createContainer"
+  modal-view="views/modals/createContainerModal.html"
   modal-header-class="modal-header-primary"
   wvr-modal-backdrop="static">
 </modal>
 
-<modal  
-  modal-id="addMetadata" 
-  modal-view="views/modals/addMetadataModal.html" 
+<modal
+  modal-id="addMetadata"
+  modal-view="views/modals/addMetadataModal.html"
   modal-header-class="modal-header-primary"
   wvr-modal-backdrop="static">
 </modal>

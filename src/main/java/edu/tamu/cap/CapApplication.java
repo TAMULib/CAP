@@ -7,21 +7,21 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = { "edu.tamu.*","wro.*" })
+@ComponentScan(basePackages = { "edu.tamu.*", "wro.*" })
 public class CapApplication extends SpringBootServletInitializer {
-	
-	/**
+
+    /**
      * Entry point to the application from within servlet.
      *
      * @param args
      *            String[]
      *
      */
-	public static void main(String[] args) {
-		SpringApplication.run(CapApplication.class, args);
-	}
-	
-	/**
+    public static void main(String[] args) {
+        SpringApplication.run(CapApplication.class, args);
+    }
+
+    /**
      * Entry point to the application if run using spring-boot:run.
      *
      * @param application
@@ -34,4 +34,5 @@ public class CapApplication extends SpringBootServletInitializer {
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(CapApplication.class);
     }
+
 }

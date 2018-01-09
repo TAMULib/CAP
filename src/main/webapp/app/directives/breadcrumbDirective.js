@@ -9,7 +9,7 @@ cap.directive("breadcrumbs", function($rootScope, $q, $route, $filter, IRRepo, B
         link: function($scope, attr, elem) {
             $scope.breadcrumbs = BreadcrumbService.getBreadcrumbs();
             BreadcrumbService.registerBreadcrumbView($route.current.$$route.templateUrl);
-            
+
             var currentContext = {};
 
             $scope.trimCrumb = function(crumb) {
@@ -29,7 +29,7 @@ cap.directive("breadcrumbs", function($rootScope, $q, $route, $filter, IRRepo, B
                                 BreadcrumbService.updateBreadcrumb(currentContext, next.params.context);
                             } else {
                                 BreadcrumbService.clearBreadcrumbs();
-                            }   
+                            }
                             un();
                         });
                     });
@@ -49,7 +49,7 @@ cap.directive("breadcrumbs", function($rootScope, $q, $route, $filter, IRRepo, B
     var storedCrumbs = angular.fromJson(StorageService.get("breadcrumbs"));
 
     var lastCrumbUri;
-    
+
     var sendToStorage = function() {
         StorageService.set("breadcrumbs",angular.toJson(breadcrumbs));
     };
@@ -62,10 +62,10 @@ cap.directive("breadcrumbs", function($rootScope, $q, $route, $filter, IRRepo, B
 
     breadcrumbService.trimCrumb = function(crumb) {
         return lastCrumbUri&&crumb&&crumb.includes(lastCrumbUri)?crumb.replace(lastCrumbUri, "..."):crumb;
-    }
+    };
 
     breadcrumbService.updateBreadcrumb = function(context, nextContextUri) {
-        
+
         var crumb = {
             name: breadcrumbService.trimCrumb(context.name),
             uri: context.uri
@@ -81,8 +81,7 @@ cap.directive("breadcrumbs", function($rootScope, $q, $route, $filter, IRRepo, B
                 break;
             }
         }
-        
-        console.log(containedIndex);
+
         if(containedIndex===-1) {
             breadcrumbs.push(crumb);
             sendToStorage();

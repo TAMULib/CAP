@@ -3,11 +3,11 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
 
     var irContext = this;
 
-    irContext.ir;
-    irContext.uri;
+    irContext.ir = undefined;
+    irContext.uri = undefined;
 
     irContext.before(function() {
-      
+
       var loadPromise = WsApi.fetch(irContext.getMapping().load, {
         method: HttpMethodVerbs.GET,
         pathValues: {
@@ -45,13 +45,13 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
             contextUri: triple.object
           }
         });
-  
+
         loadPromise.then(function(res) {
           angular.extend(children[triple.object], angular.fromJson(res.body).payload.IRContext);
         });
 
       }
-      
+
       return children[triple.object];
     };
 
@@ -69,9 +69,9 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
           name: createForm.name
         }
       });
-      
+
       createPromise.then(function(res) {
-        angular.extend(irContext, angular.fromJson(res.body).payload.IRContext)
+        angular.extend(irContext, angular.fromJson(res.body).payload.IRContext);
       });
 
       return createPromise;
@@ -89,13 +89,21 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
             type: irContext.ir.type
           },
           query: {
-            containerUri: containerTriple.object
+            containerUri: containerTriple.subject
           }
         });
 
         removePromise.then(function(res) {
           var children = irContext.children;
-          children.splice(children.indexOf(containerTriple), 1);
+          for(var i in children) {
+            if (children.hasOwnProperty(i)) {
+              var child = children[i];
+              if (child.triple.object === containerTriple.subject) {
+                children.splice(i, 1);
+                break;
+              }
+            }
+          }
         });
 
         promises.push(removePromise);
@@ -105,7 +113,7 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
 
       return allRemovePromses;
     };
-    
+
     return this;
 
   };

@@ -1,74 +1,95 @@
 package edu.tamu.cap.model.response;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class IRContext implements Serializable {
 
-	private static final long serialVersionUID = -8489156248122941988L;
+    private static final long serialVersionUID = -8489156248122941988L;
 
-	private String name;
+    private String name;
 
-	private boolean resource;
+    private Triple triple;
 
-	private List<Triple> properties;
+    private boolean resource;
 
-	private List<Triple> metadata;
+    private List<Triple> properties;
 
-	private List<Triple> containers;
+    private List<Triple> metadata;
 
-	private List<Triple> resources;
+    private List<IRContext> children;
 
-	public IRContext() {
+    public IRContext() {
+        super();
+        properties = new ArrayList<Triple>();
+        metadata = new ArrayList<Triple>();
+        children = new ArrayList<IRContext>();
+    }
 
-	}
+    public IRContext(Triple triple) {
+        this();
+        this.triple = triple;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public boolean isResource() {
-		return resource;
-	}
+    public Triple getTriple() {
+        return triple;
+    }
 
-	public void setResource(boolean resource) {
-		this.resource = resource;
-	}
+    public void setTriple(Triple triple) {
+        this.triple = triple;
+    }
 
-	public List<Triple> getProperties() {
-		return properties;
-	}
+    public boolean isResource() {
+        return resource;
+    }
 
-	public void setProperties(List<Triple> properties) {
-		this.properties = properties;
-	}
+    public void setResource(boolean resource) {
+        this.resource = resource;
+    }
 
-	public List<Triple> getMetadata() {
-		return metadata;
-	}
+    public List<Triple> getProperties() {
+        return properties;
+    }
 
-	public void setMetadata(List<Triple> metadata) {
-		this.metadata = metadata;
-	}
+    public void setProperties(List<Triple> properties) {
+        this.properties = properties;
+    }
 
-	public List<Triple> getContainers() {
-		return containers;
-	}
+    public void addProperty(Triple property) {
+        properties.add(property);
+    }
 
-	public void setContainers(List<Triple> containers) {
-		this.containers = containers;
-	}
+    public List<Triple> getMetadata() {
+        return metadata;
+    }
 
-	public List<Triple> getResources() {
-		return resources;
-	}
+    public void setMetadata(List<Triple> metadata) {
+        this.metadata = metadata;
+    }
 
-	public void setResources(List<Triple> resources) {
-		this.resources = resources;
-	};
+    public void addMetadum(Triple metadatum) {
+        metadata.add(metadatum);
+    }
+
+    public List<IRContext> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<IRContext> children) {
+        this.children = children;
+    }
+
+    public void addChild(IRContext child) {
+        children.add(child);
+    }
 
 }
