@@ -119,8 +119,6 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
       var formData = new FormData();
       formData.append("file", createForm.file, createForm.file.name);      
 
-      console.log(Array.from(formData.entries()));
-
       var createPromise = WsApi.fetch(irContext.getMapping().resource, {
         method: HttpMethodVerbs.POST,
         headers: {
@@ -137,8 +135,7 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
       });
 
       createPromise.then(function(res) {
-        console.log(res);
-        // angular.extend(irContext, angular.fromJson(res.body).payload.IRContext);
+        angular.extend(irContext, angular.fromJson(res.body).payload.IRContext);
       });
 
       return createPromise;

@@ -1,5 +1,7 @@
 package edu.tamu.cap.service.ir;
 
+import org.apache.tika.Tika;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -13,6 +15,7 @@ import java.util.Optional;
 import org.apache.commons.io.IOUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
@@ -43,7 +46,9 @@ public class FedoraService implements IRService<Model> {
 	private final static String W3_TYPE_PREDICATE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
 
 	private final static String FEDORA_BINRAY_PREDICATE = "http://fedora.info/definitions/v4/repository#Binary";
-
+	
+	private final static String EBU_FILENAME_PREDICATE = "http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#filename";
+	
 	// @formatter:off
 	private final static List<String> FEDORA_PROPERTY_PREDICATES = Arrays.asList(new String[] { "http://fedora.info/definitions/v4/2016/10/18/repository#hasParent", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://fedora.info/definitions/v4/repository#writable", "http://fedora.info/definitions/v4/repository#lastModified", "http://fedora.info/definitions/v4/repository#created", "http://fedora.info/definitions/v4/repository#lastModifiedBy", "http://fedora.info/definitions/v4/repository#createdBy" });
 	// @formatter:on
@@ -51,6 +56,8 @@ public class FedoraService implements IRService<Model> {
 	// @formatter:off
 	private final static List<String> DUBLIN_CORE_METADATA_PREDICATES = Arrays.asList(new String[] { DC.contributor.getURI(), DC.coverage.getURI(), DC.creator.getURI(), DC.date.getURI(), DC.description.getURI(), DC.format.getURI(), DC.identifier.getURI(), DC.language.getURI(), DC.publisher.getURI(), DC.relation.getURI(), DC.rights.getURI(), DC.source.getURI(), DC.subject.getURI(), DC.title.getURI(), DC.type.getURI(), DC.contributor.getURI(), DC.contributor.getURI() });
 	// @formatter:on
+	
+    private Tika tika = new Tika();
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -106,7 +113,10 @@ public class FedoraService implements IRService<Model> {
 	public IRContext createResource(String contextUri, MultipartFile file) throws Exception {
 		FcrepoClient client = buildClient();
 		PostBuilder post = new PostBuilder(new URI(contextUri), client);
-		post.body(new ByteArrayInputStream(file.getBytes()));
+		
+		InputStream fileStream = new ByteArrayInputStream(file.getBytes());
+		post.body(fileStream, tika.detect(fileStream));
+		post.filename(file.getOriginalFilename());
 		FcrepoResponse response = post.perform();
 		URI location = response.getLocation();
 		logger.debug("Resource creation status and location: {}, {}", response.getStatusCode(), location);
@@ -141,8 +151,6 @@ public class FedoraService implements IRService<Model> {
 	@Override
 	public IRContext buildIRContext(Model model) {
 		IRContext irContext = new IRContext();
-		irContext.setName(getName(model));
-		irContext.setTriple(getTriple(model));
 
 		model.listStatements().forEachRemaining(statement -> {
 
@@ -173,6 +181,12 @@ public class FedoraService implements IRService<Model> {
 			}
 
 		});
+		
+		irContext.setName(getName(model, irContext.isResource() ?
+			model.createProperty(EBU_FILENAME_PREDICATE)		:
+			DC.title
+		));
+		irContext.setTriple(getTriple(model));
 
 		return irContext;
 	}
@@ -184,11 +198,11 @@ public class FedoraService implements IRService<Model> {
 		return Triple.of(subject, predicate, object);
 	}
 
-	private String getName(Model model) {
+	private String getName(Model model, Property prop) {
 		Optional<String> name = Optional.empty();
-		ResIterator titleResources = model.listResourcesWithProperty(DC.title);
+		ResIterator titleResources = model.listResourcesWithProperty(prop);
 		while (titleResources.hasNext()) {
-			name = Optional.of(titleResources.next().getProperty(DC.title).asTriple().getObject().toString());
+			name = Optional.of(titleResources.next().getProperty(prop).asTriple().getObject().toString());
 			break;
 		}
 		if (!name.isPresent()) {
