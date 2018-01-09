@@ -1,0 +1,60 @@
+<div class="container-fluid ir-management">
+
+  <admintabs></admintabs>    
+
+  <h1>Schema Management</h1>
+
+  <div class="col-xs-12">
+    <div class="panel panel-default ir-container">
+
+      <div class="panel-heading clearfix">
+        <modal  modal-id="createSchemaModal"
+                modal-view="views/modals/createSchemaModal.html"
+                modal-btn-classes="btn btn-success pull-right"
+                modal-header-class="modal-header-primary"
+                modal-fullscreen="true"
+                wvr-modal-backdrop="static">
+                New
+        </modal>
+      </div>
+
+      <div class="panel-body">
+        <table ng-table="tableParams" class="table table-hover ir-table">
+          <tbody>
+            <tr ng-repeat="schema in $data">
+              <td data-title="'Name'">
+                {{schema.name}} ({{schema.abbreviation}})
+              </td>
+              <td data-title="'Namespace'">
+                  {{schema.namespace}}
+              </td>
+              <td data-title="'Properties'">
+                  <span class="badge">{{schema.properties.length || 0}}</span>
+              </td>
+              <td data-title="'Actions'" class="actions">
+                  <span title="edit" ng-click="editSchema(schema)" class="glyphicon glyphicon-pencil action clickable"></span>
+                  <span title="delete" ng-click="confirmDeleteSchema(schema)" class="glyphicon glyphicon-trash action clickable"></span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <modal
+    modal-id="schemaDeleteModal"
+    modal-view="views/modals/schemaDeleteModal.html"
+    modal-header-class="modal-header-danger"
+    wvr-modal-backdrop="static">
+  </modal>
+
+  <modal
+    modal-id="schemaEditModal"
+    modal-view="views/modals/schemaEditModal.html"
+    modal-header-class="modal-header-warning"
+    modal-fullscreen="true"
+    wvr-modal-backdrop="static">
+  </modal>
+    
+</div>

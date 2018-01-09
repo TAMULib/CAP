@@ -1,0 +1,57 @@
+<form name="schemaForms.edit" ng-submit="updateSchema()" novalidate class="schema-forms-edit">
+  <div class="modal-header {{attr.modalHeaderClass}}">
+    <button type="button" class="close modal-close" aria-label="Close" ng-click="resetSchemaForms()"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title">edit Schema</h4>
+  </div>
+  <div class="modal-body">
+
+    <validationmessage results="schemaForms.getResults()"></validationmessage>
+    
+    <div class="row">
+      <div class="col-sm-5 col-sm-offset-1">            
+
+        <validatedinput
+          model="schemaToEdit"
+          property="name"
+          label="Name"
+          placeholder="Name of the new schema"
+          form="schemaForms.edit"
+          validations="schemaForms.validations"
+          results="schemaForms.getResults()"
+          autocomplete="off">
+        </validatedinput>
+        
+        <validatedinput
+          model="schemaToEdit"
+          property="abbreviation"
+          label="Abbreviation"
+          placeholder="Abbreviation for the new schema name"
+          form="schemaForms.edit"
+          validations="schemaForms.validations"
+          results="schemaForms.getResults()"
+          autocomplete="off">
+        </validatedinput>
+
+        <validatedinput
+          model="schemaToEdit"
+          property="namespace"
+          label="Namespace"
+          placeholder="URI of the schema namespace"
+          form="schemaForms.edit"
+          validations="schemaForms.validations"
+          results="schemaForms.getResults()"
+          autocomplete="off">
+        </validatedinput>
+        
+      </div>
+      <div class="col-sm-5">
+      </div>
+    </div>
+    
+  </div>     
+  <div class="modal-footer">
+    <button type="button" class="btn" ng-class="{'btn-default': schemaForms.edit.$pristine, 'btn-warning': !schemaForms.edit.$pristine}" ng-click="resetSchemaForms()">Cancel</button>
+    <button type="submit" class="btn btn-success" ng-disabled="schemaForms.edit.$invalid">edit</button>
+  </div>
+</form>
+      

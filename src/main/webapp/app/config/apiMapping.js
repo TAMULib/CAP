@@ -88,5 +88,34 @@ var apiMapping = {
       'controller': 'ir',
       'method': 'types'
     }
+  },
+  Schema: {
+    channel: '/channel/schema',
+    validations: true,
+    all: {
+        'endpoint': '/private/queue',
+        'controller': 'schema',
+        'method': 'all'
+    },
+    create: {
+      'endpoint': '/private/queue',
+      'controller': 'schema',
+      'method': 'create'
+    },
+    update: {
+        'endpoint': '/private/queue',
+        'controller': 'schema',
+        'method': 'update'
+    },
+    remove: {
+        'endpoint': '/private/queue',
+        'controller': 'schema',
+        'method': 'delete'
+    },
+    getTypes: {
+      'endpoint': '/private/queue',
+      'controller': 'schema',
+      'method': 'types'
+    }
   }
 };
