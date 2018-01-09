@@ -1,10 +1,9 @@
-
-<div class="panel panel-default">
+<div class="panel panel-default ir-section">
   <div class="panel-heading clearfix">
     <div class="btn-group pull-right" ng-show="(contentExpanded||!getListLength())&&!removeListElements" uib-dropdown keyboard-nav>
-      <button type="button" class="btn btn-success btn-xs" uib-dropdown-toggle>
+      <span type="button" class="clickable" uib-dropdown-toggle>
         Actions <span class="caret"></span>
-      </button>
+      </span>
       <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
         <li role="menuitem" ng-click="addAction()"><a href="#">Add {{type}}</a></li>
         <li ng-show="getListLength()" role="menuitem" ng-click="removeListElements=true;"><a href="#">Remove {{type}}</a></li>
