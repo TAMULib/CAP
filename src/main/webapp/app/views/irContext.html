@@ -1,8 +1,5 @@
 <div class="ir-context">
-  <div class="page-header">
-    <h1>{{ir.name}} <small class="clickable" ng-click="loadContainer(ir.rootUri)">({{ir.rootUri}})</small></h1>
-  </div>
-  <div class="btn-group pull-right context-actions-btn" uib-dropdown keyboard-nav>
+    <div class="btn-group pull-right context-actions-btn" uib-dropdown keyboard-nav>
     <button type="button" class="btn btn-default" uib-dropdown-toggle>
       Context Actions <span class="caret"></span>
     </button>
@@ -15,6 +12,9 @@
       <li class="divider"></li>
       <li role="menuitem bg-danger"><a href="#" class="bg-danger"><span class="glyphicon glyphicon-trash"></span> Delete</a></li>
     </ul>
+  </div>
+  <div class="page-header">
+    <h1>{{ir.name}} <small class="clickable" ng-click="loadContainer(ir.rootUri)">({{ir.rootUri}})</small></h1>
   </div>
   <breadcrumbs nav="loadContainer(containerUri)" context="context"></breadcrumbs>
 
@@ -83,9 +83,9 @@
         <ol class="list-group" ng-show="contentExpanded">
           <li  class="list-group-item" ng-repeat="le in filteredList = (list | filterResources:context)" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le.triple)!==-1}">
             <a href="" ng-click="listElementAction({'le':le.triple.subject})">{{le.name || le.triple.object}}</a>
-            <span ng-show="!removeListElements" title="swap" class="glyphicon glyphicon-transfer pull-right clickable"></span>
-            <span ng-show="!removeListElements" title="fixity" class="glyphicon glyphicon glyphicon-ok pull-right clickable"></span> 
-            <span ng-show="!removeListElements" title="download" class="glyphicon glyphicon-download-alt pull-right clickable"></span>
+            <a href=""><span ng-show="!removeListElements" title="swap" class="glyphicon glyphicon-transfer pull-right clickable"></span></a>
+            <a href=""><span ng-show="!removeListElements" title="fixity" class="glyphicon glyphicon glyphicon-ok pull-right clickable"></span></a>
+            <a href="{{le.triple.subject}}"><span ng-show="!removeListElements" title="download" class="glyphicon glyphicon-download-alt pull-right"></span></a>
             <input ng-show="removeListElements" type="checkbox" class="pull-right" ng-checked="selectedListElements.indexOf(le.triple)!==-1" ng-click="selectedListElements.indexOf(le.triple)===-1?selectedListElements.push(le.triple):selectedListElements.splice(selectedListElements.indexOf(le.triple),1)">
           </li>
         </ol>
