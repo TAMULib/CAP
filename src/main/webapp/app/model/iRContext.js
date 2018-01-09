@@ -123,6 +123,9 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
 
       var createPromise = WsApi.fetch(irContext.getMapping().resource, {
         method: HttpMethodVerbs.POST,
+        headers: {
+          "Content-Type": undefined
+        },
         pathValues: {
           irid: irContext.ir.id,
           type: irContext.ir.type

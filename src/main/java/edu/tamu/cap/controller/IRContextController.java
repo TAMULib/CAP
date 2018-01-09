@@ -41,7 +41,7 @@ public class IRContextController {
 
 	@RequestMapping(value = "/resource", method = POST)
 	@PreAuthorize("hasRole('USER')")
-	public ApiResponse createResource(IRService<?> irService, @Param("contextUri") String contextUri, @RequestParam MultipartFile file) throws Exception {
+	public ApiResponse createResource(IRService<?> irService, @Param("contextUri") String contextUri, @RequestParam("file") MultipartFile file) throws Exception {
 		return new ApiResponse(SUCCESS, irService.createResource(contextUri, file));
 	}
 
