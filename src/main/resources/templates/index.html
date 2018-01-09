@@ -21,7 +21,7 @@
 
   <meta name="description" content="Fedora User Interface" />
 
-  <link rel="stylesheet" th:href="${@environment.getProperty('app.url')+'/wro/app.css'}" />  
+  <link rel="stylesheet" th:href="${@environment.getProperty('app.url')+'/wro/app.css'}" />
 
 </head>
 
@@ -30,11 +30,11 @@
     <tamuheader title="CAP"></tamuheader>
 
     <alerts types="WARNING,ERROR"></alerts>
-    
+
     <div class="container-fluid">
       <div class="container">
         <div class="col-md-12 appContent" ng-controller="AdminController">
-          <nav class="userMenu pull-right">  
+          <nav class="userMenu pull-right">
             <div>
               <!-- <modal modal-id="assumeUserModal" modal-view="bower_components/core/app/views/modals/assumeUserModal.html" modal-header-class="modal-header-primary"></modal> -->
             </div>
@@ -57,13 +57,13 @@
           </nav>
 
           <div ng-view class="view"></div>
-        
+
         </div>
       </div>
     </div>
   </main>
   <tamufooter></tamufooter>
-  
+
 
   <script src="node_modules/jquery/dist/jquery.min.js"></script>
   <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -83,8 +83,8 @@
   <script src="node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
 
   <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
-  <script src="node_modules/ng-table/bundles/ng-table.min.js"></script>  
-  
+  <script src="node_modules/ng-table/bundles/ng-table.min.js"></script>
+
   <script src="node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js"></script>
   <script src="node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
 
@@ -171,7 +171,7 @@
   <!-- build:js resources/scripts/app_concat.js -->
 
   <!-- App Libraries -->
-  
+
   <!-- App Configuration -->
   <script src="config/appConfig.js"></script>
   <script src="config/apiMapping.js"></script>
@@ -192,12 +192,12 @@
   <!-- Repos -->
   <script src="repo/abstractAppRepo.js"></script>
   <script src="repo/iRRepo.js"></script>
-  
+
   <!-- Models -->
   <script src="model/abstractAppModel.js"></script>
   <script src="model/iRModel.js"></script>
   <script src="model/iRContext.js"></script>
-  
+
   <!-- Constants -->
 
   <!-- Factories -->
@@ -207,13 +207,14 @@
   <script src="filters/contextFilter.js"></script>
   <script src="filters/metadataLabelFilter.js"></script>
   <script src="filters/mapPropertiesFilter.js"></script>
+  <script src="filters/removeQuotes.js"></script>
   <script src="filters/uniqueFilter.js"></script>
 
   <!-- Controllers -->
   <script src="controllers/adminController.js"></script>
-  <script src="controllers/iRManagementController.js"></script>  
-  <script src="controllers/irContextController.js"></script>  
-  
+  <script src="controllers/iRManagementController.js"></script>
+  <script src="controllers/irContextController.js"></script>
+
   <!-- endbuild -->
 
 </body>
