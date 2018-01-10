@@ -30,7 +30,7 @@ cap.controller("SchemaManagementController", function($controller, $scope, Schem
   $scope.createSchema = function() {
     SchemaRepo.create($scope.schemaToCreate).then(function(res) {
       if(angular.fromJson(res.body).meta.status === "SUCCESS") {
-        $scope.resetSchemaForms();
+        $scope.cancelCreateSchema();
       }
     });
   };

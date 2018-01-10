@@ -16,8 +16,6 @@ import edu.tamu.cap.model.repo.SchemaRepo;
 import edu.tamu.cap.model.repo.custom.SchemaRepoCustom;
 import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
 
-import org.apache.jena.atlas.web.HttpException;
-
 public class SchemaRepoImpl extends AbstractWeaverRepoImpl<Schema, SchemaRepo> implements SchemaRepoCustom {
 	
 	@Override
@@ -42,6 +40,7 @@ public class SchemaRepoImpl extends AbstractWeaverRepoImpl<Schema, SchemaRepo> i
 					properties.add(prop);
 				}
 			});
+			
 		} catch (Exception e) {
 			throw new OntModelReadException(e.getMessage());
 		}
