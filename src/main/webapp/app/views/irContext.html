@@ -84,7 +84,7 @@
         list="context.children"
         list-element-action="loadContainer(le)"
         add-action="openModal('#uploadResource')"
-        remove-action="ir.removeResources(items)">
+        remove-action="context.removeResources(items)">
         <ol class="list-group" ng-show="contentExpanded">
           <li  class="list-group-item" ng-repeat="le in filteredList = (list | filterResources:context)" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le.triple)!==-1}">
             <a href="" ng-click="listElementAction({'le':le.triple.subject})">{{(le.name || le.triple.object) | removeQuotes}}</a>

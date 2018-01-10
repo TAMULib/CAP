@@ -2,8 +2,8 @@ cap.repo("IRRepo", function($q, WsApi, api, HttpMethodVerbs) {
   var iRRepo = this;
 
   iRRepo.scaffold = {
-    name: "Test",
-    rootUri: "http://machuff.tamu.edu:8080/fcrepo/rest/",
+    name: "Labs Fedora",
+    rootUri: "http://labs.library.tamu.edu/fcrepo/rest/",
     username: "fedoraAdmin",
     password: "secret3",
     type: ""

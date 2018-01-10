@@ -114,10 +114,12 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
       return allRemovePromses;
     };
 
+    irContext.removeResources = irContext.removeContainers;
+
     irContext.createResource = function(createForm) {
 
       var formData = new FormData();
-      formData.append("file", createForm.file, createForm.file.name);      
+      formData.append("file", createForm.file, createForm.file.name);
 
       var createPromise = WsApi.fetch(irContext.getMapping().resource, {
         method: HttpMethodVerbs.POST,
