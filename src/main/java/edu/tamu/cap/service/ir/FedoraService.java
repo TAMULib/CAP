@@ -44,7 +44,7 @@ public class FedoraService implements IRService<Model> {
 
     private final static String EBU_FILENAME_PREDICATE = "http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#filename";
 
-    private final static String FEDORA_HAS_PARENT_PREDICATE = " http://fedora.info/definitions/v4/repository#hasParent";
+    private final static String FEDORA_HAS_PARENT_PREDICATE = "http://fedora.info/definitions/v4/repository#hasParent";
 
     private final static String FEDORA_CONTAINER_PREDICATE = "http://fedora.info/definitions/v4/repository#Container";
 
