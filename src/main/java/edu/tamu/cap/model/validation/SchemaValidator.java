@@ -14,7 +14,7 @@ public class SchemaValidator extends BaseModelValidator {
         this.addInputValidator(new InputValidator(InputValidationType.minlength, "Names must be at least 2 charachters long.", nameProperty, 2));
         
         String abbreviationProperty = "abbreviation";
-        this.addInputValidator(new InputValidator(InputValidationType.required, "A schema requires a name", abbreviationProperty, true));
+        this.addInputValidator(new InputValidator(InputValidationType.required, "A schema requires an abbreviation", abbreviationProperty, true));
         this.addInputValidator(new InputValidator(InputValidationType.maxlength, "Abbreviations must be at most 8 charachters long.", abbreviationProperty, 6));
         this.addInputValidator(new InputValidator(InputValidationType.minlength, "Abbreviations must be at least 2 charachters long.", abbreviationProperty, 2));
 

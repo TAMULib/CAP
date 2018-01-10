@@ -112,10 +112,10 @@ var apiMapping = {
         'controller': 'schema',
         'method': 'delete'
     },
-    getTypes: {
+    findProperties: {
       'endpoint': '/private/queue',
       'controller': 'schema',
-      'method': 'types'
+      'method': 'properties'
     }
   }
 };
