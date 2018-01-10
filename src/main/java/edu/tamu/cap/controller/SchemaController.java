@@ -39,7 +39,7 @@ public class SchemaController {
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	@PreAuthorize("hasRole('USER')")
 	@WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
-	public ApiResponse createIRs(@RequestBody @WeaverValidatedModel Schema schema) {
+	public ApiResponse createSchema(@RequestBody @WeaverValidatedModel Schema schema) {
 		logger.info("Creating schema:  " + schema.getName());
 		return new ApiResponse(SUCCESS, schemaRepo.create(schema));
 	}
@@ -47,7 +47,7 @@ public class SchemaController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	@PreAuthorize("hasRole('USER')")
 	@WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
-	public ApiResponse updateIR(@RequestBody @WeaverValidatedModel Schema schema) {
+	public ApiResponse updateSchema(@RequestBody @WeaverValidatedModel Schema schema) {
 		logger.info("Updating schema:  " + schema.getName());
 		return new ApiResponse(SUCCESS, schemaRepo.update(schema));
 	}
@@ -55,7 +55,7 @@ public class SchemaController {
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	@PreAuthorize("hasRole('USER')")
 	@WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
-	public ApiResponse deleteIR(@RequestBody @WeaverValidatedModel Schema schema) {
+	public ApiResponse deleteSchema(@RequestBody @WeaverValidatedModel Schema schema) {
 		logger.info("Deleating schema:  " + schema.getName());
 		schemaRepo.delete(schema);
 		return new ApiResponse(SUCCESS);
@@ -63,7 +63,7 @@ public class SchemaController {
 
 	@RequestMapping("/{id}")
 	@PreAuthorize("hasRole('USER')")
-	public ApiResponse getIR(@PathVariable Long id) {
+	public ApiResponse getSchema(@PathVariable Long id) {
 		return new ApiResponse(SUCCESS, schemaRepo.read(id));
 	}
 
