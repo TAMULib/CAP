@@ -6,7 +6,7 @@ cap.repo("SchemaRepo", function(WsApi, HttpMethodVerbs) {
     abbreviation: "DC",
     namespace: "http://purl.org/dc/terms/",
     properties: []
-  }
+  };
 
   schemaRepo.findProperties = function(schema) {
     var findPropertiesPromise = WsApi.fetch(schemaRepo.mapping.findProperties, {

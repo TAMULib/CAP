@@ -38,7 +38,7 @@ cap.directive("findproperties", function(SchemaRepo) {
                 } else {
                     $scope.schema.properties.splice(propIndex, 1);
                 }
-            }
+            };
 
             $scope.toggleAllProps = function() {
                 if($scope.schema.properties.length === $scope.properties.length) {
@@ -46,7 +46,7 @@ cap.directive("findproperties", function(SchemaRepo) {
                 } else {
                     angular.extend($scope.schema.properties, $scope.properties);
                 }
-            }
+            };
 
             $scope.indexOfProp = function(prop) {
                 var indx = -1;
@@ -58,7 +58,7 @@ cap.directive("findproperties", function(SchemaRepo) {
                     }
                 }
                 return indx;
-            }
+            };
 
             if($scope.mode==="edit") {
                 $scope.getProperties();
@@ -66,5 +66,5 @@ cap.directive("findproperties", function(SchemaRepo) {
 
         }
 
-    }
+    };
 });
