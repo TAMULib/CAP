@@ -3,56 +3,60 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
 
     var irContext = this;
 
-    irContext.ir = undefined;
-    irContext.uri = undefined;
+    var children = {};
 
-    irContext.before(function() {
-
-      var loadPromise = WsApi.fetch(irContext.getMapping().load, {
+    var fetchContext = function (contextUri) {
+      return WsApi.fetch(irContext.getMapping().load, {
         method: HttpMethodVerbs.GET,
         pathValues: {
           type: irContext.ir.type,
           irid: irContext.ir.id
         },
         query: {
-          contextUri: irContext.uri
+          contextUri: contextUri
         }
       });
+    }
 
-      loadPromise.then(function(res) {
-        angular.extend(irContext, angular.fromJson(res.body).payload.IRContext);
-      });
-
-      return loadPromise;
-
+    irContext.before(function() {
+      var defer = $q.defer();
+      if(irContext.fetch) {
+        fetchContext(irContext.uri).then(function(res) {
+          angular.extend(irContext, angular.fromJson(res.body).payload.IRContext, {
+            fetch: false
+          });
+          irContext.ir.cacheContext(irContext);
+          defer.resolve(irContext);
+        });
+      } else {
+        defer.resolve(irContext);
+      }
+      return defer.promise;
     });
 
-    var children = {};
-
     irContext.getChildContext = function(triple) {
-
       if(!children[triple.object]) {
-
-        children[triple.object] = {};
-
-        var loadPromise = WsApi.fetch(irContext.getMapping().load, {
-          method: HttpMethodVerbs.GET,
-          pathValues: {
-            type: irContext.ir.type,
-            irid: irContext.ir.id
-          },
-          query: {
-            contextUri: triple.object
-          }
+        children[triple.object] = new IRContext({
+          fetch: false
         });
-
-        loadPromise.then(function(res) {
-          angular.extend(children[triple.object], angular.fromJson(res.body).payload.IRContext);
-        });
-
+        var cachedContext = irContext.ir.getCachedContext(triple.object);
+        if(cachedContext) {
+          angular.extend(children[triple.object], cachedContext);
+        } else {
+          fetchContext(triple.object).then(function(res) {
+            angular.extend(children[triple.object], angular.fromJson(res.body).payload.IRContext, {
+              ir: irContext.ir,
+              uri: triple.object
+            });
+            irContext.ir.cacheContext(children[triple.object]);
+          });
+        }
       }
-
       return children[triple.object];
+    };
+
+    irContext.getCachedChildContext = function(contextUri) {
+      return children[contextUri];
     };
 
     irContext.createContainer = function(createForm) {
