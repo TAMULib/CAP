@@ -10,16 +10,11 @@ cap.directive("findproperties", function(SchemaRepo) {
 
             $scope.properties = [];
 
-            var un = $scope.$watch("schema", function(c,n) {
-                if($scope.schema.properties.length) {
-                    angular.extend($scope.properties = angular.copy($scope.schema.properties));
-                    un();
-                }
-            });
-
             $scope.getProperties = function() {
                 $scope.gettingProperties = true;
-                SchemaRepo.findProperties($scope.schema).then(function(res) {
+                var getPropertiesPromise = SchemaRepo.findProperties($scope.schema);
+                
+                getPropertiesPromise.then(function(res) {
 
                     var un =  $scope.$watch("schema.namespace", function(current, next) {
                         if(current!==next) {
@@ -32,6 +27,8 @@ cap.directive("findproperties", function(SchemaRepo) {
                     angular.extend($scope.properties, properties);
                     $scope.gettingProperties = false;
                 });
+
+                return getPropertiesPromise;
             };
 
             $scope.toggleProp = function(prop) {
@@ -61,6 +58,10 @@ cap.directive("findproperties", function(SchemaRepo) {
                     }
                 }
                 return indx;
+            }
+
+            if($scope.mode==="edit") {
+                $scope.getProperties();
             }
 
         }
