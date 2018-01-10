@@ -11,10 +11,10 @@ import java.util.Optional;
 import org.apache.commons.io.IOUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.NodeIterator;
 import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.ResIterator;
+import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Statement;
-import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.vocabulary.DC;
@@ -40,19 +40,23 @@ public class FedoraService implements IRService<Model> {
 
     private final static String LDP_CONTAINS_PREDICATE = "http://www.w3.org/ns/ldp#contains";
 
-    private final static String FEDORA_BINRAY_PREDICATE = "http://fedora.info/definitions/v4/repository#Binary";
+    private final static String RDF_TYPE_PREDICATE = "https://www.w3.org/1999/02/22-rdf-syntax-ns#type";
 
     private final static String EBU_FILENAME_PREDICATE = "http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#filename";
 
+    private final static String FEDORA_CONTAINER_PREDICATE = "http://fedora.info/definitions/v4/repository#Container";
+
+    public final static String FEDORA_BINRAY_PREDICATE = "http://fedora.info/definitions/v4/repository#Binary";
+
     // @formatter:off
-	private final static String[] PROPERTY_PREFIXES = new String[] { 
+    private final static String[] PROPERTY_PREFIXES = new String[] {
         "http://fedora.info/definitions/v4/repository",
         "http://www.w3.org/1999/02/22-rdf-syntax-ns",
         "http://www.ebu.ch/metadata/ontologies/ebucore/ebucore",
         "http://www.iana.org/assignments/relation",
         "http://www.loc.gov/premis/rdf/v1"
     };
-	// @formatter:on
+    // @formatter:on
 
     // @formatter:off
     public final static String[] METADATA_PREFIXES = new String[] {
@@ -116,7 +120,6 @@ public class FedoraService implements IRService<Model> {
     public IRContext createResource(String contextUri, MultipartFile file) throws Exception {
         FcrepoClient client = buildClient();
         PostBuilder post = new PostBuilder(new URI(contextUri), client);
-
         InputStream fileStream = new ByteArrayInputStream(file.getBytes());
         post.body(fileStream, tika.detect(fileStream));
         post.filename(file.getOriginalFilename());
@@ -131,7 +134,7 @@ public class FedoraService implements IRService<Model> {
         FcrepoClient client = buildClient();
         FcrepoResponse response = new GetBuilder(new URI(contextUri + "/fcr:metadata"), client).accept("application/rdf+xml").perform();
         Model model = createRdfModel(response.getBody());
-        return buildIRContext(model);
+        return buildIRContext(model, contextUri);
     }
 
     @Override
@@ -152,8 +155,8 @@ public class FedoraService implements IRService<Model> {
     }
 
     @Override
-    public synchronized IRContext buildIRContext(Model model) {
-        IRContext irContext = new IRContext();
+    public synchronized IRContext buildIRContext(Model model, String contextUri) {
+        IRContext irContext = new IRContext(Triple.of(contextUri, RDF_TYPE_PREDICATE, FEDORA_CONTAINER_PREDICATE));
 
         // System.out.println("\n::\n");
         model.listStatements().forEachRemaining(statement -> {
@@ -178,7 +181,7 @@ public class FedoraService implements IRService<Model> {
                     if (predicate.startsWith(prefix)) {
                         irContext.addProperty(triple);
                         if (triple.getObject().equals(FEDORA_BINRAY_PREDICATE)) {
-                            irContext.setResource(true);
+                            irContext.getTriple().setObject(FEDORA_BINRAY_PREDICATE);
                         }
                     }
                 }
@@ -193,8 +196,19 @@ public class FedoraService implements IRService<Model> {
         });
         // System.out.println("\n\n");
 
-        irContext.setName(getName(model, irContext.isResource() ? model.createProperty(EBU_FILENAME_PREDICATE) : DC.title));
-        irContext.setTriple(getTriple(model));
+        irContext.setName(contextUri.equals(ir.getRootUri()) ? "Root" : contextUri);
+
+        if (irContext.isResource()) {
+            Optional<String> fileName = getLiteralForProperty(model, model.createProperty(EBU_FILENAME_PREDICATE));
+            if (fileName.isPresent()) {
+                irContext.setName(fileName.get());
+            }
+        } else {
+            Optional<String> title = getLiteralForProperty(model, DC.title);
+            if (title.isPresent()) {
+                irContext.setName(title.get());
+            }
+        }
 
         return irContext;
     }
@@ -206,32 +220,17 @@ public class FedoraService implements IRService<Model> {
         return Triple.of(subject, predicate, object);
     }
 
-    private String getName(Model model, Property prop) {
-        Optional<String> name = Optional.empty();
-        ResIterator titleResources = model.listResourcesWithProperty(prop);
-        while (titleResources.hasNext()) {
-            name = Optional.of(titleResources.next().getProperty(prop).asTriple().getObject().toString());
-            break;
-        }
-        if (!name.isPresent()) {
-            StmtIterator statements = model.listStatements();
-            while (statements.hasNext()) {
-                String subject = statements.next().asTriple().getSubject().toString();
-                name = Optional.of(subject.equals(ir.getRootUri()) ? "Root" : subject);
+    private Optional<String> getLiteralForProperty(Model model, Property property) {
+        Optional<String> literal = Optional.empty();
+        NodeIterator nodeIterator = model.listObjectsOfProperty(property);
+        while (nodeIterator.hasNext()) {
+            RDFNode node = nodeIterator.next();
+            if (node.isLiteral()) {
+                literal = Optional.of(node.toString());
                 break;
             }
         }
-        return name.get();
-    }
-
-    private Triple getTriple(Model model) {
-        Optional<Triple> triple = Optional.empty();
-        StmtIterator statements = model.listStatements();
-        while (statements.hasNext()) {
-            triple = Optional.of(craftTriple(statements.next()));
-            break;
-        }
-        return triple.get();
+        return literal;
     }
 
     private FcrepoClient buildClient() {
