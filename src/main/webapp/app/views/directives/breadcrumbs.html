@@ -1,8 +1,9 @@
 <ol class="breadcrumb">
     <li ng-repeat="crumb in breadcrumbs track by $index">
-        <a href="" ng-click="nav({containerUri:crumb})">{{crumb | breadcrumb:ir }}</a>
+        <a href="" ng-click="nav({containerUri:crumb.uri})">{{crumb.name}}</a>
     </li>
+    <br ng-if="breadcrumbs.length">
     <li class="active">
-        {{ir.contextUri | breadcrumb:ir }}
+        <h3><span ng-if="breadcrumbs.length" class="glyphicon glyphicon-share-alt"></span> {{trimCrumb(context.name).replace(context.ir.rootUri, "...")}}</h3>
     </li>
 </ol>

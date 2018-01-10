@@ -23,6 +23,43 @@ var apiMapping = {
         'method': 'delete'
     }
   },
+  IRContext: {
+    channel: '/channel/ir-context',
+    validations: false,
+    lazy: true,
+    load: {
+      'endpoint': '/private/queue',
+      'controller': 'ir-context',
+      'method': ':type/:irid'
+    },
+    container: {
+      'endpoint': '/private/queue',
+      'controller': 'ir-context',
+      'method': ':type/:irid/container'
+    },
+    resource: {
+      'endpoint': '/private/queue',
+      'controller': 'ir-context',
+      'method': ':type/:irid/resource'
+    }
+  },
+  TestIRSettings: {
+    testPing: {
+      'endpoint': '/private/queue',
+      'controller': 'ir-test',
+      'method': ':type/ping'
+    },
+    testAuth: {
+        'endpoint': '/private/queue',
+        'controller': 'ir-test',
+        'method': ':type/auth'
+    },
+    testContent: {
+        'endpoint': '/private/queue',
+        'controller': 'ir-test',
+        'method': ':type/content'
+    }
+  },
   IR: {
     channel: '/channel/ir',
     validations: true,
@@ -50,36 +87,35 @@ var apiMapping = {
       'endpoint': '/private/queue',
       'controller': 'ir',
       'method': 'types'
-    },
-    createContainer: {
-      'endpoint': '/private/queue',
-      'controller': 'ir',
-      'method': 'container'
-    },
-    deleteContainers: {
-      'endpoint': '/private/queue',
-      'controller': 'ir',
-      'method': 'containers/delete'
-    },
-    getContainers: {
-      'endpoint': '/private/queue',
-      'controller': 'ir',
-      'method': 'containers'
-    },
-    testPing: {
+    }
+  },
+  Schema: {
+    channel: '/channel/schema',
+    validations: true,
+    all: {
         'endpoint': '/private/queue',
-        'controller': 'ir',
-        'method': 'test/ping'
+        'controller': 'schema',
+        'method': 'all'
     },
-    testAuth: {
-        'endpoint': '/private/queue',
-        'controller': 'ir',
-        'method': 'test/auth'
+    create: {
+      'endpoint': '/private/queue',
+      'controller': 'schema',
+      'method': 'create'
     },
-    testContent: {
+    update: {
         'endpoint': '/private/queue',
-        'controller': 'ir',
-        'method': 'test/content'
+        'controller': 'schema',
+        'method': 'update'
+    },
+    remove: {
+        'endpoint': '/private/queue',
+        'controller': 'schema',
+        'method': 'delete'
+    },
+    findProperties: {
+      'endpoint': '/private/queue',
+      'controller': 'schema',
+      'method': 'properties'
     }
   }
 };

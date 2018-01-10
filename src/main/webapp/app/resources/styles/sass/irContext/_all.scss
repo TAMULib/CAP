@@ -1,0 +1,12 @@
+.ir-context {
+    @import "./main";
+
+    .resource-section {
+        @import "./resourceSection";
+    }
+
+    .properties-section {
+        @import "./propertiesSection";
+    }
+
+}

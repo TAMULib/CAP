@@ -1,15 +1,42 @@
-cap.directive("breadcrumbs", function(IRRepo, $q, $route, BreadcrumbService) {
+cap.directive("breadcrumbs", function($rootScope, $q, $route, $filter, IRRepo, BreadcrumbService) {
     return {
-      templateUrl: "views/directives/breadcrumbs.html",
-      restrict: "E",
-      scope: {
-          ir: "=",
-          nav: "&"
-      },
-      link: function($scope, attr, elem) {
-        $scope.breadcrumbs = BreadcrumbService.getBreadcrumbs();
-        BreadcrumbService.registerBreadcrumbView($route.current.$$route.templateUrl);
-      }
+        templateUrl: "views/directives/breadcrumbs.html",
+        restrict: "E",
+        scope: {
+            context: "=",
+            nav: "&"
+        },
+        link: function($scope, attr, elem) {
+            $scope.breadcrumbs = BreadcrumbService.getBreadcrumbs();
+            BreadcrumbService.registerBreadcrumbView($route.current.$$route.templateUrl);
+
+            var currentContext = {};
+
+            $scope.trimCrumb = function(crumb) {
+                return BreadcrumbService.trimCrumb(crumb);
+            };
+
+            var un = $scope.$watch("context", function() {
+                if($scope.context) {
+                    un();
+                    $q.all([
+                        IRRepo.ready(),
+                        $scope.context.ready()
+                    ]).then(function(){
+                        currentContext = angular.copy($scope.context);
+                        var un = $rootScope.$on("$routeChangeStart", function(e, next, current) {
+                            if(BreadcrumbService.isABreadcrumbView(next.$$route.templateUrl)) {
+                                BreadcrumbService.updateBreadcrumb(currentContext, next.params.context);
+                            } else {
+                                BreadcrumbService.clearBreadcrumbs();
+                            }
+                            un();
+                        });
+                    });
+                }
+            });
+
+        }
     };
   });
 
@@ -20,10 +47,12 @@ cap.directive("breadcrumbs", function(IRRepo, $q, $route, BreadcrumbService) {
     var registeredBreadcrumbView = [];
 
     var storedCrumbs = angular.fromJson(StorageService.get("breadcrumbs"));
-    
+
+    var lastCrumbUri;
+
     var sendToStorage = function() {
         StorageService.set("breadcrumbs",angular.toJson(breadcrumbs));
-    }
+    };
 
     if(!storedCrumbs) {
         storedCrumbs = [];
@@ -31,23 +60,42 @@ cap.directive("breadcrumbs", function(IRRepo, $q, $route, BreadcrumbService) {
     var breadcrumbs = storedCrumbs;
     sendToStorage();
 
-    $rootScope.$on("$routeChangeStart", function(e, next, current) {
-        if(breadcrumbService.isABreadcrumbView(next.$$route.templateUrl)) {
-            var context = current.params.context;
-            var nextContext = next.params.context;
-            var containedIndex = breadcrumbs.indexOf(nextContext);
-            if(context && containedIndex===-1) {
-                breadcrumbs.push(context);
-                sendToStorage();
-            } else if(context) {
-                breadcrumbs.length = containedIndex;
-                sendToStorage();
+    breadcrumbService.trimCrumb = function(crumb) {
+        return lastCrumbUri&&crumb&&crumb.includes(lastCrumbUri)?crumb.replace(lastCrumbUri, "..."):crumb;
+    };
+
+    breadcrumbService.updateBreadcrumb = function(context, nextContextUri) {
+
+        var crumb = {
+            name: breadcrumbService.trimCrumb(context.name),
+            uri: context.uri
+        };
+
+        lastCrumbUri = context.uri;
+
+        var containedIndex = -1;
+        for(var i in breadcrumbs) {
+            var c = breadcrumbs[i];
+            if(c.uri===nextContextUri) {
+                containedIndex = i;
+                break;
             }
+        }
+
+        if(containedIndex===-1) {
+            breadcrumbs.push(crumb);
+            sendToStorage();
         } else {
-            breadcrumbs.length = 0;
+            breadcrumbs.length = containedIndex;
             sendToStorage();
         }
-    });
+
+    };
+
+    breadcrumbService.clearBreadcrumbs = function() {
+        breadcrumbs.length = 0;
+        sendToStorage();
+    };
 
     breadcrumbService.getBreadcrumbs = function() {
         return breadcrumbs;

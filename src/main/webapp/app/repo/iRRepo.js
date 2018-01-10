@@ -1,4 +1,4 @@
-cap.repo("IRRepo", function($q, WsApi) {
+cap.repo("IRRepo", function($q, WsApi, api, HttpMethodVerbs) {
   var iRRepo = this;
 
   iRRepo.scaffold = {
@@ -28,22 +28,31 @@ cap.repo("IRRepo", function($q, WsApi) {
   };
 
   iRRepo.testPing = function(ir) {
-    return WsApi.fetch(iRRepo.mapping.testPing, {
+    return WsApi.fetch(api.TestIRSettings.testPing, {
+      pathValues: {
+        type: ir.type
+      },
       data: ir
     });
   };
 
   iRRepo.testAuth = function(ir) {
-    return WsApi.fetch(iRRepo.mapping.testAuth, {
+    return WsApi.fetch(api.TestIRSettings.testAuth, {
+      pathValues: {
+        type: ir.type
+      },
       data: ir
     });
   };
 
   iRRepo.testContent = function(ir) {
-    return WsApi.fetch(iRRepo.mapping.testContent, {
+    return WsApi.fetch(api.TestIRSettings.testContent, {
+      pathValues: {
+        type: ir.type
+      },
       data: ir
     });
   };
-  
+
   return iRRepo;
 });

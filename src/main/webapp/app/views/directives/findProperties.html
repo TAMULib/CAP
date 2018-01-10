@@ -1,0 +1,23 @@
+<alerts view="views/alerts/irTestsAlert.html" channels="schema/properties" exclusive></alerts>
+
+<div class="find-properties text-center">
+    <button ng-if="!properties.length" type="button" class="find-properties-btn btn btn-large btn-success" ng-click="getProperties(schemaToCreate)" ng-disabled="!schema.namespace">
+        <span ng-if="!gettingProperties">Get Properties</span>
+        <span ng-if="gettingProperties" class="glyphicon glyphicon-refresh spinning"></span>
+    </button>
+    <div ng-if="properties.length" class="panel panel-default properties-list-panel">
+        <div class="panel-heading">
+            <button type="button" class="btn btn-success btn-small pull-right" ng-class="{'btn-warning': properties.length === schema.properties.length}" ng-click="toggleAllProps()">
+                    <span ng-if="properties.length !== schema.properties.length">Select All</span>
+                <span ng-if="properties.length === schema.properties.length">Deselect All</span>
+            </button>
+            <h4><span class="badge pull-left">{{schema.properties.length}}</span> Properties Selected</h4>
+        </div>
+        <div class="properties-list-group">
+            <div class="list-group-item clickable text-left" ng-repeat="prop in properties |  orderBy:'label'" ng-click="toggleProp(prop)" ng-class="{active: indexOfProp(prop)>-1}">
+                <h4 class="list-group-item-heading">{{prop.label || 'No Label'}}</h4>
+                <p class="list-group-item-text">{{prop.uri}}</p>
+            </div>
+        </div>
+    </div>
+</div>

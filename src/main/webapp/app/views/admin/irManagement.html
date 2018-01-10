@@ -1,0 +1,57 @@
+<div class="ir-management">
+
+  <admintabs></admintabs>
+
+  <h1>Repository Management</h1>
+
+  <div class="panel panel-default ir-container">
+
+    <div class="panel-heading clearfix">
+      <modal
+        modal-id="createIRModal"
+        modal-view="views/modals/createIRModal.html"
+        modal-btn-classes="btn btn-success pull-right"
+        modal-header-class="modal-header-primary"
+        modal-fullscreen="true"
+        wvr-modal-backdrop="static">
+        New
+      </modal>
+    </div>
+
+    <div class="panel-body">
+      <table ng-table="tableParams" class="table table-hover ir-table">
+        <tbody>
+          <tr ng-repeat="ir in $data">
+            <td data-title="'Name'">
+              {{ir.name}}
+            </td>
+            <td data-title="'Root URI'">
+                {{ir.rootUri}}
+            </td>
+            <td data-title="'Actions'" class="actions">
+                <a href="/ir/{{ir.name}}?context={{ir.rootUri}}" title="view" class="glyphicon glyphicon-eye-open action"></a>
+                <span title="edit" ng-click="editIr(ir)" class="glyphicon glyphicon-pencil action"></span>
+                <span title="delete" ng-click="confirmDeleteIr(ir)" class="glyphicon glyphicon-trash action"></span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <modal
+    modal-id="irDeleteModal"
+    modal-view="views/modals/irDeleteModal.html"
+    modal-header-class="modal-header-danger"
+    wvr-modal-backdrop="static">
+  </modal>
+
+  <modal
+    modal-id="irEditModal"
+    modal-view="views/modals/irEditModal.html"
+    modal-header-class="modal-header-warning"
+    modal-fullscreen="true"
+    wvr-modal-backdrop="static">
+  </modal>
+
+</div>

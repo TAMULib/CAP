@@ -4,15 +4,22 @@ cap.config(function ($locationProvider, $routeProvider) {
   
       $routeProvider.
       when('/', {
-        templateUrl: 'views/irManagement.html',
-        controller: 'IrManagementController'
+        templateUrl: 'views/splash.html'
       }).
       when('/home', {
         redirectTo: '/',        
       }).
+      when('/admin/ir', {
+        templateUrl: 'views/admin/irManagement.html',
+        controller: 'IrManagementController'
+      }).
+      when('/admin/schema', {
+        templateUrl: 'views/admin/schemaManagement.html',
+        controller: 'SchemaManagementController'
+      }).
       when('/ir/:irName', {
-          templateUrl: 'views/ir.html',
-          controller: 'IrController'
+        templateUrl: 'views/irContext.html',
+        controller: 'IrContextController'
       }).
   
       // Error Routes
