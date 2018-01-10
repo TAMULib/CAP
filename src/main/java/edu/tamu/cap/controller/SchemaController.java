@@ -5,9 +5,6 @@ import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,52 +27,52 @@ import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 @RequestMapping("/schema")
 public class SchemaController {
 
-	@Autowired
-	private SchemaRepo schemaRepo;
+    @Autowired
+    private SchemaRepo schemaRepo;
 
-	private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	@RequestMapping("/all")
-	@PreAuthorize("hasRole('USER')")
-	public ApiResponse allSchemas() {
-		return new ApiResponse(SUCCESS, schemaRepo.findAll());
-	}
-	
-	@RequestMapping("/properties")
-	@PreAuthorize("hasRole('USER')")
-	public ApiResponse propertiesByNamespace(@Param("namespace") String namespace) throws OntModelReadException {
-		return new ApiResponse(SUCCESS, schemaRepo.findPropertiesByNamespace(namespace));
-	}
+    @RequestMapping("/all")
+    @PreAuthorize("hasRole('USER')")
+    public ApiResponse allSchemas() {
+        return new ApiResponse(SUCCESS, schemaRepo.findAll());
+    }
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	@PreAuthorize("hasRole('USER')")
-	@WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
-	public ApiResponse createSchema(@RequestBody @WeaverValidatedModel Schema schema) {
-		logger.info("Creating schema:  " + schema.getName());
-		return new ApiResponse(SUCCESS, schemaRepo.create(schema));
-	}
+    @RequestMapping("/properties")
+    @PreAuthorize("hasRole('USER')")
+    public ApiResponse propertiesByNamespace(@Param("namespace") String namespace) throws OntModelReadException {
+        return new ApiResponse(SUCCESS, schemaRepo.findPropertiesByNamespace(namespace));
+    }
 
-	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	@PreAuthorize("hasRole('USER')")
-	@WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
-	public ApiResponse updateSchema(@RequestBody @WeaverValidatedModel Schema schema) {
-		logger.info("Updating schema:  " + schema.getName());
-		return new ApiResponse(SUCCESS, schemaRepo.update(schema));
-	}
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('USER')")
+    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
+    public ApiResponse createSchema(@RequestBody @WeaverValidatedModel Schema schema) {
+        logger.info("Creating schema:  " + schema.getName());
+        return new ApiResponse(SUCCESS, schemaRepo.create(schema));
+    }
 
-	@RequestMapping(value = "/delete", method = RequestMethod.POST)
-	@PreAuthorize("hasRole('USER')")
-	@WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
-	public ApiResponse deleteSchema(@RequestBody @WeaverValidatedModel Schema schema) {
-		logger.info("Deleating schema:  " + schema.getName());
-		schemaRepo.delete(schema);
-		return new ApiResponse(SUCCESS);
-	}
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('USER')")
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
+    public ApiResponse updateSchema(@RequestBody @WeaverValidatedModel Schema schema) {
+        logger.info("Updating schema:  " + schema.getName());
+        return new ApiResponse(SUCCESS, schemaRepo.update(schema));
+    }
 
-	@RequestMapping("/{id}")
-	@PreAuthorize("hasRole('USER')")
-	public ApiResponse getSchema(@PathVariable Long id) {
-		return new ApiResponse(SUCCESS, schemaRepo.read(id));
-	}
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('USER')")
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
+    public ApiResponse deleteSchema(@RequestBody @WeaverValidatedModel Schema schema) {
+        logger.info("Deleating schema:  " + schema.getName());
+        schemaRepo.delete(schema);
+        return new ApiResponse(SUCCESS);
+    }
+
+    @RequestMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
+    public ApiResponse getSchema(@PathVariable Long id) {
+        return new ApiResponse(SUCCESS, schemaRepo.read(id));
+    }
 
 }

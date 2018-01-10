@@ -1,35 +1,25 @@
 cap.controller("IrContextController", function($controller, $scope, IRRepo, $routeParams, $location, $route, IRContext) {
-  
+
   angular.extend(this, $controller('CoreAdminController', {
       $scope: $scope
   }));
 
-  var contextUri = $routeParams.context;
-
   $scope.irForm = {};
 
   IRRepo.ready().then(function() {
-    
-    
 
-    $scope.ir = IRRepo.findByName(decodeURI($routeParams.irName));  
-    
-    $scope.context = new IRContext({
-      ir: IRRepo.findByName(decodeURI($routeParams.irName)),
-      uri: $routeParams.context
-    });
-    
-    if(contextUri !== undefined) {
-      $scope.ir.contextUri = decodeURI(contextUri);
+    $scope.ir = IRRepo.findByName(decodeURI($routeParams.irName));
+
+    if($routeParams.context !== undefined) {
+      $scope.ir.contextUri = decodeURI($routeParams.context);
     } else {
-      $location.search("context", $scope.ir.contextUri);     
+      $location.search("context", $scope.ir.contextUri);
     }
 
     $scope.createContainer = function(form) {
-      $scope.context.createContainer(form)
-        .then(function() {
-          $scope.closeModal();
-        });
+      $scope.context.createContainer(form).then(function() {
+        $scope.closeModal();
+      });
     };
 
     $scope.resetCreateContainer = function() {
@@ -58,14 +48,23 @@ cap.controller("IrContextController", function($controller, $scope, IRRepo, $rou
     $scope.resetCreateContainer();
     $scope.resetUploadResource();
 
+    $scope.loadContainer = function(containerUri) {
+      console.log('load', containerUri)
+      var cachedContext = $scope.ir.getCachedContext(containerUri);
+      if(cachedContext) {
+        $scope.context = cachedContext;
+      } else {
+        $scope.context = new IRContext({
+          ir: $scope.ir,
+          uri: containerUri,
+          fetch: true
+        });
+      }
+      $location.search("context", containerUri);
+    };
+
+    $scope.loadContainer($scope.ir.contextUri);
+
   });
-  
-  $scope.loadContainer = function(containerUri) {
-    $scope.context = new IRContext({
-      ir: IRRepo.findByName(decodeURI($routeParams.irName)),
-      uri: containerUri
-    });
-    $location.search("context", containerUri);
-  };
 
 });
