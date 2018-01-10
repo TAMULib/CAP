@@ -78,7 +78,46 @@
         </div>
       </uib-tab>
 
-      <uib-tab index="2" heading="Test">
+      <uib-tab index="2" heading="Schemas">
+
+        <div class="row">
+
+          <div class="col-xs-6">
+          
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">This Repository</h3>
+              </div>
+              <ul class="list-group">
+                <li class="list-group-item" ng-repeat="s in irToCreate.schemas">
+                  {{s.name}}
+                  <span class="glyphicon glyphicon-arrow-right pull-right"></span>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+          
+          <div class="col-xs-6">
+
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">All Schemas</h3>
+              </div>
+              <ul class="list-group">
+                <li class="list-group-item clickable" ng-repeat="s in schemas | containedIn:irToCreate.schemas:'namespace'" ng-click="irToCreate.schemas.push(s)">
+                  <span class="glyphicon glyphicon-arrow-left"></span>
+                  {{s.name}}
+                </li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+      </uib-tab>
+
+      <uib-tab index="3" heading="Test">
         <irtests ir="irToCreate" results="testResults"></irtests>
       </uib-tab>
 

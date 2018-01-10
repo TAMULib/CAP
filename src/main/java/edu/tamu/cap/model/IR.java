@@ -9,10 +9,14 @@
  */
 package edu.tamu.cap.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.OneToMany;
 
 import edu.tamu.cap.model.validation.IRValidator;
 import edu.tamu.cap.service.ir.IRType;
@@ -42,16 +46,20 @@ public class IR extends ValidatingBaseEntity {
 
 	@Column
 	private String password;
+	
+	@OneToMany
+    private List<Schema> schemas;
 
 	public IR() {
 		setModelValidator(new IRValidator());
 	}
 
-	public IR(IRType type, String name, String rootUri) {
+	public IR(IRType type, String name, String rootUri, List<Schema> schemas) {
 		this();
 		setType(type);
 		setName(name);
 		setRootUri(rootUri);
+		setSchema(schemas==null?schemas:new ArrayList<Schema>());
 	}
 
 	public IRType getType() {
@@ -93,5 +101,13 @@ public class IR extends ValidatingBaseEntity {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+    public List<Schema> getSchema() {
+        return schemas;
+    }
+
+    public void setSchema(List<Schema> schema) {
+        this.schemas = schema;
+    }
 
 }

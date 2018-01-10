@@ -75,6 +75,11 @@ cap.controller("SchemaManagementController", function($controller, $scope, Schem
     });
   };
 
+  $scope.showProperties = function(props) {
+    $scope.propsToShow = props;
+    $scope.openModal("#showProperties");
+  };
+
   SchemaRepo.ready().then(function() {
     $scope.setTable = function () {
       $scope.tableParams = new NgTableParams({

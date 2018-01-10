@@ -28,6 +28,9 @@
             <td data-title="'Root URI'">
                 {{ir.rootUri}}
             </td>
+            <td data-title="'Schemas'">
+              <span class="badge">{{ir.schemas.length || 0}}</span>
+            </td>
             <td data-title="'Actions'" class="actions">
                 <a href="/ir/{{ir.name}}?context={{ir.rootUri}}" title="view" class="glyphicon glyphicon-eye-open action"></a>
                 <span title="edit" ng-click="editIr(ir)" class="glyphicon glyphicon-pencil action"></span>

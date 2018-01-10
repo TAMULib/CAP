@@ -1,9 +1,10 @@
-cap.controller("IrManagementController", function($controller, $scope, $q, $location, $timeout, NgTableParams, ApiResponseActions, IRRepo) {
+cap.controller("IrManagementController", function($controller, $scope, $q, $location, $timeout, NgTableParams, ApiResponseActions, IRRepo, SchemaRepo) {
 
   angular.extend(this, $controller('CoreAdminController', {
       $scope: $scope
   }));
 
+  $scope.schemas = SchemaRepo.getAll();
   $scope.irs = IRRepo.getAll();  
   $scope.iRTypes = [];
   
@@ -87,7 +88,10 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
     });
   };
 
-  IRRepo.ready().then(function() {
+  $q.all([
+    IRRepo.ready(),
+    SchemaRepo.ready()
+  ]).then(function() {
     $scope.setTable = function () {
       $scope.tableParams = new NgTableParams({
         count: $scope.irs.length,

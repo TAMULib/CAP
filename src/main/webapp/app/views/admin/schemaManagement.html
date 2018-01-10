@@ -29,7 +29,7 @@
                 {{schema.namespace}}
             </td>
             <td data-title="'Properties'">
-                <span class="badge">{{schema.properties.length || 0}}</span>
+                <span class="badge clickable" ng-click="showProperties(schema.properties)">{{schema.properties.length || 0}}</span>
             </td>
             <td data-title="'Actions'" class="actions">
                 <span title="edit" ng-click="editSchema(schema)" class="glyphicon glyphicon-pencil action clickable"></span>
@@ -53,6 +53,13 @@
     modal-view="views/modals/schemaEditModal.html"
     modal-header-class="modal-header-warning"
     modal-fullscreen="true"
+    wvr-modal-backdrop="static">
+  </modal>
+
+  <modal
+    modal-id="showProperties"
+    modal-view="views/modals/showProperties.html"
+    modal-header-class="modal-header-info"
     wvr-modal-backdrop="static">
   </modal>
 

@@ -1,0 +1,15 @@
+<div class="panel panel-default properties-list-panel">
+    <div class="panel-heading">
+        <h4><span class="badge pull-left">{{schema.properties.length}}</span> Properties</h4>
+        <input placeholder="Find Property in List" type="text" class="form-control" ng-model="limitProps" />
+    </div>
+    <div class="properties-list-group">
+        <div class="list-group-item text-left" ng-repeat="prop in propsToShow |  orderBy:'label' | filter:{label: limitProps}">
+            <h4 class="list-group-item-heading">{{prop.label || 'No Label'}}</h4>
+            <a href="{{prop.uri}}" class="list-group-item-text">{{prop.uri}}</a>
+        </div>
+    </div>
+</div>    
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" ng-click="limitProps='';closeModal()">Close</button>
+</div>
