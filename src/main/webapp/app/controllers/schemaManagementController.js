@@ -6,8 +6,8 @@ cap.controller("SchemaManagementController", function($controller, $scope, Schem
 
   $scope.schemas = SchemaRepo.getAll();    
 
-  $scope.schemaToCreate = {};
-  $scope.schemaToEdit = {};
+  $scope.schemaToCreate = SchemaRepo.getScaffold();
+  $scope.schemaToEdit = SchemaRepo.getScaffold();
   $scope.schemaToDelete = {};
 
   $scope.schemaForms = {
@@ -35,6 +35,11 @@ cap.controller("SchemaManagementController", function($controller, $scope, Schem
     });
   };
 
+  $scope.cancelCreateSchema = function() {
+    angular.extend($scope.schemaToCreate, SchemaRepo.getScaffold());
+    $scope.resetSchemaForms();
+  };
+
   $scope.editSchema = function(schema) {
     $scope.schemaToEdit = schema;
     $scope.openModal('#schemaEditModal');
@@ -48,7 +53,7 @@ cap.controller("SchemaManagementController", function($controller, $scope, Schem
 
   $scope.cancelEditSchema = function(schema) {
     $scope.schemaToEdit.refresh();
-    $scope.schemaToEdit = {};        
+    $scope.schemaToEdit = SchemaRepo.getScaffold();        
     $scope.resetSchemaForms();
   };
 
@@ -68,10 +73,6 @@ cap.controller("SchemaManagementController", function($controller, $scope, Schem
         $scope.resetSchemaForms();
       }
     });
-  };
-
-  $scope.getProperties = function(schema) {
-    $scope.gettingProperties = true;
   };
 
   SchemaRepo.ready().then(function() {

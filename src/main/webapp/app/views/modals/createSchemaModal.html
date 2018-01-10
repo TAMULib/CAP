@@ -1,6 +1,6 @@
 <form name="schemaForms.create" ng-submit="createSchema()" novalidate class="schema-forms-create">
   <div class="modal-header {{attr.modalHeaderClass}}">
-    <button type="button" class="close modal-close" aria-label="Close" ng-click="resetSchemaForms()"><span aria-hidden="true">&times;</span></button>
+    <button type="button" class="close modal-close" aria-label="Close" ng-click="cancelCreateSchema()"><span aria-hidden="true">&times;</span></button>
     <h4 class="modal-title">Create Schema</h4>
   </div>
   <div class="modal-body">
@@ -14,7 +14,7 @@
           model="schemaToCreate"
           property="name"
           label="Name"
-          placeholder="Name of the new schema"
+          placeholder="e.g. Dublin Core"
           form="schemaForms.create"
           validations="schemaForms.validations"
           results="schemaForms.getResults()"
@@ -25,7 +25,7 @@
           model="schemaToCreate"
           property="abbreviation"
           label="Abbreviation"
-          placeholder="Abbreviation for the new schema name"
+          placeholder="e.g. DC"
           form="schemaForms.create"
           validations="schemaForms.validations"
           results="schemaForms.getResults()"
@@ -36,7 +36,7 @@
           model="schemaToCreate"
           property="namespace"
           label="Namespace"
-          placeholder="URI of the schema namespace"
+          placeholder="e.g. http://purl.org/dc/terms/"
           form="schemaForms.create"
           validations="schemaForms.validations"
           results="schemaForms.getResults()"
@@ -44,18 +44,15 @@
         </validatedinput>
         
       </div>
-      <div class="col-sm-5 text-center">
-        <button class="btn btn-large btn-success" ng-click="getProperties(schemaToCreate)">
-          <span ng-if="!gettingProperties">Get Properties</span>
-          <span ng-if="gettingProperties" class="glyphicon glyphicon-refresh spinning"></span>
-        </button>
+      <div class="col-sm-5">
+        <findproperties schema="schemaToCreate"></findproperties>
       </div>
     </div>
     
   </div>     
   <div class="modal-footer">
-    <button type="button" class="btn" ng-class="{'btn-default': schemaForms.create.$pristine, 'btn-warning': !schemaForms.create.$pristine}" ng-click="resetSchemaForms()">Cancel</button>
-    <button type="submit" class="btn btn-success" ng-disabled="schemaForms.create.$invalid">Create</button>
+    <button type="button" class="btn" ng-class="{'btn-default': schemaForms.create.$pristine, 'btn-warning': !schemaForms.create.$pristine}" ng-click="cancelCreateSchema()">Cancel</button>
+    <button type="submit" class="btn btn-success" ng-disabled="schemaForms.create.$invalid||!schemaToCreate.properties.length">Create</button>
   </div>
 </form>
       
