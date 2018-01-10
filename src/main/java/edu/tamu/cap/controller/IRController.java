@@ -40,7 +40,7 @@ public class IRController {
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	@PreAuthorize("hasRole('USER')")
 	@WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
-	public ApiResponse createIRs(@RequestBody @WeaverValidatedModel IR ir) {
+	public ApiResponse createIR(@RequestBody @WeaverValidatedModel IR ir) {
 		logger.info("Creating IR:  " + ir.getName());
 		return new ApiResponse(SUCCESS, irRepo.create(ir));
 	}
@@ -64,7 +64,7 @@ public class IRController {
 
 	@RequestMapping(value = "/types", method = RequestMethod.GET)
 	@PreAuthorize("hasRole('USER')")
-	public ApiResponse testIRPing() {
+	public ApiResponse getIRTypes() {
 		return new ApiResponse(SUCCESS, IRType.getValues());
 	}
 
