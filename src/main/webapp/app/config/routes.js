@@ -19,8 +19,7 @@ cap.config(function ($locationProvider, $routeProvider) {
       }).
       when('/ir/:irName', {
         templateUrl: 'views/irContext.html',
-        controller: 'IrContextController',
-        reloadOnSearch: false
+        controller: 'IrContextController'
       }).
 
       // Error Routes

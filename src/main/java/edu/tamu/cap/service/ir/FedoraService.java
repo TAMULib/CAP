@@ -44,6 +44,8 @@ public class FedoraService implements IRService<Model> {
 
     private final static String EBU_FILENAME_PREDICATE = "http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#filename";
 
+    private final static String FEDORA_HAS_PARENT_PREDICATE = " http://fedora.info/definitions/v4/repository#hasParent";
+
     private final static String FEDORA_CONTAINER_PREDICATE = "http://fedora.info/definitions/v4/repository#Container";
 
     public final static String FEDORA_BINRAY_PREDICATE = "http://fedora.info/definitions/v4/repository#Binary";
@@ -172,6 +174,9 @@ public class FedoraService implements IRService<Model> {
             String predicate = triple.getPredicate();
 
             switch (predicate) {
+            case FEDORA_HAS_PARENT_PREDICATE:
+                irContext.setParent(triple);
+                break;
             case LDP_CONTAINS_PREDICATE:
                 irContext.addChild(new IRContext(triple));
                 break;

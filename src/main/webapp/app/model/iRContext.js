@@ -21,6 +21,7 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
     irContext.before(function() {
       var defer = $q.defer();
       if(irContext.fetch) {
+        console.log('fetch');
         fetchContext(irContext.uri).then(function(res) {
           angular.extend(irContext, angular.fromJson(res.body).payload.IRContext, {
             fetch: false
@@ -43,6 +44,7 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
         if(cachedContext) {
           angular.extend(children[triple.object], cachedContext);
         } else {
+          console.log('fetch child');
           fetchContext(triple.object).then(function(res) {
             angular.extend(children[triple.object], angular.fromJson(res.body).payload.IRContext, {
               ir: irContext.ir,

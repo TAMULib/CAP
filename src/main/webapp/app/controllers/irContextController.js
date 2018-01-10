@@ -49,6 +49,7 @@ cap.controller("IrContextController", function($controller, $scope, IRRepo, $rou
     $scope.resetUploadResource();
 
     $scope.loadContainer = function(containerUri) {
+      console.log('load', containerUri)
       var cachedContext = $scope.ir.getCachedContext(containerUri);
       if(cachedContext) {
         $scope.context = cachedContext;

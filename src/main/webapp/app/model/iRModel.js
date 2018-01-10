@@ -9,6 +9,9 @@ cap.model("IR", function() {
     };
 
     ir.getCachedContext = function(contextUri) {
+      if(cache[contextUri]) {
+        console.log('hit', contextUri, cache);
+      }
       return cache[contextUri];
     };
 
