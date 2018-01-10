@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.tamu.cap.service.ir.FedoraService;
+
 public class IRContext implements Serializable {
 
     private static final long serialVersionUID = -8489156248122941988L;
@@ -11,8 +13,6 @@ public class IRContext implements Serializable {
     private String name;
 
     private Triple triple;
-
-    private boolean resource;
 
     private List<Triple> properties;
 
@@ -49,11 +49,7 @@ public class IRContext implements Serializable {
     }
 
     public boolean isResource() {
-        return resource;
-    }
-
-    public void setResource(boolean resource) {
-        this.resource = resource;
+        return triple.getObject().equals(FedoraService.FEDORA_BINRAY_PREDICATE);
     }
 
     public List<Triple> getProperties() {

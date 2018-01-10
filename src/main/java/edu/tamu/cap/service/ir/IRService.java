@@ -1,6 +1,5 @@
 package edu.tamu.cap.service.ir;
 
-
 import org.springframework.web.multipart.MultipartFile;
 
 import edu.tamu.cap.model.IR;
@@ -15,7 +14,7 @@ public interface IRService<M> {
     public void verifyRoot() throws Exception;
 
     public IRContext createContainer(String contextUri, String name) throws Exception;
-    
+
     public IRContext createResource(String contextUri, MultipartFile file) throws Exception;
 
     public IRContext getContainer(String contextUri) throws Exception;
@@ -26,6 +25,6 @@ public interface IRService<M> {
 
     public void setIr(IR ir);
 
-    public IRContext buildIRContext(M model);
+    public IRContext buildIRContext(M model, String contextUri);
 
 }

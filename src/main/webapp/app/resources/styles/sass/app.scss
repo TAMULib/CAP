@@ -1,5 +1,3 @@
-
-
 @import "variables/all";
 @import "theme-base";
 
@@ -7,6 +5,7 @@
 @import "imports";
 @import "main";
 
+@import "splash/all";
 @import "iRManagement/all";
 @import "irContext/all";
 @import "directives/all";
@@ -23,13 +22,6 @@ body {
   display: grid;
   grid-template-rows: 1fr auto;
 }
-
-// main {
-//   display: block;
-//   height: auto;
-//   min-height: 100%;
-//   margin-bottom: -50px;
-// }
 
 tamufooter {
   grid-row-start: 2;
