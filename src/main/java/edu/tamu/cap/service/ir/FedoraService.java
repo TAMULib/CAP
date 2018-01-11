@@ -104,15 +104,10 @@ public class FedoraService implements IRService<Model> {
         FcrepoClient client = buildClient();
         String contextUri = triple.getSubject();
         PatchBuilder patch = new PatchBuilder(new URI(contextUri), client);
-
         String sparql = "INSERT { <" + triple.getSubject() + "> <" + triple.getPredicate() + "> '" + triple.getObject() + "' . } WHERE {}";
-
         UpdateRequest request = UpdateFactory.create();
-
         request.add(sparql);
-
         patch.body(new ByteArrayInputStream(request.toString().getBytes()));
-
         FcrepoResponse response = patch.perform();
         URI location = response.getLocation();
         logger.debug("Metadata creation status and location: {}, {}", response.getStatusCode(), location);
@@ -123,17 +118,12 @@ public class FedoraService implements IRService<Model> {
     public IRContext deleteMetadata(Triple triple) throws Exception {
         FcrepoClient client = buildClient();
         String contextUri = triple.getSubject();
-
         PatchBuilder patch = new PatchBuilder(new URI(contextUri), client);
-
-        String sparql = "DELETE { <" + contextUri + "> <" + triple.getPredicate() + "> " + triple.getObject() + " } WHERE { <" + contextUri + "> <" + triple.getPredicate() + "> " + triple.getObject() + " }";
-
+        String sparql = "DELETE { <" + contextUri + "> <" + triple.getPredicate() + "> " + triple.getObject() + " } " + 
+                        "WHERE { <" + contextUri + "> <" + triple.getPredicate() + "> " + triple.getObject() + " }";
         UpdateRequest request = UpdateFactory.create();
-
         request.add(sparql);
-
         patch.body(new ByteArrayInputStream(request.toString().getBytes()));
-
         FcrepoResponse response = patch.perform();
         URI location = response.getLocation();
         logger.debug("Metadata delete status and location: {}, {}", response.getStatusCode(), location);
@@ -144,9 +134,7 @@ public class FedoraService implements IRService<Model> {
     public IRContext updateMetadata(String contextUri, String sparql) throws Exception {
         FcrepoClient client = buildClient();
         PatchBuilder patch = new PatchBuilder(new URI(contextUri), client);
-
         patch.body(new ByteArrayInputStream(sparql.getBytes()));
-
         FcrepoResponse response = patch.perform();
         URI location = response.getLocation();
         logger.debug("Metadata update status and location: {}, {}", response.getStatusCode(), location);
