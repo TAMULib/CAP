@@ -21,15 +21,15 @@ public interface IRService<M> {
     public IRContext getContainer(String contextUri) throws Exception;
 
     public IRContext updateContainer(String contextUri) throws Exception;
-    
+
     public IRContext createMetadata(Triple triple) throws Exception;
+
+    public IRContext updateMetadata(String contextUri, String sparql) throws Exception;
 
     public void deleteContainer(String targetUri) throws Exception;
 
     public void setIr(IR ir);
 
     public IRContext buildIRContext(M model, String contextUri);
-
-	
 
 }

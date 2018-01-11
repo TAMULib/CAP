@@ -2,8 +2,8 @@ cap.repo("SchemaRepo", function(WsApi, HttpMethodVerbs) {
   var schemaRepo = this;
 
   schemaRepo.scaffold = {
-    name: "Dublin Core",
-    abbreviation: "DC",
+    name: "Dublin Core Terms",
+    abbreviation: "dcterms",
     namespace: "http://purl.org/dc/terms/",
     properties: []
   };
