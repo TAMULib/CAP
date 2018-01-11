@@ -3,6 +3,7 @@ package edu.tamu.cap.model.response;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import edu.tamu.cap.service.ir.FedoraService;
 
@@ -13,6 +14,8 @@ public class IRContext implements Serializable {
     private String name;
 
     private Triple triple;
+
+    private Triple parent;
 
     private List<Triple> properties;
 
@@ -46,6 +49,18 @@ public class IRContext implements Serializable {
 
     public void setTriple(Triple triple) {
         this.triple = triple;
+    }
+
+    public Triple getParent() {
+        return parent;
+    }
+
+    public void setParent(Triple parent) {
+        this.parent = parent;
+    }
+
+    public boolean getHasParent() {
+        return Optional.ofNullable(parent).isPresent();
     }
 
     public boolean isResource() {
