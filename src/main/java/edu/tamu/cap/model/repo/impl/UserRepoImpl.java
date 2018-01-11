@@ -1,12 +1,3 @@
-/* 
- * UserRepoImpl.java 
- * 
- * Version: 
- *     $Id$ 
- * 
- * Revisions: 
- *     $Log$ 
- */
 package edu.tamu.cap.model.repo.impl;
 
 import java.util.Optional;
@@ -39,7 +30,7 @@ public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> impleme
      */
     @Override
     public synchronized User create(String uin) {
-    	Optional<User> user = userRepo.findByUsername(uin);
+        Optional<User> user = userRepo.findByUsername(uin);
         return user.isPresent() ? user.get() : userRepo.save(new User(uin));
     }
 
@@ -55,9 +46,9 @@ public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> impleme
     /**
      * {@inheritDoc}
      */
-	@Override
-	protected String getChannel() {
-		return "/channel/user";
-	}
+    @Override
+    protected String getChannel() {
+        return "/channel/user";
+    }
 
 }
