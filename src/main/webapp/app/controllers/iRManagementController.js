@@ -45,7 +45,6 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
   }
 
   $scope.createIr = function() {
-    console.log($scope.irToCreate.schemas.length);
     IRRepo.create($scope.irToCreate).then(function(res) {
       if(angular.fromJson(res.body).meta.status === "SUCCESS") {
         $scope.cancelCreateIr();
@@ -118,7 +117,7 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
       });
     };
     $scope.setTable();
-  }); 
+  });
 
   IRRepo.listen([ApiResponseActions.CREATE, ApiResponseActions.DELETE], function (arg) {
     $scope.setTable();

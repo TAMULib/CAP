@@ -72,11 +72,50 @@
                 </div>
             </div>
         </uib-tab>
-        <uib-tab index="2" heading="Test">
+        <uib-tab index="2" heading="Schemas">
+
+            <div class="row">
+    
+                <div class="col-xs-6">
+                
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                    <h3 class="panel-title">This Repository</h3>
+                    </div>
+                    <ul class="list-group">
+                    <li class="list-group-item clickable" ng-repeat="s in irToEdit.schemas track by $index" ng-click="irForms.edit.$setDirty();irToEdit.schemas.splice($index,1);">
+                        {{s.name}}
+                        <span class="glyphicon glyphicon-arrow-right pull-right"></span>
+                    </li>
+                    </ul>
+                </div>
+    
+                </div>
+                
+                <div class="col-xs-6">
+    
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                    <h3 class="panel-title">All Schemas</h3>
+                    </div>
+                    <ul class="list-group">
+                    <li class="list-group-item clickable" ng-repeat="s in schemas | containedIn:irToEdit.schemas:'namespace'" ng-click="irForms.edit.$setDirty();irToEdit.schemas.push(s);">
+                        <span class="glyphicon glyphicon-arrow-left"></span>
+                        {{s.name}}
+                    </li>
+                    </ul>
+                </div>
+    
+                </div>
+            </div>
+    
+        </uib-tab>
+        <uib-tab index="3" heading="Test">
             <irtests ir="irToEdit" results="testResults"></irtests>
         </uib-tab>
     </div>     
     <div class="modal-footer">
+        <small class="text-warning pull-left" ng-if="irForms.edit.$dirty&&testResults.status!=='SUCCESS'">Test must pass before edits can be saved</small>
         <button type="button" class="btn btn-default" ng-class="{'btn-default': irForms.edit.$pristine, 'btn-warning': !irForms.edit.$pristine}" ng-click="cancelEditIr()">Cancel</button>
         <button type="submit" class="btn btn-success" ng-disabled="!irForms.edit.$dirty||irForms.edit.$invalid||(irForms.edit.$dirty&&testResults.status!=='SUCCESS')">Edit</button>
     </div>
