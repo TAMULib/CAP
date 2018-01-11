@@ -1,6 +1,7 @@
 package edu.tamu.cap.model.response;
 
 import java.io.Serializable;
+import java.util.Map;
 
 public class Triple implements Serializable {
 
@@ -49,6 +50,10 @@ public class Triple implements Serializable {
 
     public static Triple of(String subject, String predicate, String object) {
         return new Triple(subject, predicate, object);
+    }
+    
+    public static Triple of(Map<String, String> tripleMap) {
+        return new Triple(tripleMap.get("subject"), tripleMap.get("predicate"), tripleMap.get("object"));
     }
 
 }

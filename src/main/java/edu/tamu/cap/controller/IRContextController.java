@@ -7,6 +7,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.PATCH;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
+import java.util.Map;
+
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,6 +53,12 @@ public class IRContextController {
     @PreAuthorize("hasRole('USER')")
     public ApiResponse createMetadata(IRService<?> irService, Triple triple) throws Exception {
         return new ApiResponse(SUCCESS, irService.createMetadata(triple));
+    }
+    
+    @RequestMapping(value = "/metadata", method = DELETE)
+    @PreAuthorize("hasRole('USER')")
+    public ApiResponse deleteMetadata(IRService<?> irService, @RequestParam Map<String,String> tripleMap) throws Exception {
+        return new ApiResponse(SUCCESS, irService.deleteMetadata(Triple.of(tripleMap)));
     }
 
     @RequestMapping(value = "/metadata", method = PATCH)

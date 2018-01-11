@@ -2,13 +2,11 @@ package edu.tamu.cap.service.ir;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.NodeIterator;
@@ -46,6 +44,8 @@ public class FedoraService implements IRService<Model> {
     private final static String RDF_TYPE_PREDICATE = "https://www.w3.org/1999/02/22-rdf-syntax-ns#type";
 
     private final static String EBU_FILENAME_PREDICATE = "http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#filename";
+
+    private final static String FEDORA_ROOT_PREDICATE = "http://fedora.info/definitions/v4/repository#RepositoryRoot";
 
     private final static String FEDORA_HAS_PARENT_PREDICATE = "http://fedora.info/definitions/v4/repository#hasParent";
 
@@ -89,13 +89,13 @@ public class FedoraService implements IRService<Model> {
     }
 
     @Override
-    public void verifyRoot() throws FcrepoOperationFailedException, URISyntaxException, IOException, IRVerificationException {
+    public void verifyRoot() throws Exception {
         FcrepoClient client = buildClient();
-        FcrepoResponse response = new GetBuilder(new URI(ir.getRootUri()), client).perform();
-        String resBody = IOUtils.toString(response.getBody(), "UTF-8");
-        if (!resBody.contains("fedora:RepositoryRoot")) {
-            // TODO: Add switch to give better messages by status code
-            throw new IRVerificationException("No root found. Status " + response.getStatusCode());
+        FcrepoResponse response = new GetBuilder(new URI(ir.getRootUri() + "/fcr:metadata"), client).accept("application/rdf+xml").perform();
+        Model model = createRdfModel(response.getBody());
+        Optional<String> root = getLiteralForProperty(model, model.createProperty(FEDORA_ROOT_PREDICATE));
+        if (root.isPresent()) {
+            throw new IRVerificationException("URI is not a Fedora root!");
         }
     }
 
@@ -105,7 +105,7 @@ public class FedoraService implements IRService<Model> {
         String contextUri = triple.getSubject();
         PatchBuilder patch = new PatchBuilder(new URI(contextUri), client);
 
-        String sparql = "INSERT { <" + triple.getSubject() + "> <" + triple.getPredicate() + "> '" + triple.getObject() + "' . " + "} WHERE {}";
+        String sparql = "INSERT { <" + triple.getSubject() + "> <" + triple.getPredicate() + "> '" + triple.getObject() + "' . } WHERE {}";
 
         UpdateRequest request = UpdateFactory.create();
 
@@ -116,6 +116,27 @@ public class FedoraService implements IRService<Model> {
         FcrepoResponse response = patch.perform();
         URI location = response.getLocation();
         logger.debug("Metadata creation status and location: {}, {}", response.getStatusCode(), location);
+        return getContainer(contextUri);
+    }
+
+    @Override
+    public IRContext deleteMetadata(Triple triple) throws Exception {
+        FcrepoClient client = buildClient();
+        String contextUri = triple.getSubject();
+
+        PatchBuilder patch = new PatchBuilder(new URI(contextUri), client);
+
+        String sparql = "DELETE { <" + contextUri + "> <" + triple.getPredicate() + "> " + triple.getObject() + " } WHERE { <" + contextUri + "> <" + triple.getPredicate() + "> " + triple.getObject() + " }";
+
+        UpdateRequest request = UpdateFactory.create();
+
+        request.add(sparql);
+
+        patch.body(new ByteArrayInputStream(request.toString().getBytes()));
+
+        FcrepoResponse response = patch.perform();
+        URI location = response.getLocation();
+        logger.debug("Metadata delete status and location: {}, {}", response.getStatusCode(), location);
         return getContainer(contextUri);
     }
 

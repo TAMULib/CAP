@@ -32,4 +32,6 @@ public interface IRService<M> {
 
     public IRContext buildIRContext(M model, String contextUri);
 
+    public IRContext deleteMetadata(Triple triple) throws Exception;
+
 }

@@ -173,6 +173,32 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
       return allRemovePromses;
     };
 
+    irContext.removeMetadata = function(metadataTriples) {
+      
+      var promises = [];
+
+      angular.forEach(metadataTriples, function(metadataTriple) {
+        var createPromise = WsApi.fetch(irContext.getMapping().metadata, {
+          method: HttpMethodVerbs.DELETE,
+          pathValues: {
+            irid: irContext.ir.id,
+            type: irContext.ir.type
+          },
+          query: metadataTriple
+        });
+
+        createPromise.then(function(res) {
+          angular.extend(irContext, angular.fromJson(res.body).payload.IRContext);
+        });
+
+        promises.push(createPromise);
+      });
+
+      var allRemovePromses = $q.all(promises);
+
+      return allRemovePromses;
+    };
+
     irContext.advancedUpdate = function(updateForm) {
       var updatePromise = WsApi.fetch(irContext.getMapping().metadata, {
         method: HttpMethodVerbs.PATCH,

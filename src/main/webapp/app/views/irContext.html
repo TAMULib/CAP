@@ -48,12 +48,17 @@
         list="context.metadata"
         list-element-action="ir.loadContext(le)"
         add-action="openModal('#addMetadata')"
-        remove-action="ir.removeProperties(items)">
+        remove-action="context.removeMetadata(items)">
         <br ng-show="contentExpanded">
         <dl ng-show="contentExpanded" class="dl-horizontal" ng-repeat="triple in list | unique:'predicate'">
-          <dt><a href="{{triple.predicate}}">{{triple.predicate | metadataLabel }}</a></dt>
-          <dd ng-repeat="t in list | filter:{predicate:triple.predicate}:true">
-              {{t.object.split("^^")[0] | removeQuotes}}
+          <dt> 
+              <input ng-show="removeListElements" type="checkbox" ng-checked="checkAll" ng-click="checkAll=!checkAll;checkAll?selectAll(filteredList):selectedListElements.length=0"> 
+              <a href="{{triple.predicate}}">{{triple.predicate | metadataLabel }}</a>
+          </dt>
+          <dd ng-repeat="t in filteredList = (list |filter:{predicate:triple.predicate}:true)">
+              <input ng-show="removeListElements" type="checkbox" ng-checked="selectedListElements.indexOf(t)!==-1" ng-click="selectedListElements.indexOf(t)===-1?selectedListElements.push(t):selectedListElements.splice(selectedListElements.indexOf(t),1)"> 
+              <span ng-if="selectedListElements.indexOf(t)===-1">{{t.object.split("^^")[0] | removeQuotes}}</span>
+              <del ng-if="selectedListElements.indexOf(t)!==-1">{{t.object.split("^^")[0] | removeQuotes}}</del>
           </dd>
         </dl>
       </irsection>
