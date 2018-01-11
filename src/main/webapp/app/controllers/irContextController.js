@@ -44,6 +44,22 @@ cap.controller("IrContextController", function($controller, $scope, IRRepo, $rou
       $scope.closeModal();
     };
 
+    $scope.addMetadata = function(form) {
+      var triples = [];
+      angular.forEach(form.entries, function(entry) {
+        triples.push({
+          subject: $scope.context.uri,
+          predicate: entry.property.uri,
+          object: entry.value
+        });
+      });
+
+      $scope.context.createMetadata(triples).then(function() {
+        $scope.closeModal();
+      });
+
+    };
+
     $scope.resetCreateContainer();
     $scope.resetUploadResource();
 

@@ -24,6 +24,7 @@ import org.fcrepo.client.FcrepoClient;
 import org.fcrepo.client.FcrepoOperationFailedException;
 import org.fcrepo.client.FcrepoResponse;
 import org.fcrepo.client.GetBuilder;
+import org.fcrepo.client.PatchBuilder;
 import org.fcrepo.client.PostBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,6 +101,30 @@ public class FedoraService implements IRService<Model> {
             throw new IRVerificationException("No root found. Status " + response.getStatusCode());
         }
     }
+    
+	@Override
+	public IRContext createMetadata(Triple triple) throws Exception {
+		
+		System.out.println("In Service");
+		
+		FcrepoClient client = buildClient();
+    
+        String contextUri = triple.getSubject();
+        
+		PatchBuilder patch = new PatchBuilder(new URI(contextUri), client);
+        
+		Model model = ModelFactory.createDefaultModel();
+		Property predicate = model.createProperty(triple.getPredicate());
+        model.createResource("").addProperty(predicate, triple.getObject());
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        RDFDataMgr.write(out, model, Lang.TURTLE);
+        patch.body(new ByteArrayInputStream(out.toByteArray()));
+            
+        FcrepoResponse response = patch.perform();
+        URI location = response.getLocation();
+        logger.debug("Metadata creation status and location: {}, {}", response.getStatusCode(), location);
+        return getContainer(contextUri);
+	}
 
     @Override
     public IRContext createContainer(String contextUri, String name) throws Exception {

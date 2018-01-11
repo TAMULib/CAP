@@ -12,14 +12,13 @@ package edu.tamu.cap.model;
 import static javax.persistence.FetchType.EAGER;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 
 import edu.tamu.cap.model.validation.IRValidator;
 import edu.tamu.cap.service.ir.IRType;
@@ -50,7 +49,7 @@ public class IR extends ValidatingBaseEntity {
 	@Column
 	private String password;
 	
-	@OneToMany(fetch = EAGER)
+	@ManyToMany(fetch = EAGER)
     private List<Schema> schemas;
 
 	public IR() {

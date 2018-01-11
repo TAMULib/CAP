@@ -147,6 +147,33 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
       return createPromise;
     };
 
+    irContext.createMetadata = function(metadataTriples) {
+
+      var promises = [];
+
+      angular.forEach(metadataTriples, function(metadataTriple) {
+        var createPromise = WsApi.fetch(irContext.getMapping().metadata, {
+          method: HttpMethodVerbs.POST,
+          pathValues: {
+            irid: irContext.ir.id,
+            type: irContext.ir.type
+          },
+          data: metadataTriple
+        });
+
+        createPromise.then(function(res) {
+          console.log(angular.fromJson(res.body).payload.IRContext);
+          angular.extend(irContext, angular.fromJson(res.body).payload.IRContext);
+        });
+
+        promises.push(createPromise);
+      });
+
+      var allRemovePromses = $q.all(promises);
+
+      return allRemovePromses;
+    };
+
     return this;
 
   };
