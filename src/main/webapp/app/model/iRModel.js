@@ -1,4 +1,4 @@
-cap.model("IR", function($location, $q, IRContext) {
+cap.model("IR", function($location, IRContext) {
   return function IR() {
     var ir = this;
 
