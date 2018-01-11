@@ -1,0 +1,16 @@
+<form name="irForm.advancedUpdate" ng-submit="advancedUpdate(irForm.advancedUpdate)" novalidate>
+    <div class="modal-header {{attr.modalHeaderClass}}">
+      <button type="button" class="close modal-close" aria-label="Close" ng-click="resetAdvancedUpdate()"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title">Advanced Update</h4>
+    </div>
+    <div class="modal-body" ng-init="resetAdvancedUpdate()">
+      <div class="form-group">
+        <label for="properties.update">Sparql</label>
+        <textarea name="properties.update" ng-model="irForm.advancedUpdate.sparql" class="form-control fixed-vertical" cols="10" rows="20"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default" ng-click="resetAdvancedUpdate()">Cancel</button>
+      <button type="submit" class="btn btn-success" ng-disabled="irForm.advancedUpdate.sparql.length === 0">Update</button>
+    </div>
+</form>

@@ -3,8 +3,6 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
 
     var irContext = this;
 
-    console.log(irContext);
-
     var children = {};
 
     var fetchContext = function (contextUri) {
@@ -164,7 +162,6 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
         });
 
         createPromise.then(function(res) {
-          console.log(angular.fromJson(res.body).payload.IRContext);
           angular.extend(irContext, angular.fromJson(res.body).payload.IRContext);
         });
 
@@ -174,6 +171,26 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
       var allRemovePromses = $q.all(promises);
 
       return allRemovePromses;
+    };
+
+    irContext.advancedUpdate = function(updateForm) {
+      var updatePromise = WsApi.fetch(irContext.getMapping().metadata, {
+        method: HttpMethodVerbs.PATCH,
+        pathValues: {
+          irid: irContext.ir.id,
+          type: irContext.ir.type
+        },
+        query: {
+          contextUri: irContext.uri
+        },
+        data: updateForm.sparql
+      });
+
+      updatePromise.then(function(res) {
+        angular.extend(irContext, angular.fromJson(res.body).payload.IRContext);
+      });
+
+      return updatePromise;
     };
 
     return this;
