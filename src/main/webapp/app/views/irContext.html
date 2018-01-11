@@ -15,10 +15,10 @@
         <li role="menuitem bg-danger"><a href="#" class="bg-danger"><span class="glyphicon glyphicon-trash"></span> Delete</a></li>
       </ul>
     </div>
-    <h1>{{ir.name}} <small class="clickable" ng-click="loadContainer(ir.rootUri)">(<span class="glyphicon glyphicon-home"></span> {{ir.rootUri}})</small></h1>
+    <h1>{{ir.name}} <small class="clickable" ng-click="ir.loadContext(ir.rootUri)">(<span class="glyphicon glyphicon-home"></span> {{ir.rootUri}})</small></h1>
   </div>
 
-  <breadcrumbs nav="loadContainer(containerUri)" context="context"></breadcrumbs>
+  <breadcrumbs context="context"></breadcrumbs>
 
   <div class="container-fluid">
     <div class="properties-section">
@@ -45,7 +45,7 @@
         title="'Metadata'"
         type="'metadatum'"
         list="context.metadata"
-        list-element-action="loadContainer(le)"
+        list-element-action="ir.loadContext(le)"
         add-action="openModal('#addMetadata')"
         remove-action="ir.removeProperties(items)">
         <br ng-show="contentExpanded">
@@ -64,7 +64,7 @@
         title="'Children'"
         type="'child'"
         list="context.children"
-        list-element-action="loadContainer(le)"
+        list-element-action="ir.loadContext(le)"
         add-action="openModal('#createContainer')"
         remove-action="context.removeContainers(items)">
         <ol class="list-group" ng-show="contentExpanded">
@@ -82,7 +82,7 @@
         title="'Resources'"
         type="'resource'"
         list="context.children"
-        list-element-action="loadContainer(le)"
+        list-element-action="ir.loadContext(le)"
         add-action="openModal('#uploadResource')"
         remove-action="context.removeResources(items)">
         <ol class="list-group" ng-show="contentExpanded">
