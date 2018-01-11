@@ -89,7 +89,7 @@
                 <h3 class="panel-title">This Repository</h3>
               </div>
               <ul class="list-group">
-                <li class="list-group-item" ng-repeat="s in irToCreate.schemas">
+                <li class="list-group-item clickable" ng-repeat="s in irToCreate.schemas track by $index" ng-click="irToCreate.schemas.splice($index,1)">
                   {{s.name}}
                   <span class="glyphicon glyphicon-arrow-right pull-right"></span>
                 </li>

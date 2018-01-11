@@ -4,7 +4,6 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
       $scope: $scope
   }));
 
-  $scope.schemas = SchemaRepo.getAll();
   $scope.irs = IRRepo.getAll();  
   $scope.iRTypes = [];
   
@@ -38,9 +37,15 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
     $scope.closeModal();    
   };
 
-  $scope.resetIrForms();  
+  $scope.resetIrForms(); 
+  
+  $scope.startCreate = function() {
+    $scope.schemas = SchemaRepo.getAll();
+    $scope.openModal("#createIRModal");
+  }
 
   $scope.createIr = function() {
+    console.log($scope.irToCreate.schemas.length);
     IRRepo.create($scope.irToCreate).then(function(res) {
       if(angular.fromJson(res.body).meta.status === "SUCCESS") {
         $scope.cancelCreateIr();
@@ -54,6 +59,7 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
   };
 
   $scope.editIr = function(ir) {
+    $scope.schemas = SchemaRepo.getAll();
     $scope.irToEdit = ir;
     $scope.openModal('#irEditModal');
   };

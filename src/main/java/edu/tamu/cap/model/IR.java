@@ -9,7 +9,10 @@
  */
 package edu.tamu.cap.model;
 
+import static javax.persistence.FetchType.EAGER;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -47,7 +50,7 @@ public class IR extends ValidatingBaseEntity {
 	@Column
 	private String password;
 	
-	@OneToMany
+	@OneToMany(fetch = EAGER)
     private List<Schema> schemas;
 
 	public IR() {
@@ -59,7 +62,7 @@ public class IR extends ValidatingBaseEntity {
 		setType(type);
 		setName(name);
 		setRootUri(rootUri);
-		setSchema(schemas==null?schemas:new ArrayList<Schema>());
+		setSchemas(schemas!=null?schemas:new ArrayList<Schema>());
 	}
 
 	public IRType getType() {
@@ -102,11 +105,11 @@ public class IR extends ValidatingBaseEntity {
 		this.password = password;
 	}
 
-    public List<Schema> getSchema() {
+    public List<Schema> getSchemas() {
         return schemas;
     }
 
-    public void setSchema(List<Schema> schema) {
+    public void setSchemas(List<Schema> schema) {
         this.schemas = schema;
     }
 

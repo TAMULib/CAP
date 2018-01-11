@@ -1,17 +1,15 @@
-cap.filter("containedIn", function() {
-  return function(input, array, prop) {
-   
-    var notContained = true;
-
-    for(var i in array) {
-      var item = array[i];
-      if(input[prop]===item[prop]) {
-        notcontained=false;
-      }
+cap.filter("containedIn", function($filter) {
+  return function(list, arrayFilter, element){
+    if(arrayFilter){
+      return $filter("filter")(list, function(listItem){
+        var found = true;
+        angular.forEach(arrayFilter, function(arrayItem) {
+          if(arrayItem[element]===listItem[element]) {
+            found = false;
+          }
+        });
+        return found;
+      });
     }
-    
-   
-    return notContained;
   };
-
 });
