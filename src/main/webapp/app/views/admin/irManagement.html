@@ -28,7 +28,7 @@
                 {{ir.rootUri}}
             </td>
             <td data-title="'Schemas'">
-              <span class="badge">{{ir.schemas.length || 0}}</span>
+              <span class="badge clickable" ng-click="showSchemas(ir.schemas)">{{ir.schemas.length || 0}}</span>
             </td>
             <td data-title="'Actions'" class="actions">
                 <a href="/ir/{{ir.name}}?context={{ir.rootUri}}" title="view" class="glyphicon glyphicon-eye-open action"></a>
@@ -53,6 +53,13 @@
     modal-view="views/modals/irEditModal.html"
     modal-header-class="modal-header-warning"
     modal-fullscreen="true"
+    wvr-modal-backdrop="static">
+  </modal>
+
+  <modal
+    modal-id="showSchemasModal"
+    modal-view="views/modals/showSchemasModal.html"
+    modal-header-class="modal-header-info"
     wvr-modal-backdrop="static">
   </modal>
 

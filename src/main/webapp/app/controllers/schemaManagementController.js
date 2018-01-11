@@ -77,7 +77,7 @@ cap.controller("SchemaManagementController", function($controller, $scope, Schem
 
   $scope.showProperties = function(props) {
     $scope.propsToShow = props;
-    $scope.openModal("#showProperties");
+    $scope.openModal("#showPropertiesModal");
   };
 
   SchemaRepo.ready().then(function() {

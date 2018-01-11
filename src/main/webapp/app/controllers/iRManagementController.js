@@ -94,6 +94,11 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
     });
   };
 
+  $scope.showSchemas = function(schemas) {
+    $scope.schemasToShow = schemas;
+    $scope.openModal("#showSchemasModal")
+  }
+
   $q.all([
     IRRepo.ready(),
     SchemaRepo.ready()
