@@ -1,4 +1,4 @@
-cap.model("IR", function() {
+cap.model("IR", function($location, IRContext) {
   return function IR() {
     var ir = this;
 
@@ -9,10 +9,24 @@ cap.model("IR", function() {
     };
 
     ir.getCachedContext = function(contextUri) {
-      if(cache[contextUri]) {
-        console.log('hit', contextUri, cache);
-      }
       return cache[contextUri];
+    };
+
+    ir.getContext = function(contextUri) {
+      var context = ir.getCachedContext(contextUri);
+      if(context === undefined) {
+        context = new IRContext({
+          ir: ir,
+          uri: contextUri,
+          fetch: true
+        });
+      }
+      return context;
+    };
+
+    ir.loadContext = function(contextUri) {
+      $location.search("context", contextUri);
+      return ir.getContext(contextUri);
     };
 
     return ir;
