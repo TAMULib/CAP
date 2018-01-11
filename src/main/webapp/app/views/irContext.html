@@ -6,6 +6,7 @@
         Context Actions <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
+        <li role="menuitem"><a href="" ng-click="openModal('#advancedUpdate')"><span class="glyphicon glyphicon glyphicon-edit"></span> Advanced Update</a></li>
         <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-play"></span> Start Transaction</a></li>
         <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-scissors"></span> Cut Version</a></li>
         <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-move"></span> Move</a></li>
@@ -124,4 +125,12 @@
     modal-fullscreen="true"
     wvr-modal-backdrop="static">
   </modal>
+
+  <modal
+    modal-id="advancedUpdate"
+    modal-view="views/modals/advancedUpdateModal.html"
+    modal-header-class="modal-header-primary"
+    wvr-modal-backdrop="static">
+  </modal>
+
 </div>
