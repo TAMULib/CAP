@@ -81,6 +81,15 @@ cap.controller("IrContextController", function($controller, $scope, IRRepo, $rou
 
     };
 
+    $scope.srcFromFile = function(file) {
+      return URL.createObjectURL(file);
+    };
+
+    $scope.fixity = function() {
+      // TODO: this
+      console.log($scope.context);
+    };
+
     $scope.resetCreateContainer();
     $scope.resetUploadResource();
 

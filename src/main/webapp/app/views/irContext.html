@@ -23,21 +23,41 @@
 
   <div class="container-fluid">
     <div class="properties-section">
+
       <div class="row">
-        <h4>
-          Properties
-          <span class="glyphicon glyphicon-plus clickable" ng-click="propertiesCollapsed=false" ng-show="propertiesCollapsed"></span>
-          <span class="glyphicon glyphicon-minus clickable" ng-click="propertiesCollapsed=true" ng-show="!propertiesCollapsed"></span>
-        </h4>
-        <div class="container" ng-show="!propertiesCollapsed">
-          <dl class="dl-horizontal" ng-repeat="triple in context.properties | unique:'predicate'">
-            <dt><a href="{{triple.predicate}}">{{triple.predicate | metadataLabel }}</a></dt>
-            <dd ng-repeat="t in context.properties | filter:{predicate:triple.predicate}:true">
-                {{t.object.split("^^")[0] | removeQuotes}}
-            </dd>
-          </dl>
+
+        <div class="properties" ng-class="{'col-md-6': context.resource, 'col-md-12': !context.resource}">
+          <h4>
+            <span>Properties</span>
+            <span class="glyphicon glyphicon-plus clickable" ng-click="propertiesCollapsed=false" ng-show="propertiesCollapsed"></span>
+            <span class="glyphicon glyphicon-minus clickable" ng-click="propertiesCollapsed=true" ng-show="!propertiesCollapsed"></span>
+          </h4>
+          <div ng-show="!propertiesCollapsed">
+            <dl class="dl-horizontal" ng-repeat="triple in context.properties | unique:'predicate'">
+              <dt><a href="{{triple.predicate}}">{{triple.predicate | metadataLabel }}</a></dt>
+              <dd ng-repeat="t in context.properties | filter:{predicate:triple.predicate}:true">
+                  {{t.object.split("^^")[0] | removeQuotes}}
+              </dd>
+            </dl>
+          </div>
         </div>
+
+        <div class="preview col-md-6" ng-if="context.resource">
+          <div class="thumbnail">
+            <img src="{{context.uri}}">
+            <div class="caption clearfix">
+              <h3 class="text-center">{{context.name}}</h3>
+              <hr/>
+              <p class="pull-right">
+                <a href="{{context.uri}}" target="_blank" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-download-alt"></span> Download</a>
+                <a href="" ng-click="fixity()" class="btn btn-default" role="button"><span class="glyphicon glyphicon-ok"></span> Fixity</a>
+              </p>
+            </div>
+          </div>
+        </div>
+
       </div>
+
     </div>
 
     <div class="row">
@@ -51,12 +71,12 @@
         remove-action="context.removeMetadata(items)">
         <br ng-show="contentExpanded">
         <dl ng-show="contentExpanded" class="dl-horizontal" ng-repeat="triple in list | unique:'predicate'">
-          <dt> 
-              <input ng-show="removeListElements" type="checkbox" ng-checked="checkAll" ng-click="checkAll=!checkAll;checkAll?selectAll(filteredList):selectedListElements.length=0"> 
+          <dt>
+              <input ng-show="removeListElements" type="checkbox" ng-checked="checkAll" ng-click="checkAll=!checkAll;checkAll?selectAll(filteredList):selectedListElements.length=0">
               <a href="{{triple.predicate}}">{{triple.predicate | metadataLabel }}</a>
           </dt>
           <dd ng-repeat="t in filteredList = (list |filter:{predicate:triple.predicate}:true)">
-              <input ng-show="removeListElements" type="checkbox" ng-checked="selectedListElements.indexOf(t)!==-1" ng-click="selectedListElements.indexOf(t)===-1?selectedListElements.push(t):selectedListElements.splice(selectedListElements.indexOf(t),1)"> 
+              <input ng-show="removeListElements" type="checkbox" ng-checked="selectedListElements.indexOf(t)!==-1" ng-click="selectedListElements.indexOf(t)===-1?selectedListElements.push(t):selectedListElements.splice(selectedListElements.indexOf(t),1)">
               <span ng-if="selectedListElements.indexOf(t)===-1">{{t.object.split("^^")[0] | removeQuotes}}</span>
               <del ng-if="selectedListElements.indexOf(t)!==-1">{{t.object.split("^^")[0] | removeQuotes}}</del>
           </dd>
