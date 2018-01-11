@@ -1,9 +1,9 @@
 <ol class="breadcrumb">
     <li ng-repeat="breadcrumb in breadcrumbs track by $index">
-        <a href="" ng-click="breadcrumb.ir.loadContext(breadcrumb.uri)">{{breadcrumb.name}}</a>
+        <a href="" ng-click="breadcrumb.ir.loadContext(breadcrumb.uri)">{{trimName(breadcrumb)}}</a>
     </li>
     <br ng-if="breadcrumbs.length" />
     <li class="active">
-        <h3><span ng-if="breadcrumbs.length" class="glyphicon glyphicon-share-alt"></span> {{context.name}}</h3>
+        <h3><span ng-if="breadcrumbs.length" class="glyphicon glyphicon-share-alt"></span> {{trimName(context)}}</h3>
     </li>
 </ol>
