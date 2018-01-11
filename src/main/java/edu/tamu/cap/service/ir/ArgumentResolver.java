@@ -40,7 +40,7 @@ import edu.tamu.weaver.context.SpringContext;
 @Scope(value = SCOPE_REQUEST)
 public class ArgumentResolver {
 
-	private static final List<String> REQUES_METHODS_WITH_PAYLOAD = Arrays.asList(new String[] { "POST", "PUT", "PATCH" });
+	private static final List<String> REQUEST_METHODS_WITH_PAYLOAD = Arrays.asList(new String[] { "POST", "PUT", "PATCH" });
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -80,20 +80,11 @@ public class ArgumentResolver {
 	}
 
 	public void injectRequestPayload(ProceedingJoinPoint joinPoint) throws IOException, IRInjectionException {
-
-		boolean proceed = true;
-
 		Method method = getMethodFromJoinPoint(joinPoint);
 
-		for (Parameter parameter : method.getParameters()) {
-			if (Optional.ofNullable(parameter.getAnnotation(RequestParam.class)).isPresent()) {
-				proceed = false;
-				break;
-			}
-		}
+        boolean hasRequestParam = methodHasRequestParameterAnnotation(method);
 
-		if (proceed && REQUES_METHODS_WITH_PAYLOAD.contains(request.getMethod())) {
-			System.out.println("\n\nNOT HERE\n\n");
+		if (!hasRequestParam && REQUEST_METHODS_WITH_PAYLOAD.contains(request.getMethod())) {
 			String payload = IOUtils.toString(request.getInputStream(), StandardCharsets.UTF_8.name());
 			Optional<JsonNode> payloadNode = getPayloadNode(payload);
 			Object[] arguments = joinPoint.getArgs();
@@ -111,6 +102,17 @@ public class ArgumentResolver {
 			}
 		}
 	}
+
+    private boolean methodHasRequestParameterAnnotation(Method method) {
+        boolean hasAnnotation = false;
+        for (Parameter parameter : method.getParameters()) {
+            if (Optional.ofNullable(parameter.getAnnotation(RequestParam.class)).isPresent()) {
+                hasAnnotation = true;
+                break;
+            }
+        }
+        return hasAnnotation;
+    }
 
 	private IR getIRFromRequest() throws JsonProcessingException, IOException, IRInjectionException {
 		JsonNode payloadNode = objectMapper.readTree(request.getInputStream());
