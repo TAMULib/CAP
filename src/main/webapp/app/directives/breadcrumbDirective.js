@@ -1,30 +1,30 @@
-cap.directive("breadcrumbs", function() {
+cap.directive("breadcrumbs", function () {
     return {
         templateUrl: "views/directives/breadcrumbs.html",
         restrict: "E",
         scope: {
             context: "="
         },
-        link: function($scope, attr, elem) {
+        link: function ($scope, attr, elem) {
             $scope.breadcrumbs = [];
 
-            $scope.trimName = function(context) {
-              var name = context.name;
-              if (context.name.startsWith(context.ir.rootUri)) {
-                name = name.replace(context.ir.rootUri, '...');
-              }
-              return name;
+            $scope.trimName = function (context) {
+                var name = context.name;
+                if (context.name.startsWith(context.ir.rootUri)) {
+                    name = name.replace(context.ir.rootUri, '...');
+                }
+                return name;
             };
 
-            var getParent = function(context) {
+            var getParent = function (context) {
                 var parentContext = $scope.context.ir.getContext(context.parent.object);
-                if(parentContext.parent) {
-                    if(parentContext.hasParent) {
+                if (parentContext.parent) {
+                    if (parentContext.hasParent) {
                         getParent(parentContext);
                     }
                     $scope.breadcrumbs.unshift(parentContext);
-                 } else {
-                    parentContext.ready().then(function(contexts) {
+                } else {
+                    parentContext.ready().then(function (contexts) {
                         // TODO: figure out why there are three promises resolved here
                         var nextContext = contexts[0];
                         if (nextContext.hasParent) {
@@ -44,4 +44,4 @@ cap.directive("breadcrumbs", function() {
 
         }
     };
-  });
+});

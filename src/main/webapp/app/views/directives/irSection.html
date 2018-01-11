@@ -2,13 +2,20 @@
   <div class="panel-heading clearfix">
     <div class="btn-group pull-right" ng-show="(contentExpanded||!getListLength())&&!removeListElements" uib-dropdown keyboard-nav>
       <span type="button" class="clickable" uib-dropdown-toggle>
-        Actions <span class="caret"></span>
+        Actions
+        <span class="caret"></span>
       </span>
       <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
-        <li role="menuitem" ng-click="addAction()"><a href="#">Add {{type}}</a></li>
-        <li ng-show="getListLength()" role="menuitem" ng-click="removeListElements=true;"><a href="#">Remove {{type}}</a></li>
+        <li role="menuitem" ng-click="addAction()">
+          <a href="#">Add {{type}}</a>
+        </li>
+        <li ng-show="getListLength()" role="menuitem" ng-click="removeListElements=true;">
+          <a href="#">Remove {{type}}</a>
+        </li>
         <li ng-show="contentExpanded" class="divider"></li>
-        <li ng-show="contentExpanded" ng-click="manuallyCollapse()"><a href="#">Collapse</a></li>
+        <li ng-show="contentExpanded" ng-click="manuallyCollapse()">
+          <a href="#">Collapse</a>
+        </li>
       </ul>
     </div>
     <div ng-show="removeListElements" class="btn-group pull-right">
@@ -18,7 +25,9 @@
       </button>
     </div>
     <button class="btn btn-default btn-xs pull-right" ng-click="manuallyExpande()" ng-hide="contentExpanded||!getListLength()">Expand</button>
-    <h3 class="panel-title">{{title}} <span class="badge">{{getListLength() || 0}}</span></h3>
+    <h3 class="panel-title">{{title}}
+      <span class="badge">{{getListLength() || 0}}</span>
+    </h3>
   </div>
 
   <div class="transclude" ng-transclude></div>
