@@ -105,7 +105,7 @@ public class FedoraService implements IRService<Model> {
         String contextUri = triple.getSubject();
         PatchBuilder patch = new PatchBuilder(new URI(contextUri), client);
 
-        String sparql = "INSERT { <" + triple.getSubject() + "> <" + triple.getPredicate() + "> '" + triple.getObject() + "' . " + "} WHERE {}";
+        String sparql = "INSERT { <" + triple.getSubject() + "> <" + triple.getPredicate() + "> '" + triple.getObject() + "' . } WHERE {}";
 
         UpdateRequest request = UpdateFactory.create();
 
@@ -116,6 +116,27 @@ public class FedoraService implements IRService<Model> {
         FcrepoResponse response = patch.perform();
         URI location = response.getLocation();
         logger.debug("Metadata creation status and location: {}, {}", response.getStatusCode(), location);
+        return getContainer(contextUri);
+    }
+
+    @Override
+    public IRContext deleteMetadata(Triple triple) throws Exception {
+        FcrepoClient client = buildClient();
+        String contextUri = triple.getSubject();
+
+        PatchBuilder patch = new PatchBuilder(new URI(contextUri), client);
+
+        String sparql = "DELETE { <" + contextUri + "> <" + triple.getPredicate() + "> " + triple.getObject() + " } WHERE { <" + contextUri + "> <" + triple.getPredicate() + "> " + triple.getObject() + " }";
+
+        UpdateRequest request = UpdateFactory.create();
+
+        request.add(sparql);
+
+        patch.body(new ByteArrayInputStream(request.toString().getBytes()));
+
+        FcrepoResponse response = patch.perform();
+        URI location = response.getLocation();
+        logger.debug("Metadata delete status and location: {}, {}", response.getStatusCode(), location);
         return getContainer(contextUri);
     }
 

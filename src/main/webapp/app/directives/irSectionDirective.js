@@ -30,6 +30,10 @@ cap.directive("irsection", function(IrSectionService) {
             IrSectionService.setManuallyCollapsed($scope.title, false);
           };
 
+          $scope.selectAll = function(array) {
+            angular.extend($scope.selectedListElements, array);
+          };
+
           $scope.confirmDelete = function() {
             $scope.removeAction({"items": $scope.selectedListElements}).then(function() {
               $scope.removeListElements=false;
