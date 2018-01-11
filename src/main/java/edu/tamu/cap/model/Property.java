@@ -4,12 +4,13 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class Property {
-    
+
     private String uri;
-    
+
     private String label;
-    
-    public Property() {}
+
+    public Property() {
+    }
 
     public String getUri() {
         return uri;
@@ -26,5 +27,5 @@ public class Property {
     public void setLabel(String label) {
         this.label = label;
     }
-    
+
 }

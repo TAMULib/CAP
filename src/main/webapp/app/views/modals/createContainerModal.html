@@ -1,19 +1,18 @@
 <form name="irForm.createContainer" ng-submit="createContainer(irForm.createContainer)" novalidate>
-    <div class="modal-header {{attr.modalHeaderClass}}">
-      <button type="button" class="close modal-close" aria-label="Close" ng-click="resetCreateContainer()"><span aria-hidden="true">&times;</span></button>
-      <h4 class="modal-title">Create Container</h4>
-    </div>
-    <div class="modal-body">
-
+  <div class="modal-header {{attr.modalHeaderClass}}">
+    <button type="button" class="close modal-close" aria-label="Close" ng-click="resetCreateContainer()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title">Create Container</h4>
+  </div>
+  <div class="modal-body">
     <div class="form-group">
       <label for="container.name">Container Name</label>
       <input name="container.name" type="text" ng-model="irForm.createContainer.name" class="form-control" placeholder="Optional">
     </div>
-
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-default" ng-click="resetCreateContainer()">Cancel</button>
-      <button type="submit" class="btn btn-success">Create</button>
-    </div>
-
-</form>  
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="resetCreateContainer()">Cancel</button>
+    <button type="submit" class="btn btn-success">Create</button>
+  </div>
+</form>

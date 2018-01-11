@@ -1,23 +1,21 @@
+cap.filter("mapProperties", function () {
 
-cap.filter("mapProperties", function() {
+    var output = {};
 
-  var output = {};
+    return function (input) {
 
-  return function(input) {
-    
-    var prepOutput = {};
+        var prepOutput = {};
 
-    angular.forEach(input, function(triple) {
-      if(!prepOutput[triple.predicate]) prepOutput[triple.predicate] = [];
-      prepOutput[triple.predicate].push(triple.object);
-    });
+        angular.forEach(input, function (triple) {
+            if (!prepOutput[triple.predicate]) prepOutput[triple.predicate] = [];
+            prepOutput[triple.predicate].push(triple.object);
+        });
 
-    if(!angular.equals(prepOutput, output)) {
-      angular.extend(output, prepOutput);
-      console.log(output);
-    }
+        if (!angular.equals(prepOutput, output)) {
+            angular.extend(output, prepOutput);
+        }
 
-    return input;
-  };
+        return input;
+    };
 
 });

@@ -3,19 +3,41 @@
   <div class="page-header clearfix">
     <div class="btn-group pull-right context-actions-btn" uib-dropdown keyboard-nav>
       <button type="button" class="btn btn-default" uib-dropdown-toggle>
-        Context Actions <span class="caret"></span>
+        Context Actions
+        <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
-        <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-play"></span> Start Transaction</a></li>
-        <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-scissors"></span> Cut Version</a></li>
-        <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-move"></span> Move</a></li>
-        <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-random"></span> Migrate</a></li>
-        <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-export"></span> Export</a></li>
+        <li role="menuitem">
+          <a href="#">
+            <span class="glyphicon glyphicon-play"></span> Start Transaction</a>
+        </li>
+        <li role="menuitem">
+          <a href="#">
+            <span class="glyphicon glyphicon-scissors"></span> Cut Version</a>
+        </li>
+        <li role="menuitem">
+          <a href="#">
+            <span class="glyphicon glyphicon-move"></span> Move</a>
+        </li>
+        <li role="menuitem">
+          <a href="#">
+            <span class="glyphicon glyphicon-random"></span> Migrate</a>
+        </li>
+        <li role="menuitem">
+          <a href="#">
+            <span class="glyphicon glyphicon-export"></span> Export</a>
+        </li>
         <li class="divider"></li>
-        <li role="menuitem bg-danger"><a href="#" class="bg-danger"><span class="glyphicon glyphicon-trash"></span> Delete</a></li>
+        <li role="menuitem bg-danger">
+          <a href="#" class="bg-danger">
+            <span class="glyphicon glyphicon-trash"></span> Delete</a>
+        </li>
       </ul>
     </div>
-    <h1>{{ir.name}} <small class="clickable" ng-click="ir.loadContext(ir.rootUri)">(<span class="glyphicon glyphicon-home"></span> {{ir.rootUri}})</small></h1>
+    <h1>{{ir.name}}
+      <small class="clickable" ng-click="ir.loadContext(ir.rootUri)">(
+        <span class="glyphicon glyphicon-home"></span> {{ir.rootUri}})</small>
+    </h1>
   </div>
 
   <breadcrumbs ng-if="context.hasParent !== undefined" context="context"></breadcrumbs>
@@ -30,9 +52,11 @@
         </h4>
         <div class="container" ng-show="!propertiesCollapsed">
           <dl class="dl-horizontal" ng-repeat="triple in context.properties | unique:'predicate'">
-            <dt><a href="{{triple.predicate}}">{{triple.predicate | metadataLabel }}</a></dt>
+            <dt>
+              <a href="{{triple.predicate}}">{{triple.predicate | metadataLabel }}</a>
+            </dt>
             <dd ng-repeat="t in context.properties | filter:{predicate:triple.predicate}:true">
-                {{t.object.split("^^")[0] | removeQuotes}}
+              {{t.object.split("^^")[0] | removeQuotes}}
             </dd>
           </dl>
         </div>
@@ -40,82 +64,67 @@
     </div>
 
     <div class="row">
-      <irsection
-        context="context"
-        title="'Metadata'"
-        type="'metadatum'"
-        list="context.metadata"
-        list-element-action="ir.loadContext(le)"
-        add-action="openModal('#addMetadata')"
-        remove-action="ir.removeProperties(items)">
+      <irsection context="context" title="'Metadata'" type="'metadatum'" list="context.metadata" list-element-action="ir.loadContext(le)" add-action="openModal('#addMetadata')" remove-action="ir.removeProperties(items)">
         <br ng-show="contentExpanded">
         <dl ng-show="contentExpanded" class="dl-horizontal" ng-repeat="triple in list | unique:'predicate'">
-          <dt><a href="{{triple.predicate}}">{{triple.predicate | metadataLabel }}</a></dt>
+          <dt>
+            <a href="{{triple.predicate}}">{{triple.predicate | metadataLabel }}</a>
+          </dt>
           <dd ng-repeat="t in list | filter:{predicate:triple.predicate}:true">
-              {{t.object.split("^^")[0] | removeQuotes}}
+            {{t.object.split("^^")[0] | removeQuotes}}
           </dd>
         </dl>
       </irsection>
     </div>
 
     <div class="row" ng-if="!context.resource">
-      <irsection
-        context="context"
-        title="'Children'"
-        type="'child'"
-        list="context.children"
-        list-element-action="ir.loadContext(le)"
-        add-action="openModal('#createContainer')"
-        remove-action="context.removeContainers(items)">
+      <irsection context="context" title="'Children'" type="'child'" list="context.children" list-element-action="ir.loadContext(le)" add-action="openModal('#createContainer')" remove-action="context.removeContainers(items)">
         <ol class="list-group" ng-show="contentExpanded">
-          <li  class="list-group-item" ng-repeat="le in filteredList = (list | filterContainers:context)" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le.triple)!==-1}">
+          <li class="list-group-item" ng-repeat="le in filteredList = (list | filterContainers:context)" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le.triple)!==-1}">
             <a href="" ng-click="listElementAction({'le':le.triple.subject})">{{(le.name || le.triple.object) | removeQuotes}}</a>
-            <input ng-show="removeListElements" type="checkbox" class="pull-right" ng-checked="selectedListElements.indexOf(le.triple)!==-1" ng-click="selectedListElements.indexOf(le.triple)===-1?selectedListElements.push(le.triple):selectedListElements.splice(selectedListElements.indexOf(le.triple),1)">
+            <input
+              ng-show="removeListElements"
+              type="checkbox"
+              class="pull-right"
+              ng-checked="selectedListElements.indexOf(le.triple)!==-1"
+              ng-click="selectedListElements.indexOf(le.triple)===-1?selectedListElements.push(le.triple):selectedListElements.splice(selectedListElements.indexOf(le.triple),1)">
           </li>
         </ol>
       </irsection>
     </div>
 
     <div class="row resource-section" ng-if="!context.resource">
-      <irsection
-        context="context"
-        title="'Resources'"
-        type="'resource'"
-        list="context.children"
-        list-element-action="ir.loadContext(le)"
-        add-action="openModal('#uploadResource')"
-        remove-action="context.removeResources(items)">
+      <irsection context="context" title="'Resources'" type="'resource'" list="context.children" list-element-action="ir.loadContext(le)" add-action="openModal('#uploadResource')" remove-action="context.removeResources(items)">
         <ol class="list-group" ng-show="contentExpanded">
-          <li  class="list-group-item" ng-repeat="le in filteredList = (list | filterResources:context)" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le.triple)!==-1}">
+          <li class="list-group-item" ng-repeat="le in filteredList = (list | filterResources:context)" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le.triple)!==-1}">
             <a href="" ng-click="listElementAction({'le':le.triple.subject})">{{(le.name || le.triple.object) | removeQuotes}}</a>
-            <a href=""><span ng-show="!removeListElements" title="swap" class="glyphicon glyphicon-transfer pull-right clickable"></span></a>
-            <a href=""><span ng-show="!removeListElements" title="fixity" class="glyphicon glyphicon glyphicon-ok pull-right clickable"></span></a>
-            <a href="{{le.triple.subject}}"><span ng-show="!removeListElements" title="download" class="glyphicon glyphicon-download-alt pull-right"></span></a>
-            <input ng-show="removeListElements" type="checkbox" class="pull-right" ng-checked="selectedListElements.indexOf(le.triple)!==-1" ng-click="selectedListElements.indexOf(le.triple)===-1?selectedListElements.push(le.triple):selectedListElements.splice(selectedListElements.indexOf(le.triple),1)">
+            <a href="">
+              <span ng-show="!removeListElements" title="swap" class="glyphicon glyphicon-transfer pull-right clickable"></span>
+            </a>
+            <a href="">
+              <span ng-show="!removeListElements" title="fixity" class="glyphicon glyphicon glyphicon-ok pull-right clickable"></span>
+            </a>
+            <a href="{{le.triple.subject}}">
+              <span ng-show="!removeListElements" title="download" class="glyphicon glyphicon-download-alt pull-right"></span>
+            </a>
+            <input
+              ng-show="removeListElements"
+              type="checkbox"
+              class="pull-right"
+              ng-checked="selectedListElements.indexOf(le.triple)!==-1"
+              ng-click="selectedListElements.indexOf(le.triple)===-1?selectedListElements.push(le.triple):selectedListElements.splice(selectedListElements.indexOf(le.triple),1)">
           </li>
         </ol>
       </irsection>
     </div>
   </div>
 
-  <modal
-    modal-id="createContainer"
-    modal-view="views/modals/createContainerModal.html"
-    modal-header-class="modal-header-primary"
-    wvr-modal-backdrop="static">
+  <modal modal-id="createContainer" modal-view="views/modals/createContainerModal.html" modal-header-class="modal-header-primary" wvr-modal-backdrop="static">
   </modal>
 
-  <modal
-    modal-id="uploadResource"
-    modal-view="views/modals/uploadResource.html"
-    modal-header-class="modal-header-primary"
-    wvr-modal-backdrop="static">
+  <modal modal-id="uploadResource" modal-view="views/modals/uploadResource.html" modal-header-class="modal-header-primary" wvr-modal-backdrop="static">
   </modal>
 
-  <modal
-    modal-id="addMetadata"
-    modal-view="views/modals/addMetadataModal.html"
-    modal-header-class="modal-header-primary"
-    wvr-modal-backdrop="static">
+  <modal modal-id="addMetadata" modal-view="views/modals/addMetadataModal.html" modal-header-class="modal-header-primary" wvr-modal-backdrop="static">
   </modal>
 </div>

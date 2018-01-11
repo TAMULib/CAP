@@ -8,6 +8,6 @@ import edu.tamu.weaver.data.model.repo.WeaverRepo;
 
 public interface SchemaRepo extends WeaverRepo<Schema>, SchemaRepoCustom, JpaSpecificationExecutor<Schema> {
 
-	Schema findByName(String name);
+    Schema findByName(String name);
 
 }

@@ -1,12 +1,3 @@
-/* 
- * Project.java 
- * 
- * Version: 
- *     $Id$ 
- * 
- * Revisions: 
- *     $Log$ 
- */
 package edu.tamu.cap.model;
 
 import javax.persistence.Column;
@@ -27,71 +18,71 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 @Entity
 public class IR extends ValidatingBaseEntity {
 
-	@Column
-	@Enumerated(EnumType.STRING)
-	private IRType type;
+    @Column
+    @Enumerated(EnumType.STRING)
+    private IRType type;
 
-	@Column(unique = true)
-	private String name;
+    @Column(unique = true)
+    private String name;
 
-	@Column
-	private String rootUri;
+    @Column
+    private String rootUri;
 
-	@Column
-	private String username;
+    @Column
+    private String username;
 
-	@Column
-	private String password;
+    @Column
+    private String password;
 
-	public IR() {
-		setModelValidator(new IRValidator());
-	}
+    public IR() {
+        setModelValidator(new IRValidator());
+    }
 
-	public IR(IRType type, String name, String rootUri) {
-		this();
-		setType(type);
-		setName(name);
-		setRootUri(rootUri);
-	}
+    public IR(IRType type, String name, String rootUri) {
+        this();
+        setType(type);
+        setName(name);
+        setRootUri(rootUri);
+    }
 
-	public IRType getType() {
-		return type;
-	}
+    public IRType getType() {
+        return type;
+    }
 
-	public void setType(IRType type) {
-		this.type = type;
-	}
+    public void setType(IRType type) {
+        this.type = type;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getRootUri() {
-		return rootUri;
-	}
+    public String getRootUri() {
+        return rootUri;
+    }
 
-	public void setRootUri(String rootUri) {
-		this.rootUri = rootUri;
-	}
+    public void setRootUri(String rootUri) {
+        this.rootUri = rootUri;
+    }
 
-	public String getUsername() {
-		return username;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
 }
