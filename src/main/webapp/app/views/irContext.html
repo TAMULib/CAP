@@ -18,7 +18,7 @@
     <h1>{{ir.name}} <small class="clickable" ng-click="ir.loadContext(ir.rootUri)">(<span class="glyphicon glyphicon-home"></span> {{ir.rootUri}})</small></h1>
   </div>
 
-  <breadcrumbs context="context"></breadcrumbs>
+  <breadcrumbs ng-if="context.hasParent !== undefined" context="context"></breadcrumbs>
 
   <div class="container-fluid">
     <div class="properties-section">

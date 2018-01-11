@@ -8,11 +8,23 @@ cap.directive("breadcrumbs", function() {
         link: function($scope, attr, elem) {
             $scope.breadcrumbs = [];
 
+            var getParent = function(context) {
+                var parentContext = $scope.context.ir.getContext(context.parent.object);
+                parentContext.ready().then(function(contexts) {
+                    // TODO: figure out why there are three promises resolved here
+                    var nextContext = contexts[0];
+                    if (nextContext.hasParent) {
+                        getParent(nextContext);
+                    }
+                    $scope.breadcrumbs.unshift(nextContext);
+                });
+                return parentContext;
+            };
+
             var currentContext = angular.copy($scope.context);
 
-            while(currentContext.hasParent) {
-                currentContext = $scope.context.ir.getContext(currentContext.parent.object);
-                $scope.breadcrumbs.unshift(currentContext);
+            if (currentContext.hasParent) {
+                getParent(currentContext);
             }
 
         }

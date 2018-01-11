@@ -85,6 +85,7 @@ public class ArgumentResolver {
 
 		Method method = getMethodFromJoinPoint(joinPoint);
 
+        // TODO: move to its own method
 		for (Parameter parameter : method.getParameters()) {
 			if (Optional.ofNullable(parameter.getAnnotation(RequestParam.class)).isPresent()) {
 				proceed = false;
@@ -93,7 +94,6 @@ public class ArgumentResolver {
 		}
 
 		if (proceed && REQUES_METHODS_WITH_PAYLOAD.contains(request.getMethod())) {
-			System.out.println("\n\nNOT HERE\n\n");
 			String payload = IOUtils.toString(request.getInputStream(), StandardCharsets.UTF_8.name());
 			Optional<JsonNode> payloadNode = getPayloadNode(payload);
 			Object[] arguments = joinPoint.getArgs();

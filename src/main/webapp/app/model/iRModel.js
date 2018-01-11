@@ -1,4 +1,4 @@
-cap.model("IR", function($location, IRContext) {
+cap.model("IR", function($location, $q, IRContext) {
   return function IR() {
     var ir = this;
 
@@ -9,9 +9,6 @@ cap.model("IR", function($location, IRContext) {
     };
 
     ir.getCachedContext = function(contextUri) {
-      if(cache[contextUri]) {
-        console.log('hit', contextUri, cache);
-      }
       return cache[contextUri];
     };
 
