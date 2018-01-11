@@ -1,44 +1,59 @@
-<form class="add-metadata-model" name="irForm.addMetadata" ng-submit="addMetadata(irForm.createContainer)" novalidate>
+<form class="add-metadata-model" name="irForm.addMetadata" ng-submit="addMetadata(irForm.addMetadata)" novalidate ng-init="irForm.addMetadata.entries=[]">
     <div class="modal-header {{attr.modalHeaderClass}}">
       <button type="button" class="close modal-close" aria-label="Close" ng-click="cancelDeleteIr()"><span aria-hidden="true">&times;</span></button>
       <h4 class="modal-title">Add Metadata</h4>
     </div>
     <div class="modal-body" ng-init="irForm.addMetadata.entries=[{label:'',value:''}]">
         
-        <div class="row">
-            <div class="col-xs-5">
+        <div class="row" ng-init="irForm.addMetadata.entries[0]={}">
+            <div class="col-xs-2">
+                <div class="form-group" ng-init="selectedSchema=ir.schemas[0]">
+                    <label for="metadata.label">Schema</label>
+                    <select class="form-control" ng-model="selectedSchema" ng-options="schema as schema.abbreviation for schema in ir.schemas track by schema.namespace"></select>
+                    <small><a href="{{selectedSchema.namespace}}" target="_blank">{{selectedSchema.name}}</a></small>
+                </div>
+            </div>
+            <div class="col-xs-3">
                 <div class="form-group">
                     <label for="metadata.label">Label</label>
-                    <input name="metadata.label" type="text" ng-model="irForm.addMetadata.entries[0].label" class="form-control" placeholder="http://purl.org/dc/elements/1.1/title" required>
+                    <input placeholder="e.g. {{selectedSchema.properties[0].label}}" type="text" class="form-control" ng-model="irForm.addMetadata.entries[0].property" typeahead-input-formatter="$model.label" uib-typeahead="property as property.label for property in selectedSchema.properties | orderBy:'label' | filter:$viewValue | limitTo:10">
+                    <small><a href="{{irForm.addMetadata.entries[0].property.uri}}" target="_blank">{{irForm.addMetadata.entries[0].property.uri}}</a></small>
                 </div>
             </div>
             <div class="col-xs-5">
                 <div class="form-group">
                     <label for="metadata.value">Value</label>
-                    <input name="metadata.value" type="text" ng-model="irForm.addMetadata.entries[0].value" class="form-control" placeholder="My Title" required>
+                    <input name="metadata.value" type="text" ng-model="irForm.addMetadata.entries[0].value" class="form-control" placeholder="My Title" ng-disabled="!irForm.addMetadata.entries[0].property.uri" required>
                 </div>
             </div>
             <div class="col-xs-2">
                 <div class="form-group add-field-group">
-                    <button class="btn btn-success" ng-click="irForm.addMetadata.entries.push({label:'',value:''})"><span class="glyphicon glyphicon-plus"></span></button>
+                    <button type="button" class="btn btn-success" ng-click="irForm.addMetadata.entries.push({})"><span class="glyphicon glyphicon-plus"></span></button>
                 </div>
             </div>
         </div>
 
         <div class="row" ng-repeat="metadatum in irForm.addMetadata.entries track by $index" ng-hide="$first">
-            <div class="col-xs-5">
+            <div class="col-xs-2">
+                <div class="form-group" ng-init="selectedSchema=ir.schemas[0]">
+                    <select class="form-control" ng-model="selectedSchema" ng-options="schema as schema.abbreviation for schema in ir.schemas track by schema.namespace"></select>
+                    <small><a href="{{selectedSchema.namespace}}" target="_blank">{{selectedSchema.name}}</a></small>
+                </div>
+            </div>
+            <div class="col-xs-3">
                 <div class="form-group">
-                    <input name="metadata.label" type="text" ng-model="metadatum.label" class="form-control" placeholder="http://purl.org/dc/elements/1.1/title" required>
+                    <input placeholder="e.g. {{selectedSchema.properties[$index].label}}" type="text" class="form-control" ng-model="irForm.addMetadata.entries[$index].property" typeahead-input-formatter="$model.label" uib-typeahead="property as property.label for property in selectedSchema.properties | orderBy:'label' | filter:$viewValue | limitTo:10">
+                    <small><a href="{{irForm.addMetadata.entries[$index].property.uir}}" target="_blank">{{irForm.addMetadata.entries[$index].property.uri}}</a></small>
                 </div>
             </div>
             <div class="col-xs-5">
                 <div class="form-group">
-                    <input name="metadata.value" type="text" ng-model="metadatum.value" class="form-control" placeholder="My Title" required>
+                    <input name="metadata.value" type="text" ng-model="irForm.addMetadata.entries[$index].value" class="form-control" placeholder="My Title" ng-disabled="!irForm.addMetadata.entries[$index].property.uri" required>
                 </div>
             </div>
             <div class="col-xs-2">
                 <div class="form-group">
-                    <button class="btn btn-danger" ng-click="irForm.addMetadata.entries.splice($index,1)"><span class="glyphicon glyphicon-minus"></span></button>
+                    <button type="button" class="btn btn-danger" ng-click="irForm.addMetadata.entries.splice($index,1)"><span class="glyphicon glyphicon-minus"></span></button>
                 </div>
             </div>
         </div>

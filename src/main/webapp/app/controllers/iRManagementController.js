@@ -1,4 +1,4 @@
-cap.controller("IrManagementController", function($controller, $scope, $q, $location, $timeout, NgTableParams, ApiResponseActions, IRRepo) {
+cap.controller("IrManagementController", function($controller, $scope, $q, $location, $timeout, NgTableParams, ApiResponseActions, IRRepo, SchemaRepo) {
 
   angular.extend(this, $controller('CoreAdminController', {
       $scope: $scope
@@ -12,14 +12,10 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
       type: $scope.iRTypes[0].value
     });
   });
-
-
   
   $scope.irToDelete = {};
   $scope.irToEdit = {};
   $scope.testResults = {};
-
-  
 
   $scope.irForms = {
     validations: IRRepo.getValidations(),
@@ -37,7 +33,12 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
     $scope.closeModal();    
   };
 
-  $scope.resetIrForms();  
+  $scope.resetIrForms(); 
+  
+  $scope.startCreate = function() {
+    $scope.schemas = SchemaRepo.getAll();
+    $scope.openModal("#createIRModal");
+  };
 
   $scope.createIr = function() {
     IRRepo.create($scope.irToCreate).then(function(res) {
@@ -53,6 +54,7 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
   };
 
   $scope.editIr = function(ir) {
+    $scope.schemas = SchemaRepo.getAll();
     $scope.irToEdit = ir;
     $scope.openModal('#irEditModal');
   };
@@ -87,7 +89,15 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
     });
   };
 
-  IRRepo.ready().then(function() {
+  $scope.showSchemas = function(schemas) {
+    $scope.schemasToShow = schemas;
+    $scope.openModal("#showSchemasModal");
+  };
+
+  $q.all([
+    IRRepo.ready(),
+    SchemaRepo.ready()
+  ]).then(function() {
     $scope.setTable = function () {
       $scope.tableParams = new NgTableParams({
         count: $scope.irs.length,
@@ -103,7 +113,7 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
       });
     };
     $scope.setTable();
-  }); 
+  });
 
   IRRepo.listen([ApiResponseActions.CREATE, ApiResponseActions.DELETE], function (arg) {
     $scope.setTable();

@@ -41,7 +41,7 @@ public class IRController {
 	@PreAuthorize("hasRole('USER')")
 	@WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
 	public ApiResponse createIR(@RequestBody @WeaverValidatedModel IR ir) {
-		logger.info("Creating IR:  " + ir.getName());
+		logger.info("Creating IR:  " + ir.getName() + " with schema " + ir.getSchemas());
 		return new ApiResponse(SUCCESS, irRepo.create(ir));
 	}
 

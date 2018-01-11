@@ -4,6 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import edu.tamu.cap.model.IR;
 import edu.tamu.cap.model.response.IRContext;
+import edu.tamu.cap.model.response.Triple;
 
 public interface IRService<M> {
 
@@ -20,6 +21,10 @@ public interface IRService<M> {
     public IRContext getContainer(String contextUri) throws Exception;
 
     public IRContext updateContainer(String contextUri) throws Exception;
+
+    public IRContext createMetadata(Triple triple) throws Exception;
+
+    public IRContext updateMetadata(String contextUri, String sparql) throws Exception;
 
     public void deleteContainer(String targetUri) throws Exception;
 

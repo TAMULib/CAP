@@ -6,11 +6,11 @@ public class Triple implements Serializable {
 
     private static final long serialVersionUID = -8857131728443388752L;
 
-    public String subject;
+    private String subject;
 
-    public String predicate;
+    private String predicate;
 
-    public String object;
+    private String object;
 
     public Triple() {
         super();

@@ -6,7 +6,8 @@ cap.repo("IRRepo", function($q, WsApi, api, HttpMethodVerbs) {
     rootUri: "http://labs.library.tamu.edu/fcrepo/rest/",
     username: "fedoraAdmin",
     password: "secret3",
-    type: ""
+    type: "",
+    schemas: []
   };
 
   iRRepo.getTypes = function(types) {

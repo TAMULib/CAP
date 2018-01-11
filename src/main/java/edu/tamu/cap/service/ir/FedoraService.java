@@ -17,6 +17,8 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.update.UpdateFactory;
+import org.apache.jena.update.UpdateRequest;
 import org.apache.jena.vocabulary.DC;
 import org.apache.tika.Tika;
 import org.fcrepo.client.DeleteBuilder;
@@ -24,6 +26,7 @@ import org.fcrepo.client.FcrepoClient;
 import org.fcrepo.client.FcrepoOperationFailedException;
 import org.fcrepo.client.FcrepoResponse;
 import org.fcrepo.client.GetBuilder;
+import org.fcrepo.client.PatchBuilder;
 import org.fcrepo.client.PostBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,13 +59,8 @@ public class FedoraService implements IRService<Model> {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns",
         "http://www.ebu.ch/metadata/ontologies/ebucore/ebucore",
         "http://www.iana.org/assignments/relation",
-        "http://www.loc.gov/premis/rdf/v1"
-    };
-    // @formatter:on
-
-    // @formatter:off
-    public final static String[] METADATA_PREFIXES = new String[] {
-        "http://purl.org/dc/elements/1.1"
+        "http://www.loc.gov/premis/rdf/v1",
+        "http://pcdm.org/models"
     };
     // @formatter:on
 
@@ -99,6 +97,39 @@ public class FedoraService implements IRService<Model> {
             // TODO: Add switch to give better messages by status code
             throw new IRVerificationException("No root found. Status " + response.getStatusCode());
         }
+    }
+
+    @Override
+    public IRContext createMetadata(Triple triple) throws Exception {
+        FcrepoClient client = buildClient();
+        String contextUri = triple.getSubject();
+        PatchBuilder patch = new PatchBuilder(new URI(contextUri), client);
+
+        String sparql = "INSERT { <" + triple.getSubject() + "> <" + triple.getPredicate() + "> '" + triple.getObject() + "' . " + "} WHERE {}";
+
+        UpdateRequest request = UpdateFactory.create();
+
+        request.add(sparql);
+
+        patch.body(new ByteArrayInputStream(request.toString().getBytes()));
+
+        FcrepoResponse response = patch.perform();
+        URI location = response.getLocation();
+        logger.debug("Metadata creation status and location: {}, {}", response.getStatusCode(), location);
+        return getContainer(contextUri);
+    }
+
+    @Override
+    public IRContext updateMetadata(String contextUri, String sparql) throws Exception {
+        FcrepoClient client = buildClient();
+        PatchBuilder patch = new PatchBuilder(new URI(contextUri), client);
+
+        patch.body(new ByteArrayInputStream(sparql.getBytes()));
+
+        FcrepoResponse response = patch.perform();
+        URI location = response.getLocation();
+        logger.debug("Metadata update status and location: {}, {}", response.getStatusCode(), location);
+        return getContainer(contextUri);
     }
 
     @Override
@@ -171,30 +202,41 @@ public class FedoraService implements IRService<Model> {
             // System.out.println(" OBJECT: " + triple.getObject());
             // System.out.println();
 
-            String predicate = triple.getPredicate();
+            {
+                String predicate = triple.getPredicate();
 
-            switch (predicate) {
-            case FEDORA_HAS_PARENT_PREDICATE:
-                irContext.setParent(triple);
-                break;
-            case LDP_CONTAINS_PREDICATE:
-                irContext.addChild(new IRContext(triple));
-                break;
-            default:
+                switch (predicate) {
+                case FEDORA_HAS_PARENT_PREDICATE:
+                    irContext.setParent(triple);
+                    break;
+                case LDP_CONTAINS_PREDICATE:
+                    irContext.addChild(new IRContext(triple));
+                    break;
+                default:
 
-                for (String prefix : PROPERTY_PREFIXES) {
-                    if (predicate.startsWith(prefix)) {
-                        irContext.addProperty(triple);
-                        if (triple.getObject().equals(FEDORA_BINRAY_PREDICATE)) {
-                            irContext.getTriple().setObject(FEDORA_BINRAY_PREDICATE);
+                    for (String prefix : PROPERTY_PREFIXES) {
+                        if (predicate.startsWith(prefix)) {
+                            irContext.addProperty(triple);
+                        }
+                    }
+
+                    for (String prefix : ir.getMetadataPrefixes()) {
+                        if (predicate.startsWith(prefix)) {
+                            irContext.addMetadum(triple);
                         }
                     }
                 }
+            }
 
-                for (String prefix : METADATA_PREFIXES) {
-                    if (predicate.startsWith(prefix)) {
-                        irContext.addMetadum(triple);
-                    }
+            {
+                String object = triple.getObject();
+
+                switch (object) {
+                case FEDORA_BINRAY_PREDICATE:
+                    irContext.getTriple().setObject(FEDORA_BINRAY_PREDICATE);
+                    break;
+                default:
+
                 }
             }
 
