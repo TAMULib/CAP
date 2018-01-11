@@ -35,7 +35,7 @@ cap.directive("breadcrumbs", function() {
                 var parentContext = $scope.context.ir.getContext(context.parent.object);
                 if(parentContext.hasParent) {
                     getParent(parentContext);
-                    $scope.breadcrumbs.unshift(parentContext);
+                    $scope.breadcrumbs.push(parentContext);
                  } else {
                     parentContext.ready().then(function(nextContext) {
                         if (nextContext.hasParent) {
