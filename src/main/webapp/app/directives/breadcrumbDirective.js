@@ -10,14 +10,21 @@ cap.directive("breadcrumbs", function() {
 
             var getParent = function(context) {
                 var parentContext = $scope.context.ir.getContext(context.parent.object);
-                parentContext.ready().then(function(contexts) {
-                    // TODO: figure out why there are three promises resolved here
-                    var nextContext = contexts[0];
-                    if (nextContext.hasParent) {
-                        getParent(nextContext);
+                if(parentContext.parent) {
+                    if(parentContext.hasParent) {
+                        getParent(parentContext);
                     }
-                    $scope.breadcrumbs.unshift(nextContext);
-                });
+                    $scope.breadcrumbs.unshift(parentContext);
+                 } else {
+                    parentContext.ready().then(function(contexts) {
+                        // TODO: figure out why there are three promises resolved here
+                        var nextContext = contexts[0];
+                        if (nextContext.hasParent) {
+                            getParent(nextContext);
+                        }
+                        $scope.breadcrumbs.unshift(nextContext);
+                    });
+                }
                 return parentContext;
             };
 
