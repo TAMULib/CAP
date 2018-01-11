@@ -17,6 +17,8 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.update.UpdateFactory;
+import org.apache.jena.update.UpdateRequest;
 import org.apache.jena.vocabulary.DC;
 import org.apache.tika.Tika;
 import org.fcrepo.client.DeleteBuilder;
@@ -57,13 +59,8 @@ public class FedoraService implements IRService<Model> {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns",
         "http://www.ebu.ch/metadata/ontologies/ebucore/ebucore",
         "http://www.iana.org/assignments/relation",
-        "http://www.loc.gov/premis/rdf/v1"
-    };
-    // @formatter:on
-
-    // @formatter:off
-    public final static String[] METADATA_PREFIXES = new String[] {
-        "http://purl.org/dc/elements/1.1"
+        "http://www.loc.gov/premis/rdf/v1",
+        "http://pcdm.org/models"
     };
     // @formatter:on
 
@@ -101,30 +98,23 @@ public class FedoraService implements IRService<Model> {
             throw new IRVerificationException("No root found. Status " + response.getStatusCode());
         }
     }
-    
-	@Override
-	public IRContext createMetadata(Triple triple) throws Exception {
-		
-		System.out.println("In Service");
-		
-		FcrepoClient client = buildClient();
-    
+
+    @Override
+    public IRContext createMetadata(Triple triple) throws Exception {
+        FcrepoClient client = buildClient();
         String contextUri = triple.getSubject();
-        
-		PatchBuilder patch = new PatchBuilder(new URI(contextUri), client);
-        
-		Model model = ModelFactory.createDefaultModel();
-		Property predicate = model.createProperty(triple.getPredicate());
-        model.createResource("").addProperty(predicate, triple.getObject());
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        RDFDataMgr.write(out, model, Lang.TURTLE);
-        patch.body(new ByteArrayInputStream(out.toByteArray()));
-            
+        PatchBuilder patch = new PatchBuilder(new URI(contextUri), client);
+
+        UpdateRequest request = UpdateFactory.create();
+        request.add("INSERT {" + "<> <" + triple.getPredicate() + "> '" + triple.getObject() + "' . " + "} WHERE {}");
+
+        patch.body(new ByteArrayInputStream(request.toString().getBytes()));
+
         FcrepoResponse response = patch.perform();
         URI location = response.getLocation();
         logger.debug("Metadata creation status and location: {}, {}", response.getStatusCode(), location);
         return getContainer(contextUri);
-	}
+    }
 
     @Override
     public IRContext createContainer(String contextUri, String name) throws Exception {
@@ -196,30 +186,41 @@ public class FedoraService implements IRService<Model> {
             // System.out.println(" OBJECT: " + triple.getObject());
             // System.out.println();
 
-            String predicate = triple.getPredicate();
+            {
+                String predicate = triple.getPredicate();
 
-            switch (predicate) {
-            case FEDORA_HAS_PARENT_PREDICATE:
-                irContext.setParent(triple);
-                break;
-            case LDP_CONTAINS_PREDICATE:
-                irContext.addChild(new IRContext(triple));
-                break;
-            default:
+                switch (predicate) {
+                case FEDORA_HAS_PARENT_PREDICATE:
+                    irContext.setParent(triple);
+                    break;
+                case LDP_CONTAINS_PREDICATE:
+                    irContext.addChild(new IRContext(triple));
+                    break;
+                default:
 
-                for (String prefix : PROPERTY_PREFIXES) {
-                    if (predicate.startsWith(prefix)) {
-                        irContext.addProperty(triple);
-                        if (triple.getObject().equals(FEDORA_BINRAY_PREDICATE)) {
-                            irContext.getTriple().setObject(FEDORA_BINRAY_PREDICATE);
+                    for (String prefix : PROPERTY_PREFIXES) {
+                        if (predicate.startsWith(prefix)) {
+                            irContext.addProperty(triple);
+                        }
+                    }
+
+                    for (String prefix : ir.getMetadataPrefixes()) {
+                        if (predicate.startsWith(prefix)) {
+                            irContext.addMetadum(triple);
                         }
                     }
                 }
+            }
 
-                for (String prefix : METADATA_PREFIXES) {
-                    if (predicate.startsWith(prefix)) {
-                        irContext.addMetadum(triple);
-                    }
+            {
+                String object = triple.getObject();
+
+                switch (object) {
+                case FEDORA_BINRAY_PREDICATE:
+                    irContext.getTriple().setObject(FEDORA_BINRAY_PREDICATE);
+                    break;
+                default:
+
                 }
             }
 

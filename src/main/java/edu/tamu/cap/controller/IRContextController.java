@@ -8,7 +8,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,46 +22,45 @@ import edu.tamu.weaver.response.ApiResponse;
 @RequestMapping("ir-context/{type}/{irid}")
 public class IRContextController {
 
-	@RequestMapping(method = GET)
-	@PreAuthorize("hasRole('USER')")
-	public ApiResponse get(IRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
-		return new ApiResponse(SUCCESS, irService.getContainer(contextUri));
-	}
+    @RequestMapping(method = GET)
+    @PreAuthorize("hasRole('USER')")
+    public ApiResponse get(IRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
+        return new ApiResponse(SUCCESS, irService.getContainer(contextUri));
+    }
 
-	@RequestMapping(method = PUT)
-	@PreAuthorize("hasRole('USER')")
-	public ApiResponse update(IRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
-		return new ApiResponse(SUCCESS, irService.updateContainer(contextUri));
-	}
+    @RequestMapping(method = PUT)
+    @PreAuthorize("hasRole('USER')")
+    public ApiResponse update(IRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
+        return new ApiResponse(SUCCESS, irService.updateContainer(contextUri));
+    }
 
-	@RequestMapping(value = "/container", method = POST)
-	@PreAuthorize("hasRole('USER')")
-	public ApiResponse create(IRService<?> irService, @Param("contextUri") String contextUri, @PayloadArgName("name") String name) throws Exception {
-		return new ApiResponse(SUCCESS, irService.createContainer(contextUri, name));
-	}
+    @RequestMapping(value = "/container", method = POST)
+    @PreAuthorize("hasRole('USER')")
+    public ApiResponse create(IRService<?> irService, @Param("contextUri") String contextUri, @PayloadArgName("name") String name) throws Exception {
+        return new ApiResponse(SUCCESS, irService.createContainer(contextUri, name));
+    }
 
-	@RequestMapping(value = "/resource", method = POST)
-	@PreAuthorize("hasRole('USER')")
-	public ApiResponse createResource(IRService<?> irService, @Param("contextUri") String contextUri, @RequestParam("file") MultipartFile file) throws Exception {
-		return new ApiResponse(SUCCESS, irService.createResource(contextUri, file));
-	}
-	
-	@RequestMapping(value = "/metadata", method = POST)
-	@PreAuthorize("hasRole('USER')")
-	public ApiResponse createMetadata(IRService<?> irService, Triple triple) throws Exception {
-		System.out.println("In Controller");
-		return new ApiResponse(SUCCESS, irService.createMetadata(triple));
-	}
+    @RequestMapping(value = "/resource", method = POST)
+    @PreAuthorize("hasRole('USER')")
+    public ApiResponse createResource(IRService<?> irService, @Param("contextUri") String contextUri, @RequestParam("file") MultipartFile file) throws Exception {
+        return new ApiResponse(SUCCESS, irService.createResource(contextUri, file));
+    }
 
-	@RequestMapping(value = "/container", method = DELETE)
-	@PreAuthorize("hasRole('USER')")
-	public ApiResponse delete(IRService<?> irService, @Param("containerUri") String containerUri) throws Exception {
-		try {
-			irService.deleteContainer(containerUri);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		return new ApiResponse(SUCCESS);
-	}
+    @RequestMapping(value = "/metadata", method = POST)
+    @PreAuthorize("hasRole('USER')")
+    public ApiResponse createMetadata(IRService<?> irService, Triple triple) throws Exception {
+        return new ApiResponse(SUCCESS, irService.createMetadata(triple));
+    }
+
+    @RequestMapping(value = "/container", method = DELETE)
+    @PreAuthorize("hasRole('USER')")
+    public ApiResponse delete(IRService<?> irService, @Param("containerUri") String containerUri) throws Exception {
+        try {
+            irService.deleteContainer(containerUri);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return new ApiResponse(SUCCESS);
+    }
 
 }

@@ -3,6 +3,8 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
 
     var irContext = this;
 
+    console.log(irContext);
+
     var children = {};
 
     var fetchContext = function (contextUri) {
@@ -16,7 +18,7 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
           contextUri: contextUri
         }
       });
-    }
+    };
 
     irContext.before(function() {
       var defer = $q.defer();

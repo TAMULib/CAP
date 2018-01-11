@@ -12,14 +12,10 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
       type: $scope.iRTypes[0].value
     });
   });
-
-
   
   $scope.irToDelete = {};
   $scope.irToEdit = {};
   $scope.testResults = {};
-
-  
 
   $scope.irForms = {
     validations: IRRepo.getValidations(),
@@ -42,7 +38,7 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
   $scope.startCreate = function() {
     $scope.schemas = SchemaRepo.getAll();
     $scope.openModal("#createIRModal");
-  }
+  };
 
   $scope.createIr = function() {
     IRRepo.create($scope.irToCreate).then(function(res) {
@@ -95,8 +91,8 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
 
   $scope.showSchemas = function(schemas) {
     $scope.schemasToShow = schemas;
-    $scope.openModal("#showSchemasModal")
-  }
+    $scope.openModal("#showSchemasModal");
+  };
 
   $q.all([
     IRRepo.ready(),
