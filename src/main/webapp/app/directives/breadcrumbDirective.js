@@ -33,11 +33,9 @@ cap.directive("breadcrumbs", function() {
 
             var getParent = function(context) {
                 var parentContext = $scope.context.ir.getContext(context.parent.object);
-                if(parentContext.parent) {
-                    if(parentContext.hasParent) {
-                        getParent(parentContext);
-                    }
-                    $scope.breadcrumbs.push(parentContext);
+                if(parentContext.hasParent) {
+                    getParent(parentContext);
+                    $scope.breadcrumbs.unshift(parentContext);
                  } else {
                     parentContext.ready().then(function(contexts) {
                         // TODO: figure out why there are three promises resolved here
