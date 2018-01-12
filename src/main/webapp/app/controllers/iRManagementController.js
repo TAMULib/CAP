@@ -60,6 +60,7 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
   };
 
   $scope.updateIr = function() {
+    $scope.irToEdit.dirty(true);
     $scope.irToEdit.save().then(function() {
       $scope.cancelEditIr();
     });
