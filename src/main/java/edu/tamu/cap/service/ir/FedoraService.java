@@ -18,7 +18,6 @@ import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateRequest;
 import org.apache.jena.vocabulary.DC;
-import org.apache.tika.Tika;
 import org.fcrepo.client.DeleteBuilder;
 import org.fcrepo.client.FcrepoClient;
 import org.fcrepo.client.FcrepoOperationFailedException;
@@ -63,8 +62,6 @@ public class FedoraService implements IRService<Model> {
         "http://pcdm.org/models"
     };
     // @formatter:on
-
-    private Tika tika = new Tika();
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -162,8 +159,7 @@ public class FedoraService implements IRService<Model> {
     public IRContext createResource(String contextUri, MultipartFile file) throws Exception {
         FcrepoClient client = buildClient();
         PostBuilder post = new PostBuilder(new URI(contextUri), client);
-        InputStream fileStream = new ByteArrayInputStream(file.getBytes());
-        post.body(fileStream, tika.detect(fileStream));
+        post.body(file.getInputStream(), file.getContentType());
         post.filename(file.getOriginalFilename());
         FcrepoResponse response = post.perform();
         URI location = response.getLocation();
