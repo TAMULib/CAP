@@ -10,9 +10,7 @@
         <div class="col-md-2 col-md-offset-1">
 
           <div class="form-group">
-              <div class="btn btn-default" ngf-select ng-model="irForm.uploadResource.file" name="file" ngf-pattern="'image/*'"
-              ngf-accept="'image/*'" ngf-max-size="20MB" ngf-min-height="100"
-              ngf-resize="{width: 100, height: 100}">Select</div>
+              <div class="btn btn-default" ngf-select ng-model="irForm.uploadResource.file" name="file" ngf-pattern="'image/*'" ngf-accept="'image/*'" ngf-max-size="100MB">Select</div>
           </div>
 
         </div>
@@ -21,7 +19,7 @@
 
           <div class="well media" ng-if="irForm.uploadResource.file.name">
             <div class="media-left media-middle" ng-init="fileSrc = srcFromFile(irForm.uploadResource.file)">
-              <img class="media-object" src="{{fileSrc}}">
+              <img class="media-object resource-upload-preview" src="{{fileSrc}}">
             </div>
             <div class="media-body">
               <h4 class="media-heading"><label>Name:</label><span> {{irForm.uploadResource.file.name}}</span></h4>

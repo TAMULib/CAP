@@ -72,7 +72,7 @@
         <br ng-show="contentExpanded">
         <dl ng-show="contentExpanded" class="dl-horizontal" ng-repeat="triple in list | unique:'predicate'">
           <dt>
-              <input ng-show="removeListElements" type="checkbox" ng-checked="checkAll" ng-click="checkAll=!checkAll;checkAll?selectAll(filteredList):selectedListElements.length=0">
+              <input ng-show="removeListElements&&filteredList.length>1" type="checkbox" ng-checked="checkAll" ng-click="checkAll=!checkAll;checkAll?selectAll(filteredList):selectedListElements.length=0">
               <a href="{{triple.predicate}}">{{triple.predicate | metadataLabel }}</a>
           </dt>
           <dd ng-repeat="t in filteredList = (list |filter:{predicate:triple.predicate}:true)">

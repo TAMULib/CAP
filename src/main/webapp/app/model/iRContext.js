@@ -175,7 +175,7 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
 
     irContext.removeMetadata = function(metadataTriples) {
       
-      var promises = [];
+      var promises = [];      
 
       angular.forEach(metadataTriples, function(metadataTriple) {
         var createPromise = WsApi.fetch(irContext.getMapping().metadata, {
@@ -188,7 +188,10 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
         });
 
         createPromise.then(function(res) {
-          angular.extend(irContext, angular.fromJson(res.body).payload.IRContext);
+          var res = angular.fromJson(res.body).payload;
+          if(res.payload) {
+            angular.extend(irContext, angular.fromJson(res.body).payload.IRContext);
+          }
         });
 
         promises.push(createPromise);
