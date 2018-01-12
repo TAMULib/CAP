@@ -103,7 +103,7 @@ public class FedoraService implements IRService<Model> {
     public IRContext createMetadata(Triple triple) throws Exception {
         FcrepoClient client = buildClient();
         String contextUri = triple.getSubject();
-        PatchBuilder patch = new PatchBuilder(new URI(contextUri), client);
+        PatchBuilder patch = new PatchBuilder(new URI(contextUri + "/fcr:metadata"), client);
         String sparql = "INSERT { <" + triple.getSubject() + "> <" + triple.getPredicate() + "> '" + triple.getObject() + "' . } WHERE {}";
         UpdateRequest request = UpdateFactory.create();
         request.add(sparql);
@@ -133,7 +133,7 @@ public class FedoraService implements IRService<Model> {
     @Override
     public IRContext updateMetadata(String contextUri, String sparql) throws Exception {
         FcrepoClient client = buildClient();
-        PatchBuilder patch = new PatchBuilder(new URI(contextUri), client);
+        PatchBuilder patch = new PatchBuilder(new URI(contextUri + "/fcr:metadata"), client);
         patch.body(new ByteArrayInputStream(sparql.getBytes()));
         FcrepoResponse response = patch.perform();
         URI location = response.getLocation();
