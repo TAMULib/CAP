@@ -18,6 +18,7 @@ import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateRequest;
 import org.apache.jena.vocabulary.DC;
+
 import org.fcrepo.client.DeleteBuilder;
 import org.fcrepo.client.FcrepoClient;
 import org.fcrepo.client.FcrepoOperationFailedException;
@@ -25,8 +26,10 @@ import org.fcrepo.client.FcrepoResponse;
 import org.fcrepo.client.GetBuilder;
 import org.fcrepo.client.PatchBuilder;
 import org.fcrepo.client.PostBuilder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -115,11 +118,14 @@ public class FedoraService implements IRService<Model> {
     public IRContext deleteMetadata(Triple triple) throws Exception {
         FcrepoClient client = buildClient();
         String contextUri = triple.getSubject();
-        PatchBuilder patch = new PatchBuilder(new URI(contextUri), client);
-        String sparql = "DELETE { <" + contextUri + "> <" + triple.getPredicate() + "> " + triple.getObject() + " } " + 
-                        "WHERE { <" + contextUri + "> <" + triple.getPredicate() + "> " + triple.getObject() + " }";
+        
+        PatchBuilder patch = new PatchBuilder(new URI(contextUri+ "/fcr:metadata"), client);
+        
+        String sparql = "DELETE WHERE { <" + contextUri + "> <" + triple.getPredicate() + "> " + triple.getObject() + " } ";
+        
         UpdateRequest request = UpdateFactory.create();
         request.add(sparql);
+                
         patch.body(new ByteArrayInputStream(request.toString().getBytes()));
         FcrepoResponse response = patch.perform();
         URI location = response.getLocation();
