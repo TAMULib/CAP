@@ -26,7 +26,7 @@
               {{schema.name}} ({{schema.abbreviation}})
             </td>
             <td data-title="'Namespace'">
-                {{schema.namespace}}
+                <a target="_blank" href="{{schema.namespace}}">{{schema.namespace}}</a>
             </td>
             <td data-title="'Properties'">
                 <span class="badge clickable" ng-click="showProperties(schema.properties)">{{schema.properties.length || 0}}</span>
