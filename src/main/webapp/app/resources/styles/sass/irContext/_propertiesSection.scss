@@ -1,3 +1,16 @@
 .row {
   margin: 5px 0px 12px 0px;
 }
+
+.properties {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+
+}
+
+.preview {
+  .thumbnail > img {
+    width: 100%;
+  }
+}

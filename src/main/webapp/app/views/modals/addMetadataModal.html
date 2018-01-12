@@ -4,7 +4,7 @@
       <h4 class="modal-title">Add Metadata</h4>
     </div>
     <div class="modal-body" ng-init="irForm.addMetadata.entries=[{label:'',value:''}]">
-        
+
         <div class="row" ng-init="irForm.addMetadata.entries[0]={}">
             <div class="col-xs-2">
                 <div class="form-group" ng-init="selectedSchema=ir.schemas[0]">
@@ -16,7 +16,7 @@
             <div class="col-xs-3">
                 <div class="form-group">
                     <label for="metadata.label">Label</label>
-                    <input placeholder="e.g. {{selectedSchema.properties[0].label}}" type="text" class="form-control" ng-model="irForm.addMetadata.entries[0].property" typeahead-input-formatter="$model.label" uib-typeahead="property as property.label for property in selectedSchema.properties | orderBy:'label' | filter:$viewValue | limitTo:10">
+                    <input placeholder="e.g. {{selectedSchema.properties[0].label}}" type="text" class="form-control" ng-model="irForm.addMetadata.entries[0].property" typeahead-input-formatter="$model.label" uib-typeahead="property as property.label for property in selectedSchema.properties | filter:$viewValue | orderBy:'label' | limitTo:10">
                     <small><a href="{{irForm.addMetadata.entries[0].property.uri}}" target="_blank">{{irForm.addMetadata.entries[0].property.uri}}</a></small>
                 </div>
             </div>
@@ -57,12 +57,12 @@
                 </div>
             </div>
         </div>
-        
-        
-      
-    </div>     
+
+
+
+    </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-default" ng-class="{'btn-warning': irForm.addMetadata.$dirty}" ng-click="closeModal()">Cancel</button>
       <button type="submit" class="btn btn-success" ng-disabled="irForm.addMetadata.$invalid">Add</button>
     </div>
-</form>  
+</form>

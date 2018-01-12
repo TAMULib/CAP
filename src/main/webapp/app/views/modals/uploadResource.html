@@ -5,26 +5,46 @@
     </div>
     <div class="modal-body">
 
-      <div class="form-group">
-          <div class="btn btn-default" ngf-select ng-model="irForm.uploadResource.file" name="file" ngf-pattern="'image/*'"
-          ngf-accept="'image/*'" ngf-max-size="20MB" ngf-min-height="100"
-          ngf-resize="{width: 100, height: 100}">Select</div>
-      </div>
+      <div class="row">
 
-      <!-- <img ng-if="irForm.uploadResource.file.name" src="{{window.URL.createObjectURL(this.irForm.uploadResource.file)}}"> -->
-        
-      <dl class="dl-horizontal" ng-if="irForm.uploadResource.file.name">
-        <dt>Name:</dt>
-        <dd>{{irForm.uploadResource.file.name}}</dd>
-        <dt>Type:</dt>
-        <dd>{{irForm.uploadResource.file.type}}</dd>
-        <dt>Size:</dt>
-        <dd>{{irForm.uploadResource.file.size}}</dd>
-      </dl>
+        <div class="col-md-2 col-md-offset-1">
+
+          <div class="form-group">
+              <div class="btn btn-default" ngf-select ng-model="irForm.uploadResource.file" name="file" ngf-pattern="'image/*'"
+              ngf-accept="'image/*'" ngf-max-size="20MB" ngf-min-height="100"
+              ngf-resize="{width: 100, height: 100}">Select</div>
+          </div>
+
+        </div>
+
+        <div class="col-md-9">
+
+          <div class="well media" ng-if="irForm.uploadResource.file.name">
+            <div class="media-left media-middle" ng-init="fileSrc = srcFromFile(irForm.uploadResource.file)">
+              <img class="media-object" src="{{fileSrc}}">
+            </div>
+            <div class="media-body">
+              <h4 class="media-heading"><label>Name:</label><span> {{irForm.uploadResource.file.name}}</span></h4>
+              <ul class="list-unstyled">
+                <li>
+                  <label>Type:</label>
+                  <span>{{irForm.uploadResource.file.type}}</span>
+                </li>
+                <li>
+                  <label>Size:</label>
+                  <span>{{irForm.uploadResource.file.size}}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
 
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-default" ng-click="resetUploadResource()">Cancel</button>
       <button type="submit" class="btn btn-success" ng-disabled="!irForm.uploadResource.file">Upload</button>
     </div>
-</form>  
+</form>
