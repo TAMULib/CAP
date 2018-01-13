@@ -88,8 +88,13 @@ cap.controller("IrContextController", function($controller, $scope, IRRepo, $rou
     $scope.deleteIrContext = function() {
       var ir = $scope.context.ir;
       var currentTriple = $scope.context.triple;
+      var isResource = $scope.context.resource;
       $scope.context = ir.loadContext($scope.context.parent.object);
-      $scope.context.removeContainers([currentTriple]);
+      if(isResource) {
+        $scope.context.removeContainers([currentTriple]);
+      } else {
+        $scope.context.removeResource([currentTriple]);
+      }
     };
 
     $scope.srcFromFile = function(file) {
