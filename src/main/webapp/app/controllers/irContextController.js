@@ -91,9 +91,9 @@ cap.controller("IrContextController", function($controller, $scope, IRRepo, $rou
       var isResource = $scope.context.resource;
       $scope.context = ir.loadContext($scope.context.parent.object);
       if(isResource) {
-        $scope.context.removeContainers([currentTriple]);
+        $scope.context.removeResources([currentTriple]);
       } else {
-        $scope.context.removeResource([currentTriple]);
+        $scope.context.removeContainers([currentTriple]);
       }
     };
 
