@@ -13,7 +13,11 @@
         <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-random"></span> Migrate</a></li>
         <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-export"></span> Export</a></li>
         <li class="divider"></li>
-        <li role="menuitem bg-danger"><a href="#" class="bg-danger"><span class="glyphicon glyphicon-trash"></span> Delete</a></li>
+        <li role="menuitem bg-danger" ng-click="openModal('#irContextDeleteModal')">
+          <a href="#" class="bg-danger">
+            <span class="glyphicon glyphicon-trash"></span> Delete
+          </a>
+        </li>
       </ul>
     </div>
     <h1>{{ir.name}} <small class="clickable" ng-click="ir.loadContext(ir.rootUri)">(<span class="glyphicon glyphicon-home"></span> {{ir.rootUri}})</small></h1>
@@ -149,6 +153,13 @@
     modal-id="advancedUpdate"
     modal-view="views/modals/advancedUpdateModal.html"
     modal-header-class="modal-header-primary"
+    wvr-modal-backdrop="static">
+  </modal>
+
+  <modal
+    modal-id="irContextDeleteModal"
+    modal-view="views/modals/irContextDeleteModal.html"
+    modal-header-class="modal-header-danger"
     wvr-modal-backdrop="static">
   </modal>
 

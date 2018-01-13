@@ -78,7 +78,23 @@ cap.controller("IrContextController", function($controller, $scope, IRRepo, $rou
       $scope.context.createMetadata(triples).then(function() {
         $scope.closeModal();
       });
-
+    }
+    
+    $scope.cancelDeleteIrContext = function(irContext) {
+      $scope.irContextToDelete = {};        
+      $scope.closeModal();
+    };
+  
+    $scope.deleteIrContext = function() {
+      var ir = $scope.context.ir;
+      var currentTriple = $scope.context.triple;
+      var isResource = $scope.context.resource;
+      $scope.context = ir.loadContext($scope.context.parent.object);
+      if(isResource) {
+        $scope.context.removeResources([currentTriple]);
+      } else {
+        $scope.context.removeContainers([currentTriple]);
+      }
     };
 
     $scope.srcFromFile = function(file) {
