@@ -6,18 +6,25 @@
         Context Actions <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
-        <li role="menuitem"><a href="" ng-click="openModal('#advancedUpdate')"><span class="glyphicon glyphicon glyphicon-edit"></span> Advanced Update</a></li>
-        <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-play"></span> Start Transaction</a></li>
+        <li class="dropdown-header">Container Actions</li>
+        <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-play-circle"></span> Start Transaction</a></li>
         <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-scissors"></span> Cut Version</a></li>
         <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-move"></span> Move</a></li>
         <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-random"></span> Migrate</a></li>
         <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-export"></span> Export</a></li>
+        <li role="menuitem bg-danger" ng-click="openModal('#irContextDeleteModal')"><a href="#" class="bg-danger"><span class="glyphicon glyphicon-trash"></span> Delete</a></li>
+
         <li class="divider"></li>
-        <li role="menuitem bg-danger" ng-click="openModal('#irContextDeleteModal')">
-          <a href="#" class="bg-danger">
-            <span class="glyphicon glyphicon-trash"></span> Delete
-          </a>
-        </li>
+        <li class="dropdown-header">Resource Actions</li>
+        <li role="menuitem" ng-class="{'disabled': !context.resource}"><a href="" ng-click="fixity(context)"><span class="glyphicon glyphicon glyphicon-edit"></span> Fixity</a></li>
+        <li role="menuitem" ng-class="{'disabled': !context.resource}"><a href="{{context.resourse}}" target="_blank"><span class="glyphicon glyphicon-download-alt"></span> Download</a></li>
+        
+        <!-- These ngIf calls should be executed once we enable user management -->
+        <li ng-if="isAdmin" class="divider"></li>
+        <li ng-if="isAdmin" class="dropdown-header">Admin Actions</li>
+        <li ng-if="isAdmin" role="menuitem"><a href="" ng-click="openModal('#advancedUpdate')"><span class="glyphicon glyphicon glyphicon-edit"></span> Advanced Update</a></li>
+        <li ng-if="isAdmin" role="menuitem"><a href="/admin/ir"><span class="glyphicon glyphicon-cog"></span> Admin Settings</a></li>
+        
       </ul>
     </div>
     <h1>{{ir.name}} <small class="clickable" ng-click="ir.loadContext(ir.rootUri)">(<span class="glyphicon glyphicon-home"></span> {{ir.rootUri}})</small></h1>
@@ -35,10 +42,25 @@
             <div class="caption clearfix">
               <h3 class="text-center">{{context.name}}</h3>
               <hr/>
-              <p class="pull-right">
+              <div class="pull-left">
+                <div class="btn-group pull-left dropup" uib-dropdown keyboard-nav>
+                  <button type="button" class="btn btn-default" uib-dropdown-toggle>
+                      <span class="glyphicon glyphicon-menu-hamburger"></span>
+                  </button>
+                  <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
+                    <li class="dropdown-header">Resource Actions</li>
+                    <li role="menuitem" class="disabled"><a href="#">Add to IIIF Manifest</a></li>
+                    <li role="menuitem" class="disabled"><a href="#">Send to Magpie</a></li>
+                    <li role="menuitem" class="disabled"><a href="#">Create thumbnail</a></li>
+                    <li role="menuitem" class="disabled"><a href="#">View in Mirador</a></li>
+                    <li role="menuitem" class="disabled"><a href="#">Copy Resource URL</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="pull-right">
                 <a href="{{context.uri}}" target="_blank" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-download-alt"></span> Download</a>
                 <a href="" ng-click="fixity()" class="btn btn-default" role="button"><span class="glyphicon glyphicon-ok"></span> Fixity</a>
-              </p>
+              </div>
             </div>
           </div>
         </div>
@@ -118,7 +140,7 @@
           <li  class="list-group-item" ng-repeat="le in filteredList = (list | filterResources:context)" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le.triple)!==-1}">
             <a href="" ng-click="listElementAction({'le':le.triple.subject})">{{(le.name || le.triple.object) | removeQuotes}}</a>
             <a href=""><span ng-show="!removeListElements" title="swap" class="glyphicon glyphicon-transfer pull-right clickable"></span></a>
-            <a href=""><span ng-show="!removeListElements" title="fixity" class="glyphicon glyphicon glyphicon-ok pull-right clickable"></span></a>
+            <a href=""><span ng-show="!removeListElements" title="fixity" class="glyphicon glyphicon-check pull-right clickable"></span></a>
             <a href="{{le.triple.subject}}"><span ng-show="!removeListElements" title="download" class="glyphicon glyphicon-download-alt pull-right"></span></a>
             <input ng-show="removeListElements" type="checkbox" class="pull-right" ng-checked="selectedListElements.indexOf(le.triple)!==-1" ng-click="selectedListElements.indexOf(le.triple)===-1?selectedListElements.push(le.triple):selectedListElements.splice(selectedListElements.indexOf(le.triple),1)">
           </li>
