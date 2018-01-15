@@ -23,7 +23,7 @@ public class IRContext implements Serializable {
 
     private List<IRContext> children;
     
-    private IRContext fixity;
+    private FixityReport fixity;
 
 	public IRContext() {
         super();
@@ -105,11 +105,11 @@ public class IRContext implements Serializable {
         children.add(child);
     }
     
-    public IRContext getFixity() {
+    public FixityReport getFixity() {
 		return fixity;
 	}
 
-	public void setFixity(IRContext fixity) {
+	public void setFixity(FixityReport fixity) {
 		this.fixity = fixity;
 	}
 

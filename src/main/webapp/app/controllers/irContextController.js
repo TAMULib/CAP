@@ -97,10 +97,10 @@ cap.controller("IrContextController", function($controller, $scope, IRRepo, $rou
       }
     };
 
-    $scope.copiedSuccess = function() {
-      $scope.copied=true;
+    $scope.copiedSuccess = function(target) {
+      $scope[target+"Copied"]=true;
       $timeout(function() {
-        $scope.copied=false;
+        $scope[target+"Copied"]=false;
       }, 1500);
     }
 

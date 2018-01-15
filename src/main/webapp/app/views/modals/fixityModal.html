@@ -6,16 +6,31 @@
 
 <div class="row" ng-init="fixityResults={}">
     <div class="col-md-3">
-        <button class="btn btn-primary btn-large pull-right" ng-click="fixityCheck()">Check Fixity</button>
+        <button class="btn btn-primary btn-lg pull-right" ng-click="fixityCheck()">Check Fixity</button>
     </div>
 
-    <div class="col-md-9">
-        <dl class="dl-horizontal" ng-repeat="triple in context.fixity.properties | unique:'predicate'">
+    <div class="col-md-9" ng-if="context.fixity">
+        <dl class="dl-horizontal">
             <dt>
-                <a href="{{triple.predicate}}">{{triple.predicate | metadataLabel }}</a>
+                Status:
             </dt>
-            <dd ng-repeat="t in context.fixity.properties | filter:{predicate:triple.predicate}:true">
-                {{t.object | removeQuotes}}
+            <dd>
+                {{context.fixity.status | removeQuotes }}
+            </dd>
+            <dt>
+                Message Digest:
+            </dt>
+            <dd>
+                {{context.fixity.messageDigest}} 
+                <button class="btn btn-default btn-sm" ngclipboard data-clipboard-text="{{context.fixity.messageDigest}}" ngclipboard-success="copiedSuccess('fixity')" uib-tooltip="Copied!" tooltip-trigger="'none'" tooltip-is-open="fixityCopied===true">
+                    <span class="glyphicon glyphicon-copy"></span>
+                </button>
+            </dd>
+            <dt>
+                Size:
+            </dt>
+            <dd>
+                {{context.fixity.size.split("^^")[0] | removeQuotes }}
             </dd>
         </dl>
     </div>

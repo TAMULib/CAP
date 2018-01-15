@@ -36,6 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import edu.tamu.cap.exceptions.IRVerificationException;
 import edu.tamu.cap.model.IR;
+import edu.tamu.cap.model.response.FixityReport;
 import edu.tamu.cap.model.response.IRContext;
 import edu.tamu.cap.model.response.Triple;
 
@@ -191,7 +192,7 @@ public class FedoraService implements IRService<Model> {
         model.read(response.getBody(), null, "text/turtle");
         model.createResource("").addProperty(DC.title, "Fixity Report");
         
-        IRContext fixityReportContext = buildIRContext(model, contextUri); 
+        FixityReport fixityReportContext = FixityReport.of(buildIRContext(model, contextUri).getProperties()); 
         IRContext thisContext = getContainer(contextUri);
         thisContext.setFixity(fixityReportContext);
 	    
