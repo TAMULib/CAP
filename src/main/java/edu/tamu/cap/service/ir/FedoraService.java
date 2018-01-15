@@ -7,6 +7,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.NodeIterator;
@@ -179,6 +180,23 @@ public class FedoraService implements IRService<Model> {
         logger.debug("Resource creation status and location: {}, {}", response.getStatusCode(), location);
         return getContainer(contextUri);
     }
+    
+	@Override
+	public IRContext resourceFixity(Triple tiple) throws Exception {
+		String contextUri = tiple.getSubject();
+		FcrepoClient client = buildClient();
+		FcrepoResponse response = new GetBuilder(URI.create(contextUri+"/fcr:fixity"), client).perform();
+			
+		Model model = ModelFactory.createDefaultModel();
+        model.read(response.getBody(), null, "text/turtle");
+        model.createResource("").addProperty(DC.title, "Fixity Report");
+        
+        IRContext fixityReportContext = buildIRContext(model, contextUri); 
+        IRContext thisContext = getContainer(contextUri);
+        thisContext.setFixity(fixityReportContext);
+	    
+        return thisContext;
+	}
 
     @Override
     public IRContext getContainer(String contextUri) throws Exception {

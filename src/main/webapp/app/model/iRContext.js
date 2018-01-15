@@ -212,6 +212,19 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
       });
     };
 
+    irContext.fixityCheck = function() {
+      var fixityPromise = WsApi.fetch(irContext.getMapping().resourceFixity, {
+        method: HttpMethodVerbs.GET,
+        pathValues: {
+          irid: irContext.ir.id,
+          type: irContext.ir.type
+        },
+        query: irContext.triple
+      });
+      
+      return fixityPromise;
+    };
+
     irContext.advancedUpdate = function(updateForm) {
       var updatePromise = WsApi.fetch(irContext.getMapping().metadata, {
         method: HttpMethodVerbs.PATCH,

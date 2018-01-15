@@ -1,0 +1,28 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+    <button type="button" class="close modal-close" aria-label="Close" ng-click="resetCreateContainer()"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title">Run Fixity</h4>
+</div>
+<div class="modal-body">
+
+<div class="row" ng-init="fixityResults={}">
+    <div class="col-md-3">
+        <button class="btn btn-primary btn-large pull-right" ng-click="fixityCheck()">Check Fixity</button>
+    </div>
+
+    <div class="col-md-9">
+        <dl class="dl-horizontal" ng-repeat="triple in context.fixity.properties | unique:'predicate'">
+            <dt>
+                <a href="{{triple.predicate}}">{{triple.predicate | metadataLabel }}</a>
+            </dt>
+            <dd ng-repeat="t in context.fixity.properties | filter:{predicate:triple.predicate}:true">
+                {{t.object | removeQuotes}}
+            </dd>
+        </dl>
+    </div>
+    
+</div>
+
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="resetCreateContainer()">Cancel</button>
+</div>

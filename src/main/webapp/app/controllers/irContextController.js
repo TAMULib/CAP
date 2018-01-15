@@ -104,13 +104,12 @@ cap.controller("IrContextController", function($controller, $scope, IRRepo, $rou
       }, 1500);
     }
 
-    $scope.srcFromFile = function(file) {
-      return URL.createObjectURL(file);
+    $scope.fixityCheck = function() {
+      $scope.context.fixityCheck();
     };
 
-    $scope.fixity = function() {
-      // TODO: this
-      console.log($scope.context);
+    $scope.srcFromFile = function(file) {
+      return URL.createObjectURL(file);
     };
 
     $scope.resetCreateContainer();

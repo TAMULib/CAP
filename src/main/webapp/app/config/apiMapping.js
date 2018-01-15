@@ -46,6 +46,11 @@ var apiMapping = {
       'endpoint': '/private/queue',
       'controller': 'ir-context',
       'method': ':type/:irid/resource'
+    },
+    resourceFixity: {
+      'endpoint': '/private/queue',
+      'controller': 'ir-context',
+      'method': ':type/:irid/resource/fixity'
     }
   },
   TestIRSettings: {

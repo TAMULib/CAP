@@ -15,7 +15,7 @@
 
         <li class="divider"></li>
         <li class="dropdown-header">Resource Actions</li>
-        <li role="menuitem" ng-class="{'disabled': !context.resource}"><a href="" ng-click="fixity(context)"><span class="glyphicon glyphicon glyphicon-edit"></span> Fixity</a></li>
+        <li role="menuitem" ng-class="{'disabled': !context.resource}"><a href="" ng-click="openModal('#fixityModal')"><span class="glyphicon glyphicon glyphicon-edit"></span> Fixity</a></li>
         <li role="menuitem" ng-class="{'disabled': !context.resource}"><a href="{{context.resourse}}" target="_blank"><span class="glyphicon glyphicon-download-alt"></span> Download</a></li>
         
         <!-- These ngIf calls should be executed once we enable user management -->
@@ -58,7 +58,7 @@
               </div>
               <div class="pull-right">
                 <a href="{{context.uri}}" target="_blank" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-download-alt"></span> Download</a>
-                <a href="" ng-click="fixity()" class="btn btn-default" role="button"><span class="glyphicon glyphicon-ok"></span> Fixity</a>
+                <a href="" ng-click="openModal('#fixityModal')" class="btn btn-default" role="button"><span class="glyphicon glyphicon-ok"></span> Fixity</a>
               </div>
             </div>
           </div>
@@ -203,6 +203,14 @@
     modal-id="irContextDeleteModal"
     modal-view="views/modals/irContextDeleteModal.html"
     modal-header-class="modal-header-danger"
+    wvr-modal-backdrop="static">
+  </modal>
+
+  <modal
+    modal-id="fixityModal"
+    modal-view="views/modals/fixityModal.html"
+    modal-header-class="modal-header-primary"
+    modal-fullscreen="true"
     wvr-modal-backdrop="static">
   </modal>
 

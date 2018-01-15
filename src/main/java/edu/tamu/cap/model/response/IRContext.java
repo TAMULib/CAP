@@ -22,8 +22,10 @@ public class IRContext implements Serializable {
     private List<Triple> metadata;
 
     private List<IRContext> children;
+    
+    private IRContext fixity;
 
-    public IRContext() {
+	public IRContext() {
         super();
         properties = new ArrayList<Triple>();
         metadata = new ArrayList<Triple>();
@@ -102,5 +104,13 @@ public class IRContext implements Serializable {
     public void addChild(IRContext child) {
         children.add(child);
     }
+    
+    public IRContext getFixity() {
+		return fixity;
+	}
+
+	public void setFixity(IRContext fixity) {
+		this.fixity = fixity;
+	}
 
 }
