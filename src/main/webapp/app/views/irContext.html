@@ -16,7 +16,7 @@
         <li class="divider"></li>
         <li class="dropdown-header">Resource Actions</li>
         <li role="menuitem" ng-class="{'disabled': !context.resource}"><a href="" ng-click="fixity(context)"><span class="glyphicon glyphicon glyphicon-edit"></span> Fixity</a></li>
-        <li role="menuitem" ng-class="{'disabled': !context.resource}"><a href="{{context.resourse}}" target="_blank"><span class="glyphicon glyphicon-download-alt"></span> Download</a></li>
+        <li role="menuitem" ng-class="{'disabled': !context.resource}"><a href="{{context.resourse}}" target="download"><span class="glyphicon glyphicon-download-alt"></span> Download</a></li>
         
         <!-- These ngIf calls should be executed once we enable user management -->
         <li ng-if="isAdmin" class="divider"></li>
@@ -57,7 +57,7 @@
                 </div>
               </div>
               <div class="pull-right">
-                <a href="{{context.uri}}" target="_blank" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-download-alt"></span> Download</a>
+                <a href="{{context.uri}}" download class="btn btn-primary" role="button"><span class="glyphicon glyphicon-download-alt"></span> Download</a>
                 <a href="" ng-click="fixity()" class="btn btn-default" role="button"><span class="glyphicon glyphicon-ok"></span> Fixity</a>
               </div>
             </div>
@@ -162,7 +162,7 @@
             <a href="" ng-click="listElementAction({'le':le.triple.subject})">{{(le.name || le.triple.object) | removeQuotes}}</a>
             <a href=""><span ng-show="!removeListElements" title="swap" class="glyphicon glyphicon-transfer pull-right clickable"></span></a>
             <a href=""><span ng-show="!removeListElements" title="fixity" class="glyphicon glyphicon-check pull-right clickable"></span></a>
-            <a href="{{le.triple.subject}}"><span ng-show="!removeListElements" title="download" class="glyphicon glyphicon-download-alt pull-right"></span></a>
+            <a href="{{le.triple.subject}}" download><span ng-show="!removeListElements" title="download" class="glyphicon glyphicon-download-alt pull-right"></span></a>
             <input ng-show="removeListElements" type="checkbox" class="pull-right" ng-checked="selectedListElements.indexOf(le.triple)!==-1" ng-click="selectedListElements.indexOf(le.triple)===-1?selectedListElements.push(le.triple):selectedListElements.splice(selectedListElements.indexOf(le.triple),1)">
           </li>
         </ol>
