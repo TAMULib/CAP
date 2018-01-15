@@ -42,7 +42,7 @@
               <h3 class="text-center">{{context.name}}</h3>
               <hr/>
               <div class="pull-left">
-                <div class="btn-group pull-left dropup" uib-dropdown keyboard-nav>
+                <div class="btn-group pull-left dropup" uib-dropdown keyboard-nav uib-tooltip="Copied!" tooltip-trigger="'none'" tooltip-is-open="copied===true">
                   <button type="button" class="btn btn-default" uib-dropdown-toggle>
                       <span class="glyphicon glyphicon-menu-hamburger"></span>
                   </button>
@@ -52,7 +52,7 @@
                     <li role="menuitem" class="disabled"><a href="#">Send to Magpie</a></li>
                     <li role="menuitem" class="disabled"><a href="#">Create thumbnail</a></li>
                     <li role="menuitem" class="disabled"><a href="#">View in Mirador</a></li>
-                    <li role="menuitem" class="disabled"><a href="#">Copy Resource URL</a></li>
+                    <li role="menuitem" ngclipboard data-clipboard-text="{{context.uri}}" ngclipboard-success="copiedSuccess()"><a href="#">Copy Resource URL</a></li>
                   </ul>
                 </div>
               </div>

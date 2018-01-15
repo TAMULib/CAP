@@ -1,4 +1,4 @@
-cap.controller("IrContextController", function($controller, $scope, IRRepo, $routeParams, $location, $route, IRContext) {
+cap.controller("IrContextController", function($controller, $scope, IRRepo, $routeParams, $location, $route, $timeout, IRContext) {
 
   angular.extend(this, $controller('CoreAdminController', {
       $scope: $scope
@@ -96,6 +96,13 @@ cap.controller("IrContextController", function($controller, $scope, IRRepo, $rou
         $scope.context.removeContainers([currentTriple]);
       }
     };
+
+    $scope.copiedSuccess = function() {
+      $scope.copied=true;
+      $timeout(function() {
+        $scope.copied=false;
+      }, 1500);
+    }
 
     $scope.srcFromFile = function(file) {
       return URL.createObjectURL(file);
