@@ -10,7 +10,8 @@ cap.directive("irsection", function(IrSectionService) {
           list: "=",
           listElementAction: "&",
           addAction: "&",
-          removeAction: "&"
+          removeAction: "&",
+          editAction: "&"
         },
         link: function($scope, elem, attr, ctrl, transclude) {
 
@@ -38,6 +39,13 @@ cap.directive("irsection", function(IrSectionService) {
             $scope.removeAction({"items": $scope.selectedListElements}).then(function() {
               $scope.removeListElements=false;
               $scope.selectedListElements.length=0;          
+            });
+          };
+
+          $scope.editItem = function(argObj) {
+            $scope.editWorking = true;
+            $scope.editAction(argObj).then(function() {
+              $scope.editWorking = false;
             });
           };
 

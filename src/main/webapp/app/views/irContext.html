@@ -1,5 +1,4 @@
 <div class="ir-context">
-
   <div class="page-header clearfix">
     <div class="btn-group pull-right context-actions-btn" uib-dropdown keyboard-nav>
       <button type="button" class="btn btn-default" uib-dropdown-toggle>
@@ -75,7 +74,7 @@
             <dl class="dl-horizontal" ng-repeat="triple in context.properties | unique:'predicate'">
               <dt><a href="{{triple.predicate}}">{{triple.predicate | metadataLabel }}</a></dt>
               <dd ng-repeat="t in context.properties | filter:{predicate:triple.predicate}:true">
-                  {{t.object.split("^^")[0] | removeQuotes}}
+                  {{t.object | removeQuotes}}
               </dd>
             </dl>
           </div>
@@ -93,6 +92,7 @@
         list="context.metadata"
         list-element-action="ir.loadContext(le)"
         add-action="openModal('#addMetadata')"
+        edit-action="context.updateMetadatum(triple,newObject)"
         remove-action="context.removeMetadata(items)">
         <br ng-show="contentExpanded">
         <dl ng-show="contentExpanded" class="dl-horizontal" ng-repeat="triple in list | unique:'predicate'">
@@ -100,10 +100,31 @@
               <input ng-show="removeListElements&&filteredList.length>1" type="checkbox" ng-checked="checkAll" ng-click="checkAll=!checkAll;checkAll?selectAll(filteredList):selectedListElements.length=0">
               <a href="{{triple.predicate}}">{{triple.predicate | metadataLabel }}</a>
           </dt>
-          <dd ng-repeat="t in filteredList = (list |filter:{predicate:triple.predicate}:true)">
-              <input ng-show="removeListElements" type="checkbox" ng-checked="selectedListElements.indexOf(t)!==-1" ng-click="selectedListElements.indexOf(t)===-1?selectedListElements.push(t):selectedListElements.splice(selectedListElements.indexOf(t),1)">
-              <span ng-if="selectedListElements.indexOf(t)===-1">{{t.object.split("^^")[0] | removeQuotes}}</span>
-              <del ng-if="selectedListElements.indexOf(t)!==-1">{{t.object.split("^^")[0] | removeQuotes}}</del>
+          <dd ng-mouseenter="showEditBtn=true" ng-mouseleave="showEditBtn=false" ng-repeat="t in filteredList = (list |filter:{predicate:triple.predicate}:true)">
+            <input ng-show="removeListElements" type="checkbox" ng-checked="selectedListElements.indexOf(t)!==-1" ng-click="selectedListElements.indexOf(t)===-1?selectedListElements.push(t):selectedListElements.splice(selectedListElements.indexOf(t),1)">
+            <span ng-show="!editValue&&selectedListElements.indexOf(t)===-1">
+              {{t.object | removeQuotes}}
+              <span ng-show="showEditBtn" class="glyphicon glyphicon-pencil clickable" ng-click="editValue=t.object"></span>
+            </span>
+            <div ng-show="editValue" class="row">
+              <div class="col-md-6">
+                  <div class="input-group">
+                    <input type="text" class="form-control" ng-model="editValue" remove-quotes>
+                    <div class="input-group-btn">
+                      <button ng-show="!editWorking" class="btn btn-default" ng-click="editItem({triple:t,newObject:editValue})" ng-disabled="t.object===editValue">
+                        <span class="glyphicon glyphicon-ok"></span>
+                      </button>
+                      <button ng-show="!editWorking" class="btn btn-default" ng-click="editValue=null">
+                        <span class="glyphicon glyphicon-remove"></span>
+                      </button>
+                      <button ng-show="editWorking" class="btn btn-default" ng-click="editValue=null">
+                        <span class="glyphicon glyphicon-refresh spinning"></span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <del ng-if="removeListElements && selectedListElements.indexOf(t)!==-1">{{t.object | removeQuotes}}</del>
           </dd>
         </dl>
       </irsection>
