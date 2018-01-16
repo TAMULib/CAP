@@ -6,8 +6,6 @@ cap.controller("IrContextController", function($controller, $scope, IRRepo, $rou
 
   $scope.irForm = {};
 
-  $scope.contextToFixityCheck = {};
-
   IRRepo.ready().then(function() {
 
     $scope.ir = IRRepo.findByName(decodeURI($routeParams.irName));
