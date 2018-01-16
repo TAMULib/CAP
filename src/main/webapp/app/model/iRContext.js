@@ -221,10 +221,6 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
         },
         query: irContext.triple
       });
-
-      fixityPromise.then(function(res) {
-        console.log("done", angular.fromJson(res.body).payload);
-      });
       
       return fixityPromise;
     };
