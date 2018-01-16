@@ -5,32 +5,32 @@
 <div class="modal-body">
 
 <div class="row" ng-init="fixityResults={}">
-    <div class="col-md-3">
-        <button class="btn btn-primary btn-lg pull-right" ng-click="fixityCheck()">Check Fixity</button>
+    <div class="col-md-2 col-xs-offset-1">
+        <button class="btn btn-primary btn-lg " ng-click="contextToFixityCheck.fixityCheck()">Check Fixity</button>
     </div>
 
-    <div class="col-md-9" ng-if="context.fixity">
+    <div class="col-md-9" ng-if="contextToFixityCheck.fixity">
         <dl class="dl-horizontal">
             <dt>
                 Status:
             </dt>
             <dd>
-                {{context.fixity.status | removeQuotes }}
+                {{contextToFixityCheck.fixity.status | removeQuotes }}
             </dd>
             <dt>
                 Message Digest:
             </dt>
             <dd>
-                {{context.fixity.messageDigest}} 
+                {{contextToFixityCheck.fixity.messageDigest}} 
                 <button class="btn btn-default btn-sm" ngclipboard data-clipboard-text="{{context.fixity.messageDigest}}" ngclipboard-success="copiedSuccess('fixity')" uib-tooltip="Copied!" tooltip-trigger="'none'" tooltip-is-open="fixityCopied===true">
-                    <span class="glyphicon glyphicon-copy"></span>
+                    <span class="glyphicon glyphicon-copy" style="margin-left: 0px;"></span>
                 </button>
             </dd>
             <dt>
                 Size:
             </dt>
             <dd>
-                {{context.fixity.size.split("^^")[0] | removeQuotes }}
+                {{contextToFixityCheck.fixity.size.split("^^")[0] | removeQuotes }}
             </dd>
         </dl>
     </div>
@@ -39,5 +39,5 @@
 
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-default" ng-click="resetCreateContainer()">Cancel</button>
+    <button type="button" class="btn btn-default" ng-click="closeModal()">Cancel</button>
 </div>

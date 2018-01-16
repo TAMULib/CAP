@@ -15,7 +15,7 @@
 
         <li class="divider"></li>
         <li class="dropdown-header">Resource Actions</li>
-        <li role="menuitem" ng-class="{'disabled': !context.resource}"><a href="" ng-click="openModal('#fixityModal')"><span class="glyphicon glyphicon glyphicon-edit"></span> Fixity</a></li>
+        <li role="menuitem" ng-class="{'disabled': !context.resource}"><a href="" ng-click="contextToFixityCheck=context;openModal('#fixityModal')"><span class="glyphicon glyphicon glyphicon-edit"></span> Fixity</a></li>
         <li role="menuitem" ng-class="{'disabled': !context.resource}"><a href="{{context.resourse}}" target="_blank"><span class="glyphicon glyphicon-download-alt"></span> Download</a></li>
         
         <!-- These ngIf calls should be executed once we enable user management -->
@@ -58,7 +58,7 @@
               </div>
               <div class="pull-right">
                 <a href="{{context.uri}}" target="_blank" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-download-alt"></span> Download</a>
-                <a href="" ng-click="openModal('#fixityModal')" class="btn btn-default" role="button"><span class="glyphicon glyphicon-ok"></span> Fixity</a>
+                <a href="" ng-click="contextToFixityCheck=context;openModal('#fixityModal')" class="btn btn-default" role="button"><span class="glyphicon glyphicon-ok"></span> Fixity</a>
               </div>
             </div>
           </div>
@@ -158,10 +158,17 @@
         add-action="openModal('#uploadResource')"
         remove-action="context.removeResources(items)">
         <ol class="list-group" ng-show="contentExpanded">
-          <li  class="list-group-item" ng-repeat="le in filteredList = (list | filterResources:context)" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le.triple)!==-1}">
+          <li  class="list-group-item" ng-repeat="le in filteredList = (list | filterResources:context) track by $index" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le.triple)!==-1}">
             <a href="" ng-click="listElementAction({'le':le.triple.subject})">{{(le.name || le.triple.object) | removeQuotes}}</a>
             <a href="" ng-show="!removeListElements"><span title="swap" class="glyphicon glyphicon-transfer pull-right clickable"></span></a>
-            <a href="" ng-show="!removeListElements" ng-click="openModal('#fixityModal')"><span title="fixity" class="glyphicon glyphicon-check pull-right clickable"></span></a>
+            <a href="" ng-show="!removeListElements" ng-click="contextToFixityCheck=le;openModal('#fixityModal'+$index)"><span title="fixity" class="glyphicon glyphicon-check pull-right clickable"></span></a>
+            <modal
+              modal-id="{{'fixityModal'+$index}}"
+              modal-view="views/modals/fixityModal.html"
+              modal-header-class="modal-header-primary"
+              modal-fullscreen="true"
+              wvr-modal-backdrop="static">
+            </modal>
             <a href="{{le.triple.subject}}"><span ng-show="!removeListElements" title="download" class="glyphicon glyphicon-download-alt pull-right"></span></a>
             <input ng-show="removeListElements" type="checkbox" class="pull-right" ng-checked="selectedListElements.indexOf(le.triple)!==-1" ng-click="selectedListElements.indexOf(le.triple)===-1?selectedListElements.push(le.triple):selectedListElements.splice(selectedListElements.indexOf(le.triple),1)">
           </li>

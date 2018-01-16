@@ -6,6 +6,8 @@ cap.controller("IrContextController", function($controller, $scope, IRRepo, $rou
 
   $scope.irForm = {};
 
+  $scope.contextToFixityCheck = {};
+
   IRRepo.ready().then(function() {
 
     $scope.ir = IRRepo.findByName(decodeURI($routeParams.irName));
@@ -103,10 +105,6 @@ cap.controller("IrContextController", function($controller, $scope, IRRepo, $rou
         $scope[target+"Copied"]=false;
       }, 1500);
     }
-
-    $scope.fixityCheck = function() {
-      $scope.context.fixityCheck();
-    };
 
     $scope.srcFromFile = function(file) {
       return URL.createObjectURL(file);
