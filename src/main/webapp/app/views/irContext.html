@@ -89,7 +89,7 @@
             <dl class="dl-horizontal" ng-repeat="triple in context.properties | unique:'predicate'">
               <dt><a href="{{triple.predicate}}">{{triple.predicate | metadataLabel }}</a></dt>
               <dd ng-repeat="t in context.properties | filter:{predicate:triple.predicate}:true">
-                  {{t.object | removeQuotes}}
+                  {{t.object | propertyValue}}
               </dd>
             </dl>
           </div>
