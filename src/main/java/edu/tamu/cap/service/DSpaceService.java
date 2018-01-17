@@ -45,12 +45,6 @@ public class DSpaceService implements IRService<Model> {
     }
 
     @Override
-    public IRContext updateContainer(String contextUri) throws Exception {
-
-        return null;
-    }
-
-    @Override
     public IRContext createMetadata(Triple triple) throws Exception {
 
         return null;
