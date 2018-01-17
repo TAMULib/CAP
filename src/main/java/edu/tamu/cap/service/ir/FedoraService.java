@@ -7,6 +7,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.NodeIterator;
@@ -35,6 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import edu.tamu.cap.exceptions.IRVerificationException;
 import edu.tamu.cap.model.IR;
+import edu.tamu.cap.model.response.FixityReport;
 import edu.tamu.cap.model.response.IRContext;
 import edu.tamu.cap.model.response.Triple;
 
@@ -179,6 +181,23 @@ public class FedoraService implements IRService<Model> {
         logger.debug("Resource creation status and location: {}, {}", response.getStatusCode(), location);
         return getContainer(contextUri);
     }
+    
+	@Override
+	public IRContext resourceFixity(Triple tiple) throws Exception {
+		String contextUri = tiple.getSubject();
+		FcrepoClient client = buildClient();
+		FcrepoResponse response = new GetBuilder(URI.create(contextUri+"/fcr:fixity"), client).perform();
+			
+		Model model = ModelFactory.createDefaultModel();
+        model.read(response.getBody(), null, "text/turtle");
+        model.createResource("").addProperty(DC.title, "Fixity Report");
+        
+        FixityReport fixityReportContext = FixityReport.of(buildIRContext(model, contextUri).getProperties()); 
+        IRContext thisContext = getContainer(contextUri);
+        thisContext.setFixity(fixityReportContext);
+	    
+        return thisContext;
+	}
 
     @Override
     public IRContext getContainer(String contextUri) throws Exception {

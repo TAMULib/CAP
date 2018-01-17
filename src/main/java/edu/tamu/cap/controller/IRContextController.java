@@ -42,11 +42,28 @@ public class IRContextController {
     public ApiResponse create(IRService<?> irService, @Param("contextUri") String contextUri, @PayloadArgName("name") String name) throws Exception {
         return new ApiResponse(SUCCESS, irService.createContainer(contextUri, name));
     }
+    
+    @RequestMapping(value = "/container", method = DELETE)
+    @PreAuthorize("hasRole('USER')")
+    public ApiResponse delete(IRService<?> irService, @Param("containerUri") String containerUri) throws Exception {
+        try {
+            irService.deleteContainer(containerUri);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return new ApiResponse(SUCCESS);
+    }
 
     @RequestMapping(value = "/resource", method = POST)
     @PreAuthorize("hasRole('USER')")
     public ApiResponse createResource(IRService<?> irService, @Param("contextUri") String contextUri, @RequestParam("file") MultipartFile file) throws Exception {
         return new ApiResponse(SUCCESS, irService.createResource(contextUri, file));
+    }
+    
+    @RequestMapping(value = "/resource/fixity", method = GET)
+    @PreAuthorize("hasRole('USER')")
+    public ApiResponse createResource(IRService<?> irService, @RequestParam Map<String,String> tripleMap) throws Exception {
+        return new ApiResponse(SUCCESS, irService.resourceFixity(Triple.of(tripleMap)));
     }
 
     @RequestMapping(value = "/metadata", method = POST)
@@ -65,17 +82,6 @@ public class IRContextController {
     @PreAuthorize("hasRole('USER')")
     public ApiResponse updateMetadata(IRService<?> irService, @Param("contextUri") String contextUri, String spqarl) throws Exception {
         return new ApiResponse(SUCCESS, irService.updateMetadata(contextUri, spqarl));
-    }
-
-    @RequestMapping(value = "/container", method = DELETE)
-    @PreAuthorize("hasRole('USER')")
-    public ApiResponse delete(IRService<?> irService, @Param("containerUri") String containerUri) throws Exception {
-        try {
-            irService.deleteContainer(containerUri);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return new ApiResponse(SUCCESS);
     }
 
 }

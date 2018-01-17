@@ -1,23 +1,37 @@
 <div class="ir-context">
-
   <div class="page-header clearfix">
     <div class="btn-group pull-right context-actions-btn" uib-dropdown keyboard-nav>
       <button type="button" class="btn btn-default" uib-dropdown-toggle>
         Context Actions <span class="caret"></span>
       </button>
+      <modal
+        modal-id="fixityModalDD"
+        modal-view="views/modals/fixityModal.html"
+        modal-header-class="modal-header-primary"
+        modal-fullscreen="true"
+        wvr-modal-backdrop="static">
+      </modal>
       <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
-        <li role="menuitem"><a href="" ng-click="openModal('#advancedUpdate')"><span class="glyphicon glyphicon glyphicon-edit"></span> Advanced Update</a></li>
-        <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-play"></span> Start Transaction</a></li>
+        <li class="dropdown-header">Container Actions</li>
+        <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-play-circle"></span> Start Transaction</a></li>
         <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-scissors"></span> Cut Version</a></li>
         <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-move"></span> Move</a></li>
         <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-random"></span> Migrate</a></li>
         <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-export"></span> Export</a></li>
+        <li role="menuitem bg-danger" ng-click="openModal('#irContextDeleteModal')"><a href="#" class="bg-danger"><span class="glyphicon glyphicon-trash"></span> Delete</a></li>
+
         <li class="divider"></li>
-        <li role="menuitem bg-danger" ng-click="openModal('#irContextDeleteModal')">
-          <a href="#" class="bg-danger">
-            <span class="glyphicon glyphicon-trash"></span> Delete
-          </a>
-        </li>
+        <li class="dropdown-header">Resource Actions</li>
+        <li role="menuitem" ng-class="{'disabled': !context.resource}"><a href="" ng-click="contextToFixityCheck=context;openModal('#fixityModalDD')"><span class="glyphicon glyphicon glyphicon-edit"></span> Fixity</a></li>
+
+        <li role="menuitem" ng-class="{'disabled': !context.resource}"><a href="{{context.resourse}}" target="_blank"><span class="glyphicon glyphicon-download-alt"></span> Download</a></li>
+        
+        <!-- These ngIf calls should be executed once we enable user management -->
+        <li ng-if="isAdmin" class="divider"></li>
+        <li ng-if="isAdmin" class="dropdown-header">Admin Actions</li>
+        <li ng-if="isAdmin" role="menuitem"><a href="" ng-click="openModal('#advancedUpdate')"><span class="glyphicon glyphicon glyphicon-edit"></span> Advanced Update</a></li>
+        <li ng-if="isAdmin" role="menuitem"><a href="/admin/ir"><span class="glyphicon glyphicon-cog"></span> Admin Settings</a></li>
+        
       </ul>
     </div>
     <h1>{{ir.name}} <small class="clickable" ng-click="ir.loadContext(ir.rootUri)">(<span class="glyphicon glyphicon-home"></span> {{ir.rootUri}})</small></h1>
@@ -27,33 +41,63 @@
 
   <div class="container-fluid">
     <div class="properties-section">
-
       <div class="row">
-        <div class="preview col-md-6 col-md-push-6" ng-if="context.resource">
-          <div class="thumbnail">
+        <div class="preview" ng-class="{'col-md-6 col-md-push-6': !theaterMode, 'col-md-12': theaterMode}" ng-if="context.resource">
+          <div class="thumbnail" ng-mouseover="showImageControls=true" ng-mouseleave="showImageControls=false" >
+            <div class="image-controls" ng-show="showImageControls">
+              <div class="image-control">
+                  <span class="glyphicon glyphicon-resize-horizontal" ng-click="setOrToggleTheaterMode()"></span>
+              </div>
+              <div class="image-control">
+                  <span class="glyphicon glyphicon-fullscreen clickable" ng-click="openModal('#resourceFullScreen')"></span>
+              </div>
+            </div>
             <img src="{{context.uri}}">
             <div class="caption clearfix">
               <h3 class="text-center">{{context.name}}</h3>
               <hr/>
-              <p class="pull-right">
+              <div class="pull-left">
+                <div class="btn-group pull-left dropup" uib-dropdown keyboard-nav uib-tooltip="Copied!" tooltip-trigger="'none'" tooltip-is-open="contextUriCopied===true">
+                  <button type="button" class="btn btn-default" uib-dropdown-toggle>
+                      <span class="glyphicon glyphicon-menu-hamburger"></span>
+                  </button>
+                  <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
+                    <li class="dropdown-header">Resource Actions</li>
+                    <li role="menuitem" class="disabled"><a href="#">Add to IIIF Manifest</a></li>
+                    <li role="menuitem" class="disabled"><a href="#">Send to Magpie</a></li>
+                    <li role="menuitem" class="disabled"><a href="#">Create thumbnail</a></li>
+                    <li role="menuitem" class="disabled"><a href="#">View in Mirador</a></li>
+                    <li role="menuitem" ngclipboard data-clipboard-text="{{context.uri}}" ngclipboard-success="copiedSuccess('contextUri')"><a href="#">Copy Resource URL</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="pull-right">
                 <a href="{{context.uri}}" target="_blank" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-download-alt"></span> Download</a>
-                <a href="" ng-click="fixity()" class="btn btn-default" role="button"><span class="glyphicon glyphicon-ok"></span> Fixity</a>
-              </p>
+                <a href="" ng-click="contextToFixityCheck=context;openModal('#fixityModalButton')" class="btn btn-default" role="button"><span class="glyphicon glyphicon-ok"></span> Fixity</a>
+                <modal
+                  modal-id="fixityModalButton"
+                  modal-view="views/modals/fixityModal.html"
+                  modal-header-class="modal-header-primary"
+                  modal-fullscreen="true"
+                  wvr-modal-backdrop="static">
+                </modal>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="properties" ng-class="{'col-md-6 col-md-pull-6': context.resource, 'col-md-12': !context.resource}">
+        <div class="properties" ng-class="{'col-md-6 col-md-pull-6': context.resource&&!theaterMode, 'col-md-12': !context.resource||theaterMode}">
           <h4>
-            <span>Properties</span>
-            <span class="glyphicon glyphicon-plus clickable" ng-click="propertiesCollapsed=false" ng-show="propertiesCollapsed"></span>
-            <span class="glyphicon glyphicon-minus clickable" ng-click="propertiesCollapsed=true" ng-show="!propertiesCollapsed"></span>
+            <span>Properties {{theaterMode}}</span>
+            <span class="glyphicon glyphicon-minus clickable" ng-click="propertiesCollapsed=true;setOrToggleTheaterMode(true)" ng-show="context.resource&&!theaterMode"></span>
+            <span class="glyphicon glyphicon-plus clickable" ng-click="propertiesCollapsed=false" ng-show="(!context.resource||theaterMode)&&propertiesCollapsed"></span>
+            <span class="glyphicon glyphicon-minus clickable" ng-click="propertiesCollapsed=true" ng-show="(!context.resource||theaterMode)&&!propertiesCollapsed"></span>
           </h4>
-          <div ng-show="!propertiesCollapsed">
+          <div ng-show="!propertiesCollapsed||(context.resource&&!theaterMode)">
             <dl class="dl-horizontal" ng-repeat="triple in context.properties | unique:'predicate'">
               <dt><a href="{{triple.predicate}}">{{triple.predicate | metadataLabel }}</a></dt>
               <dd ng-repeat="t in context.properties | filter:{predicate:triple.predicate}:true">
-                  {{t.object.split("^^")[0] | removeQuotes}}
+                  {{t.object | propertyValue}}
               </dd>
             </dl>
           </div>
@@ -71,6 +115,7 @@
         list="context.metadata"
         list-element-action="ir.loadContext(le)"
         add-action="openModal('#addMetadata')"
+        edit-action="context.updateMetadatum(triple,newObject)"
         remove-action="context.removeMetadata(items)">
         <br ng-show="contentExpanded">
         <dl ng-show="contentExpanded" class="dl-horizontal" ng-repeat="triple in list | unique:'predicate'">
@@ -78,10 +123,31 @@
               <input ng-show="removeListElements&&filteredList.length>1" type="checkbox" ng-checked="checkAll" ng-click="checkAll=!checkAll;checkAll?selectAll(filteredList):selectedListElements.length=0">
               <a href="{{triple.predicate}}">{{triple.predicate | metadataLabel }}</a>
           </dt>
-          <dd ng-repeat="t in filteredList = (list |filter:{predicate:triple.predicate}:true)">
-              <input ng-show="removeListElements" type="checkbox" ng-checked="selectedListElements.indexOf(t)!==-1" ng-click="selectedListElements.indexOf(t)===-1?selectedListElements.push(t):selectedListElements.splice(selectedListElements.indexOf(t),1)">
-              <span ng-if="selectedListElements.indexOf(t)===-1">{{t.object.split("^^")[0] | removeQuotes}}</span>
-              <del ng-if="selectedListElements.indexOf(t)!==-1">{{t.object.split("^^")[0] | removeQuotes}}</del>
+          <dd ng-mouseenter="showEditBtn=true" ng-mouseleave="showEditBtn=false" ng-repeat="t in filteredList = (list |filter:{predicate:triple.predicate}:true)">
+            <input ng-show="removeListElements" type="checkbox" ng-checked="selectedListElements.indexOf(t)!==-1" ng-click="selectedListElements.indexOf(t)===-1?selectedListElements.push(t):selectedListElements.splice(selectedListElements.indexOf(t),1)">
+            <span ng-show="!editValue&&selectedListElements.indexOf(t)===-1">
+              {{t.object | removeQuotes}}
+              <span ng-show="showEditBtn" class="glyphicon glyphicon-pencil clickable" ng-click="editValue=t.object"></span>
+            </span>
+            <div ng-show="editValue" class="row">
+              <div class="col-md-6">
+                  <div class="input-group">
+                    <input type="text" class="form-control" ng-model="editValue" remove-quotes>
+                    <div class="input-group-btn">
+                      <button ng-show="!editWorking" class="btn btn-default" ng-click="editItem({triple:t,newObject:editValue})" ng-disabled="t.object===editValue">
+                        <span class="glyphicon glyphicon-ok"></span>
+                      </button>
+                      <button ng-show="!editWorking" class="btn btn-default" ng-click="editValue=null">
+                        <span class="glyphicon glyphicon-remove"></span>
+                      </button>
+                      <button ng-show="editWorking" class="btn btn-default" ng-click="editValue=null">
+                        <span class="glyphicon glyphicon-refresh spinning"></span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <del ng-if="removeListElements && selectedListElements.indexOf(t)!==-1">{{t.object | removeQuotes}}</del>
           </dd>
         </dl>
       </irsection>
@@ -115,10 +181,17 @@
         add-action="openModal('#uploadResource')"
         remove-action="context.removeResources(items)">
         <ol class="list-group" ng-show="contentExpanded">
-          <li  class="list-group-item" ng-repeat="le in filteredList = (list | filterResources:context)" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le.triple)!==-1}">
+          <li  class="list-group-item" ng-repeat="le in filteredList = (list | filterResources:context) track by $index" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le.triple)!==-1}">
             <a href="" ng-click="listElementAction({'le':le.triple.subject})">{{(le.name || le.triple.object) | removeQuotes}}</a>
-            <a href=""><span ng-show="!removeListElements" title="swap" class="glyphicon glyphicon-transfer pull-right clickable"></span></a>
-            <a href=""><span ng-show="!removeListElements" title="fixity" class="glyphicon glyphicon glyphicon-ok pull-right clickable"></span></a>
+            <a href="" ng-show="!removeListElements"><span title="swap" class="glyphicon glyphicon-transfer pull-right clickable"></span></a>
+            <a href="" ng-show="!removeListElements" ng-click="contextToFixityCheck=le;openModal('#fixityModal'+$index)"><span title="fixity" class="glyphicon glyphicon-check pull-right clickable"></span></a>
+            <modal
+              modal-id="{{'fixityModal'+$index}}"
+              modal-view="views/modals/fixityModal.html"
+              modal-header-class="modal-header-primary"
+              modal-fullscreen="true"
+              wvr-modal-backdrop="static">
+            </modal>
             <a href="{{le.triple.subject}}"><span ng-show="!removeListElements" title="download" class="glyphicon glyphicon-download-alt pull-right"></span></a>
             <input ng-show="removeListElements" type="checkbox" class="pull-right" ng-checked="selectedListElements.indexOf(le.triple)!==-1" ng-click="selectedListElements.indexOf(le.triple)===-1?selectedListElements.push(le.triple):selectedListElements.splice(selectedListElements.indexOf(le.triple),1)">
           </li>
@@ -161,6 +234,13 @@
     modal-view="views/modals/irContextDeleteModal.html"
     modal-header-class="modal-header-danger"
     wvr-modal-backdrop="static">
+  </modal>
+
+  <modal
+    modal-id="resourceFullScreen"
+    modal-view="views/modals/resourceFullScreen.html"
+    modal-header-class="modal-header-danger"
+    wvr-modal-backdrop="true">
   </modal>
 
 </div>

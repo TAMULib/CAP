@@ -1,10 +1,16 @@
-cap.controller("IrContextController", function($controller, $scope, IRRepo, $routeParams, $location, $route, IRContext) {
+cap.controller("IrContextController", function($controller, $scope, IRRepo, $routeParams, $location, $route, $timeout, IRContext) {
 
   angular.extend(this, $controller('CoreAdminController', {
       $scope: $scope
   }));
 
   $scope.irForm = {};
+
+  $scope.theaterMode = false;
+
+  $scope.setOrToggleTheaterMode = function(mode) {
+    $scope.theaterMode= mode?mode:!$scope.theaterMode;
+  }
 
   IRRepo.ready().then(function() {
 
@@ -97,13 +103,15 @@ cap.controller("IrContextController", function($controller, $scope, IRRepo, $rou
       }
     };
 
+    $scope.copiedSuccess = function(target) {
+      $scope[target+"Copied"]=true;
+      $timeout(function() {
+        $scope[target+"Copied"]=false;
+      }, 1500);
+    }
+
     $scope.srcFromFile = function(file) {
       return URL.createObjectURL(file);
-    };
-
-    $scope.fixity = function() {
-      // TODO: this
-      console.log($scope.context);
     };
 
     $scope.resetCreateContainer();

@@ -34,4 +34,6 @@ public interface IRService<M> {
 
     public IRContext deleteMetadata(Triple triple) throws Exception;
 
+	public IRContext resourceFixity(Triple tiple) throws Exception;
+
 }

@@ -202,6 +202,29 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
       return allRemovePromses;
     };
 
+    irContext.updateMetadatum = function(triple, newObject) {
+      // TODO: This should be done in the context of a transaction
+      return irContext.removeMetadata([triple]).then(function() {
+        triple.object=newObject.substring(1,newObject.length-1);;
+        return irContext.createMetadata([triple]).then(function() {
+          delete newObject;
+        });
+      });
+    };
+
+    irContext.fixityCheck = function() {
+      var fixityPromise = WsApi.fetch(irContext.getMapping().resourceFixity, {
+        method: HttpMethodVerbs.GET,
+        pathValues: {
+          irid: irContext.ir.id,
+          type: irContext.ir.type
+        },
+        query: irContext.triple
+      });
+      
+      return fixityPromise;
+    };
+
     irContext.advancedUpdate = function(updateForm) {
       var updatePromise = WsApi.fetch(irContext.getMapping().metadata, {
         method: HttpMethodVerbs.PATCH,
