@@ -6,6 +6,12 @@ cap.controller("IrContextController", function($controller, $scope, IRRepo, $rou
 
   $scope.irForm = {};
 
+  $scope.theaterMode = false;
+
+  $scope.setOrToggleTheaterMode = function(mode) {
+    $scope.theaterMode= mode?mode:!$scope.theaterMode;
+  }
+
   IRRepo.ready().then(function() {
 
     $scope.ir = IRRepo.findByName(decodeURI($routeParams.irName));

@@ -41,10 +41,17 @@
 
   <div class="container-fluid">
     <div class="properties-section">
-
       <div class="row">
-        <div class="preview col-md-6 col-md-push-6" ng-if="context.resource">
-          <div class="thumbnail">
+        <div class="preview" ng-class="{'col-md-6 col-md-push-6': !theaterMode, 'col-md-12': theaterMode}" ng-if="context.resource">
+          <div class="thumbnail" ng-mouseover="showImageControls=true" ng-mouseleave="showImageControls=false" >
+            <div class="image-controls" ng-show="showImageControls">
+              <div class="image-control">
+                  <span class="glyphicon glyphicon-resize-horizontal" ng-click="setOrToggleTheaterMode()"></span>
+              </div>
+              <div class="image-control">
+                  <span class="glyphicon glyphicon-fullscreen clickable" ng-click="openModal('#resourceFullScreen')"></span>
+              </div>
+            </div>
             <img src="{{context.uri}}">
             <div class="caption clearfix">
               <h3 class="text-center">{{context.name}}</h3>
@@ -79,13 +86,14 @@
           </div>
         </div>
 
-        <div class="properties" ng-class="{'col-md-6 col-md-pull-6': context.resource, 'col-md-12': !context.resource}">
+        <div class="properties" ng-class="{'col-md-6 col-md-pull-6': context.resource&&!theaterMode, 'col-md-12': !context.resource||theaterMode}">
           <h4>
-            <span>Properties</span>
-            <span class="glyphicon glyphicon-plus clickable" ng-click="propertiesCollapsed=false" ng-show="propertiesCollapsed"></span>
-            <span class="glyphicon glyphicon-minus clickable" ng-click="propertiesCollapsed=true" ng-show="!propertiesCollapsed"></span>
+            <span>Properties {{theaterMode}}</span>
+            <span class="glyphicon glyphicon-minus clickable" ng-click="propertiesCollapsed=true;setOrToggleTheaterMode(true)" ng-show="context.resource&&!theaterMode"></span>
+            <span class="glyphicon glyphicon-plus clickable" ng-click="propertiesCollapsed=false" ng-show="(!context.resource||theaterMode)&&propertiesCollapsed"></span>
+            <span class="glyphicon glyphicon-minus clickable" ng-click="propertiesCollapsed=true" ng-show="(!context.resource||theaterMode)&&!propertiesCollapsed"></span>
           </h4>
-          <div ng-show="!propertiesCollapsed">
+          <div ng-show="!propertiesCollapsed||(context.resource&&!theaterMode)">
             <dl class="dl-horizontal" ng-repeat="triple in context.properties | unique:'predicate'">
               <dt><a href="{{triple.predicate}}">{{triple.predicate | metadataLabel }}</a></dt>
               <dd ng-repeat="t in context.properties | filter:{predicate:triple.predicate}:true">
@@ -226,6 +234,13 @@
     modal-view="views/modals/irContextDeleteModal.html"
     modal-header-class="modal-header-danger"
     wvr-modal-backdrop="static">
+  </modal>
+
+  <modal
+    modal-id="resourceFullScreen"
+    modal-view="views/modals/resourceFullScreen.html"
+    modal-header-class="modal-header-danger"
+    wvr-modal-backdrop="true">
   </modal>
 
 </div>
