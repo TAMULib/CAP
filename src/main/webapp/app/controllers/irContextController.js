@@ -1,4 +1,4 @@
-cap.controller("IrContextController", function ($compile, $controller, $scope, IRRepo, $routeParams, $location, $route, $timeout, IRContext) {
+cap.controller("IrContextController", function ($controller, $location, $routeParams, $scope, $timeout, IRRepo) {
 
   angular.extend(this, $controller('CoreAdminController', {
     $scope: $scope
