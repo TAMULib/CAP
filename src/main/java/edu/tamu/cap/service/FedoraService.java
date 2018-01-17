@@ -1,4 +1,4 @@
-package edu.tamu.cap.service.ir;
+package edu.tamu.cap.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -7,7 +7,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.NodeIterator;
@@ -19,7 +18,6 @@ import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateRequest;
 import org.apache.jena.vocabulary.DC;
-
 import org.fcrepo.client.DeleteBuilder;
 import org.fcrepo.client.FcrepoClient;
 import org.fcrepo.client.FcrepoOperationFailedException;
@@ -27,10 +25,8 @@ import org.fcrepo.client.FcrepoResponse;
 import org.fcrepo.client.GetBuilder;
 import org.fcrepo.client.PatchBuilder;
 import org.fcrepo.client.PostBuilder;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -124,15 +120,15 @@ public class FedoraService implements IRService<Model> {
     public IRContext deleteMetadata(Triple triple) throws Exception {
         FcrepoClient client = buildClient();
         String contextUri = triple.getSubject();
-        
-        PatchBuilder patch = new PatchBuilder(new URI(contextUri+ "/fcr:metadata"), client);
-        
+
+        PatchBuilder patch = new PatchBuilder(new URI(contextUri + "/fcr:metadata"), client);
+
         String sparql = "DELETE WHERE { <" + contextUri + "> <" + triple.getPredicate() + "> " + triple.getObject() + " } ";
-        
+
         UpdateRequest request = UpdateFactory.create();
 
         request.add(sparql);
-                
+
         patch.body(new ByteArrayInputStream(request.toString().getBytes()));
 
         FcrepoResponse response = patch.perform();
@@ -181,23 +177,23 @@ public class FedoraService implements IRService<Model> {
         logger.debug("Resource creation status and location: {}, {}", response.getStatusCode(), location);
         return getContainer(contextUri);
     }
-    
-	@Override
-	public IRContext resourceFixity(Triple tiple) throws Exception {
-		String contextUri = tiple.getSubject();
-		FcrepoClient client = buildClient();
-		FcrepoResponse response = new GetBuilder(URI.create(contextUri+"/fcr:fixity"), client).perform();
-			
-		Model model = ModelFactory.createDefaultModel();
+
+    @Override
+    public IRContext resourceFixity(Triple tiple) throws Exception {
+        String contextUri = tiple.getSubject();
+        FcrepoClient client = buildClient();
+        FcrepoResponse response = new GetBuilder(URI.create(contextUri + "/fcr:fixity"), client).perform();
+
+        Model model = ModelFactory.createDefaultModel();
         model.read(response.getBody(), null, "text/turtle");
         model.createResource("").addProperty(DC.title, "Fixity Report");
-        
-        FixityReport fixityReportContext = FixityReport.of(buildIRContext(model, contextUri).getProperties()); 
+
+        FixityReport fixityReportContext = FixityReport.of(buildIRContext(model, contextUri).getProperties());
         IRContext thisContext = getContainer(contextUri);
         thisContext.setFixity(fixityReportContext);
-	    
+
         return thisContext;
-	}
+    }
 
     @Override
     public IRContext getContainer(String contextUri) throws Exception {
@@ -205,12 +201,6 @@ public class FedoraService implements IRService<Model> {
         FcrepoResponse response = new GetBuilder(new URI(contextUri + "/fcr:metadata"), client).accept("application/rdf+xml").perform();
         Model model = createRdfModel(response.getBody());
         return buildIRContext(model, contextUri);
-    }
-
-    @Override
-    public IRContext updateContainer(String contextUri) throws Exception {
-        // TODO: do this
-        return null;
     }
 
     @Override

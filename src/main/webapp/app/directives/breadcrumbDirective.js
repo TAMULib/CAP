@@ -10,7 +10,7 @@ cap.directive("breadcrumbs", function() {
 
             $scope.trimName = function(context, index) {
               var name = context.name;
-              if (context.name.startsWith(context.ir.rootUri)) {
+              if (context.name.indexOf(context.ir.rootUri) === 0) {
                 name = name.replace(context.ir.rootUri, '...');
               }
               if(index) {
@@ -20,10 +20,10 @@ cap.directive("breadcrumbs", function() {
                   name = name.replace(prevName, '...');
                 }
                 if(index === $scope.breadcrumbs.length) {
-                  if(name.startsWith('...')) {
+                  if(name.indexOf('...') === 0) {
                     name = name.replace('...', '');
                   }
-                  if(name.startsWith('/')) {
+                  if(name.indexOf('/') === 0) {
                     name = name.replace('/', '');
                   }
                 }

@@ -1,4 +1,4 @@
-package edu.tamu.cap.service.ir;
+package edu.tamu.cap.service;
 
 import static org.springframework.web.context.WebApplicationContext.SCOPE_REQUEST;
 

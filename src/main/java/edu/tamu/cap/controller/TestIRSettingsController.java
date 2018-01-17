@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.tamu.cap.service.ir.IRService;
+import edu.tamu.cap.service.IRService;
 import edu.tamu.weaver.response.ApiResponse;
 
 @RestController

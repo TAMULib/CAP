@@ -1,4 +1,4 @@
-cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
+cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
   return function IRContext() {
 
     var irContext = this;
@@ -18,10 +18,14 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
       });
     };
 
-    irContext.before(function() {
+    var removeQuotes = function (value) {
+      return $filter('removeQuotes')(value);
+    };
+
+    irContext.before(function () {
       var defer = $q.defer();
-      if(irContext.fetch) {
-        fetchContext(irContext.uri).then(function(res) {
+      if (irContext.fetch) {
+        fetchContext(irContext.uri).then(function (res) {
           angular.extend(irContext, angular.fromJson(res.body).payload.IRContext, {
             fetch: false
           });
@@ -34,16 +38,16 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
       return defer.promise;
     });
 
-    irContext.getChildContext = function(triple) {
-      if(!children[triple.object]) {
+    irContext.getChildContext = function (triple) {
+      if (!children[triple.object]) {
         children[triple.object] = new IRContext({
           fetch: false
         });
         var cachedContext = irContext.ir.getCachedContext(triple.object);
-        if(cachedContext) {
+        if (cachedContext) {
           angular.extend(children[triple.object], cachedContext);
         } else {
-          fetchContext(triple.object).then(function(res) {
+          fetchContext(triple.object).then(function (res) {
             angular.extend(children[triple.object], angular.fromJson(res.body).payload.IRContext, {
               ir: irContext.ir,
               uri: triple.object
@@ -55,11 +59,11 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
       return children[triple.object];
     };
 
-    irContext.getCachedChildContext = function(contextUri) {
+    irContext.getCachedChildContext = function (contextUri) {
       return children[contextUri];
     };
 
-    irContext.createContainer = function(createForm) {
+    irContext.createContainer = function (createForm) {
       var createPromise = WsApi.fetch(irContext.getMapping().container, {
         method: HttpMethodVerbs.POST,
         pathValues: {
@@ -74,18 +78,18 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
         }
       });
 
-      createPromise.then(function(res) {
+      createPromise.then(function (res) {
         angular.extend(irContext, angular.fromJson(res.body).payload.IRContext);
       });
 
       return createPromise;
     };
 
-    irContext.removeContainers = function(containerTriples) {
+    irContext.removeContainers = function (containerTriples) {
 
       var promises = [];
 
-      angular.forEach(containerTriples, function(containerTriple) {
+      angular.forEach(containerTriples, function (containerTriple) {
         var removePromise = WsApi.fetch(irContext.getMapping().container, {
           method: HttpMethodVerbs.DELETE,
           pathValues: {
@@ -97,9 +101,9 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
           }
         });
 
-        removePromise.then(function(res) {
+        removePromise.then(function (res) {
           var children = irContext.children;
-          for(var i in children) {
+          for (var i in children) {
             if (children.hasOwnProperty(i)) {
               var child = children[i];
               if (child.triple.object === containerTriple.subject) {
@@ -120,10 +124,10 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
 
     irContext.removeResources = irContext.removeContainers;
 
-    irContext.createResource = function(createForm) {
+    irContext.createResource = function (file) {
 
       var formData = new FormData();
-      formData.append("file", createForm.file, createForm.file.name);
+      formData.append("file", file, file.name);
 
       var createPromise = WsApi.fetch(irContext.getMapping().resource, {
         method: HttpMethodVerbs.POST,
@@ -140,20 +144,20 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
         data: formData
       });
 
-      createPromise.then(function(res) {
+      createPromise.then(function (res) {
         angular.extend(irContext, angular.fromJson(res.body).payload.IRContext);
       });
 
       return createPromise;
     };
 
-    irContext.createMetadata = function(metadataTriples) {
+    irContext.createMetadata = function (metadataTriples) {
 
       var promises = [];
 
-      angular.forEach(metadataTriples, function(metadataTriple) {
+      angular.forEach(metadataTriples, function (metadataTriple) {
         var createPromise = WsApi.fetch(irContext.getMapping().metadata, {
-          method: HttpMethodVerbs.POST,
+          method: HttpMethodVerbs.PUT,
           pathValues: {
             irid: irContext.ir.id,
             type: irContext.ir.type
@@ -161,7 +165,7 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
           data: metadataTriple
         });
 
-        createPromise.then(function(res) {
+        createPromise.then(function (res) {
           angular.extend(irContext, angular.fromJson(res.body).payload.IRContext);
         });
 
@@ -173,11 +177,11 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
       return allRemovePromses;
     };
 
-    irContext.removeMetadata = function(metadataTriples) {
-      
-      var promises = [];      
+    irContext.removeMetadata = function (metadataTriples) {
 
-      angular.forEach(metadataTriples, function(metadataTriple) {
+      var promises = [];
+
+      angular.forEach(metadataTriples, function (metadataTriple) {
         var createPromise = WsApi.fetch(irContext.getMapping().metadata, {
           method: HttpMethodVerbs.DELETE,
           pathValues: {
@@ -187,10 +191,10 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
           query: metadataTriple
         });
 
-        createPromise.then(function(res) {
-          var res = angular.fromJson(res.body).payload;
-          if(res.payload) {
-            angular.extend(irContext, angular.fromJson(res.body).payload.IRContext);
+        createPromise.then(function (response) {
+          var payload = angular.fromJson(response.body).payload;
+          if (payload) {
+            angular.extend(irContext, payload.IRContext);
           }
         });
 
@@ -202,17 +206,16 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
       return allRemovePromses;
     };
 
-    irContext.updateMetadatum = function(triple, newObject) {
-      // TODO: This should be done in the context of a transaction
-      return irContext.removeMetadata([triple]).then(function() {
-        triple.object=newObject.substring(1,newObject.length-1);;
-        return irContext.createMetadata([triple]).then(function() {
-          delete newObject;
-        });
+    irContext.updateMetadatum = function (triple, newObject) {
+      var sparql = "DELETE { <> <" + triple.predicate + "> '" + removeQuotes(triple.object) + "' } ";
+      sparql += "INSERT { <> <" + triple.predicate + "> '" + removeQuotes(newObject) + "' } ";
+      sparql += "WHERE { }";
+      return irContext.advancedUpdate(sparql).then(function () {
+        newObject = undefined;
       });
     };
 
-    irContext.fixityCheck = function() {
+    irContext.fixityCheck = function () {
       var fixityPromise = WsApi.fetch(irContext.getMapping().resourceFixity, {
         method: HttpMethodVerbs.GET,
         pathValues: {
@@ -221,11 +224,11 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
         },
         query: irContext.triple
       });
-      
+
       return fixityPromise;
     };
 
-    irContext.advancedUpdate = function(updateForm) {
+    irContext.advancedUpdate = function (sparql) {
       var updatePromise = WsApi.fetch(irContext.getMapping().metadata, {
         method: HttpMethodVerbs.PATCH,
         pathValues: {
@@ -235,10 +238,10 @@ cap.model("IRContext", function($q, WsApi, HttpMethodVerbs) {
         query: {
           contextUri: irContext.uri
         },
-        data: updateForm.sparql
+        data: sparql
       });
 
-      updatePromise.then(function(res) {
+      updatePromise.then(function (res) {
         angular.extend(irContext, angular.fromJson(res.body).payload.IRContext);
       });
 

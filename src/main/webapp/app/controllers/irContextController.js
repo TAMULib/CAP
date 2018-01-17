@@ -1,22 +1,22 @@
-cap.controller("IrContextController", function($controller, $scope, IRRepo, $routeParams, $location, $route, $timeout, IRContext) {
+cap.controller("IrContextController", function ($controller, $location, $routeParams, $scope, $timeout, IRRepo) {
 
   angular.extend(this, $controller('CoreAdminController', {
-      $scope: $scope
+    $scope: $scope
   }));
 
   $scope.irForm = {};
 
   $scope.theaterMode = false;
 
-  $scope.setOrToggleTheaterMode = function(mode) {
-    $scope.theaterMode= mode?mode:!$scope.theaterMode;
-  }
+  $scope.setOrToggleTheaterMode = function (mode) {
+    $scope.theaterMode = mode ? mode : !$scope.theaterMode;
+  };
 
-  IRRepo.ready().then(function() {
+  IRRepo.ready().then(function () {
 
     $scope.ir = IRRepo.findByName(decodeURI($routeParams.irName));
 
-    if($routeParams.context !== undefined) {
+    if ($routeParams.context !== undefined) {
       $scope.ir.contextUri = decodeURI($routeParams.context);
     } else {
       $location.search("context", $scope.ir.contextUri);
@@ -24,41 +24,41 @@ cap.controller("IrContextController", function($controller, $scope, IRRepo, $rou
 
     $scope.context = $scope.ir.loadContext($scope.ir.contextUri);
 
-    $scope.createContainer = function(form) {
-      $scope.context.createContainer(form).then(function() {
+    $scope.createContainer = function (form) {
+      $scope.context.createContainer(form).then(function () {
         $scope.closeModal();
       });
     };
 
-    $scope.advancedUpdate = function(form) {
-      $scope.context.advancedUpdate(form).then(function() {
+    $scope.advancedUpdate = function (sparql) {
+      $scope.context.advancedUpdate(sparql).then(function () {
         $scope.closeModal();
       });
     };
 
-    $scope.uploadResource = function(form) {
-      $scope.context.createResource(form).then(function() {
+    $scope.uploadResource = function (file) {
+      $scope.context.createResource(file).then(function () {
         $scope.closeModal();
       });
     };
 
-    $scope.resetCreateContainer = function() {
+    $scope.resetCreateContainer = function () {
       $scope.irForm.createContainer = {
         name: ""
       };
       $scope.closeModal();
     };
 
-    $scope.resetUploadResource = function() {
-      if($scope.irForm.uploadResource) {
+    $scope.resetUploadResource = function () {
+      if ($scope.irForm.uploadResource) {
         delete $scope.irForm.uploadResource.file;
       }
       $scope.closeModal();
     };
 
-    $scope.resetAdvancedUpdate = function() {
+    $scope.resetAdvancedUpdate = function () {
       var defaultSparql = '';
-      angular.forEach($scope.ir.schemas, function(schema) {
+      angular.forEach($scope.ir.schemas, function (schema) {
         defaultSparql += 'PREFIX ' + schema.abbreviation + ': <' + schema.namespace + '>\n';
       });
       defaultSparql += '\n\n';
@@ -71,9 +71,9 @@ cap.controller("IrContextController", function($controller, $scope, IRRepo, $rou
       $scope.closeModal();
     };
 
-    $scope.addMetadata = function(form) {
+    $scope.addMetadata = function (form) {
       var triples = [];
-      angular.forEach(form.entries, function(entry) {
+      angular.forEach(form.entries, function (entry) {
         triples.push({
           subject: $scope.context.uri,
           predicate: entry.property.uri,
@@ -81,36 +81,47 @@ cap.controller("IrContextController", function($controller, $scope, IRRepo, $rou
         });
       });
 
-      $scope.context.createMetadata(triples).then(function() {
+      $scope.context.createMetadata(triples).then(function () {
         $scope.closeModal();
       });
-    }
-    
-    $scope.cancelDeleteIrContext = function(irContext) {
-      $scope.irContextToDelete = {};        
+    };
+
+    $scope.cancelDeleteIrContext = function (irContext) {
+      $scope.irContextToDelete = {};
       $scope.closeModal();
     };
-  
-    $scope.deleteIrContext = function() {
+
+    $scope.deleteIrContext = function () {
       var ir = $scope.context.ir;
       var currentTriple = $scope.context.triple;
       var isResource = $scope.context.resource;
       $scope.context = ir.loadContext($scope.context.parent.object);
-      if(isResource) {
+      if (isResource) {
         $scope.context.removeResources([currentTriple]);
       } else {
         $scope.context.removeContainers([currentTriple]);
       }
     };
 
-    $scope.copiedSuccess = function(target) {
-      $scope[target+"Copied"]=true;
-      $timeout(function() {
-        $scope[target+"Copied"]=false;
-      }, 1500);
-    }
+    $scope.copyToClipboard = function (text, target) {
+      var textArea = document.createElement("textarea");
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        $scope[target + "Copied"] = true;
+      } catch (e) {
+        console.log("browser doesn't support copying to clipboard");
+      } finally {
+        document.body.removeChild(textArea);
+        $timeout(function () {
+          $scope[target + "Copied"] = false;
+        }, 1500);
+      }
+    };
 
-    $scope.srcFromFile = function(file) {
+    $scope.srcFromFile = function (file) {
       return URL.createObjectURL(file);
     };
 

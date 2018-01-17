@@ -1,4 +1,4 @@
-package edu.tamu.cap.service.ir;
+package edu.tamu.cap.service;
 
 import org.apache.jena.rdf.model.Model;
 import org.springframework.stereotype.Service;
