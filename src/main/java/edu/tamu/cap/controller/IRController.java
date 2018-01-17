@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import edu.tamu.cap.model.IR;
 import edu.tamu.cap.model.repo.IRRepo;
-import edu.tamu.cap.service.ir.IRType;
+import edu.tamu.cap.service.IRType;
 import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;

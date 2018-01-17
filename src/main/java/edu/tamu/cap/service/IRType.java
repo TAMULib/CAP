@@ -1,4 +1,4 @@
-package edu.tamu.cap.service.ir;
+package edu.tamu.cap.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;

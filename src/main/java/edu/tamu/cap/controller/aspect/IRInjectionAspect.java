@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import edu.tamu.cap.service.ir.ArgumentResolver;
+import edu.tamu.cap.service.ArgumentResolver;
 import edu.tamu.weaver.response.ApiResponse;
 
 @Aspect

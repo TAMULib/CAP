@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import edu.tamu.cap.service.ir.FedoraService;
+import edu.tamu.cap.service.FedoraService;
 
 public class IRContext implements Serializable {
 

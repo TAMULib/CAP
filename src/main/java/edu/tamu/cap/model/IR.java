@@ -12,7 +12,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.ManyToMany;
 
 import edu.tamu.cap.model.validation.IRValidator;
-import edu.tamu.cap.service.ir.IRType;
+import edu.tamu.cap.service.IRType;
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 /**

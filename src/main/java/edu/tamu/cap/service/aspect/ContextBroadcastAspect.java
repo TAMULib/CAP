@@ -1,4 +1,4 @@
-package edu.tamu.cap.controller.aspect;
+package edu.tamu.cap.service.aspect;
 
 import static edu.tamu.weaver.response.ApiAction.BROADCAST;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
@@ -23,7 +23,7 @@ public class ContextBroadcastAspect {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
-    @AfterReturning(pointcut = "execution(edu.tamu.cap.model.response.IRContext edu.tamu.cap.service.ir.IRService.*(..)) && !execution(edu.tamu.cap.model.response.IRContext edu.tamu.cap.service.ir.IRService.getContainer(..)) && !execution(edu.tamu.cap.model.response.IRContext edu.tamu.cap.service.ir.IRService.buildIRContext(..))", returning = "context")
+    @AfterReturning(pointcut = "execution(edu.tamu.cap.model.response.IRContext edu.tamu.cap.service.IRService.*(..)) && !execution(edu.tamu.cap.model.response.IRContext edu.tamu.cap.service.IRService.getContainer(..)) && !execution(edu.tamu.cap.model.response.IRContext edu.tamu.cap.service.IRService.buildIRContext(..))", returning = "context")
     public void broadcastContext(IRContext context) throws Throwable {
         logger.debug("Broadcasting " + context.getTriple().getSubject());
         simpMessagingTemplate.convertAndSend("/queue/context", new ApiResponse(SUCCESS, BROADCAST, context));

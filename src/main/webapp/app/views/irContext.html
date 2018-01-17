@@ -68,7 +68,7 @@
                     <li role="menuitem" class="disabled"><a href="#">Send to Magpie</a></li>
                     <li role="menuitem" class="disabled"><a href="#">Create thumbnail</a></li>
                     <li role="menuitem" class="disabled"><a href="#">View in Mirador</a></li>
-                    <li role="menuitem" ngclipboard data-clipboard-text="{{context.uri}}" ngclipboard-success="copiedSuccess('contextUri')"><a href="#">Copy Resource URL</a></li>
+                    <li role="menuitem"><a href="" ng-click="copyToClipboard(context.uri, 'contextUri')">Copy Resource URL</a></li>
                   </ul>
                 </div>
               </div>

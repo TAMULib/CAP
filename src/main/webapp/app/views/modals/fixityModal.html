@@ -22,7 +22,7 @@
             </dt>
             <dd>
                 {{contextToFixityCheck.fixity.messageDigest}} 
-                <button class="btn btn-default btn-sm" ngclipboard data-clipboard-text="{{context.fixity.messageDigest}}" ngclipboard-success="copiedSuccess('fixity')" uib-tooltip="Copied!" tooltip-trigger="'none'" tooltip-is-open="fixityCopied===true">
+                <button class="btn btn-default btn-sm" ng-click="copyToClipboard(context.fixity.messageDigest, 'fixity')" uib-tooltip="Copied!" tooltip-trigger="'none'" tooltip-is-open="fixityCopied === true">
                     <span class="glyphicon glyphicon-copy" style="margin-left: 0px;"></span>
                 </button>
             </dd>

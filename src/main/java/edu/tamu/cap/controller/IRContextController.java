@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import edu.tamu.cap.controller.aspect.annotation.PayloadArgName;
 import edu.tamu.cap.model.response.Triple;
-import edu.tamu.cap.service.ir.IRService;
+import edu.tamu.cap.service.IRService;
 import edu.tamu.weaver.response.ApiResponse;
 
 @RestController
@@ -31,18 +31,12 @@ public class IRContextController {
         return new ApiResponse(SUCCESS, irService.getContainer(contextUri));
     }
 
-    @RequestMapping(method = PUT)
-    @PreAuthorize("hasRole('USER')")
-    public ApiResponse update(IRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
-        return new ApiResponse(SUCCESS, irService.updateContainer(contextUri));
-    }
-
     @RequestMapping(value = "/container", method = POST)
     @PreAuthorize("hasRole('USER')")
     public ApiResponse create(IRService<?> irService, @Param("contextUri") String contextUri, @PayloadArgName("name") String name) throws Exception {
         return new ApiResponse(SUCCESS, irService.createContainer(contextUri, name));
     }
-    
+
     @RequestMapping(value = "/container", method = DELETE)
     @PreAuthorize("hasRole('USER')")
     public ApiResponse delete(IRService<?> irService, @Param("containerUri") String containerUri) throws Exception {
@@ -59,22 +53,22 @@ public class IRContextController {
     public ApiResponse createResource(IRService<?> irService, @Param("contextUri") String contextUri, @RequestParam("file") MultipartFile file) throws Exception {
         return new ApiResponse(SUCCESS, irService.createResource(contextUri, file));
     }
-    
+
     @RequestMapping(value = "/resource/fixity", method = GET)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse createResource(IRService<?> irService, @RequestParam Map<String,String> tripleMap) throws Exception {
+    public ApiResponse createResource(IRService<?> irService, @RequestParam Map<String, String> tripleMap) throws Exception {
         return new ApiResponse(SUCCESS, irService.resourceFixity(Triple.of(tripleMap)));
     }
 
-    @RequestMapping(value = "/metadata", method = POST)
+    @RequestMapping(value = "/metadata", method = PUT)
     @PreAuthorize("hasRole('USER')")
     public ApiResponse createMetadata(IRService<?> irService, Triple triple) throws Exception {
         return new ApiResponse(SUCCESS, irService.createMetadata(triple));
     }
-    
+
     @RequestMapping(value = "/metadata", method = DELETE)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse deleteMetadata(IRService<?> irService, @RequestParam Map<String,String> tripleMap) throws Exception {
+    public ApiResponse deleteMetadata(IRService<?> irService, @RequestParam Map<String, String> tripleMap) throws Exception {
         return new ApiResponse(SUCCESS, irService.deleteMetadata(Triple.of(tripleMap)));
     }
 
