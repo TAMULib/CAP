@@ -84,4 +84,10 @@ public class DSpaceService implements IRService<Model> {
         return null;
     }
 
+	@Override
+	public IRContext resourceFixity(Triple tiple) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

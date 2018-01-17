@@ -1,4 +1,4 @@
-cap.directive("irsection", function(IrSectionService) {
+cap.directive("irsection", function($controller, IrSectionService) {
     return {
         templateUrl: "views/directives/irSection.html",
         restrict: "E",
@@ -14,6 +14,10 @@ cap.directive("irsection", function(IrSectionService) {
           editAction: "&"
         },
         link: function($scope, elem, attr, ctrl, transclude) {
+          
+          angular.extend(this, $controller('CoreAdminController', {
+              $scope: $scope
+          }));
 
           transclude($scope, function(clone, $scope) {
             elem.find('.transclude').replaceWith(clone);

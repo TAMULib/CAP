@@ -1,0 +1,21 @@
+.image-controls {
+    position: absolute;
+    color: white;
+    font-size: 2em;
+    top: 15px;
+    right: 30px;
+
+    .image-control {
+        background: black;
+        padding: 6px 6px 0px 6px;
+        margin: 0px;
+        border-radius: 5px;
+        opacity: .25;
+        display: inline-block;
+    }
+
+    .image-control:hover {
+        opacity: .6;
+    }
+
+}

@@ -6,6 +6,12 @@ cap.controller("IrContextController", function($controller, $scope, IRRepo, $rou
 
   $scope.irForm = {};
 
+  $scope.theaterMode = false;
+
+  $scope.setOrToggleTheaterMode = function(mode) {
+    $scope.theaterMode= mode?mode:!$scope.theaterMode;
+  }
+
   IRRepo.ready().then(function() {
 
     $scope.ir = IRRepo.findByName(decodeURI($routeParams.irName));
@@ -97,20 +103,15 @@ cap.controller("IrContextController", function($controller, $scope, IRRepo, $rou
       }
     };
 
-    $scope.copiedSuccess = function() {
-      $scope.copied=true;
+    $scope.copiedSuccess = function(target) {
+      $scope[target+"Copied"]=true;
       $timeout(function() {
-        $scope.copied=false;
+        $scope[target+"Copied"]=false;
       }, 1500);
     }
 
     $scope.srcFromFile = function(file) {
       return URL.createObjectURL(file);
-    };
-
-    $scope.fixity = function() {
-      // TODO: this
-      console.log($scope.context);
     };
 
     $scope.resetCreateContainer();
