@@ -1,0 +1,28 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+    <button type="button" class="close modal-close" aria-label="Close" ng-click="resetCreateContainer()"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title">Versions</h4>
+</div>
+<div class="modal-body">
+
+  <div class="container">
+    <div class="row" ng-init="fixityResults={}">
+      <div class="col-md-2">
+          <button class="btn btn-primary btn-lg " ng-click="context.cutVersion()">Cut Version</button>
+      </div>
+
+      <div class="col-md-10">
+          <ul class="list-unstyled" ng-repeat="version in context.versions">
+            <li>
+              <h4><a href="/ir/{{context.ir.name}}?context={{version.triple.object}}">{{version.name}}</a></h4>
+              <small>{{version.time | propertyValue | date:'dd-MM-yy h:mma' }}</small>
+            </li>
+          </ul>
+      </div>
+    </div>
+  </div>
+  
+
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="closeModal()">Cancel</button>
+</div>

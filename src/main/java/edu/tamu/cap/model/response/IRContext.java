@@ -23,12 +23,17 @@ public class IRContext implements Serializable {
 
     private List<IRContext> children;
     
+    private List<Version> versions;
+    
     private FixityReport fixity;
+
+    private String version;
 
 	public IRContext() {
         super();
         properties = new ArrayList<Triple>();
         metadata = new ArrayList<Triple>();
+        versions = new ArrayList<Version>();
         children = new ArrayList<IRContext>();
     }
 
@@ -105,6 +110,22 @@ public class IRContext implements Serializable {
         children.add(child);
     }
     
+    public List<Version> getVersions() {
+        return versions;
+    }
+
+    public void setVersions(List<Version> versions) {
+        this.versions = versions;
+    }
+    
+    public void addVersion(Version version) {
+        this.versions.add(version);
+    }
+    
+    public void removeVersion(Triple triple) {
+        this.versions.remove(triple);
+    }
+
     public FixityReport getFixity() {
 		return fixity;
 	}
@@ -112,5 +133,13 @@ public class IRContext implements Serializable {
 	public void setFixity(FixityReport fixity) {
 		this.fixity = fixity;
 	}
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+    
+    public String getVersion() {
+        return version;
+    }
 
 }

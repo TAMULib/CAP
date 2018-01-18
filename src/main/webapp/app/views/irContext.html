@@ -14,7 +14,7 @@
       <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
         <li class="dropdown-header">Container Actions</li>
         <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-play-circle"></span> Start Transaction</a></li>
-        <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-scissors"></span> Cut Version</a></li>
+        <li role="menuitem" ng-click="openModal('#versionsModal')"><a href="#"><span class="glyphicon glyphicon-scissors"></span> Versions</a></li>
         <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-move"></span> Move</a></li>
         <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-random"></span> Migrate</a></li>
         <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-export"></span> Export</a></li>
@@ -89,7 +89,7 @@
 
         <div class="properties" ng-class="{'col-md-6 col-md-pull-6': context.resource&&!theaterMode, 'col-md-12': !context.resource||theaterMode}">
           <h4>
-            <span>Properties {{theaterMode}}</span>
+            <span>Properties</span>
             <span class="glyphicon glyphicon-minus clickable" ng-click="propertiesCollapsed=true;setOrToggleTheaterMode(true)" ng-show="context.resource&&!theaterMode"></span>
             <span class="glyphicon glyphicon-plus clickable" ng-click="propertiesCollapsed=false" ng-show="(!context.resource||theaterMode)&&propertiesCollapsed"></span>
             <span class="glyphicon glyphicon-minus clickable" ng-click="propertiesCollapsed=true" ng-show="(!context.resource||theaterMode)&&!propertiesCollapsed"></span>
@@ -243,6 +243,13 @@
     modal-id="resourceFullScreen"
     modal-view="views/modals/resourceFullScreen.html"
     modal-header-class="modal-header-danger"
+    wvr-modal-backdrop="true">
+  </modal>
+
+  <modal
+    modal-id="versionsModal"
+    modal-view="views/modals/versionsModal.html"
+    modal-header-class="modal-header-primary"
     wvr-modal-backdrop="true">
   </modal>
 

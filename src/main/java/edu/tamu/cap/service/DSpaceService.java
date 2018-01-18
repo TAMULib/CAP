@@ -1,5 +1,7 @@
 package edu.tamu.cap.service;
 
+import java.util.List;
+
 import org.apache.jena.rdf.model.Model;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -7,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import edu.tamu.cap.model.IR;
 import edu.tamu.cap.model.response.IRContext;
 import edu.tamu.cap.model.response.Triple;
+import edu.tamu.cap.model.response.Version;
 
 @Service("DSpace")
 public class DSpaceService implements IRService<Model> {
@@ -83,5 +86,11 @@ public class DSpaceService implements IRService<Model> {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+    @Override
+    public List<Version> getVersions(String contextUri) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }

@@ -1,10 +1,13 @@
 package edu.tamu.cap.service;
 
+import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import edu.tamu.cap.model.IR;
 import edu.tamu.cap.model.response.IRContext;
 import edu.tamu.cap.model.response.Triple;
+import edu.tamu.cap.model.response.Version;
 
 public interface IRService<M> {
 
@@ -33,5 +36,7 @@ public interface IRService<M> {
     public IRContext deleteMetadata(Triple triple) throws Exception;
 
     public IRContext resourceFixity(Triple tiple) throws Exception;
+
+    public List<Version> getVersions(String contextUri) throws Exception;
 
 }

@@ -26,7 +26,9 @@ cap.model("IR", function($location, IRContext, WsApi) {
 
     ir.loadContext = function(contextUri) {
       $location.search("context", contextUri);
-      return ir.getContext(contextUri);
+      var c = ir.getContext(contextUri);
+      console.log(c);
+      return c;
     };
 
     WsApi.listen("/queue/context").then(null, null, function(response) {
