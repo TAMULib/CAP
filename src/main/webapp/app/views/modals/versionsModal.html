@@ -1,3 +1,4 @@
+<form name="createVersion">
 <div class="modal-header {{attr.modalHeaderClass}}">
     <button type="button" class="close modal-close" aria-label="Close" ng-click="resetCreateContainer()"><span aria-hidden="true">&times;</span></button>
     <h4 class="modal-title">Versions</h4>
@@ -6,17 +7,31 @@
 
   <div class="container">
     <div class="row" ng-init="fixityResults={}">
-      <div class="col-md-2">
-          <button class="btn btn-primary btn-lg " ng-click="context.cutVersion()">Cut Version</button>
+      <div class="col-md-4">
+        <div class="form-group">
+            <Label>Cut New version</Label>
+            <div class="input-group">
+              <span class="input-group-addon">version.</span>
+              <input class="form-control" ng-model="createVersion.name" placeholder="Auto Generate Name">
+              <span class="input-group-addon clickable" ng-click="context.createVersion(createVersion)">Create</span>
+            </div>
+        </div>
+        
       </div>
 
-      <div class="col-md-10">
-          <ul class="list-unstyled" ng-repeat="version in context.versions">
-            <li>
-              <h4><a href="/ir/{{context.ir.name}}?context={{version.triple.object}}">{{version.name}}</a></h4>
-              <small>{{version.time | propertyValue | date:'dd-MM-yy h:mma' }}</small>
-            </li>
-          </ul>
+      <div class="col-md-8">
+          <div ng-if="context.versions.length" class="panel panel-default properties-list-panel">
+              <div class="panel-heading">
+                  <h4>Historical Versions</h4>
+              </div>
+              <div class="properties-list-group">
+                  <div class="list-group-item" ng-repeat="version in context.versions">
+                      <h4 class="list-group-item-heading">{{version.name}}<a class="pull-right" href="/ir/{{context.ir.name}}?context={{version.triple.object}}">View</a></h4>
+                      <small class="list-group-item-text">Created: {{version.time | propertyValue | date:'MM-dd-yy h:mma' }}</small>
+                  </div>
+              </div>
+          </div>
+          
       </div>
     </div>
   </div>

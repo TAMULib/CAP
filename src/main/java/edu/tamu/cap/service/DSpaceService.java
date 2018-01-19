@@ -93,4 +93,16 @@ public class DSpaceService implements IRService<Model> {
         return null;
     }
 
+    @Override
+    public IRContext createVersion(String contextUri, String name) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public IRContext restoreVersion(String contextUri) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

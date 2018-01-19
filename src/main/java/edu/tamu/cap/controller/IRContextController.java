@@ -40,6 +40,7 @@ public class IRContextController {
     @RequestMapping(value = "/container", method = DELETE)
     @PreAuthorize("hasRole('USER')")
     public ApiResponse delete(IRService<?> irService, @Param("containerUri") String containerUri) throws Exception {
+        System.out.println("\n\n" + containerUri + "\n\n");
         try {
             irService.deleteContainer(containerUri);
         } catch (Exception e) {
@@ -76,6 +77,20 @@ public class IRContextController {
     @PreAuthorize("hasRole('USER')")
     public ApiResponse updateMetadata(IRService<?> irService, @Param("contextUri") String contextUri, String spqarl) throws Exception {
         return new ApiResponse(SUCCESS, irService.updateMetadata(contextUri, spqarl));
+    }
+    
+    @RequestMapping(value = "/version", method = POST)
+    @PreAuthorize("hasRole('USER')")
+    public ApiResponse createVersion(IRService<?> irService, @Param("contextUri") String contextUri, @PayloadArgName("name") String name) throws Exception {
+        System.out.println(irService.getClass().getName()+" create version: ("+name+") "+ contextUri);
+        return new ApiResponse(SUCCESS, irService.createVersion(contextUri, name));
+    }
+    
+    @RequestMapping(value = "/version", method = PATCH)
+    @PreAuthorize("hasRole('USER')")
+    public ApiResponse restoreVersion(IRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
+        System.out.println(irService.getClass().getName()+" create version: "+ contextUri);
+        return new ApiResponse(SUCCESS, irService.restoreVersion(contextUri));
     }
 
 }

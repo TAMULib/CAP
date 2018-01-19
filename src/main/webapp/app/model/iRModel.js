@@ -12,8 +12,8 @@ cap.model("IR", function($location, IRContext, WsApi) {
       return cache[contextUri];
     };
 
-    ir.getContext = function(contextUri) {
-      var context = ir.getCachedContext(contextUri);
+    ir.getContext = function(contextUri, reload) {
+      var context = reload ? undefined : ir.getCachedContext(contextUri);
       if(context === undefined) {
         context = new IRContext({
           ir: ir,
@@ -24,11 +24,9 @@ cap.model("IR", function($location, IRContext, WsApi) {
       return context;
     };
 
-    ir.loadContext = function(contextUri) {
+    ir.loadContext = function(contextUri, reload) {
       $location.search("context", contextUri);
-      var c = ir.getContext(contextUri);
-      console.log(c);
-      return c;
+      return ir.getContext(contextUri, reload);
     };
 
     WsApi.listen("/queue/context").then(null, null, function(response) {

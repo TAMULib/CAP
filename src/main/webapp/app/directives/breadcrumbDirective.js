@@ -15,7 +15,8 @@ cap.directive("breadcrumbs", function() {
               }
               if(index) {
                 var prev = $scope.breadcrumbs.length > 0 ? $scope.breadcrumbs[index - 1] : undefined;
-                if(prev) {
+                console.log(context);
+                if(prev && !context.isVersion) {
                   var prevName = prev.name.replace(context.ir.rootUri, '...');
                   name = name.replace(prevName, '...');
                 }

@@ -141,5 +141,9 @@ public class IRContext implements Serializable {
     public String getVersion() {
         return version;
     }
+    
+    public boolean getIsVersion() {
+        return Optional.ofNullable(version).isPresent();
+    }
 
 }

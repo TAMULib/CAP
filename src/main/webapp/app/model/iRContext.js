@@ -215,6 +215,43 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
       });
     };
 
+    irContext.createVersion = function(form) {
+
+      var versionPromise = WsApi.fetch(irContext.getMapping().version, {
+        method: HttpMethodVerbs.POST,
+        pathValues: {
+          irid: irContext.ir.id,
+          type: irContext.ir.type
+        },
+        query: {
+          contextUri: irContext.uri
+        },
+        data: {
+          name: form.name
+        }
+      });
+
+      versionPromise.then(function() {
+        if (form) {
+          form.$setPristine();
+          form.$setUntouched();
+          form.name ="";
+        }
+      });
+
+      return versionPromise;
+    };
+
+    irContext.deleteVersion = function() {
+      var versionContextUri = irContext.uri.replace(irContext.version.name, "frc:versions/"+irContext.version.name);
+      console.log(versionContextUri);
+      var deleteVersionPromise = irContext.removeContainers([{
+        subject: versionContextUri
+      }]);
+
+      return deleteVersionPromise;
+    };
+
     irContext.fixityCheck = function () {
       var fixityPromise = WsApi.fetch(irContext.getMapping().resourceFixity, {
         method: HttpMethodVerbs.GET,

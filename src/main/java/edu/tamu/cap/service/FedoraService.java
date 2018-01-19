@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -14,15 +15,12 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.NodeIterator;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.SimpleSelector;
 import org.apache.jena.rdf.model.Statement;
-import org.apache.jena.rdf.model.impl.SelectorImpl;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateRequest;
 import org.apache.jena.vocabulary.DC;
-import org.apache.tika.io.IOUtils;
 import org.fcrepo.client.DeleteBuilder;
 import org.fcrepo.client.FcrepoClient;
 import org.fcrepo.client.FcrepoOperationFailedException;
@@ -58,15 +56,15 @@ public class FedoraService implements IRService<Model> {
     private final static String FEDORA_CONTAINER_PREDICATE = "http://fedora.info/definitions/v4/repository#Container";
 
     public final static String FEDORA_BINRAY_PREDICATE = "http://fedora.info/definitions/v4/repository#Binary";
-    
+
     public final static String FEDORA_HAS_VERSIONS_PREDICATE = "http://fedora.info/definitions/v4/repository#hasVersions";
-    
+
     public final static String FEDORA_HAS_VERSION_PREDICATE = "http://fedora.info/definitions/v4/repository#hasVersion";
-    
+
     public final static String FEDORA_HAS_VERSION_LABEL = "http://fedora.info/definitions/v4/repository#hasVersionLabel";
-    
+
     public final static String FEDORA_CREATED = "http://fedora.info/definitions/v4/repository#created";
-    
+
     public final static String FEDORA_VERSION = "http://fedora.info/definitions/v4/repository#Version";
 
     // @formatter:off
@@ -118,7 +116,7 @@ public class FedoraService implements IRService<Model> {
         FcrepoClient client = buildClient();
         String contextUri = triple.getSubject();
         PatchBuilder patch = new PatchBuilder(new URI(contextUri + "/fcr:metadata"), client);
-        String sparql = "INSERT { "+triple.toString()+" . } WHERE {}";
+        String sparql = "INSERT { " + triple.toString() + " . } WHERE {}";
 
         UpdateRequest request = UpdateFactory.create();
 
@@ -139,7 +137,7 @@ public class FedoraService implements IRService<Model> {
 
         PatchBuilder patch = new PatchBuilder(new URI(contextUri + "/fcr:metadata"), client);
 
-        String sparql = "DELETE WHERE { "+triple.toString()+" } ";
+        String sparql = "DELETE WHERE { " + triple.toString() + " } ";
 
         UpdateRequest request = UpdateFactory.create();
 
@@ -218,36 +216,65 @@ public class FedoraService implements IRService<Model> {
         Model model = createRdfModel(response.getBody());
         return buildIRContext(model, contextUri);
     }
-    
+
     @Override
     public List<Version> getVersions(String contextUri) throws Exception {
         FcrepoClient client = buildClient();
         FcrepoResponse response = new GetBuilder(new URI(contextUri + "/fcr:versions"), client).accept("application/rdf+xml").perform();
-        Model model = createRdfModel(response.getBody());        
+        Model model = createRdfModel(response.getBody());
         List<Version> versions = new ArrayList<Version>();
-        
-        model.listObjectsOfProperty(model.createProperty(FEDORA_HAS_VERSION_PREDICATE)).forEachRemaining(object->{
-            
+
+        model.listObjectsOfProperty(model.createProperty(FEDORA_HAS_VERSION_PREDICATE)).forEachRemaining(object -> {
+
             Version version = Version.of(Triple.of(contextUri + "/fcr:versions", FEDORA_HAS_VERSION_PREDICATE, object.toString()));
-            
-            object.asResource().listProperties().forEachRemaining(prop->{
-                switch(prop.getPredicate().toString()) {
-                    case FEDORA_HAS_VERSION_LABEL:
-                        version.setName(prop.getObject().toString());
-                        break;
-                    case FEDORA_CREATED:
-                        version.setTime(prop.getObject().toString());
-                        break;
+
+            object.asResource().listProperties().forEachRemaining(prop -> {
+                switch (prop.getPredicate().toString()) {
+                case FEDORA_HAS_VERSION_LABEL:
+                    version.setName(prop.getObject().toString());
+                    break;
+                case FEDORA_CREATED:
+                    version.setTime(prop.getObject().toString());
+                    break;
                 }
             });
-            
+
             versions.add(version);
-            
+
         });
-        
+
         return versions;
     }
+    
+    @Override
+    public IRContext createVersion(String contextUri, String name) throws Exception {
+        
+        if(name.isEmpty()) {
+            SimpleDateFormat output = new SimpleDateFormat("yyyyMMddHHmmss");
+            name = "version."+output.format(System.currentTimeMillis());
+        } else {
+            name = "version."+name;
+        }
+        
+        URI uri = URI.create(contextUri+"/fcr:versions");
+        logger.info("Attempting to create version: {}", uri.toString());
+        FcrepoResponse response = new PostBuilder(uri, buildClient())
+                .slug(name)
+                .perform();
 
+        URI location = response.getLocation();
+        logger.info("Version creation status and location: {}, {}", response.getStatusCode(), location);
+        
+        return getContainer(contextUri);
+    }
+    
+    @Override
+    public IRContext restoreVersion(String contextUri) {
+        URI uri = URI.create(contextUri);
+        FcrepoResponse response = new PatchBuilder(uri, buildClient()).perform();
+        return null;
+    }
+    
     @Override
     public void deleteContainer(String uri) throws Exception {
         FcrepoResponse response = new DeleteBuilder(new URI(uri), buildClient()).perform();
@@ -290,7 +317,6 @@ public class FedoraService implements IRService<Model> {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    
                     break;
                 default:
 
@@ -316,13 +342,12 @@ public class FedoraService implements IRService<Model> {
                     irContext.getTriple().setObject(FEDORA_BINRAY_PREDICATE);
                     break;
                 case FEDORA_VERSION:
-                    String verionName = contextUri.substring(contextUri.lastIndexOf("/")+1, contextUri.length());
+
+                    String verionName = contextUri.substring(contextUri.lastIndexOf("/") + 1, contextUri.length());
                     irContext.setVersion(verionName);
-//                    try {
-//                        irContext.setVersions(getVersions(triple.getSubject().replaceAll(verionName, "")));
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
+
+                    irContext.setParent(Triple.of(object, FEDORA_HAS_PARENT_PREDICATE, contextUri.replace("/fcr:versions/" + verionName, "")));
+
                     break;
                 default:
 
@@ -330,8 +355,7 @@ public class FedoraService implements IRService<Model> {
             }
 
         });
-        // System.out.println("\n\n");
-        
+
         irContext.setName(contextUri.equals(ir.getRootUri()) ? "Root" : contextUri);
 
         if (irContext.isResource()) {
@@ -345,11 +369,15 @@ public class FedoraService implements IRService<Model> {
                 irContext.setName(title.get());
             }
         }
+        
+        if (irContext.getIsVersion()) {
+            irContext.setName(irContext.getName() + " (" + irContext.getVersion() + ")");
+        }
 
         return irContext;
     }
 
-    private Triple craftTriple(Statement statement) {        
+    private Triple craftTriple(Statement statement) {
         String subject = statement.asTriple().getSubject().toString();
         String predicate = statement.asTriple().getPredicate().toString();
         String object = statement.asTriple().getObject().toString();

@@ -39,4 +39,8 @@ public interface IRService<M> {
 
     public List<Version> getVersions(String contextUri) throws Exception;
 
+    public IRContext createVersion(String contextUri, String Name) throws Exception;
+
+    public IRContext restoreVersion(String contextUri);
+
 }
