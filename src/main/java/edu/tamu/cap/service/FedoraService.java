@@ -132,6 +132,9 @@ public class FedoraService implements IRService<Model> {
 
     @Override
     public IRContext deleteMetadata(Triple triple) throws Exception {
+        
+        logger.debug("Attempting to delete");
+        
         FcrepoClient client = buildClient();
         String contextUri = triple.getSubject();
 
@@ -269,10 +272,12 @@ public class FedoraService implements IRService<Model> {
     }
     
     @Override
-    public IRContext restoreVersion(String contextUri) {
+    public IRContext restoreVersion(String contextUri) throws Exception {
+        IRContext versionContext = getContainer(contextUri);
+        String parentUri = versionContext.getParent().getSubject();
         URI uri = URI.create(contextUri);
-        FcrepoResponse response = new PatchBuilder(uri, buildClient()).perform();
-        return null;
+        new PatchBuilder(uri, buildClient()).perform();
+        return getContainer(parentUri);
     }
     
     @Override

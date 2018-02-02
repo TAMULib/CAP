@@ -182,6 +182,7 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
       var promises = [];
 
       angular.forEach(metadataTriples, function (metadataTriple) {
+
         var createPromise = WsApi.fetch(irContext.getMapping().metadata, {
           method: HttpMethodVerbs.DELETE,
           pathValues: {
@@ -244,12 +245,26 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
 
     irContext.deleteVersion = function() {
       var versionContextUri = irContext.uri.replace(irContext.version.name, "frc:versions/"+irContext.version.name);
-      console.log(versionContextUri);
       var deleteVersionPromise = irContext.removeContainers([{
         subject: versionContextUri
       }]);
 
       return deleteVersionPromise;
+    };
+
+    irContext.revertVersion = function(context) {
+      var revertVersionPromise = WsApi.fetch(irContext.getMapping().version, {
+        method: HttpMethodVerbs.PATCH,
+        pathValues: {
+          irid: context.ir.id,
+          type: context.ir.type
+        },
+        query: {
+          contextUri: context.uri
+        }
+      });
+
+      return revertVersionPromise;
     };
 
     irContext.fixityCheck = function () {
