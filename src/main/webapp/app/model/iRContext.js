@@ -208,6 +208,8 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
     };
 
     irContext.updateMetadatum = function (triple, newObject) {
+      // This approach is fedora specific and will need to be handled on the server side
+      // in the fedora implementation of the ir service.
       var sparql = "DELETE { <> <" + triple.predicate + "> '" + removeQuotes(triple.object) + "' } ";
       sparql += "INSERT { <> <" + triple.predicate + "> '" + removeQuotes(newObject) + "' } ";
       sparql += "WHERE { }";
