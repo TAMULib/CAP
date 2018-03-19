@@ -23,7 +23,7 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     }
 
     $scope.context = $scope.ir.loadContext($scope.ir.contextUri);
-
+    
     $scope.createContainer = function (form) {
       $scope.context.createContainer(form).then(function () {
         $scope.closeModal();
@@ -96,9 +96,11 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
       var currentTriple = $scope.context.triple;
       var isResource = $scope.context.resource;
       var isVersion = $scope.context.isVersion;
-      $scope.context = ir.loadContext($scope.context.parent.object);
+      
 
       var deleteContext = isVersion ? $scope.context.deleteVersion : isResource ? $scope.context.removeResources :  $scope.context.removeContainers;
+      
+      $scope.context = ir.loadContext($scope.context.parent.object);
       
       deleteContext([currentTriple]).then(function() {
         $scope.context = ir.loadContext($scope.context.uri, true);

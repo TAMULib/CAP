@@ -12,9 +12,14 @@ cap.model("IR", function($location, IRContext, WsApi) {
       return cache[contextUri];
     };
 
+    ir.removeCachedContext = function(contextUri) {
+      delete cache[contextUri];
+    };
+
     ir.getContext = function(contextUri, reload) {
       var context = reload ? undefined : ir.getCachedContext(contextUri);
       if(context === undefined) {
+        ir.removeCachedContext(contextUri);
         context = new IRContext({
           ir: ir,
           uri: contextUri,

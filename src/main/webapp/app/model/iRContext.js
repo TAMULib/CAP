@@ -246,7 +246,7 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
     };
 
     irContext.deleteVersion = function() {
-      var versionContextUri = irContext.uri.replace(irContext.version.name, "frc:versions/"+irContext.version.name);
+      var versionContextUri = irContext.uri.indexOf("frc:versions/") === -1 ? irContext.uri.replace(irContext.version.name, "frc:versions/"+irContext.version.name) : irContext.uri;
       var deleteVersionPromise = irContext.removeContainers([{
         subject: versionContextUri
       }]);
