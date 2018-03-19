@@ -281,6 +281,12 @@ public class FedoraService implements IRService<Model> {
     }
     
     @Override
+    public void deleteVersion(String uri) throws Exception {
+        logger.info("Deleting version: {}",uri);
+        deleteContainer(uri);
+    }
+    
+    @Override
     public void deleteContainer(String uri) throws Exception {
         FcrepoResponse response = new DeleteBuilder(new URI(uri), buildClient()).perform();
         logger.debug("Resource deletion status: {}", response.getStatusCode());

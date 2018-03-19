@@ -105,4 +105,7 @@ public class DSpaceService implements IRService<Model> {
         return null;
     }
 
+    @Override
+    public void deleteVersion(String contextUri) {
+    }
 }

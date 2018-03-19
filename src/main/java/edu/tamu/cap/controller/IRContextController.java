@@ -40,7 +40,6 @@ public class IRContextController {
     @RequestMapping(value = "/container", method = DELETE)
     @PreAuthorize("hasRole('USER')")
     public ApiResponse delete(IRService<?> irService, @Param("containerUri") String containerUri) throws Exception {
-        System.out.println("\n\n" + containerUri + "\n\n");
         try {
             irService.deleteContainer(containerUri);
         } catch (Exception e) {
@@ -70,7 +69,6 @@ public class IRContextController {
     @RequestMapping(value = "/metadata", method = DELETE)
     @PreAuthorize("hasRole('USER')")
     public ApiResponse deleteMetadata(IRService<?> irService, @RequestParam Map<String, String> tripleMap) throws Exception {
-        System.out.println(irService.getClass().getName()+" deleting metadata: "+ tripleMap);
         return new ApiResponse(SUCCESS, irService.deleteMetadata(Triple.of(tripleMap)));
     }
 
@@ -90,6 +88,14 @@ public class IRContextController {
     @PreAuthorize("hasRole('USER')")
     public ApiResponse restoreVersion(IRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
         return new ApiResponse(SUCCESS, irService.restoreVersion(contextUri));
+    }
+    
+    @RequestMapping(value = "/version", method = DELETE)
+    @PreAuthorize("hasRole('USER')")
+    public ApiResponse deleteVersion(IRService<?> irService, @Param("versionUri") String versionUri) throws Exception {
+        System.out.println("\n\n"+versionUri+"\n\n");
+        irService.deleteVersion(versionUri);
+        return new ApiResponse(SUCCESS);
     }
 
 }

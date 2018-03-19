@@ -245,13 +245,17 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
       return versionPromise;
     };
 
-    irContext.deleteVersion = function() {
-      var versionContextUri = irContext.uri.indexOf("frc:versions/") === -1 ? irContext.uri.replace(irContext.version.name, "frc:versions/"+irContext.version.name) : irContext.uri;
-      var deleteVersionPromise = irContext.removeContainers([{
-        subject: versionContextUri
-      }]);
-
-      return deleteVersionPromise;
+    irContext.deleteVersion = function(versionContext) {
+      return WsApi.fetch(irContext.getMapping().version, {
+        method: HttpMethodVerbs.DELETE,
+        pathValues: {
+          irid: irContext.ir.id,
+          type: irContext.ir.type
+        },
+        query: {
+          versionUri: versionContext.uri
+        }
+      });
     };
 
     irContext.revertVersion = function(context) {

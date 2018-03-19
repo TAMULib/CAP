@@ -119,6 +119,17 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
       });
     };
 
+    $scope.deleteVersion = function () {
+
+      var ir = $scope.context.ir;
+      var currentContext = $scope.context;
+      $scope.context = ir.loadContext($scope.context.parent.object);
+
+      $scope.context.deleteVersion(currentContext).then(function() {
+        $scope.context = ir.loadContext($scope.context.uri, true);
+      });
+    };    
+
     $scope.copyToClipboard = function (text, target) {
       var textArea = document.createElement("textarea");
       textArea.value = text;

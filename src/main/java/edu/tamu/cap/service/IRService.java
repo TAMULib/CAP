@@ -43,7 +43,7 @@ public interface IRService<M> {
     public List<Version> getVersions(String contextUri) throws Exception;
     //currently no update version
     public IRContext restoreVersion(String contextUri) throws Exception;
-    
+    public void deleteVersion(String contextUri) throws Exception;
     //Transactions
  
 }
