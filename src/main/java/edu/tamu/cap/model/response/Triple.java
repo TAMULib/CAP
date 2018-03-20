@@ -65,7 +65,7 @@ public class Triple implements Serializable {
         StringBuilder stngBldr = new StringBuilder();
         stngBldr.append("<").append(subject).append("> ");
         stngBldr.append("<").append(predicate).append("> ");
-        if(object.contains("http://")) {
+        if(object.contains("http://")||object.contains("https://")) {
             stngBldr.append("<").append(object).append("> ");
         } else {
             stngBldr.append("'").append(object).append("' ");
