@@ -5,7 +5,7 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
   }));
 
   $scope.irForm = {};
-
+  
   $scope.theaterMode = false;
 
   $scope.setOrToggleTheaterMode = function (mode) {
@@ -23,7 +23,7 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     }
 
     $scope.context = $scope.ir.loadContext($scope.ir.contextUri);
-    
+
     $scope.createContainer = function (form) {
       $scope.context.createContainer(form).then(function () {
         $scope.closeModal();
@@ -125,7 +125,13 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
       var currentContext = $scope.context;
       $scope.context = ir.loadContext($scope.context.parent.object);
 
-      $scope.context.deleteVersion(currentContext).then(function() {
+      console.log($scope.context.uri);
+
+      var deletePromise = $scope.context.deleteVersion(currentContext);
+
+      deletePromise.then(function() {
+        console.log("Updated");
+        console.log($scope.context.uri);
         $scope.context = ir.loadContext($scope.context.uri, true);
       });
     };    

@@ -289,7 +289,7 @@ public class FedoraService implements IRService<Model> {
     @Override
     public void deleteContainer(String uri) throws Exception {
         FcrepoResponse response = new DeleteBuilder(new URI(uri), buildClient()).perform();
-        logger.debug("Resource deletion status: {}", response.getStatusCode());
+        logger.info("Resource deletion status: {}", response.getStatusCode());
     }
 
     @Override
