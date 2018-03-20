@@ -5,7 +5,7 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
   }));
 
   $scope.irForm = {};
-  
+
   $scope.theaterMode = false;
 
   $scope.setOrToggleTheaterMode = function (mode) {
@@ -96,13 +96,13 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
       var currentTriple = $scope.context.triple;
       var isResource = $scope.context.resource;
       var isVersion = $scope.context.isVersion;
-      
 
-      var deleteContext = isVersion ? $scope.context.deleteVersion : isResource ? $scope.context.removeResources :  $scope.context.removeContainers;
-      
+
+      var deleteContext = isVersion ? $scope.context.deleteVersion : isResource ? $scope.context.removeResources : $scope.context.removeContainers;
+
       $scope.context = ir.loadContext($scope.context.parent.object);
-      
-      deleteContext([currentTriple]).then(function() {
+
+      deleteContext([currentTriple]).then(function () {
         $scope.context = ir.loadContext($scope.context.uri, true);
       });
 
@@ -112,9 +112,10 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
 
       var ir = $scope.context.ir;
       var currentContext = $scope.context;
+
       $scope.context = ir.loadContext($scope.context.parent.object);
 
-      $scope.context.revertVersion(currentContext).then(function() {
+      $scope.context.revertVersion(currentContext).then(function () {
         $scope.context = ir.loadContext($scope.context.uri, true);
       });
     };
@@ -123,18 +124,15 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
 
       var ir = $scope.context.ir;
       var currentContext = $scope.context;
+
       $scope.context = ir.loadContext($scope.context.parent.object);
 
-      console.log($scope.context.uri);
+      ir.removeCachedContext($scope.context.uri);
 
-      var deletePromise = $scope.context.deleteVersion(currentContext);
-
-      deletePromise.then(function() {
-        console.log("Updated");
-        console.log($scope.context.uri);
+      $scope.context.deleteVersion(currentContext).then(function () {
         $scope.context = ir.loadContext($scope.context.uri, true);
       });
-    };    
+    };
 
     $scope.copyToClipboard = function (text, target) {
       var textArea = document.createElement("textarea");
