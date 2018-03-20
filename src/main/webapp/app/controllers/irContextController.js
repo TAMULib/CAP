@@ -95,12 +95,43 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
       var ir = $scope.context.ir;
       var currentTriple = $scope.context.triple;
       var isResource = $scope.context.resource;
+      var isVersion = $scope.context.isVersion;
+
+
+      var deleteContext = isVersion ? $scope.context.deleteVersion : isResource ? $scope.context.removeResources : $scope.context.removeContainers;
+
       $scope.context = ir.loadContext($scope.context.parent.object);
-      if (isResource) {
-        $scope.context.removeResources([currentTriple]);
-      } else {
-        $scope.context.removeContainers([currentTriple]);
-      }
+
+      deleteContext([currentTriple]).then(function () {
+        $scope.context = ir.loadContext($scope.context.uri, true);
+      });
+
+    };
+
+    $scope.revertVersion = function () {
+
+      var ir = $scope.context.ir;
+      var currentContext = $scope.context;
+
+      $scope.context = ir.loadContext($scope.context.parent.object);
+
+      $scope.context.revertVersion(currentContext).then(function () {
+        $scope.context = ir.loadContext($scope.context.uri, true);
+      });
+    };
+
+    $scope.deleteVersion = function () {
+
+      var ir = $scope.context.ir;
+      var currentContext = $scope.context;
+
+      $scope.context = ir.loadContext($scope.context.parent.object);
+
+      ir.removeCachedContext($scope.context.uri);
+
+      $scope.context.deleteVersion(currentContext).then(function () {
+        $scope.context = ir.loadContext($scope.context.uri, true);
+      });
     };
 
     $scope.copyToClipboard = function (text, target) {
