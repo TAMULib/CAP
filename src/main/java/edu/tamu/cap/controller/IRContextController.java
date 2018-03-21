@@ -28,6 +28,12 @@ public class IRContextController {
     @RequestMapping(method = GET)
     @PreAuthorize("hasRole('USER')")
     public ApiResponse get(IRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
+        return getContainer(irService, contextUri);
+    }
+    
+    @RequestMapping(value = "/container", method = GET)
+    @PreAuthorize("hasRole('USER')")
+    public ApiResponse getContainer(IRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
         return new ApiResponse(SUCCESS, irService.getContainer(contextUri));
     }
 
