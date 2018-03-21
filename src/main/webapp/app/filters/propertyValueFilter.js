@@ -4,7 +4,7 @@ cap.filter("propertyValue", function ($filter) {
         var output = input;
 
         if (typeof output === 'string') {
-            var splitOutput = output.split("^^")
+            var splitOutput = output.split("^^");
             output = splitOutput[0];
             var typePart = splitOutput[1];
       

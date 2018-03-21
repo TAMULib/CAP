@@ -48,11 +48,15 @@ public class IR extends ValidatingBaseEntity {
         setSchemas(new ArrayList<Schema>());
     }
 
-    public IR(IRType type, String name, String rootUri, List<Schema> schemas) {
+    public IR(IRType type, String name, String rootUri) {
         this();
         setType(type);
         setName(name);
         setRootUri(rootUri);
+    }
+
+    public IR(IRType type, String name, String rootUri, List<Schema> schemas) {
+        this(type, name, rootUri);
         setSchemas(schemas);
     }
 
