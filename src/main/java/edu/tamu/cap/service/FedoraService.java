@@ -408,7 +408,7 @@ public class FedoraService implements IRService<Model> {
         return literal;
     }
 
-    private FcrepoClient buildClient() {
+    public FcrepoClient buildClient() {
         return (ir.getUsername() == null || ir.getPassword() == null) ? FcrepoClient.client().build() : FcrepoClient.client().credentials(ir.getUsername(), ir.getPassword()).build();
     }
 
