@@ -132,9 +132,9 @@ public class FedoraService implements IRService<Model> {
 
     @Override
     public IRContext deleteMetadata(Triple triple) throws Exception {
-        
+
         logger.debug("Attempting to delete");
-        
+
         FcrepoClient client = buildClient();
         String contextUri = triple.getSubject();
 
@@ -248,29 +248,27 @@ public class FedoraService implements IRService<Model> {
 
         return versions;
     }
-    
+
     @Override
     public IRContext createVersion(String contextUri, String name) throws Exception {
-        
-        if(name.isEmpty()) {
+
+        if (name.isEmpty()) {
             SimpleDateFormat output = new SimpleDateFormat("yyyyMMddHHmmss");
-            name = "version."+output.format(System.currentTimeMillis());
+            name = "version." + output.format(System.currentTimeMillis());
         } else {
-            name = "version."+name;
+            name = "version." + name;
         }
-        
-        URI uri = URI.create(contextUri+"/fcr:versions");
+
+        URI uri = URI.create(contextUri + "/fcr:versions");
         logger.info("Attempting to create version: {}", uri.toString());
-        FcrepoResponse response = new PostBuilder(uri, buildClient())
-                .slug(name)
-                .perform();
+        FcrepoResponse response = new PostBuilder(uri, buildClient()).slug(name).perform();
 
         URI location = response.getLocation();
         logger.info("Version creation status and location: {}, {}", response.getStatusCode(), location);
-        
+
         return getContainer(contextUri);
     }
-    
+
     @Override
     public IRContext restoreVersion(String contextUri) throws Exception {
         IRContext versionContext = getContainer(contextUri);
@@ -279,13 +277,13 @@ public class FedoraService implements IRService<Model> {
         new PatchBuilder(uri, buildClient()).perform();
         return getContainer(parentUri);
     }
-    
+
     @Override
     public void deleteVersion(String uri) throws Exception {
-        logger.info("Deleting version: {}",uri);
+        logger.info("Deleting version: {}", uri);
         deleteContainer(uri);
     }
-    
+
     @Override
     public void deleteContainer(String uri) throws Exception {
         FcrepoResponse response = new DeleteBuilder(new URI(uri), buildClient()).perform();
@@ -380,12 +378,16 @@ public class FedoraService implements IRService<Model> {
                 irContext.setName(title.get());
             }
         }
-        
+
         if (irContext.getIsVersion()) {
             irContext.setName(irContext.getName() + " (" + irContext.getVersion() + ")");
         }
 
         return irContext;
+    }
+
+    private FcrepoClient buildClient() {
+        return (ir.getUsername() == null || ir.getPassword() == null) ? FcrepoClient.client().build() : FcrepoClient.client().credentials(ir.getUsername(), ir.getPassword()).build();
     }
 
     private Triple craftTriple(Statement statement) {
@@ -406,10 +408,6 @@ public class FedoraService implements IRService<Model> {
             }
         }
         return literal;
-    }
-
-    private FcrepoClient buildClient() {
-        return (ir.getUsername() == null || ir.getPassword() == null) ? FcrepoClient.client().build() : FcrepoClient.client().credentials(ir.getUsername(), ir.getPassword()).build();
     }
 
     private Model createRdfModel(InputStream stream) {
