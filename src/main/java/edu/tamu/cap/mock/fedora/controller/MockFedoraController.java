@@ -3,6 +3,7 @@ package edu.tamu.cap.mock.fedora.controller;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,6 +16,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.tamu.cap.mock.fedora.loader.MockFedoraLoader;
 
 @RestController
+@Profile("test")
 @RequestMapping("/mock/fcrepo/rest")
 public class MockFedoraController {
 

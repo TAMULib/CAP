@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
@@ -11,6 +12,7 @@ import org.springframework.util.StreamUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Service
+@Profile("test")
 public class MockFedoraLoader {
 
     @Value("classpath:mock/container.xml")
