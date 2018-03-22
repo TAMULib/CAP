@@ -2,12 +2,12 @@ package edu.tamu.cap.model.response;
 
 import java.io.Serializable;
 
-public class Version  implements Serializable {
-    
+public class Version implements Serializable {
+
     String name;
-    
+
     String time;
-    
+
     Triple triple;
 
     private static final long serialVersionUID = 6125496651739394381L;
@@ -15,7 +15,7 @@ public class Version  implements Serializable {
     public Version() {
         super();
     }
-    
+
     public Version(String name, String time, Triple triple) {
         super();
         setName(name);
@@ -52,5 +52,5 @@ public class Version  implements Serializable {
         v.setTriple(t);
         return v;
     }
-    
+
 }

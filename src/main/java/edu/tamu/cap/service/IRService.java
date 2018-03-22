@@ -12,38 +12,50 @@ import edu.tamu.cap.model.response.Version;
 public interface IRService<M> {
 
     public void setIr(IR ir);
+
     public IRContext buildIRContext(M model, String contextUri);
-    
-    // Varafication  Methods
+
+    // Verification Methods
     public void verifyPing() throws Exception;
+
     public void verifyAuth() throws Exception;
+
     public void verifyRoot() throws Exception;
 
-    //Containers
+    // Containers
     public IRContext createContainer(String contextUri, String name) throws Exception;
+
     public IRContext getContainer(String contextUri) throws Exception;
-    // Currently no update of container
+
+    // TODO: currently no update of container
     public void deleteContainer(String targetUri) throws Exception;
-    
-    //Resources
+
+    // Resources
     public IRContext createResource(String contextUri, MultipartFile file) throws Exception;
-    // Currently no read of resource
-    // Currently no update of resource
-    // Currently not delete of resource
+
+    // TODO: currently no read of resource
+    // TODO: currently no update of resource
+    // TODO: currently not delete of resource
     public IRContext resourceFixity(Triple tiple) throws Exception;
-    
-    //Metadata
+
+    // Metadata
     public IRContext createMetadata(Triple triple) throws Exception;
-    //currently no read of metadata
+
+    // TODO: currently no read of metadata
     public IRContext updateMetadata(String contextUri, String sparql) throws Exception;
+
     public IRContext deleteMetadata(Triple triple) throws Exception;
 
-    //Versions
+    // Versions
     public IRContext createVersion(String contextUri, String Name) throws Exception;
+
     public List<Version> getVersions(String contextUri) throws Exception;
-    //currently no update version
+
+    // TODO: currently no update version
     public IRContext restoreVersion(String contextUri) throws Exception;
+
     public void deleteVersion(String contextUri) throws Exception;
-    //Transactions
- 
+
+    // Transactions
+
 }
