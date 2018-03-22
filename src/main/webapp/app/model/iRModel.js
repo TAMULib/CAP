@@ -12,7 +12,11 @@ cap.model("IR", function($location, IRContext, WsApi) {
       return cache[contextUri];
     };
 
-    ir.getContext = function(contextUri) {
+    ir.removeCachedContext = function(contextUri) {
+      delete cache[contextUri];
+    };
+
+    ir.getContext = function(contextUri, reload) {
       var context = ir.getCachedContext(contextUri);
       if(context === undefined) {
         context = new IRContext({
@@ -20,13 +24,16 @@ cap.model("IR", function($location, IRContext, WsApi) {
           uri: contextUri,
           fetch: true
         });
+        ir.cacheContext(context);
+      } else if(reload) {
+        context.fetch = true;
       }
       return context;
     };
 
-    ir.loadContext = function(contextUri) {
+    ir.loadContext = function(contextUri, reload) {
       $location.search("context", contextUri);
-      return ir.getContext(contextUri);
+      return ir.getContext(contextUri, reload);
     };
 
     WsApi.listen("/queue/context").then(null, null, function(response) {

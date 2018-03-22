@@ -182,6 +182,7 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
       var promises = [];
 
       angular.forEach(metadataTriples, function (metadataTriple) {
+
         var createPromise = WsApi.fetch(irContext.getMapping().metadata, {
           method: HttpMethodVerbs.DELETE,
           pathValues: {
@@ -207,12 +208,69 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
     };
 
     irContext.updateMetadatum = function (triple, newObject) {
+      // This approach is fedora specific and will need to be handled on the server side
+      // in the fedora implementation of the ir service.
       var sparql = "DELETE { <> <" + triple.predicate + "> '" + removeQuotes(triple.object) + "' } ";
       sparql += "INSERT { <> <" + triple.predicate + "> '" + removeQuotes(newObject) + "' } ";
       sparql += "WHERE { }";
       return irContext.advancedUpdate(sparql).then(function () {
         newObject = undefined;
       });
+    };
+
+    irContext.createVersion = function(form) {
+
+      var versionPromise = WsApi.fetch(irContext.getMapping().version, {
+        method: HttpMethodVerbs.POST,
+        pathValues: {
+          irid: irContext.ir.id,
+          type: irContext.ir.type
+        },
+        query: {
+          contextUri: irContext.uri
+        },
+        data: {
+          name: form.name
+        }
+      });
+
+      versionPromise.then(function() {
+        if (form) {
+          form.$setPristine();
+          form.$setUntouched();
+          form.name ="";
+        }
+      });
+
+      return versionPromise;
+    };
+
+    irContext.deleteVersion = function(versionContext) {
+      return WsApi.fetch(irContext.getMapping().version, {
+        method: HttpMethodVerbs.DELETE,
+        pathValues: {
+          irid: irContext.ir.id,
+          type: irContext.ir.type
+        },
+        query: {
+          versionUri: versionContext.uri
+        }
+      });
+    };
+
+    irContext.revertVersion = function(context) {
+      var revertVersionPromise = WsApi.fetch(irContext.getMapping().version, {
+        method: HttpMethodVerbs.PATCH,
+        pathValues: {
+          irid: context.ir.id,
+          type: context.ir.type
+        },
+        query: {
+          contextUri: context.uri
+        }
+      });
+
+      return revertVersionPromise;
     };
 
     irContext.fixityCheck = function () {

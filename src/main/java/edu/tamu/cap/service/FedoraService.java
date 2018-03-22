@@ -5,6 +5,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.jena.rdf.model.Model;
@@ -35,6 +38,7 @@ import edu.tamu.cap.model.IR;
 import edu.tamu.cap.model.response.FixityReport;
 import edu.tamu.cap.model.response.IRContext;
 import edu.tamu.cap.model.response.Triple;
+import edu.tamu.cap.model.response.Version;
 
 @Service("Fedora")
 public class FedoraService implements IRService<Model> {
@@ -52,6 +56,16 @@ public class FedoraService implements IRService<Model> {
     private final static String FEDORA_CONTAINER_PREDICATE = "http://fedora.info/definitions/v4/repository#Container";
 
     public final static String FEDORA_BINRAY_PREDICATE = "http://fedora.info/definitions/v4/repository#Binary";
+
+    public final static String FEDORA_HAS_VERSIONS_PREDICATE = "http://fedora.info/definitions/v4/repository#hasVersions";
+
+    public final static String FEDORA_HAS_VERSION_PREDICATE = "http://fedora.info/definitions/v4/repository#hasVersion";
+
+    public final static String FEDORA_HAS_VERSION_LABEL = "http://fedora.info/definitions/v4/repository#hasVersionLabel";
+
+    public final static String FEDORA_CREATED = "http://fedora.info/definitions/v4/repository#created";
+
+    public final static String FEDORA_VERSION = "http://fedora.info/definitions/v4/repository#Version";
 
     // @formatter:off
     private final static String[] PROPERTY_PREFIXES = new String[] {
@@ -102,7 +116,7 @@ public class FedoraService implements IRService<Model> {
         FcrepoClient client = buildClient();
         String contextUri = triple.getSubject();
         PatchBuilder patch = new PatchBuilder(new URI(contextUri + "/fcr:metadata"), client);
-        String sparql = "INSERT { <" + triple.getSubject() + "> <" + triple.getPredicate() + "> '" + triple.getObject() + "' . } WHERE {}";
+        String sparql = "INSERT { " + triple.toString() + " . } WHERE {}";
 
         UpdateRequest request = UpdateFactory.create();
 
@@ -118,12 +132,15 @@ public class FedoraService implements IRService<Model> {
 
     @Override
     public IRContext deleteMetadata(Triple triple) throws Exception {
+
+        logger.debug("Attempting to delete");
+
         FcrepoClient client = buildClient();
         String contextUri = triple.getSubject();
 
         PatchBuilder patch = new PatchBuilder(new URI(contextUri + "/fcr:metadata"), client);
 
-        String sparql = "DELETE WHERE { <" + contextUri + "> <" + triple.getPredicate() + "> " + triple.getObject() + " } ";
+        String sparql = "DELETE WHERE { " + triple.toString() + " } ";
 
         UpdateRequest request = UpdateFactory.create();
 
@@ -204,9 +221,73 @@ public class FedoraService implements IRService<Model> {
     }
 
     @Override
+    public List<Version> getVersions(String contextUri) throws Exception {
+        FcrepoClient client = buildClient();
+        FcrepoResponse response = new GetBuilder(new URI(contextUri + "/fcr:versions"), client).accept("application/rdf+xml").perform();
+        Model model = createRdfModel(response.getBody());
+        List<Version> versions = new ArrayList<Version>();
+
+        model.listObjectsOfProperty(model.createProperty(FEDORA_HAS_VERSION_PREDICATE)).forEachRemaining(object -> {
+
+            Version version = Version.of(Triple.of(contextUri + "/fcr:versions", FEDORA_HAS_VERSION_PREDICATE, object.toString()));
+
+            object.asResource().listProperties().forEachRemaining(prop -> {
+                switch (prop.getPredicate().toString()) {
+                case FEDORA_HAS_VERSION_LABEL:
+                    version.setName(prop.getObject().toString());
+                    break;
+                case FEDORA_CREATED:
+                    version.setTime(prop.getObject().toString());
+                    break;
+                }
+            });
+
+            versions.add(version);
+
+        });
+
+        return versions;
+    }
+
+    @Override
+    public IRContext createVersion(String contextUri, String name) throws Exception {
+
+        if (name.isEmpty()) {
+            SimpleDateFormat output = new SimpleDateFormat("yyyyMMddHHmmss");
+            name = "version." + output.format(System.currentTimeMillis());
+        } else {
+            name = "version." + name;
+        }
+
+        URI uri = URI.create(contextUri + "/fcr:versions");
+        logger.info("Attempting to create version: {}", uri.toString());
+        FcrepoResponse response = new PostBuilder(uri, buildClient()).slug(name).perform();
+
+        URI location = response.getLocation();
+        logger.info("Version creation status and location: {}, {}", response.getStatusCode(), location);
+
+        return getContainer(contextUri);
+    }
+
+    @Override
+    public IRContext restoreVersion(String contextUri) throws Exception {
+        IRContext versionContext = getContainer(contextUri);
+        String parentUri = versionContext.getParent().getSubject();
+        URI uri = URI.create(contextUri);
+        new PatchBuilder(uri, buildClient()).perform();
+        return getContainer(parentUri);
+    }
+
+    @Override
+    public void deleteVersion(String uri) throws Exception {
+        logger.info("Deleting version: {}", uri);
+        deleteContainer(uri);
+    }
+
+    @Override
     public void deleteContainer(String uri) throws Exception {
         FcrepoResponse response = new DeleteBuilder(new URI(uri), buildClient()).perform();
-        logger.debug("Resource deletion status: {}", response.getStatusCode());
+        logger.info("Resource deletion status: {}", response.getStatusCode());
     }
 
     @Override
@@ -239,6 +320,13 @@ public class FedoraService implements IRService<Model> {
                 case LDP_CONTAINS_PREDICATE:
                     irContext.addChild(new IRContext(triple));
                     break;
+                case FEDORA_HAS_VERSIONS_PREDICATE:
+                    try {
+                        irContext.setVersions(getVersions(triple.getSubject()));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
                 default:
 
                     for (String prefix : PROPERTY_PREFIXES) {
@@ -262,13 +350,20 @@ public class FedoraService implements IRService<Model> {
                 case FEDORA_BINRAY_PREDICATE:
                     irContext.getTriple().setObject(FEDORA_BINRAY_PREDICATE);
                     break;
+                case FEDORA_VERSION:
+
+                    String verionName = contextUri.substring(contextUri.lastIndexOf("/") + 1, contextUri.length());
+                    irContext.setVersion(verionName);
+
+                    irContext.setParent(Triple.of(object, FEDORA_HAS_PARENT_PREDICATE, contextUri.replace("/fcr:versions/" + verionName, "")));
+
+                    break;
                 default:
 
                 }
             }
 
         });
-        // System.out.println("\n\n");
 
         irContext.setName(contextUri.equals(ir.getRootUri()) ? "Root" : contextUri);
 
@@ -284,7 +379,15 @@ public class FedoraService implements IRService<Model> {
             }
         }
 
+        if (irContext.getIsVersion()) {
+            irContext.setName(irContext.getName() + " (" + irContext.getVersion() + ")");
+        }
+
         return irContext;
+    }
+
+    private FcrepoClient buildClient() {
+        return (ir.getUsername() == null || ir.getPassword() == null) ? FcrepoClient.client().build() : FcrepoClient.client().credentials(ir.getUsername(), ir.getPassword()).build();
     }
 
     private Triple craftTriple(Statement statement) {
@@ -305,10 +408,6 @@ public class FedoraService implements IRService<Model> {
             }
         }
         return literal;
-    }
-
-    private FcrepoClient buildClient() {
-        return (ir.getUsername() == null || ir.getPassword() == null) ? FcrepoClient.client().build() : FcrepoClient.client().credentials(ir.getUsername(), ir.getPassword()).build();
     }
 
     private Model createRdfModel(InputStream stream) {

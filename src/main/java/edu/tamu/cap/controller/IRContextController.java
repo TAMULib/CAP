@@ -77,5 +77,24 @@ public class IRContextController {
     public ApiResponse updateMetadata(IRService<?> irService, @Param("contextUri") String contextUri, String spqarl) throws Exception {
         return new ApiResponse(SUCCESS, irService.updateMetadata(contextUri, spqarl));
     }
+    
+    @RequestMapping(value = "/version", method = POST)
+    @PreAuthorize("hasRole('USER')")
+    public ApiResponse createVersion(IRService<?> irService, @Param("contextUri") String contextUri, @PayloadArgName("name") String name) throws Exception {
+        return new ApiResponse(SUCCESS, irService.createVersion(contextUri, name));
+    }
+    
+    @RequestMapping(value = "/version", method = PATCH)
+    @PreAuthorize("hasRole('USER')")
+    public ApiResponse restoreVersion(IRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
+        return new ApiResponse(SUCCESS, irService.restoreVersion(contextUri));
+    }
+    
+    @RequestMapping(value = "/version", method = DELETE)
+    @PreAuthorize("hasRole('USER')")
+    public ApiResponse deleteVersion(IRService<?> irService, @Param("versionUri") String versionUri) throws Exception {
+        irService.deleteVersion(versionUri);
+        return new ApiResponse(SUCCESS);
+    }
 
 }

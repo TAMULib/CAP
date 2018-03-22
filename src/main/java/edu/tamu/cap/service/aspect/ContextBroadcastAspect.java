@@ -25,7 +25,7 @@ public class ContextBroadcastAspect {
 
     @AfterReturning(pointcut = "execution(edu.tamu.cap.model.response.IRContext edu.tamu.cap.service.IRService.*(..)) && !execution(edu.tamu.cap.model.response.IRContext edu.tamu.cap.service.IRService.getContainer(..)) && !execution(edu.tamu.cap.model.response.IRContext edu.tamu.cap.service.IRService.buildIRContext(..))", returning = "context")
     public void broadcastContext(IRContext context) throws Throwable {
-        logger.debug("Broadcasting " + context.getTriple().getSubject());
+        logger.info("Broadcasting " + context.getTriple().getSubject());
         simpMessagingTemplate.convertAndSend("/queue/context", new ApiResponse(SUCCESS, BROADCAST, context));
     }
 

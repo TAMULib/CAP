@@ -11,10 +11,10 @@
         modal-fullscreen="true"
         wvr-modal-backdrop="static">
       </modal>
-      <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
+      <ul ng-if="!context.isVersion" class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
         <li class="dropdown-header">Container Actions</li>
         <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-play-circle"></span> Start Transaction</a></li>
-        <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-scissors"></span> Cut Version</a></li>
+        <li role="menuitem" ng-click="openModal('#versionsModal')"><a href="#"><span class="glyphicon glyphicon-scissors"></span> Versions</a></li>
         <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-move"></span> Move</a></li>
         <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-random"></span> Migrate</a></li>
         <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-export"></span> Export</a></li>
@@ -34,11 +34,32 @@
         <li ng-if="isAdmin" role="menuitem"><a href="/admin/ir"><span class="glyphicon glyphicon-cog"></span> Admin Settings</a></li>
         
       </ul>
+      <ul ng-if="context.isVersion" class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
+          <li class="dropdown-header">Version Actions</li>
+          <li role="menuitem" ng-click="openModal('#contextVersionRevertModal')"><a href="#"><span class="glyphicon glyphicon-repeat"></span> Restore</a></li>
+          <li role="menuitem bg-danger" ng-click="openModal('#contextVersionDeleteModal')"><a href="#" class="bg-danger"><span class="glyphicon glyphicon-trash"></span> Delete</a></li>
+
+          <!-- These ngIf calls should be executed once we enable user management -->
+          <li ng-if="isAdmin" class="divider"></li>
+          <li ng-if="isAdmin" class="dropdown-header">Admin Actions</li>
+          <li ng-if="isAdmin" role="menuitem"><a href="" ng-click="openModal('#advancedUpdate')"><span class="glyphicon glyphicon glyphicon-edit"></span> Advanced Update</a></li>
+          <li ng-if="isAdmin" role="menuitem"><a href="/admin/ir"><span class="glyphicon glyphicon-cog"></span> Admin Settings</a></li>
+          
+        </ul>
     </div>
     <h1>{{ir.name}} <small class="clickable" ng-click="ir.loadContext(ir.rootUri)">(<span class="glyphicon glyphicon-home"></span> {{ir.rootUri}})</small></h1>
   </div>
 
   <breadcrumbs ng-if="context.hasParent !== undefined" context="context"></breadcrumbs>
+
+  <div ng-if="context.isVersion" class="alert alert-warning clearfix" role="alert">
+    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+    <span>This is a historical version and is not editable.</span>
+    <div class="form-group pull-right">
+        <button class="btn btn-warning" ng-click="openModal('#contextVersionRevertModal')">Restore</button>
+        <button class="btn btn-danger" ng-click="openModal('#contextVersionDeleteModal')">Delete</button>
+    </div>
+  </div>
 
   <div class="container-fluid">
     <div class="properties-section">
@@ -89,7 +110,7 @@
 
         <div class="properties" ng-class="{'col-md-6 col-md-pull-6': context.resource&&!theaterMode, 'col-md-12': !context.resource||theaterMode}">
           <h4>
-            <span>Properties {{theaterMode}}</span>
+            <span>Properties</span>
             <span class="glyphicon glyphicon-minus clickable" ng-click="propertiesCollapsed=true;setOrToggleTheaterMode(true)" ng-show="context.resource&&!theaterMode"></span>
             <span class="glyphicon glyphicon-plus clickable" ng-click="propertiesCollapsed=false" ng-show="(!context.resource||theaterMode)&&propertiesCollapsed"></span>
             <span class="glyphicon glyphicon-minus clickable" ng-click="propertiesCollapsed=true" ng-show="(!context.resource||theaterMode)&&!propertiesCollapsed"></span>
@@ -128,7 +149,7 @@
             <input ng-show="removeListElements" type="checkbox" ng-checked="selectedListElements.indexOf(t)!==-1" ng-click="selectedListElements.indexOf(t)===-1?selectedListElements.push(t):selectedListElements.splice(selectedListElements.indexOf(t),1)">
             <span ng-show="!editValue&&selectedListElements.indexOf(t)===-1">
               {{t.object | removeQuotes}}
-              <span ng-show="showEditBtn" class="glyphicon glyphicon-pencil clickable" ng-click="editValue=t.object"></span>
+              <span ng-show="showEditBtn&&!context.isVersion" class="glyphicon glyphicon-pencil clickable" ng-click="editValue=t.object"></span>
             </span>
             <div ng-show="editValue" class="row">
               <div class="col-md-6">
@@ -244,6 +265,28 @@
     modal-view="views/modals/resourceFullScreen.html"
     modal-header-class="modal-header-danger"
     wvr-modal-backdrop="true">
+  </modal>
+
+  <modal
+    modal-id="versionsModal"
+    modal-view="views/modals/versionsModal.html"
+    modal-header-class="modal-header-primary"
+    modal-fullscreen="true"    
+    wvr-modal-backdrop="static">
+  </modal>
+
+  <modal
+    modal-id="contextVersionDeleteModal"
+    modal-view="views/modals/contextVersionDeleteModal.html"
+    modal-header-class="modal-header-danger"
+    wvr-modal-backdrop="static">
+  </modal>
+
+  <modal
+    modal-id="contextVersionRevertModal"
+    modal-view="views/modals/contextVersionRevertModal.html"
+    modal-header-class="modal-header-warning"
+    wvr-modal-backdrop="static">
   </modal>
 
 </div>
