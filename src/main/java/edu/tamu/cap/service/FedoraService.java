@@ -28,6 +28,7 @@ import org.fcrepo.client.FcrepoResponse;
 import org.fcrepo.client.GetBuilder;
 import org.fcrepo.client.PatchBuilder;
 import org.fcrepo.client.PostBuilder;
+import org.fcrepo.client.PutBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -241,6 +242,28 @@ public class FedoraService implements IRService<Model> {
         logger.debug("Resource creation status and location: {}, {}", response.getStatusCode(), location);
         return getIRContext(contextUri);
     }
+    
+    @Override
+    public IRContext getResource(String contextUri) throws Exception {
+        return getIRContext(contextUri);
+    }
+
+    @Override
+    public IRContext updateResource(String contextUri, MultipartFile file) throws Exception {
+        FcrepoClient client = buildClient();
+        PutBuilder put = new PutBuilder(new URI(contextUri), client);
+        put.body(file.getInputStream(), file.getContentType());
+        put.filename(file.getOriginalFilename());
+        FcrepoResponse response = put.perform();
+        URI location = response.getLocation();
+        logger.debug("Resource binary update status and location: {}, {}", response.getStatusCode(), location);
+        return getIRContext(contextUri);
+    }
+
+    @Override
+    public void deleteResource(String contextUri) throws Exception {
+        deleteContainerOrResource(contextUri);
+    }
 
     @Override
     public IRContext resourceFixity(Triple tiple) throws Exception {
@@ -325,8 +348,22 @@ public class FedoraService implements IRService<Model> {
 
     @Override
     public void deleteContainer(String uri) throws Exception {
-        FcrepoResponse response = new DeleteBuilder(new URI(uri), buildClient()).perform();
-        logger.info("Resource deletion status: {}", response.getStatusCode());
+        logger.info("Resource deletion status: {}", deleteContainerOrResource(uri).getStatusCode());
+    }
+    
+    private FcrepoResponse deleteContainerOrResource(String uri) throws URISyntaxException, FcrepoOperationFailedException {
+        FcrepoClient client = buildClient();
+        
+        URI newURI = new URI(uri);
+        DeleteBuilder builder = new DeleteBuilder(newURI, client);
+        
+        System.out.println("\n\n\n");
+        System.out.println(uri);
+        System.out.println(newURI);
+        System.out.println(builder);
+        System.out.println("\n\n\n");
+        
+        return builder.perform();
     }
 
     @Override

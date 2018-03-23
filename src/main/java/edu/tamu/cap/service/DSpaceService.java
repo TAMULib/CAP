@@ -126,4 +126,22 @@ public class DSpaceService implements IRService<Model> {
         return null;
     }
 
+    @Override
+    public IRContext getResource(String contextUri) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public IRContext updateResource(String contextUri, MultipartFile file) throws Exception{
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void deleteResource(String contextUri) throws Exception{
+        // TODO Auto-generated method stub
+        
+    }
+
 }
