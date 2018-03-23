@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.text.StrBuilder;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.NodeIterator;
@@ -155,7 +156,16 @@ public class FedoraService implements IRService<Model> {
     }
 
     @Override
-    public IRContext updateMetadata(String contextUri, String sparql) throws Exception {
+    public IRContext updateMetadata(Triple originalTriple, String newValue) throws Exception {
+        
+        String contextUri = originalTriple.getSubject();
+               
+        StringBuilder stngBldr = new StringBuilder();
+        stngBldr.append("DELETE { <> <").append(originalTriple.getPredicate()).append("> '").append(removeQuotes(originalTriple.getObject())).append("' } ");
+        stngBldr.append("INSERT { <> <").append(originalTriple.getPredicate()).append("> '").append(removeQuotes(newValue)).append("' } ");
+        stngBldr.append("WHERE { }");
+        String sparql = stngBldr.toString();
+               
         FcrepoClient client = buildClient();
         PatchBuilder patch = new PatchBuilder(new URI(contextUri + "/fcr:metadata"), client);
         patch.body(new ByteArrayInputStream(sparql.getBytes()));
@@ -164,6 +174,19 @@ public class FedoraService implements IRService<Model> {
         URI location = response.getLocation();
         logger.debug("Metadata update status and location: {}, {}", response.getStatusCode(), location);
         return getContainer(contextUri);
+    }
+    
+    private String removeQuotes(String string) {
+        
+        if(string.startsWith("'")||string.startsWith("\"")) {
+            string = string.substring(1);
+        } 
+        
+        if(string.endsWith("'")||string.endsWith("\"")) {
+            string = string.substring(0, string.length() - 1);
+        }
+        
+        return string;
     }
 
     @Override
@@ -420,6 +443,12 @@ public class FedoraService implements IRService<Model> {
         // System.out.println("\n");
 
         return model;
+    }
+
+    @Override
+    public List<Triple> getMetadata(String contextUri) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

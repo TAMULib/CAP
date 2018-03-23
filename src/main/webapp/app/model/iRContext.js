@@ -157,7 +157,7 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
 
       angular.forEach(metadataTriples, function (metadataTriple) {
         var createPromise = WsApi.fetch(irContext.getMapping().metadata, {
-          method: HttpMethodVerbs.PUT,
+          method: HttpMethodVerbs.POST,
           pathValues: {
             irid: irContext.ir.id,
             type: irContext.ir.type
@@ -172,9 +172,9 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
         promises.push(createPromise);
       });
 
-      var allRemovePromses = $q.all(promises);
+      var allCreatePromses = $q.all(promises);
 
-      return allRemovePromses;
+      return allCreatePromses;
     };
 
     irContext.removeMetadata = function (metadataTriples) {
@@ -183,23 +183,23 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
 
       angular.forEach(metadataTriples, function (metadataTriple) {
 
-        var createPromise = WsApi.fetch(irContext.getMapping().metadata, {
+        var removePromise = WsApi.fetch(irContext.getMapping().metadata, {
           method: HttpMethodVerbs.DELETE,
           pathValues: {
             irid: irContext.ir.id,
             type: irContext.ir.type
           },
-          query: metadataTriple
+          data: metadataTriple
         });
 
-        createPromise.then(function (response) {
+        removePromise.then(function (response) {
           var payload = angular.fromJson(response.body).payload;
           if (payload) {
             angular.extend(irContext, payload.IRContext);
           }
         });
 
-        promises.push(createPromise);
+        promises.push(removePromise);
       });
 
       var allRemovePromses = $q.all(promises);
@@ -207,15 +207,24 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
       return allRemovePromses;
     };
 
-    irContext.updateMetadatum = function (triple, newObject) {
-      // This approach is fedora specific and will need to be handled on the server side
-      // in the fedora implementation of the ir service.
-      var sparql = "DELETE { <> <" + triple.predicate + "> '" + removeQuotes(triple.object) + "' } ";
-      sparql += "INSERT { <> <" + triple.predicate + "> '" + removeQuotes(newObject) + "' } ";
-      sparql += "WHERE { }";
-      return irContext.advancedUpdate(sparql).then(function () {
-        newObject = undefined;
+    irContext.updateMetadatum = function (metadataTriple, newValue) {
+
+      console.log(metadataTriple);
+      
+      var updatePromise = WsApi.fetch(irContext.getMapping().metadata, {
+        method: HttpMethodVerbs.PUT,
+        pathValues: {
+          irid: irContext.ir.id,
+          type: irContext.ir.type
+        },
+        query: {
+          newValue: newValue
+        },
+        data: metadataTriple
       });
+      
+      return updatePromise;
+
     };
 
     irContext.createVersion = function(form) {

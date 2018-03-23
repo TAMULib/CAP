@@ -54,7 +54,7 @@ public class DSpaceService implements IRService<Model> {
     }
 
     @Override
-    public IRContext updateMetadata(String contextUri, String sparql) throws Exception {
+    public IRContext updateMetadata(Triple originalTriple, String sparql) throws Exception {
 
         return null;
     }
@@ -107,5 +107,11 @@ public class DSpaceService implements IRService<Model> {
 
     @Override
     public void deleteVersion(String contextUri) {
+    }
+
+    @Override
+    public List<Triple> getMetadata(String contextUri) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
     }
 }
