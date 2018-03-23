@@ -28,21 +28,26 @@ public class DSpaceService implements IRService<Model> {
     public void verifyRoot() throws Exception {
 
     }
+    
+    @Override
+    public IRContext getIRContext(String contextUri) throws Exception {
+
+        return null;
+    }
+    
+    @Override
+    public List<Triple> getTriples(IRService<?> irService, String contextUri) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
     @Override
-    public IRContext createContainer(String contextUri, String name) throws Exception {
-
+    public IRContext createChild(String contextUri, List<Triple> metadata) throws Exception {
         return null;
     }
 
     @Override
     public IRContext createResource(String contextUri, MultipartFile file) throws Exception {
-
-        return null;
-    }
-
-    @Override
-    public IRContext getContainer(String contextUri) throws Exception {
 
         return null;
     }
@@ -114,4 +119,11 @@ public class DSpaceService implements IRService<Model> {
         // TODO Auto-generated method stub
         return null;
     }
+
+    @Override
+    public List<Triple> getChildren(String contextUri) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }
