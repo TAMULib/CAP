@@ -18,7 +18,7 @@ import edu.tamu.weaver.response.ApiResponse;
 
 @RestController
 @RequestMapping("ir-context/{type}/{irid}/metadata")
-public class IRContextMetadata {
+public class IRContextMetadataController {
     
     @RequestMapping(method = POST)
     @PreAuthorize("hasRole('USER')")
