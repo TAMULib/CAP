@@ -183,8 +183,6 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
 
       angular.forEach(metadataTriples, function (metadataTriple) {
 
-        console.log(metadataTriple);
-
         var removePromise = WsApi.fetch(irContext.getMapping().metadata, {
           method: HttpMethodVerbs.DELETE,
           pathValues: {
@@ -210,8 +208,6 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
     };
 
     irContext.updateMetadatum = function (metadataTriple, newValue) {
-
-      console.log(metadataTriple);
       
       var updatePromise = WsApi.fetch(irContext.getMapping().metadata, {
         method: HttpMethodVerbs.PUT,
