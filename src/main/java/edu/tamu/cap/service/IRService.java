@@ -8,6 +8,7 @@ import edu.tamu.cap.model.IR;
 import edu.tamu.cap.model.response.IRContext;
 import edu.tamu.cap.model.response.Triple;
 import edu.tamu.cap.model.response.Version;
+import edu.tamu.weaver.response.ApiResponse;
 
 public interface IRService<M> {
 
@@ -22,10 +23,13 @@ public interface IRService<M> {
 
     public void verifyRoot() throws Exception;
 
-    // Containers
-    public IRContext createContainer(String contextUri, String name) throws Exception;
-
-    public IRContext getContainer(String contextUri) throws Exception;
+    public IRContext getIRContext(String contextUri) throws Exception;
+    
+    public List<Triple> getTriples(IRService<?> irService, String contextUri) throws Exception;
+    
+    // Children
+    public IRContext createChild(String contextUri, List<Triple> metadata) throws Exception;
+    public List<Triple> getChildren(String contextUri) throws Exception;
 
     // TODO: currently no update of container
     public void deleteContainer(String targetUri) throws Exception;

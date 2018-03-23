@@ -1,7 +1,6 @@
 package edu.tamu.cap.service;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -10,15 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.lang3.text.StrBuilder;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.NodeIterator;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Statement;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateRequest;
 import org.apache.jena.vocabulary.DC;
@@ -41,6 +37,7 @@ import edu.tamu.cap.model.response.IRContext;
 import edu.tamu.cap.model.response.Triple;
 import edu.tamu.cap.model.response.Version;
 import edu.tamu.cap.util.StringUtil;
+import edu.tamu.weaver.response.ApiResponse;
 
 @Service("Fedora")
 public class FedoraService implements IRService<Model> {
@@ -112,7 +109,51 @@ public class FedoraService implements IRService<Model> {
             throw new IRVerificationException("URI is not a Fedora root!");
         }
     }
+    
+    @Override
+    public IRContext getIRContext(String contextUri) throws Exception {
+        FcrepoClient client = buildClient();
+        FcrepoResponse response = new GetBuilder(new URI(contextUri + "/fcr:metadata"), client).accept("application/rdf+xml").perform();
+        Model model = createRdfModel(response.getBody());
+        return buildIRContext(model, contextUri);
+    }
+    
+    @Override
+    public List<Triple> getTriples(IRService<?> irService, String contextUri) throws Exception {
+        IRContext context = getIRContext(contextUri);
+        
+        List<Triple> allTriples = new ArrayList<Triple>();
+        
+        allTriples.addAll(context.getProperties());
+        allTriples.addAll(context.getMetadata());
+        //TODO add all resource triples
+        
+        return allTriples;
+    }
 
+    @Override
+    public IRContext createChild(String contextUri, List<Triple> metadata) throws Exception {
+        FcrepoClient client = buildClient();
+        PostBuilder post = new PostBuilder(new URI(contextUri), client);
+//        if (!name.isEmpty()) {
+//            Model model = ModelFactory.createDefaultModel();
+//            model.createResource("").addProperty(DC.title, name);
+//            ByteArrayOutputStream out = new ByteArrayOutputStream();
+//            RDFDataMgr.write(out, model, Lang.TURTLE);
+//            post.body(new ByteArrayInputStream(out.toByteArray()), "text/turtle");
+//        }
+        FcrepoResponse response = post.perform();
+        URI location = response.getLocation();
+        logger.debug("Container creation status and location: {}, {}", response.getStatusCode(), location);
+        return getIRContext(contextUri);
+    }
+    
+    @Override
+    public List<Triple> getChildren(String contextUri) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
     @Override
     public IRContext createMetadata(Triple triple) throws Exception {
         FcrepoClient client = buildClient();
@@ -129,13 +170,13 @@ public class FedoraService implements IRService<Model> {
         FcrepoResponse response = patch.perform();
         URI location = response.getLocation();
         logger.debug("Metadata creation status and location: {}, {}", response.getStatusCode(), location);
-        return getContainer(contextUri);
+        return getIRContext(contextUri);
     }
     
 
     @Override
     public List<Triple> getMetadata(String contextUri) throws Exception {
-        IRContext context = getContainer(contextUri);
+        IRContext context = getIRContext(contextUri);
         return context.getMetadata();
     }
 
@@ -157,7 +198,7 @@ public class FedoraService implements IRService<Model> {
         FcrepoResponse response = patch.perform();
         URI location = response.getLocation();
         logger.debug("Metadata update status and location: {}, {}", response.getStatusCode(), location);
-        return getContainer(contextUri);
+        return getIRContext(contextUri);
     }
     
     @Override
@@ -181,24 +222,7 @@ public class FedoraService implements IRService<Model> {
         FcrepoResponse response = patch.perform();
         URI location = response.getLocation();
         logger.debug("Metadata delete status and location: {}, {}", response.getStatusCode(), location);
-        return getContainer(contextUri);
-    }
-
-    @Override
-    public IRContext createContainer(String contextUri, String name) throws Exception {
-        FcrepoClient client = buildClient();
-        PostBuilder post = new PostBuilder(new URI(contextUri), client);
-        if (!name.isEmpty()) {
-            Model model = ModelFactory.createDefaultModel();
-            model.createResource("").addProperty(DC.title, name);
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            RDFDataMgr.write(out, model, Lang.TURTLE);
-            post.body(new ByteArrayInputStream(out.toByteArray()), "text/turtle");
-        }
-        FcrepoResponse response = post.perform();
-        URI location = response.getLocation();
-        logger.debug("Container creation status and location: {}, {}", response.getStatusCode(), location);
-        return getContainer(contextUri);
+        return getIRContext(contextUri);
     }
 
     @Override
@@ -210,7 +234,7 @@ public class FedoraService implements IRService<Model> {
         FcrepoResponse response = post.perform();
         URI location = response.getLocation();
         logger.debug("Resource creation status and location: {}, {}", response.getStatusCode(), location);
-        return getContainer(contextUri);
+        return getIRContext(contextUri);
     }
 
     @Override
@@ -224,18 +248,10 @@ public class FedoraService implements IRService<Model> {
         model.createResource("").addProperty(DC.title, "Fixity Report");
 
         FixityReport fixityReportContext = FixityReport.of(buildIRContext(model, contextUri).getProperties());
-        IRContext thisContext = getContainer(contextUri);
+        IRContext thisContext = getIRContext(contextUri);
         thisContext.setFixity(fixityReportContext);
 
         return thisContext;
-    }
-
-    @Override
-    public IRContext getContainer(String contextUri) throws Exception {
-        FcrepoClient client = buildClient();
-        FcrepoResponse response = new GetBuilder(new URI(contextUri + "/fcr:metadata"), client).accept("application/rdf+xml").perform();
-        Model model = createRdfModel(response.getBody());
-        return buildIRContext(model, contextUri);
     }
 
     @Override
@@ -284,16 +300,16 @@ public class FedoraService implements IRService<Model> {
         URI location = response.getLocation();
         logger.info("Version creation status and location: {}, {}", response.getStatusCode(), location);
 
-        return getContainer(contextUri);
+        return getIRContext(contextUri);
     }
 
     @Override
     public IRContext restoreVersion(String contextUri) throws Exception {
-        IRContext versionContext = getContainer(contextUri);
+        IRContext versionContext = getIRContext(contextUri);
         String parentUri = versionContext.getParent().getSubject();
         URI uri = URI.create(contextUri);
         new PatchBuilder(uri, buildClient()).perform();
-        return getContainer(parentUri);
+        return getIRContext(parentUri);
     }
 
     @Override

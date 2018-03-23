@@ -63,8 +63,11 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
       return children[contextUri];
     };
 
-    irContext.createContainer = function (createForm) {
-      var createPromise = WsApi.fetch(irContext.getMapping().container, {
+    irContext.createContainer = function (metadata) {
+
+      console.log(metadata);
+
+      var createPromise = WsApi.fetch(irContext.getMapping().children, {
         method: HttpMethodVerbs.POST,
         pathValues: {
           irid: irContext.ir.id,
@@ -73,9 +76,7 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
         query: {
           contextUri: irContext.uri
         },
-        data: {
-          name: createForm.name
-        }
+        data: metadata
       });
 
       createPromise.then(function (res) {
@@ -90,7 +91,7 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
       var promises = [];
 
       angular.forEach(containerTriples, function (containerTriple) {
-        var removePromise = WsApi.fetch(irContext.getMapping().container, {
+        var removePromise = WsApi.fetch(irContext.getMapping().children, {
           method: HttpMethodVerbs.DELETE,
           pathValues: {
             irid: irContext.ir.id,

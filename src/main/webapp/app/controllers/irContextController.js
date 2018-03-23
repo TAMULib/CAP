@@ -25,7 +25,17 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     $scope.context = $scope.ir.loadContext($scope.ir.contextUri);
 
     $scope.createContainer = function (form) {
-      $scope.context.createContainer(form).then(function () {
+
+      var triples = [];
+      angular.forEach(form.entries, function (entry) {
+        triples.push({
+          subject: $scope.context.uri,
+          predicate: entry.property.uri,
+          object: entry.value
+        });
+      });
+
+      $scope.context.createContainer(triples).then(function () {
         $scope.closeModal();
       });
     };

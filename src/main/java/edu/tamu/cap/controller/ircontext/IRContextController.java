@@ -27,22 +27,10 @@ public class IRContextController {
     @RequestMapping(method = GET)
     @PreAuthorize("hasRole('USER')")
     public ApiResponse get(IRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
-        return getContainer(irService, contextUri);
+        return new ApiResponse(SUCCESS, irService.getIRContext(contextUri));
     }
     
-    @RequestMapping(value = "/container", method = GET)
-    @PreAuthorize("hasRole('USER')")
-    public ApiResponse getContainer(IRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
-        return new ApiResponse(SUCCESS, irService.getContainer(contextUri));
-    }
-
-    @RequestMapping(value = "/container", method = POST)
-    @PreAuthorize("hasRole('USER')")
-    public ApiResponse create(IRService<?> irService, @Param("contextUri") String contextUri, @PayloadArgName("name") String name) throws Exception {
-        return new ApiResponse(SUCCESS, irService.createContainer(contextUri, name));
-    }
-
-    @RequestMapping(value = "/container", method = DELETE)
+    @RequestMapping(method = DELETE)
     @PreAuthorize("hasRole('USER')")
     public ApiResponse delete(IRService<?> irService, @Param("containerUri") String containerUri) throws Exception {
         try {
@@ -51,6 +39,12 @@ public class IRContextController {
             throw new RuntimeException(e);
         }
         return new ApiResponse(SUCCESS);
+    }
+    
+    @RequestMapping(value="/triples", method = GET)
+    @PreAuthorize("hasRole('USER')")
+    public ApiResponse getTriples(IRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
+        return new ApiResponse(SUCCESS, irService.getTriples(irService, contextUri));
     }
 
     @RequestMapping(value = "/resource", method = POST)

@@ -37,10 +37,10 @@ var apiMapping = {
       'controller': 'ir-context',
       'method': ':type/:irid/metadata'
     },
-    container: {
+    children: {
       'endpoint': '/private/queue',
       'controller': 'ir-context',
-      'method': ':type/:irid/container'
+      'method': ':type/:irid/children'
     },
     resource: {
       'endpoint': '/private/queue',
