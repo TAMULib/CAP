@@ -37,7 +37,6 @@ import edu.tamu.cap.model.response.IRContext;
 import edu.tamu.cap.model.response.Triple;
 import edu.tamu.cap.model.response.Version;
 import edu.tamu.cap.util.StringUtil;
-import edu.tamu.weaver.response.ApiResponse;
 
 @Service("Fedora")
 public class FedoraService implements IRService<Model> {
