@@ -43,7 +43,7 @@ public interface IRService<M> {
     
     public List<Triple> getMetadata(String contextUri) throws Exception;
     
-    public IRContext updateMetadata(Triple triple, String sparql) throws Exception;
+    public IRContext updateMetadata(Triple triple, String newValue) throws Exception;
     
     public IRContext deleteMetadata(Triple triple) throws Exception;
 
