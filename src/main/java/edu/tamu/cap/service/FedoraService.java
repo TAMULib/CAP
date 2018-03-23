@@ -1,6 +1,7 @@
 package edu.tamu.cap.service;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -15,6 +16,8 @@ import org.apache.jena.rdf.model.NodeIterator;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateRequest;
 import org.apache.jena.vocabulary.DC;
@@ -134,13 +137,16 @@ public class FedoraService implements IRService<Model> {
     public IRContext createChild(String contextUri, List<Triple> metadata) throws Exception {
         FcrepoClient client = buildClient();
         PostBuilder post = new PostBuilder(new URI(contextUri), client);
-//        if (!name.isEmpty()) {
-//            Model model = ModelFactory.createDefaultModel();
-//            model.createResource("").addProperty(DC.title, name);
-//            ByteArrayOutputStream out = new ByteArrayOutputStream();
-//            RDFDataMgr.write(out, model, Lang.TURTLE);
-//            post.body(new ByteArrayInputStream(out.toByteArray()), "text/turtle");
-//        }
+        
+        Model model = ModelFactory.createDefaultModel();
+        metadata.forEach(metadatum->{
+          Property prop = model.createProperty(metadatum.getPredicate());
+          model.createResource("").addProperty(prop, metadatum.getObject());
+          ByteArrayOutputStream out = new ByteArrayOutputStream();
+          RDFDataMgr.write(out, model, Lang.TURTLE);
+          post.body(new ByteArrayInputStream(out.toByteArray()), "text/turtle");
+        });
+        
         FcrepoResponse response = post.perform();
         URI location = response.getLocation();
         logger.debug("Container creation status and location: {}, {}", response.getStatusCode(), location);

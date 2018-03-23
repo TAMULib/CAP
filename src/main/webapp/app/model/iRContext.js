@@ -65,8 +65,6 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
 
     irContext.createContainer = function (metadata) {
 
-      console.log(metadata);
-
       var createPromise = WsApi.fetch(irContext.getMapping().children, {
         method: HttpMethodVerbs.POST,
         pathValues: {

@@ -10,7 +10,6 @@ import edu.tamu.cap.model.IR;
 import edu.tamu.cap.model.response.IRContext;
 import edu.tamu.cap.model.response.Triple;
 import edu.tamu.cap.model.response.Version;
-import edu.tamu.weaver.response.ApiResponse;
 
 @Service("DSpace")
 public class DSpaceService implements IRService<Model> {
