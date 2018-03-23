@@ -110,7 +110,6 @@ public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
         return new TomcatEmbeddedServletContainerFactory(){
             @Override
             protected void customizeConnector(Connector connector) {
-                System.out.println("\n\n\n\n CONNECTOR!!!!! \n\n\n");
                 super.customizeConnector(connector);
                 connector.setParseBodyMethods("POST,PUT,PATCH,DELETE");
             }
