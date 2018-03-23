@@ -183,6 +183,8 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
 
       angular.forEach(metadataTriples, function (metadataTriple) {
 
+        console.log(metadataTriple);
+
         var removePromise = WsApi.fetch(irContext.getMapping().metadata, {
           method: HttpMethodVerbs.DELETE,
           pathValues: {

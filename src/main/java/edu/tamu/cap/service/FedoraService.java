@@ -40,6 +40,7 @@ import edu.tamu.cap.model.response.FixityReport;
 import edu.tamu.cap.model.response.IRContext;
 import edu.tamu.cap.model.response.Triple;
 import edu.tamu.cap.model.response.Version;
+import edu.tamu.cap.util.StringUtil;
 
 @Service("Fedora")
 public class FedoraService implements IRService<Model> {
@@ -161,8 +162,8 @@ public class FedoraService implements IRService<Model> {
         String contextUri = originalTriple.getSubject();
                
         StringBuilder stngBldr = new StringBuilder();
-        stngBldr.append("DELETE { <> <").append(originalTriple.getPredicate()).append("> '").append(removeQuotes(originalTriple.getObject())).append("' } ");
-        stngBldr.append("INSERT { <> <").append(originalTriple.getPredicate()).append("> '").append(removeQuotes(newValue)).append("' } ");
+        stngBldr.append("DELETE { <> <").append(originalTriple.getPredicate()).append("> '").append(StringUtil.removeQuotes(originalTriple.getObject())).append("' } ");
+        stngBldr.append("INSERT { <> <").append(originalTriple.getPredicate()).append("> '").append(StringUtil.removeQuotes(newValue)).append("' } ");
         stngBldr.append("WHERE { }");
         String sparql = stngBldr.toString();
                
@@ -174,19 +175,6 @@ public class FedoraService implements IRService<Model> {
         URI location = response.getLocation();
         logger.debug("Metadata update status and location: {}, {}", response.getStatusCode(), location);
         return getContainer(contextUri);
-    }
-    
-    private String removeQuotes(String string) {
-        
-        if(string.startsWith("'")||string.startsWith("\"")) {
-            string = string.substring(1);
-        } 
-        
-        if(string.endsWith("'")||string.endsWith("\"")) {
-            string = string.substring(0, string.length() - 1);
-        }
-        
-        return string;
     }
 
     @Override

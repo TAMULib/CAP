@@ -6,10 +6,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.catalina.connector.Connector;
 import org.h2.server.web.WebServlet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -101,6 +103,18 @@ public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
         argumentResolvers.add(new WeaverValidatedModelMethodProcessor(converters));
         argumentResolvers.add(new WeaverCredentialsArgumentResolver());
         argumentResolvers.add(new WeaverUserArgumentResolver<User, UserRepo>(userRepo));
+    }
+    
+    @Bean
+    public TomcatEmbeddedServletContainerFactory tomcatEmbeddedServletContainerFactory() {
+        return new TomcatEmbeddedServletContainerFactory(){
+            @Override
+            protected void customizeConnector(Connector connector) {
+                System.out.println("\n\n\n\n CONNECTOR!!!!! \n\n\n");
+                super.customizeConnector(connector);
+                connector.setParseBodyMethods("POST,PUT,PATCH,DELETE");
+            }
+        };
     }
 
 }
