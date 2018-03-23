@@ -1,11 +1,10 @@
-package edu.tamu.cap.controller;
+package edu.tamu.cap.controller.ircontext;
 
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.PATCH;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 import java.util.Map;
 
@@ -64,24 +63,6 @@ public class IRContextController {
     @PreAuthorize("hasRole('USER')")
     public ApiResponse createResource(IRService<?> irService, @RequestParam Map<String, String> tripleMap) throws Exception {
         return new ApiResponse(SUCCESS, irService.resourceFixity(Triple.of(tripleMap)));
-    }
-
-    @RequestMapping(value = "/metadata", method = PUT)
-    @PreAuthorize("hasRole('USER')")
-    public ApiResponse createMetadata(IRService<?> irService, Triple triple) throws Exception {
-        return new ApiResponse(SUCCESS, irService.createMetadata(triple));
-    }
-
-    @RequestMapping(value = "/metadata", method = DELETE)
-    @PreAuthorize("hasRole('USER')")
-    public ApiResponse deleteMetadata(IRService<?> irService, @RequestParam Map<String, String> tripleMap) throws Exception {
-        return new ApiResponse(SUCCESS, irService.deleteMetadata(Triple.of(tripleMap)));
-    }
-
-    @RequestMapping(value = "/metadata", method = PATCH)
-    @PreAuthorize("hasRole('USER')")
-    public ApiResponse updateMetadata(IRService<?> irService, @Param("contextUri") String contextUri, String spqarl) throws Exception {
-        return new ApiResponse(SUCCESS, irService.updateMetadata(contextUri, spqarl));
     }
     
     @RequestMapping(value = "/version", method = POST)

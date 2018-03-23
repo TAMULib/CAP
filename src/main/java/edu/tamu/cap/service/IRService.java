@@ -40,10 +40,11 @@ public interface IRService<M> {
 
     // Metadata
     public IRContext createMetadata(Triple triple) throws Exception;
-
-    // TODO: currently no read of metadata
-    public IRContext updateMetadata(String contextUri, String sparql) throws Exception;
-
+    
+    public List<Triple> getMetadata(String contextUri) throws Exception;
+    
+    public IRContext updateMetadata(Triple triple, String newValue) throws Exception;
+    
     public IRContext deleteMetadata(Triple triple) throws Exception;
 
     // Versions

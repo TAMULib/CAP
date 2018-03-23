@@ -3,6 +3,8 @@ package edu.tamu.cap.model.response;
 import java.io.Serializable;
 import java.util.Map;
 
+import edu.tamu.cap.util.StringUtil;
+
 public class Triple implements Serializable {
 
     private static final long serialVersionUID = -8857131728443388752L;
@@ -68,11 +70,9 @@ public class Triple implements Serializable {
         if(object.contains("http://")||object.contains("https://")) {
             stngBldr.append("<").append(object).append("> ");
         } else {
-            stngBldr.append("'").append(object).append("' ");
+            stngBldr.append("'").append(StringUtil.removeQuotes(object)).append("' ");
         }
         return stngBldr.toString();
     }
-
-    
-
+ 
 }
