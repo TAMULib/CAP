@@ -131,7 +131,35 @@ public class FedoraService implements IRService<Model> {
         logger.debug("Metadata creation status and location: {}, {}", response.getStatusCode(), location);
         return getContainer(contextUri);
     }
+    
 
+    @Override
+    public List<Triple> getMetadata(String contextUri) throws Exception {
+        IRContext context = getContainer(contextUri);
+        return context.getMetadata();
+    }
+
+    @Override
+    public IRContext updateMetadata(Triple originalTriple, String newValue) throws Exception {
+        
+        String contextUri = originalTriple.getSubject();
+               
+        StringBuilder stngBldr = new StringBuilder();
+        stngBldr.append("DELETE { <> <").append(originalTriple.getPredicate()).append("> '").append(StringUtil.removeQuotes(originalTriple.getObject())).append("' } ");
+        stngBldr.append("INSERT { <> <").append(originalTriple.getPredicate()).append("> '").append(StringUtil.removeQuotes(newValue)).append("' } ");
+        stngBldr.append("WHERE { }");
+        String sparql = stngBldr.toString();
+               
+        FcrepoClient client = buildClient();
+        PatchBuilder patch = new PatchBuilder(new URI(contextUri + "/fcr:metadata"), client);
+        patch.body(new ByteArrayInputStream(sparql.getBytes()));
+
+        FcrepoResponse response = patch.perform();
+        URI location = response.getLocation();
+        logger.debug("Metadata update status and location: {}, {}", response.getStatusCode(), location);
+        return getContainer(contextUri);
+    }
+    
     @Override
     public IRContext deleteMetadata(Triple triple) throws Exception {
 
@@ -153,27 +181,6 @@ public class FedoraService implements IRService<Model> {
         FcrepoResponse response = patch.perform();
         URI location = response.getLocation();
         logger.debug("Metadata delete status and location: {}, {}", response.getStatusCode(), location);
-        return getContainer(contextUri);
-    }
-
-    @Override
-    public IRContext updateMetadata(Triple originalTriple, String newValue) throws Exception {
-        
-        String contextUri = originalTriple.getSubject();
-               
-        StringBuilder stngBldr = new StringBuilder();
-        stngBldr.append("DELETE { <> <").append(originalTriple.getPredicate()).append("> '").append(StringUtil.removeQuotes(originalTriple.getObject())).append("' } ");
-        stngBldr.append("INSERT { <> <").append(originalTriple.getPredicate()).append("> '").append(StringUtil.removeQuotes(newValue)).append("' } ");
-        stngBldr.append("WHERE { }");
-        String sparql = stngBldr.toString();
-               
-        FcrepoClient client = buildClient();
-        PatchBuilder patch = new PatchBuilder(new URI(contextUri + "/fcr:metadata"), client);
-        patch.body(new ByteArrayInputStream(sparql.getBytes()));
-
-        FcrepoResponse response = patch.perform();
-        URI location = response.getLocation();
-        logger.debug("Metadata update status and location: {}, {}", response.getStatusCode(), location);
         return getContainer(contextUri);
     }
 
@@ -431,12 +438,6 @@ public class FedoraService implements IRService<Model> {
         // System.out.println("\n");
 
         return model;
-    }
-
-    @Override
-    public List<Triple> getMetadata(String contextUri) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
     }
 
 }
