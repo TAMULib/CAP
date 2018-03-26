@@ -32,27 +32,21 @@ public class SchemaController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @RequestMapping("/all")
-    @PreAuthorize("hasRole('USER')")
-    public ApiResponse allSchemas() {
-        return new ApiResponse(SUCCESS, schemaRepo.findAll());
-    }
-
-    @RequestMapping("/properties")
-    @PreAuthorize("hasRole('USER')")
-    public ApiResponse propertiesByNamespace(@Param("namespace") String namespace) throws OntModelReadException {
-        return new ApiResponse(SUCCESS, schemaRepo.findPropertiesByNamespace(namespace));
-    }
-
-    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     @PreAuthorize("hasRole('USER')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createSchema(@RequestBody @WeaverValidatedModel Schema schema) {
         logger.info("Creating schema:  " + schema.getName());
         return new ApiResponse(SUCCESS, schemaRepo.create(schema));
     }
-
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    
+    @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("hasRole('USER')")
+    public ApiResponse allSchemas() {
+        return new ApiResponse(SUCCESS, schemaRepo.findAll());
+    }
+    
+    @RequestMapping(method = RequestMethod.PUT)
     @PreAuthorize("hasRole('USER')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateSchema(@RequestBody @WeaverValidatedModel Schema schema) {
@@ -60,7 +54,7 @@ public class SchemaController {
         return new ApiResponse(SUCCESS, schemaRepo.update(schema));
     }
 
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.DELETE)
     @PreAuthorize("hasRole('USER')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
     public ApiResponse deleteSchema(@RequestBody @WeaverValidatedModel Schema schema) {
@@ -69,10 +63,16 @@ public class SchemaController {
         return new ApiResponse(SUCCESS);
     }
 
-    @RequestMapping("/{id}")
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('USER')")
     public ApiResponse getSchema(@PathVariable Long id) {
         return new ApiResponse(SUCCESS, schemaRepo.read(id));
+    }
+    
+    @RequestMapping(value = "/properties", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('USER')")
+    public ApiResponse propertiesByNamespace(@Param("namespace") String namespace) throws OntModelReadException {
+        return new ApiResponse(SUCCESS, schemaRepo.findPropertiesByNamespace(namespace));
     }
 
 }
