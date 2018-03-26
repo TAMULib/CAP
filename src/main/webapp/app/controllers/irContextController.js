@@ -102,13 +102,12 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     };
 
     $scope.deleteIrContext = function () {
+
       var ir = $scope.context.ir;
       var currentTriple = $scope.context.triple;
       var isResource = $scope.context.resource;
-      var isVersion = $scope.context.isVersion;
-
-
-      var deleteContext = isVersion ? $scope.context.deleteVersion : isResource ? $scope.context.removeResources : $scope.context.removeContainers;
+      
+      var deleteContext = isResource ? $scope.context.removeResources : $scope.context.removeContainers;
 
       $scope.context = ir.loadContext($scope.context.parent.object);
 

@@ -28,6 +28,7 @@ import org.fcrepo.client.FcrepoResponse;
 import org.fcrepo.client.GetBuilder;
 import org.fcrepo.client.PatchBuilder;
 import org.fcrepo.client.PostBuilder;
+import org.fcrepo.client.PutBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -121,6 +122,12 @@ public class FedoraService implements IRService<Model> {
     }
     
     @Override
+    public void deleteIRContext(String uri) throws Exception {
+        logger.info("Deletion or contianer: {}", uri);
+        deleteContainer(uri);
+    }
+    
+    @Override
     public List<Triple> getTriples(IRService<?> irService, String contextUri) throws Exception {
         IRContext context = getIRContext(contextUri);
         
@@ -155,8 +162,11 @@ public class FedoraService implements IRService<Model> {
     
     @Override
     public List<Triple> getChildren(String contextUri) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+        List<Triple> childrenTriples = new ArrayList<Triple>();
+        getIRContext(contextUri).getChildren().forEach(childContext->{
+            childrenTriples.add(childContext.getTriple());
+        });
+        return childrenTriples;
     }
     
     @Override
@@ -241,6 +251,29 @@ public class FedoraService implements IRService<Model> {
         logger.debug("Resource creation status and location: {}, {}", response.getStatusCode(), location);
         return getIRContext(contextUri);
     }
+    
+    @Override
+    public IRContext getResource(String contextUri) throws Exception {
+        return getIRContext(contextUri);
+    }
+
+    @Override
+    public IRContext updateResource(String contextUri, MultipartFile file) throws Exception {
+        FcrepoClient client = buildClient();
+        PutBuilder put = new PutBuilder(new URI(contextUri), client);
+        put.body(file.getInputStream(), file.getContentType());
+        put.filename(file.getOriginalFilename());
+        FcrepoResponse response = put.perform();
+        URI location = response.getLocation();
+        logger.debug("Resource binary update status and location: {}, {}", response.getStatusCode(), location);
+        return getIRContext(contextUri);
+    }
+
+    @Override
+    public void deleteResource(String contextUri) throws Exception {
+        logger.info("Deleting resource: {}", contextUri);
+        deleteContainer(contextUri);
+    }
 
     @Override
     public IRContext resourceFixity(Triple tiple) throws Exception {
@@ -322,11 +355,14 @@ public class FedoraService implements IRService<Model> {
         logger.info("Deleting version: {}", uri);
         deleteContainer(uri);
     }
-
-    @Override
-    public void deleteContainer(String uri) throws Exception {
-        FcrepoResponse response = new DeleteBuilder(new URI(uri), buildClient()).perform();
-        logger.info("Resource deletion status: {}", response.getStatusCode());
+    
+    private FcrepoResponse deleteContainer(String uri) throws URISyntaxException, FcrepoOperationFailedException {
+        FcrepoClient client = buildClient();
+        
+        URI newURI = new URI(uri);
+        DeleteBuilder builder = new DeleteBuilder(newURI, client);
+        
+        return builder.perform();
     }
 
     @Override

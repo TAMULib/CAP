@@ -38,6 +38,18 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
       return defer.promise;
     });
 
+    irContext.reloadContext = function() {
+      var reloadPromise = fetchContext(irContext.uri);
+
+      reloadPromise.then(function (res) {
+        angular.extend(irContext, angular.fromJson(res.body).payload.IRContext, {
+          fetch: false
+        });
+      });
+
+      return reloadPromise;
+    } 
+
     irContext.getChildContext = function (triple) {
       if (!children[triple.object]) {
         children[triple.object] = new IRContext({
@@ -121,7 +133,42 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
       return allRemovePromses;
     };
 
-    irContext.removeResources = irContext.removeContainers;
+    irContext.removeResources = function (resourceTriples) {
+
+      var promises = [];
+
+      angular.forEach(resourceTriples, function (resourceTriple) {
+        var removePromise = WsApi.fetch(irContext.getMapping().resource, {
+          method: HttpMethodVerbs.DELETE,
+          pathValues: {
+            irid: irContext.ir.id,
+            type: irContext.ir.type
+          },
+          query: {
+            resourceUri: resourceTriple.subject
+          }
+        });
+
+        removePromise.then(function (res) {
+          var children = irContext.children;
+          for (var i in children) {
+            if (children.hasOwnProperty(i)) {
+              var child = children[i];
+              if (child.triple.object === resourceTriple.subject) {
+                children.splice(i, 1);
+                break;
+              }
+            }
+          }
+        });
+
+        promises.push(removePromise);
+      });
+
+      var allRemovePromses = $q.all(promises);
+
+      return allRemovePromses;
+    };
 
     irContext.createResource = function (file) {
 
@@ -138,7 +185,34 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
           type: irContext.ir.type
         },
         query: {
-          contextUri: irContext.uri
+          resourceUri: irContext.uri
+        },
+        data: formData
+      });
+
+      createPromise.then(function (res) {
+        angular.extend(irContext, angular.fromJson(res.body).payload.IRContext);
+      });
+
+      return createPromise;
+    };
+
+    irContext.updateResource = function (file) {
+
+      var formData = new FormData();
+      formData.append("file", file, file.name);
+
+      var createPromise = WsApi.fetch(irContext.getMapping().resource, {
+        method: HttpMethodVerbs.PUT,
+        headers: {
+          "Content-Type": undefined
+        },
+        pathValues: {
+          irid: irContext.ir.id,
+          type: irContext.ir.type
+        },
+        query: {
+          resourceUri: irContext.uri
         },
         data: formData
       });
@@ -244,7 +318,7 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
         if (form) {
           form.$setPristine();
           form.$setUntouched();
-          form.name ="";
+          form.name = "";
         }
       });
 

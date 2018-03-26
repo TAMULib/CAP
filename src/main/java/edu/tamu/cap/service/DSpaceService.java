@@ -63,12 +63,7 @@ public class DSpaceService implements IRService<Model> {
 
         return null;
     }
-
-    @Override
-    public void deleteContainer(String targetUri) throws Exception {
-
-    }
-
+    
     @Override
     public void setIr(IR ir) {
 
@@ -124,6 +119,30 @@ public class DSpaceService implements IRService<Model> {
     public List<Triple> getChildren(String contextUri) throws Exception {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public IRContext getResource(String contextUri) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public IRContext updateResource(String contextUri, MultipartFile file) throws Exception{
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void deleteResource(String contextUri) throws Exception{
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void deleteIRContext(String targetUri) throws Exception {
+        // TODO Auto-generated method stub
+        
     }
 
 }

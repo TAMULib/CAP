@@ -26,7 +26,7 @@ cap.model("IR", function($location, IRContext, WsApi) {
         });
         ir.cacheContext(context);
       } else if(reload) {
-        context.fetch = true;
+       context.reloadContext();
       }
       return context;
     };

@@ -28,17 +28,14 @@ public interface IRService<M> {
     
     // Children
     public IRContext createChild(String contextUri, List<Triple> metadata) throws Exception;
+    public void deleteIRContext(String targetUri) throws Exception;
     public List<Triple> getChildren(String contextUri) throws Exception;
-
-    // TODO: currently no update of container
-    public void deleteContainer(String targetUri) throws Exception;
 
     // Resources
     public IRContext createResource(String contextUri, MultipartFile file) throws Exception;
-
-    // TODO: currently no read of resource
-    // TODO: currently no update of resource
-    // TODO: currently not delete of resource
+    public IRContext getResource(String contextUri) throws Exception;
+    public IRContext updateResource(String contextUri, MultipartFile file) throws Exception;
+    public void deleteResource(String contextUri) throws Exception;
     public IRContext resourceFixity(Triple tiple) throws Exception;
 
     // Metadata
