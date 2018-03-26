@@ -31,21 +31,21 @@ public class IRController {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	@RequestMapping("/all")
+	@RequestMapping(method = RequestMethod.POST)
+    @PreAuthorize("hasRole('USER')")
+    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
+    public ApiResponse createIR(@RequestBody @WeaverValidatedModel IR ir) {
+        logger.info("Creating IR:  " + ir.getName() + " with schema " + ir.getSchemas());
+        return new ApiResponse(SUCCESS, irRepo.create(ir));
+    }
+	
+	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasRole('USER')")
 	public ApiResponse allIRs() {
 		return new ApiResponse(SUCCESS, irRepo.findAll());
 	}
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	@PreAuthorize("hasRole('USER')")
-	@WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
-	public ApiResponse createIR(@RequestBody @WeaverValidatedModel IR ir) {
-		logger.info("Creating IR:  " + ir.getName() + " with schema " + ir.getSchemas());
-		return new ApiResponse(SUCCESS, irRepo.create(ir));
-	}
-
-	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.PUT)
 	@PreAuthorize("hasRole('USER')")
 	@WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
 	public ApiResponse updateIR(@RequestBody @WeaverValidatedModel IR ir) {
@@ -53,7 +53,7 @@ public class IRController {
 		return new ApiResponse(SUCCESS, irRepo.update(ir));
 	}
 
-	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.DELETE)
 	@PreAuthorize("hasRole('USER')")
 	@WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
 	public ApiResponse deleteIR(@RequestBody @WeaverValidatedModel IR ir) {
@@ -61,17 +61,17 @@ public class IRController {
 		irRepo.delete(ir);
 		return new ApiResponse(SUCCESS);
 	}
+	
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('USER')")
+    public ApiResponse getIR(@PathVariable Long id) {
+        return new ApiResponse(SUCCESS, irRepo.read(id));
+    }
 
 	@RequestMapping(value = "/types", method = RequestMethod.GET)
 	@PreAuthorize("hasRole('USER')")
 	public ApiResponse getIRTypes() {
 		return new ApiResponse(SUCCESS, IRType.getValues());
 	}
-
-	@RequestMapping("/{id}")
-	@PreAuthorize("hasRole('USER')")
-	public ApiResponse getIR(@PathVariable Long id) {
-		return new ApiResponse(SUCCESS, irRepo.read(id));
-	}
-
+	
 }

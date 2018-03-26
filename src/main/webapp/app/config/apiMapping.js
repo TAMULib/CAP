@@ -66,18 +66,18 @@ var apiMapping = {
   TestIRSettings: {
     testPing: {
       'endpoint': '/private/queue',
-      'controller': 'ir-test',
-      'method': ':type/ping'
+      'controller': 'ir',
+      'method': ':type/test/ping'
     },
     testAuth: {
         'endpoint': '/private/queue',
-        'controller': 'ir-test',
-        'method': ':type/auth'
+        'controller': 'ir',
+        'method': ':type/test/ping'
     },
     testContent: {
         'endpoint': '/private/queue',
-        'controller': 'ir-test',
-        'method': ':type/content'
+        'controller': 'ir',
+        'method': ':type/test/ping'
     }
   },
   IR: {
@@ -86,22 +86,26 @@ var apiMapping = {
     all: {
         'endpoint': '/private/queue',
         'controller': 'ir',
-        'method': 'all'
+        'method': '',
+        'httpMethod': "GET"
     },
     create: {
       'endpoint': '/private/queue',
       'controller': 'ir',
-      'method': 'create'
+      'method': '',
+      'httpMethod': "POST"
     },
     update: {
         'endpoint': '/private/queue',
         'controller': 'ir',
-        'method': 'update'
+        'method': '',
+        'httpMethod': "PUT"
     },
     remove: {
         'endpoint': '/private/queue',
         'controller': 'ir',
-        'method': 'delete'
+        'method': '',
+        'httpMethod': "DELETE"
     },
     getTypes: {
       'endpoint': '/private/queue',

@@ -11,7 +11,7 @@ import edu.tamu.cap.service.IRService;
 import edu.tamu.weaver.response.ApiResponse;
 
 @RestController
-@RequestMapping("ir-test/{type}")
+@RequestMapping("ir/{type}/test")
 public class TestIRSettingsController {
 
     @RequestMapping(value = "/ping", method = RequestMethod.POST)
