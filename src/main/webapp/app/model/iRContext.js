@@ -1,4 +1,4 @@
-cap.model("IRContext", function ($q, $filter, $http, WsApi, HttpMethodVerbs) {
+cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
   return function IRContext() {
 
     var irContext = this;
@@ -195,12 +195,6 @@ cap.model("IRContext", function ($q, $filter, $http, WsApi, HttpMethodVerbs) {
       });
 
       return createPromise;
-    };
-
-    irContext.srcFromFile = function (file) {
-      if(file) {
-        return URL.createObjectURL(file);
-      }
     };
 
     irContext.createMetadata = function (metadataTriples) {
