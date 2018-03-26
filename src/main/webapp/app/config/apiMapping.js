@@ -115,22 +115,26 @@ var apiMapping = {
     all: {
         'endpoint': '/private/queue',
         'controller': 'schema',
-        'method': 'all'
+        'method': '',
+        'httpMethod': 'GET'
     },
     create: {
       'endpoint': '/private/queue',
       'controller': 'schema',
-      'method': 'create'
+      'method': '',
+      'httpMethod': 'POST'
     },
     update: {
         'endpoint': '/private/queue',
         'controller': 'schema',
-        'method': 'update'
+        'method': '',
+        'httpMethod': 'PUT'
     },
     remove: {
         'endpoint': '/private/queue',
         'controller': 'schema',
-        'method': 'delete'
+        'method': '',
+        'httpMethod': 'DELETE'
     },
     findProperties: {
       'endpoint': '/private/queue',

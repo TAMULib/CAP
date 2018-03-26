@@ -48,7 +48,7 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
       });
 
       return reloadPromise;
-    } 
+    }; 
 
     irContext.getChildContext = function (triple) {
       if (!children[triple.object]) {
