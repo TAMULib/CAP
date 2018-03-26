@@ -362,12 +362,6 @@ public class FedoraService implements IRService<Model> {
         URI newURI = new URI(uri);
         DeleteBuilder builder = new DeleteBuilder(newURI, client);
         
-        System.out.println("\n\n\n");
-        System.out.println(uri);
-        System.out.println(newURI);
-        System.out.println(builder);
-        System.out.println("\n\n\n");
-        
         return builder.perform();
     }
 
