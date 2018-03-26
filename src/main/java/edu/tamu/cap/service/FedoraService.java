@@ -28,7 +28,6 @@ import org.fcrepo.client.FcrepoResponse;
 import org.fcrepo.client.GetBuilder;
 import org.fcrepo.client.PatchBuilder;
 import org.fcrepo.client.PostBuilder;
-import org.fcrepo.client.PutBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -254,18 +253,6 @@ public class FedoraService implements IRService<Model> {
     
     @Override
     public IRContext getResource(String contextUri) throws Exception {
-        return getIRContext(contextUri);
-    }
-
-    @Override
-    public IRContext updateResource(String contextUri, MultipartFile file) throws Exception {
-        FcrepoClient client = buildClient();
-        PutBuilder put = new PutBuilder(new URI(contextUri), client);
-        put.body(file.getInputStream(), file.getContentType());
-        put.filename(file.getOriginalFilename());
-        FcrepoResponse response = put.perform();
-        URI location = response.getLocation();
-        logger.debug("Resource binary update status and location: {}, {}", response.getStatusCode(), location);
         return getIRContext(contextUri);
     }
 

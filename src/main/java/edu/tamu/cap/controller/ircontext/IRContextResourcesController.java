@@ -35,12 +35,6 @@ public class IRContextResourcesController {
         return new ApiResponse(SUCCESS, irService.getResource(resourceUri));
     }
     
-    @RequestMapping(method = PUT)
-    @PreAuthorize("hasRole('USER')")
-    public ApiResponse updateResources(IRService<?> irService, @Param("resourceUri") String resourceUri, @RequestParam("file") MultipartFile file) throws Exception {
-        return new ApiResponse(SUCCESS, irService.updateResource(resourceUri, file));
-    }
-    
     @RequestMapping(method = DELETE)
     @PreAuthorize("hasRole('USER')")
     public ApiResponse deleteResources(IRService<?> irService, @Param("resourceUri") String resourceUri) throws Exception {
