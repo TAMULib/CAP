@@ -48,7 +48,7 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
 
     $scope.uploadResource = function (file) {
       $scope.context.createResource(file).then(function () {
-        $scope.closeModal();
+        $scope.resetUploadResource();
       });
     };
 

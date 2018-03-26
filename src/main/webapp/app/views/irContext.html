@@ -206,8 +206,9 @@
           <li  class="list-group-item" ng-repeat="le in filteredList = (list | filterResources:context) track by $index" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le.triple)!==-1}">
             <a href="" ng-click="listElementAction({'le':le.triple.subject})">{{(le.name || le.triple.object) | removeQuotes}}</a>
 
-            <a href="" ng-show="!removeListElements"><span title="swap" class="glyphicon glyphicon-transfer pull-right clickable"></span></a>
-            <a href="" ng-show="!removeListElements" ng-click="contextToFixityCheck=le;openModal('#fixityModal'+$index)"><span title="fixity" class="glyphicon glyphicon-check pull-right clickable"></span></a>
+            <!--<a href="" ng-show="!removeListElements" ng-click="resourceToUpdate=le;openModal('#updateResourceModalModal'+$index)"><span title="swap" class="glyphicon glyphicon-transfer pull-right clickable"></span></a>-->
+            
+            <a href="" ng-show="!removeListElements" ng-click="openModal('#fixityModal'+$index)"><span title="fixity" class="glyphicon glyphicon-check pull-right clickable"></span></a>
             <modal
               modal-id="{{'fixityModal'+$index}}"
               modal-view="views/modals/fixityModal.html"
@@ -216,7 +217,6 @@
               wvr-modal-backdrop="static">
             </modal>
             <a href="{{le.triple.subject}}" download><span ng-show="!removeListElements" title="download" class="glyphicon glyphicon-download-alt pull-right"></span></a>
-
             <input ng-show="removeListElements" type="checkbox" class="pull-right" ng-checked="selectedListElements.indexOf(le.triple)!==-1" ng-click="selectedListElements.indexOf(le.triple)===-1?selectedListElements.push(le.triple):selectedListElements.splice(selectedListElements.indexOf(le.triple),1)">
           </li>
         </ol>

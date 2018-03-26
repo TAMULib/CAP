@@ -197,33 +197,6 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
       return createPromise;
     };
 
-    irContext.updateResource = function (file) {
-
-      var formData = new FormData();
-      formData.append("file", file, file.name);
-
-      var createPromise = WsApi.fetch(irContext.getMapping().resource, {
-        method: HttpMethodVerbs.PUT,
-        headers: {
-          "Content-Type": undefined
-        },
-        pathValues: {
-          irid: irContext.ir.id,
-          type: irContext.ir.type
-        },
-        query: {
-          resourceUri: irContext.uri
-        },
-        data: formData
-      });
-
-      createPromise.then(function (res) {
-        angular.extend(irContext, angular.fromJson(res.body).payload.IRContext);
-      });
-
-      return createPromise;
-    };
-
     irContext.createMetadata = function (metadataTriples) {
 
       var promises = [];

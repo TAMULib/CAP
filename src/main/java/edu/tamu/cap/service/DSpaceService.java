@@ -128,12 +128,6 @@ public class DSpaceService implements IRService<Model> {
     }
 
     @Override
-    public IRContext updateResource(String contextUri, MultipartFile file) throws Exception{
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public void deleteResource(String contextUri) throws Exception{
         // TODO Auto-generated method stub
         

@@ -34,7 +34,6 @@ public interface IRService<M> {
     // Resources
     public IRContext createResource(String contextUri, MultipartFile file) throws Exception;
     public IRContext getResource(String contextUri) throws Exception;
-    public IRContext updateResource(String contextUri, MultipartFile file) throws Exception;
     public void deleteResource(String contextUri) throws Exception;
     public IRContext resourceFixity(Triple tiple) throws Exception;
 
