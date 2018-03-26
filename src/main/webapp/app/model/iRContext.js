@@ -38,6 +38,18 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
       return defer.promise;
     });
 
+    irContext.reloadContext = function() {
+      var reloadPromise = fetchContext(irContext.uri);
+
+      reloadPromise.then(function (res) {
+        angular.extend(irContext, angular.fromJson(res.body).payload.IRContext, {
+          fetch: false
+        });
+      });
+
+      return reloadPromise;
+    } 
+
     irContext.getChildContext = function (triple) {
       if (!children[triple.object]) {
         children[triple.object] = new IRContext({
@@ -133,7 +145,7 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
             type: irContext.ir.type
           },
           query: {
-            containerUri: resourceTriple.subject
+            resourceUri: resourceTriple.subject
           }
         });
 
@@ -173,7 +185,7 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
           type: irContext.ir.type
         },
         query: {
-          contextUri: irContext.uri
+          resourceUri: irContext.uri
         },
         data: formData
       });
@@ -200,7 +212,7 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
           type: irContext.ir.type
         },
         query: {
-          contextUri: irContext.uri
+          resourceUri: irContext.uri
         },
         data: formData
       });
@@ -306,7 +318,7 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
         if (form) {
           form.$setPristine();
           form.$setUntouched();
-          form.name ="";
+          form.name = "";
         }
       });
 

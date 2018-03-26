@@ -25,26 +25,27 @@ public class IRContextResourcesController {
     
     @RequestMapping(method = POST)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse createResource(IRService<?> irService, @Param("contextUri") String contextUri, @RequestParam("file") MultipartFile file) throws Exception {
-        return new ApiResponse(SUCCESS, irService.createResource(contextUri, file));
+    public ApiResponse createResource(IRService<?> irService, @Param("resourceUri") String resourceUri, @RequestParam("file") MultipartFile file) throws Exception {
+        return new ApiResponse(SUCCESS, irService.createResource(resourceUri, file));
     }
     
     @RequestMapping(method = GET)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse getResources(IRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
-        return new ApiResponse(SUCCESS, irService.getResource(contextUri));
+    public ApiResponse getResources(IRService<?> irService, @Param("resourceUri") String resourceUri) throws Exception {
+        return new ApiResponse(SUCCESS, irService.getResource(resourceUri));
     }
     
     @RequestMapping(method = PUT)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse updateResources(IRService<?> irService, @Param("contextUri") String contextUri, @RequestParam("file") MultipartFile file) throws Exception {
-        return new ApiResponse(SUCCESS, irService.updateResource(contextUri, file));
+    public ApiResponse updateResources(IRService<?> irService, @Param("resourceUri") String resourceUri, @RequestParam("file") MultipartFile file) throws Exception {
+        return new ApiResponse(SUCCESS, irService.updateResource(resourceUri, file));
     }
     
     @RequestMapping(method = DELETE)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse deleteResources(IRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
-        irService.deleteResource(contextUri);
+    public ApiResponse deleteResources(IRService<?> irService, @Param("resourceUri") String resourceUri) throws Exception {
+        System.out.println("\n\n"+resourceUri+"\n\n");
+        irService.deleteResource(resourceUri);
         return new ApiResponse(SUCCESS);
     }
 

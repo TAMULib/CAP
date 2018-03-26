@@ -28,10 +28,8 @@ public interface IRService<M> {
     
     // Children
     public IRContext createChild(String contextUri, List<Triple> metadata) throws Exception;
+    public void deleteIRContext(String targetUri) throws Exception;
     public List<Triple> getChildren(String contextUri) throws Exception;
-
-    // TODO: currently no update of container
-    public void deleteContainer(String targetUri) throws Exception;
 
     // Resources
     public IRContext createResource(String contextUri, MultipartFile file) throws Exception;

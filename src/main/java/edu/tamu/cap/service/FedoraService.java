@@ -122,6 +122,12 @@ public class FedoraService implements IRService<Model> {
     }
     
     @Override
+    public void deleteIRContext(String uri) throws Exception {
+        logger.info("Deletion or contianer: {}", uri);
+        deleteContainer(uri);
+    }
+    
+    @Override
     public List<Triple> getTriples(IRService<?> irService, String contextUri) throws Exception {
         IRContext context = getIRContext(contextUri);
         
@@ -156,8 +162,11 @@ public class FedoraService implements IRService<Model> {
     
     @Override
     public List<Triple> getChildren(String contextUri) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+        List<Triple> childrenTriples = new ArrayList<Triple>();
+        getIRContext(contextUri).getChildren().forEach(childContext->{
+            childrenTriples.add(childContext.getTriple());
+        });
+        return childrenTriples;
     }
     
     @Override
@@ -262,7 +271,8 @@ public class FedoraService implements IRService<Model> {
 
     @Override
     public void deleteResource(String contextUri) throws Exception {
-        deleteContainerOrResource(contextUri);
+        logger.info("Deleting resource: {}", contextUri);
+        deleteContainer(contextUri);
     }
 
     @Override
@@ -345,13 +355,8 @@ public class FedoraService implements IRService<Model> {
         logger.info("Deleting version: {}", uri);
         deleteContainer(uri);
     }
-
-    @Override
-    public void deleteContainer(String uri) throws Exception {
-        logger.info("Resource deletion status: {}", deleteContainerOrResource(uri).getStatusCode());
-    }
     
-    private FcrepoResponse deleteContainerOrResource(String uri) throws URISyntaxException, FcrepoOperationFailedException {
+    private FcrepoResponse deleteContainer(String uri) throws URISyntaxException, FcrepoOperationFailedException {
         FcrepoClient client = buildClient();
         
         URI newURI = new URI(uri);

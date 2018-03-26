@@ -29,7 +29,7 @@ public class IRContextController {
     @PreAuthorize("hasRole('USER')")
     public ApiResponse delete(IRService<?> irService, @Param("containerUri") String containerUri) throws Exception {
         try {
-            irService.deleteContainer(containerUri);
+            irService.deleteIRContext(containerUri);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
