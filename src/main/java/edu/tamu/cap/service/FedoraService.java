@@ -42,7 +42,7 @@ import edu.tamu.cap.model.response.Version;
 import edu.tamu.cap.util.StringUtil;
 
 @Service("Fedora")
-public class FedoraService implements IRService<Model>, Versioning<Model>, Verifying<Model>, Transacting<Model> {
+public class FedoraService implements IRService<Model>, VersioningIRService<Model>, VerifyingIRService<Model>, TransactingIRService<Model>, QueryableIRService<Model> {
 
     private final static String LDP_CONTAINS_PREDICATE = "http://www.w3.org/ns/ldp#contains";
 
@@ -355,6 +355,35 @@ public class FedoraService implements IRService<Model>, Versioning<Model>, Verif
     @Override
     public void setIr(IR ir) {
         this.ir = ir;
+    }
+    
+    @Override
+    public IRContext query(String contextUri, String sparql) throws Exception {
+        FcrepoClient client = buildClient();
+        PatchBuilder patch = new PatchBuilder(new URI(contextUri + "/fcr:metadata"), client);
+        patch.body(new ByteArrayInputStream(sparql.getBytes()));
+
+        FcrepoResponse response = patch.perform();
+        URI location = response.getLocation();
+        logger.debug("Advanced update query status and location: {}, {}", response.getStatusCode(), location);
+        return getIRContext(contextUri);
+    }
+
+    @Override
+    public String getQueryHelp() throws Exception {
+        
+        StringBuilder strbldr = new StringBuilder();
+        
+        ir.getSchemas().forEach(schema->{
+            strbldr.append("PREFIX ").append(schema.getAbbreviation()).append(": <").append(schema.getNamespace()).append(">\n");
+        });
+        
+        strbldr.append("\n\n");
+        strbldr.append("DELETE { }\n");
+        strbldr.append("INSERT { }\n");
+        strbldr.append("WHERE { }\n\n");
+        
+        return strbldr.toString();
     }
 
     @Override

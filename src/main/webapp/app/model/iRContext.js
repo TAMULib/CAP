@@ -339,9 +339,9 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
       return fixityPromise;
     };
 
-    irContext.advancedUpdate = function (sparql) {
-      var updatePromise = WsApi.fetch(irContext.getMapping().metadata, {
-        method: HttpMethodVerbs.PATCH,
+    irContext.advancedUpdate = function (query) {
+      var updatePromise = WsApi.fetch(irContext.getMapping().advancedQuery, {
+        method: HttpMethodVerbs.POST,
         pathValues: {
           irid: irContext.ir.id,
           type: irContext.ir.type
@@ -349,7 +349,7 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
         query: {
           contextUri: irContext.uri
         },
-        data: sparql
+        data: query
       });
 
       updatePromise.then(function (res) {
@@ -357,6 +357,28 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
       });
 
       return updatePromise;
+    };
+
+    var queryHelp = {};
+
+    irContext.getQueryHelp = function () {
+
+      if(!queryHelp.message) {
+        
+        var updatePromise = WsApi.fetch(irContext.getMapping().advancedQuery, {
+          method: HttpMethodVerbs.GET,
+          pathValues: {
+            irid: irContext.ir.id,
+            type: irContext.ir.type
+          }
+        });
+  
+        updatePromise.then(function (res) {
+          queryHelp.query = angular.fromJson(res.body).payload.String;
+        });
+      }
+
+      return queryHelp;
     };
 
     return this;

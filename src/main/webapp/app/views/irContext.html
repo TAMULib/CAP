@@ -14,7 +14,7 @@
       <ul ng-if="!context.isVersion" class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
         <li class="dropdown-header">Container Actions</li>
         <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-play-circle"></span> Start Transaction</a></li>
-        <li role="menuitem" ng-click="openModal('#versionsModal')"><a href="#"><span class="glyphicon glyphicon-scissors"></span> Versions</a></li>
+        <li ng-if="context.features.versioning" role="menuitem" ng-click="openModal('#versionsModal')"><a href="#"><span class="glyphicon glyphicon-scissors"></span> Versions</a></li>
         <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-move"></span> Move</a></li>
         <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-random"></span> Migrate</a></li>
         <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-export"></span> Export</a></li>
@@ -30,29 +30,29 @@
         <!-- These ngIf calls should be executed once we enable user management -->
         <li ng-if="isAdmin" class="divider"></li>
         <li ng-if="isAdmin" class="dropdown-header">Admin Actions</li>
-        <li ng-if="isAdmin" role="menuitem"><a href="" ng-click="openModal('#advancedUpdate')"><span class="glyphicon glyphicon glyphicon-edit"></span> Advanced Update</a></li>
+        <li ng-if="isAdmin && context.features.queryable" role="menuitem"><a href="" ng-click="openModal('#advancedUpdate')"><span class="glyphicon glyphicon glyphicon-edit"></span> Advanced Update</a></li>
         <li ng-if="isAdmin" role="menuitem"><a href="/admin/ir"><span class="glyphicon glyphicon-cog"></span> Admin Settings</a></li>
         
       </ul>
-      <ul ng-if="context.isVersion" class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
-          <li class="dropdown-header">Version Actions</li>
-          <li role="menuitem" ng-click="openModal('#contextVersionRevertModal')"><a href="#"><span class="glyphicon glyphicon-repeat"></span> Restore</a></li>
-          <li role="menuitem bg-danger" ng-click="openModal('#contextVersionDeleteModal')"><a href="#" class="bg-danger"><span class="glyphicon glyphicon-trash"></span> Delete</a></li>
+      <ul ng-if="context.isVersion && context.features.versioning" class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
+        <li class="dropdown-header">Version Actions</li>
+        <li role="menuitem" ng-click="openModal('#contextVersionRevertModal')"><a href="#"><span class="glyphicon glyphicon-repeat"></span> Restore</a></li>
+        <li role="menuitem bg-danger" ng-click="openModal('#contextVersionDeleteModal')"><a href="#" class="bg-danger"><span class="glyphicon glyphicon-trash"></span> Delete</a></li>
 
-          <!-- These ngIf calls should be executed once we enable user management -->
-          <li ng-if="isAdmin" class="divider"></li>
-          <li ng-if="isAdmin" class="dropdown-header">Admin Actions</li>
-          <li ng-if="isAdmin" role="menuitem"><a href="" ng-click="openModal('#advancedUpdate')"><span class="glyphicon glyphicon glyphicon-edit"></span> Advanced Update</a></li>
-          <li ng-if="isAdmin" role="menuitem"><a href="/admin/ir"><span class="glyphicon glyphicon-cog"></span> Admin Settings</a></li>
-          
-        </ul>
+        <!-- These ngIf calls should be executed once we enable user management -->
+        <li ng-if="isAdmin" class="divider"></li>
+        <li ng-if="isAdmin" class="dropdown-header">Admin Actions</li>
+        <li ng-if="isAdmin && context.features.queryable" role="menuitem"><a href="" ng-click="openModal('#advancedUpdate')"><span class="glyphicon glyphicon glyphicon-edit"></span> Advanced Update</a></li>
+        <li ng-if="isAdmin" role="menuitem"><a href="/admin/ir"><span class="glyphicon glyphicon-cog"></span> Admin Settings</a></li>
+        
+      </ul>
     </div>
     <h1>{{ir.name}} <small class="clickable" ng-click="ir.loadContext(ir.rootUri)">(<span class="glyphicon glyphicon-home"></span> {{ir.rootUri}})</small></h1>
   </div>
 
   <breadcrumbs ng-if="context.hasParent !== undefined" context="context"></breadcrumbs>
 
-  <div ng-if="context.isVersion" class="alert alert-warning clearfix" role="alert">
+  <div ng-if="context.isVersion && context.features.versioning" class="alert alert-warning clearfix" role="alert">
     <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
     <span>This is a historical version and is not editable.</span>
     <div class="form-group pull-right">
@@ -248,6 +248,7 @@
   </modal>
 
   <modal
+    ng-if="isAdmin && context.features.queryable"
     modal-id="advancedUpdate"
     modal-view="views/modals/advancedUpdateModal.html"
     modal-header-class="modal-header-primary"
@@ -269,6 +270,7 @@
   </modal>
 
   <modal
+    ng-if="context.features.versioning"
     modal-id="versionsModal"
     modal-view="views/modals/versionsModal.html"
     modal-header-class="modal-header-primary"

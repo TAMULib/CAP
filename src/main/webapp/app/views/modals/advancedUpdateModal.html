@@ -1,4 +1,4 @@
-<form name="irForm.advancedUpdate" ng-submit="advancedUpdate(irForm.advancedUpdate.sparql)" novalidate>
+<form name="irForm.advancedUpdate" ng-submit="advancedUpdate(irForm.advancedUpdate.query)" novalidate>
   <div class="modal-header {{attr.modalHeaderClass}}">
     <button type="button" class="close modal-close" aria-label="Close" ng-click="resetAdvancedUpdate()">
       <span aria-hidden="true">&times;</span>
@@ -7,12 +7,12 @@
   </div>
   <div class="modal-body" ng-init="resetAdvancedUpdate()">
     <div class="form-group">
-      <label for="properties.update">Sparql</label>
-      <textarea name="properties.update" ng-model="irForm.advancedUpdate.sparql" class="form-control fixed-vertical" cols="10" rows="20"></textarea>
+      <label for="properties.update">Query</label>
+      <textarea name="properties.update" ng-model="irForm.advancedUpdate.query" class="form-control fixed-vertical" cols="10" rows="20"></textarea>
     </div>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-default" ng-click="resetAdvancedUpdate()">Cancel</button>
-    <button type="submit" class="btn btn-success" ng-disabled="irForm.advancedUpdate.sparql.length === 0">Update</button>
+    <button type="submit" class="btn btn-success" ng-disabled="irForm.advancedUpdate.query.length === 0">Update</button>
   </div>
 </form>
