@@ -2,7 +2,9 @@ package edu.tamu.cap.model.response;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import edu.tamu.cap.service.FedoraService;
@@ -28,6 +30,8 @@ public class IRContext implements Serializable {
     private FixityReport fixity;
 
     private String version;
+    
+    private Map<String, Boolean> features;
 
 	public IRContext() {
         super();
@@ -35,6 +39,7 @@ public class IRContext implements Serializable {
         metadata = new ArrayList<Triple>();
         versions = new ArrayList<Version>();
         children = new ArrayList<IRContext>();
+        features = new HashMap<String, Boolean>();
     }
 
     public IRContext(Triple triple) {
@@ -144,6 +149,24 @@ public class IRContext implements Serializable {
     
     public boolean getIsVersion() {
         return Optional.ofNullable(version).isPresent();
+    }
+    
+    public Map<String, Boolean> addFeature(String featureName, boolean supported) {
+        this.features.put(featureName, supported);
+        return features;
+    }
+    
+    public Map<String, Boolean> removeFeature(String featureName) {
+        this.features.remove(featureName);
+        return features;
+    }
+
+    public Map<String, Boolean> getFeatures() {
+        return features;
+    }
+
+    public void setFeatures(Map<String, Boolean> features) {
+        this.features = features;
     }
 
 }

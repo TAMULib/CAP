@@ -42,5 +42,12 @@ public interface IRService<M> {
     public IRContext updateMetadata(Triple triple, String newValue) throws Exception;
     
     public IRContext deleteMetadata(Triple triple) throws Exception;
+    
+    public default IRContext featureSupport(IRContext context) {  
+        for(Class<?> i : this.getClass().getInterfaces()) {
+            context.addFeature(i.getSimpleName().toLowerCase(), true);
+        }
+        return context;
+    }
 
 }

@@ -5,7 +5,7 @@ import java.util.List;
 import edu.tamu.cap.model.response.IRContext;
 import edu.tamu.cap.model.response.Version;
 
-public interface VersionableIRService<M> extends IRService<M> {
+public interface Versioning<M> extends IRService<M> {
     
     public IRContext createVersion(String contextUri, String Name) throws Exception;
 

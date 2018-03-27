@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import edu.tamu.cap.controller.aspect.annotation.PayloadArgName;
 import edu.tamu.cap.service.IRService;
-import edu.tamu.cap.service.VersionableIRService;
+import edu.tamu.cap.service.Versioning;
 import edu.tamu.weaver.response.ApiResponse;
 
 @RestController
@@ -45,19 +45,19 @@ public class IRContextController {
     
     @RequestMapping(value = "/version", method = POST)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse createVersion(VersionableIRService<?> irService, @Param("contextUri") String contextUri, @PayloadArgName("name") String name) throws Exception {
+    public ApiResponse createVersion(Versioning<?> irService, @Param("contextUri") String contextUri, @PayloadArgName("name") String name) throws Exception {
         return new ApiResponse(SUCCESS, irService.createVersion(contextUri, name));
     }
     
     @RequestMapping(value = "/version", method = PATCH)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse restoreVersion(VersionableIRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
+    public ApiResponse restoreVersion(Versioning<?> irService, @Param("contextUri") String contextUri) throws Exception {
         return new ApiResponse(SUCCESS, irService.restoreVersion(contextUri));
     }
     
     @RequestMapping(value = "/version", method = DELETE)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse deleteVersion(VersionableIRService<?> irService, @Param("versionUri") String versionUri) throws Exception {
+    public ApiResponse deleteVersion(Versioning<?> irService, @Param("versionUri") String versionUri) throws Exception {
         irService.deleteVersion(versionUri);
         return new ApiResponse(SUCCESS);
     }

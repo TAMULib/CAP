@@ -1,6 +1,6 @@
 package edu.tamu.cap.service;
 
-public interface VerifiableIRService<M> extends IRService<M> {
+public interface Verifying<M> extends IRService<M> {
     
     public void verifyPing() throws Exception;
 
