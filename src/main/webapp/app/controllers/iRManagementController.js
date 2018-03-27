@@ -8,6 +8,7 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
   $scope.iRTypes = [];
   
   IRRepo.getTypes($scope.iRTypes).then(function() {
+    console.log($scope.iRTypes);
     $scope.irToCreate = IRRepo.getScaffold({
       type: $scope.iRTypes[0].value
     });
