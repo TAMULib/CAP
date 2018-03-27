@@ -24,8 +24,6 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
 
     $scope.context = $scope.ir.loadContext($scope.ir.contextUri);
 
-    console.log($scope.context);
-
     $scope.createContainer = function (form) {
 
       var triples = [];
