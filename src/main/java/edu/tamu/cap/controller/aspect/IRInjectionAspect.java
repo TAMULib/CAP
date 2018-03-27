@@ -33,6 +33,7 @@ public class IRInjectionAspect {
     @Around("execution(* edu.tamu.cap.controller.ircontext..*(..))")
     public ApiResponse irContextInjection(ProceedingJoinPoint joinPoint) throws Throwable {
         logger.debug("Injecting an IR Service at joinPoint: {}", joinPoint.toString());
+             
         // inject applicable end point arguments from request body
         argumentResolver.injectRequestPayload(joinPoint);
         // inject appropriate IR service

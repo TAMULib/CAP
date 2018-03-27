@@ -9,25 +9,9 @@ import org.springframework.web.multipart.MultipartFile;
 import edu.tamu.cap.model.IR;
 import edu.tamu.cap.model.response.IRContext;
 import edu.tamu.cap.model.response.Triple;
-import edu.tamu.cap.model.response.Version;
 
 @Service("DSpace")
 public class DSpaceService implements IRService<Model> {
-
-    @Override
-    public void verifyPing() throws Exception {
-
-    }
-
-    @Override
-    public void verifyAuth() throws Exception {
-
-    }
-
-    @Override
-    public void verifyRoot() throws Exception {
-
-    }
     
     @Override
     public IRContext getIRContext(String contextUri) throws Exception {
@@ -86,28 +70,6 @@ public class DSpaceService implements IRService<Model> {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-    @Override
-    public List<Version> getVersions(String contextUri) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public IRContext createVersion(String contextUri, String name) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public IRContext restoreVersion(String contextUri) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public void deleteVersion(String contextUri) {
-    }
 
     @Override
     public List<Triple> getMetadata(String contextUri) throws Exception {

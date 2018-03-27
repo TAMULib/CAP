@@ -42,7 +42,7 @@ import edu.tamu.cap.model.response.Version;
 import edu.tamu.cap.util.StringUtil;
 
 @Service("Fedora")
-public class FedoraService implements IRService<Model> {
+public class FedoraService implements IRService<Model>, Versioning<Model>, Verifying<Model>, Transacting<Model> {
 
     private final static String LDP_CONTAINS_PREDICATE = "http://www.w3.org/ns/ldp#contains";
 
@@ -445,7 +445,7 @@ public class FedoraService implements IRService<Model> {
             irContext.setName(irContext.getName() + " (" + irContext.getVersion() + ")");
         }
 
-        return irContext;
+        return featureSupport(irContext);
     }
 
     private FcrepoClient buildClient() {
