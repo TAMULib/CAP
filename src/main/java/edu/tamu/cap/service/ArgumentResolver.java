@@ -59,7 +59,8 @@ public class ArgumentResolver {
 		Optional<IRService<?>> irService = Optional.empty();
 		int i = 0;
 		for (Parameter parameter : method.getParameters()) {
-			if (parameter.getType().equals(IRService.class)) {
+		    
+			if (IRService.class.isAssignableFrom(parameter.getType())) {
 				IRService<?> irs = SpringContext.bean(getIRType().getGloss());
 				Optional<Long> irid = getIRId();
 				if (irid.isPresent()) {
@@ -91,7 +92,7 @@ public class ArgumentResolver {
 			int i = 0;
 			for (Parameter parameter : method.getParameters()) {
 				Optional<PayloadArgName> payloadArgName = Optional.ofNullable(parameter.getAnnotation(PayloadArgName.class));
-				if (!parameter.getType().equals(IRService.class) && injectArgument(parameter)) {
+				if (!IRService.class.isAssignableFrom(parameter.getType()) && injectArgument(parameter)) {
 					if (payloadNode.isPresent()) {
 						arguments[i] = getArgumentFromBody(parameter.getType(), payloadArgName, payloadNode.get());
 					} else {
@@ -167,7 +168,7 @@ public class ArgumentResolver {
 	private Optional<Object> mapObjectFromNode(Class<?> argClass, JsonNode node) {
 		Optional<Object> argValue = Optional.empty();
 		try {
-			if (!argClass.equals(IRService.class)) {
+			if (!IRService.class.isAssignableFrom(argClass)) {
 				if (argClass.equals(String.class)) {
 					if (node.isTextual()) {
 						argValue = Optional.of(node.asText());

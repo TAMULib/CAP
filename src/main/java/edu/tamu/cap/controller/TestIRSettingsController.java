@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.tamu.cap.service.IRService;
+import edu.tamu.cap.service.VerifiableIRService;
 import edu.tamu.weaver.response.ApiResponse;
 
 @RestController
@@ -16,21 +16,21 @@ public class TestIRSettingsController {
 
     @RequestMapping(value = "/ping", method = RequestMethod.POST)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse testIRPing(IRService<?> irService) throws Exception {
+    public ApiResponse testIRPing(VerifiableIRService<?> irService) throws Exception {
         irService.verifyPing();
         return new ApiResponse(SUCCESS, "Ping was successful!");
     }
 
     @RequestMapping(value = "/auth", method = RequestMethod.POST)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse testIRAuth(IRService<?> irService) throws Exception {
+    public ApiResponse testIRAuth(VerifiableIRService<?> irService) throws Exception {
         irService.verifyAuth();
         return new ApiResponse(SUCCESS);
     }
 
     @RequestMapping(value = "/content", method = RequestMethod.POST)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse testIRContent(IRService<?> irService) throws Exception {
+    public ApiResponse testIRContent(VerifiableIRService<?> irService) throws Exception {
         irService.verifyRoot();
         return new ApiResponse(SUCCESS);
     }
