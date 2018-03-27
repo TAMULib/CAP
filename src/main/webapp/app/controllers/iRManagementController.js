@@ -15,7 +15,7 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
   
   $scope.irToDelete = {};
   $scope.irToEdit = {};
-  $scope.testResults = {};
+  $scope.verificationResults = {};
 
   $scope.irForms = {
     validations: IRRepo.getValidations(),
@@ -29,7 +29,7 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
         $scope.irForms[key].$setPristine();
       }
     }
-    delete $scope.irToTest;
+    delete $scope.irToVerify;
     $scope.closeModal();    
   };
 

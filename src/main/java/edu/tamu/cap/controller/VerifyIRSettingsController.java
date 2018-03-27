@@ -11,26 +11,26 @@ import edu.tamu.cap.service.VerifyingIRService;
 import edu.tamu.weaver.response.ApiResponse;
 
 @RestController
-@RequestMapping("ir/{type}/test")
-public class TestIRSettingsController {
+@RequestMapping("ir/{type}/verify")
+public class VerifyIRSettingsController {
 
     @RequestMapping(value = "/ping", method = RequestMethod.POST)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse testIRPing(VerifyingIRService<?> irService) throws Exception {
+    public ApiResponse verifyIRPing(VerifyingIRService<?> irService) throws Exception {
         irService.verifyPing();
         return new ApiResponse(SUCCESS, "Ping was successful!");
     }
 
     @RequestMapping(value = "/auth", method = RequestMethod.POST)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse testIRAuth(VerifyingIRService<?> irService) throws Exception {
+    public ApiResponse verifyIRAuth(VerifyingIRService<?> irService) throws Exception {
         irService.verifyAuth();
         return new ApiResponse(SUCCESS);
     }
 
     @RequestMapping(value = "/content", method = RequestMethod.POST)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse testIRContent(VerifyingIRService<?> irService) throws Exception {
+    public ApiResponse verifyIRContent(VerifyingIRService<?> irService) throws Exception {
         irService.verifyRoot();
         return new ApiResponse(SUCCESS);
     }

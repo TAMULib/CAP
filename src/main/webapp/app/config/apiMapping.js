@@ -68,21 +68,21 @@ var apiMapping = {
       'method': ':type/:irid/resource/fixity'
     }
   },
-  TestIRSettings: {
-    testPing: {
+  VerifyIRSettings: {
+    verifyPing: {
       'endpoint': '/private/queue',
       'controller': 'ir',
-      'method': ':type/test/ping'
+      'method': ':type/verify/ping'
     },
-    testAuth: {
+    verifyAuth: {
         'endpoint': '/private/queue',
         'controller': 'ir',
-        'method': ':type/test/ping'
+        'method': ':type/verify/ping'
     },
-    testContent: {
+    verifyContent: {
         'endpoint': '/private/queue',
         'controller': 'ir',
-        'method': ':type/test/ping'
+        'method': ':type/verify/ping'
     }
   },
   IR: {

@@ -22,7 +22,7 @@ public class IRInjectionAspect {
     @Autowired
     private ArgumentResolver argumentResolver;
 
-    @Around("execution(* edu.tamu.cap.controller.TestIRSettingsController.*(..))")
+    @Around("execution(* edu.tamu.cap.controller.VerifyIRSettingsController.*(..))")
     public ApiResponse testIRSettingsInjection(ProceedingJoinPoint joinPoint) throws Throwable {
         logger.debug("Injecting an IR Service at joinPoint: {}", joinPoint.toString());
         // inject appropriate IR service
