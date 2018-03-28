@@ -28,9 +28,9 @@ public class IRContextController {
     
     @RequestMapping(method = DELETE)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse delete(IRService<?> irService, @Param("containerUri") String containerUri) throws Exception {
+    public ApiResponse delete(IRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
         try {
-            irService.deleteIRContext(containerUri);
+            irService.deleteIRContext(contextUri);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -41,25 +41,6 @@ public class IRContextController {
     @PreAuthorize("hasRole('USER')")
     public ApiResponse getTriples(IRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
         return new ApiResponse(SUCCESS, irService.getTriples(irService, contextUri));
-    }
-    
-    @RequestMapping(value = "/version", method = POST)
-    @PreAuthorize("hasRole('USER')")
-    public ApiResponse createVersion(VersioningIRService<?> irService, @Param("contextUri") String contextUri, @PayloadArgName("name") String name) throws Exception {
-        return new ApiResponse(SUCCESS, irService.createVersion(contextUri, name));
-    }
-    
-    @RequestMapping(value = "/version", method = PATCH)
-    @PreAuthorize("hasRole('USER')")
-    public ApiResponse restoreVersion(VersioningIRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
-        return new ApiResponse(SUCCESS, irService.restoreVersion(contextUri));
-    }
-    
-    @RequestMapping(value = "/version", method = DELETE)
-    @PreAuthorize("hasRole('USER')")
-    public ApiResponse deleteVersion(VersioningIRService<?> irService, @Param("versionUri") String versionUri) throws Exception {
-        irService.deleteVersion(versionUri);
-        return new ApiResponse(SUCCESS);
     }
 
 }

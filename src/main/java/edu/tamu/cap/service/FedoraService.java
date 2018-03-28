@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
@@ -12,8 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.io.Charsets;
-import org.apache.commons.io.IOUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.NodeIterator;
@@ -173,9 +170,8 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
     }
     
     @Override
-    public IRContext createMetadata(Triple triple) throws Exception {
+    public IRContext createMetadata(String contextUri,Triple triple) throws Exception {
         FcrepoClient client = buildClient();
-        String contextUri = triple.getSubject();
         PatchBuilder patch = new PatchBuilder(new URI(contextUri + "/fcr:metadata"), client);
         String sparql = "INSERT { " + triple.toString() + " . } WHERE {}";
 
@@ -199,10 +195,8 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
     }
 
     @Override
-    public IRContext updateMetadata(Triple originalTriple, String newValue) throws Exception {
-        
-        String contextUri = originalTriple.getSubject();
-               
+    public IRContext updateMetadata(String contextUri, Triple originalTriple, String newValue) throws Exception {
+                       
         StringBuilder stngBldr = new StringBuilder();
         stngBldr.append("DELETE { <> <").append(originalTriple.getPredicate()).append("> '").append(StringUtil.removeQuotes(originalTriple.getObject())).append("' } ");
         stngBldr.append("INSERT { <> <").append(originalTriple.getPredicate()).append("> '").append(StringUtil.removeQuotes(newValue)).append("' } ");
@@ -220,12 +214,11 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
     }
     
     @Override
-    public IRContext deleteMetadata(Triple triple) throws Exception {
+    public IRContext deleteMetadata(String contextUri, Triple triple) throws Exception {
 
         logger.debug("Attempting to delete");
 
         FcrepoClient client = buildClient();
-        String contextUri = triple.getSubject();
 
         PatchBuilder patch = new PatchBuilder(new URI(contextUri + "/fcr:metadata"), client);
 
@@ -267,8 +260,7 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
     }
 
     @Override
-    public IRContext resourceFixity(Triple tiple) throws Exception {
-        String contextUri = tiple.getSubject();
+    public IRContext resourceFixity(String contextUri) throws Exception {
         FcrepoClient client = buildClient();
         FcrepoResponse response = new GetBuilder(URI.create(contextUri + "/fcr:fixity"), client).perform();
 

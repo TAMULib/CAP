@@ -36,6 +36,23 @@ cap.model("IR", function($location, IRContext, WsApi) {
       return ir.getContext(contextUri, reload);
     };
 
+    ir.performRequest = function(endpoint, options) {
+
+      var defaultPathValues = {
+        type: ir.type,
+        irid: ir.id
+      };
+
+      if(options.pathValues) {
+        angular.extend(options.pathValues, defaultPathValues);
+      } else {
+        options.pathValues = defaultPathValues;
+      }
+
+      return WsApi.fetch(endpoint, options);
+
+    };
+
     WsApi.listen("/queue/context").then(null, null, function(response) {
       var context = angular.fromJson(response.body).payload.IRContext;
       if(cache[context.triple.subject] === undefined) {
