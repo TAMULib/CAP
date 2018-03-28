@@ -13,26 +13,34 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
     });
 
     $scope.$watch('irToCreate',function() {
-      if ($scope.verificationResults.status === 'SUCCESS') {
-        $scope.verificationResults = {};
-      }
-    },true);    
+      resetVerification();
+    },true);
 
-    $scope.disableVerify = function() {
+    $scope.$watch('irToEdit',function() {
+      resetVerification();
+    },true);
+
+    $scope.disableVerify = function(activeIr) {
       var typeIsVerifying = false;
       for(var i in $scope.iRTypes) {
         var type = $scope.iRTypes[i];
-        if(type.value===$scope.irToCreate.type) {
+        if(type.value===activeIr.type) {
           typeIsVerifying = type.verifying===true;
         }
       }
-      return $scope.irToCreate.rootUri && !typeIsVerifying;
+      return activeIr.rootUri && !typeIsVerifying;
     };
   });
+
+  var resetVerification = function(force) {
+    if (force || $scope.verificationResults.status === 'SUCCESS') {
+      $scope.verificationResults = {};
+    }
+  };  
   
   $scope.irToDelete = {};
   $scope.irToEdit = {};
-  $scope.verificationResults = {};
+  resetVerification(true);
 
   $scope.irForms = {
     validations: IRRepo.getValidations(),
@@ -46,6 +54,7 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
         $scope.irForms[key].$setPristine();
       }
     }
+    resetVerification(true);
     delete $scope.irToVerify;
     $scope.closeModal();    
   };
