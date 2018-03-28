@@ -7,6 +7,21 @@ cap.directive("irverification", function(IRRepo, $q) {
         results: "="
     },
     link: function($scope, attr, elem) {
+
+      var types = [];
+      IRRepo.getTypes(types).then(function() {
+        $scope.disableVerify = function() {
+          var typeIsVerifying = false;
+          for(var i in types) {
+            var type = types[i];
+            if(type.value===$scope.ir.type) {
+              typeIsVerifying = type.verifying===true;
+            }
+          }
+          return $scope.ir.rootUri && !typeIsVerifying;
+        };
+      });
+
       $scope.verifyIrConnection = function() {
 
         $scope.results.status = false;
