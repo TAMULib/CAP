@@ -1,4 +1,4 @@
-cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
+cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs, StorageService) {
   return function IRContext() {
 
     var irContext = this;
@@ -351,6 +351,11 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
 
       transactionPromise.then(function(apiRes) {
         var transactionBaseURI = angular.fromJson(apiRes.body).payload.String;
+        var serializedTransactionObject = angular.toJson({
+          baseURI: transactionBaseURI,
+          createdAt: Date.now()
+        });
+        StorageService.set("transaction", serializedTransactionObject);
       });
 
       return transactionPromise;
