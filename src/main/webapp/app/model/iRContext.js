@@ -339,6 +339,23 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
       return fixityPromise;
     };
 
+    irContext.startTransaction = function() {
+      console.log("Model", irContext.uri);
+      var transactionPromise = WsApi.fetch(irContext.getMapping().transaction, {
+        method: HttpMethodVerbs.GET,
+        pathValues: {
+          irid: irContext.ir.id,
+          type: irContext.ir.type
+        }
+      });
+
+      transactionPromise.then(function(apiRes) {
+        var transactionBaseURI = angular.fromJson(apiRes.body).payload.String;
+      });
+
+      return transactionPromise;
+    };
+
     irContext.advancedUpdate = function (query) {
       var updatePromise = WsApi.fetch(irContext.getMapping().advancedQuery, {
         method: HttpMethodVerbs.POST,

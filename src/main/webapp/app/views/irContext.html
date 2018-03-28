@@ -13,7 +13,7 @@
       </modal>
       <ul ng-if="!context.isVersion" class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
         <li class="dropdown-header">Container Actions</li>
-        <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-play-circle"></span> Start Transaction</a></li>
+        <li role="menuitem" ng-if="context.features.transacting" ng-click="startTransaction()"><a href="#"><span class="glyphicon glyphicon-play-circle"></span> Start Transaction</a></li>
         <li ng-if="context.features.versioning" role="menuitem" ng-click="openModal('#versionsModal')"><a href="#"><span class="glyphicon glyphicon-scissors"></span> Versions</a></li>
         <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-move"></span> Move</a></li>
         <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-random"></span> Migrate</a></li>

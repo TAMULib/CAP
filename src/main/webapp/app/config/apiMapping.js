@@ -57,6 +57,11 @@ var apiMapping = {
       'controller': 'ir-context',
       'method': ':type/:irid/version'
     },
+    transaction: {
+      'endpoint': '/private/queue',
+      'controller': 'ir-context',
+      'method': ':type/:irid/transaction'
+    },
     advancedQuery: {
       'endpoint': '/private/queue',
       'controller': 'ir-context',

@@ -2,7 +2,9 @@ package edu.tamu.cap.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
@@ -10,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.io.Charsets;
+import org.apache.commons.io.IOUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.NodeIterator;
@@ -350,6 +354,19 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
         DeleteBuilder builder = new DeleteBuilder(newURI, client);
         
         return builder.perform();
+    }
+    
+    @Override
+    public String startTransaction() throws URISyntaxException, FcrepoOperationFailedException, IOException {
+               
+        FcrepoClient client = buildClient();
+    
+        URI transactionContextURI = new URI(ir.getRootUri()+"/fcr:tx");
+        FcrepoResponse response = new PostBuilder(transactionContextURI, client).perform();
+        
+        logger.debug("Creating transaction: {}", response.getLocation());
+        
+        return response.getLocation().toString();
     }
 
     @Override

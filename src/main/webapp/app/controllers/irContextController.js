@@ -16,6 +16,8 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
 
     $scope.ir = IRRepo.findByName(decodeURI($routeParams.irName));
 
+    if(!$scope.ir) $location.path("/error/404");
+
     if ($routeParams.context !== undefined) {
       $scope.ir.contextUri = decodeURI($routeParams.context);
     } else {
@@ -131,6 +133,11 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
       $scope.context.deleteVersion(currentContext).then(function () {
         $scope.context = ir.loadContext($scope.context.uri, true);
       });
+    };
+
+    $scope.startTransaction = function() {
+      console.log("controller");
+      $scope.context.startTransaction();
     };
 
     $scope.copyToClipboard = function (text, target) {
