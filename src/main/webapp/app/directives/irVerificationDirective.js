@@ -7,6 +7,9 @@ cap.directive("irverification", function(IRRepo, $q) {
         results: "="
     },
     link: function($scope, attr, elem) {
+      $scope.$watch('ir',function() {
+        $scope.irVerifications = [];
+      },true);
 
       var types = [];
       IRRepo.getTypes(types).then(function() {

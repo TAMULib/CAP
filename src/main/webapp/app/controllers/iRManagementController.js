@@ -12,6 +12,12 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
       type: $scope.iRTypes[0].value
     });
 
+    $scope.$watch('irToCreate',function() {
+      if ($scope.verificationResults.status === 'SUCCESS') {
+        $scope.verificationResults = {};
+      }
+    },true);    
+
     $scope.disableVerify = function() {
       var typeIsVerifying = false;
       for(var i in $scope.iRTypes) {
