@@ -36,13 +36,11 @@ cap.model("IRContext", function ($q, $filter, HttpMethodVerbs, StorageService) {
 
     irContext.reloadContext = function() {
       var reloadPromise = fetchContext(irContext.uri);
-
       reloadPromise.then(function (res) {
         angular.extend(irContext, angular.fromJson(res.body).payload.IRContext, {
           fetch: false
         });
       });
-
       return reloadPromise;
     }; 
 
@@ -304,7 +302,7 @@ cap.model("IRContext", function ($q, $filter, HttpMethodVerbs, StorageService) {
       var transactionPromise = irContext.ir.performRequest(irContext.getMapping().transaction, {
         method: HttpMethodVerbs.GET,
         query: {
-          contextUri: context.uri
+          contextUri: irContext.uri
         }
       });
 
@@ -315,7 +313,6 @@ cap.model("IRContext", function ($q, $filter, HttpMethodVerbs, StorageService) {
           createdAt: Date.now()
         });
         StorageService.set("transaction", serializedTransactionObject);
-        $scope.ir.contextUri = decodeURI($routeParams.context);
       });
 
       return transactionPromise;

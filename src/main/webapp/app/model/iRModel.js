@@ -1,4 +1,4 @@
-cap.model("IR", function($location, IRContext, WsApi) {
+cap.model("IR", function($location, IRContext, WsApi, StorageService) {
   return function IR() {
     var ir = this;
 
@@ -49,6 +49,22 @@ cap.model("IR", function($location, IRContext, WsApi) {
         options.pathValues = defaultPathValues;
       }
 
+      var rawTransaction = StorageService.get("transaction");
+      if(StorageService.get("transaction")) {
+        var transaction = angular.fromJson(rawTransaction);
+        var currentTime = new Date();
+        var timeDiffInMin = (currentTime - transaction.createdAt)/1000/60; //in ms
+        if(timeDiffInMin<3) {
+          console.info("TOKEN VALID!", timeDiffInMin);
+          var baseURI = transaction.baseURI;
+          if(ir.rootUri[ir.rootUri.length-1]==="/") baseURI+="/";
+          if(options.query.contextUri.indexOf(transaction.baseURI)===-1) options.query.contextUri = options.query.contextUri.replace(ir.rootUri, baseURI);
+          console.log(options.query.contextUri);
+        } else {
+          console.warn("TOKEN EXPIRED!");
+        }
+      } 
+      console.log(options);
       return WsApi.fetch(endpoint, options);
 
     };

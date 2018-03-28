@@ -1,4 +1,4 @@
-cap.directive("irsection", function($controller, IrSectionService) {
+cap.directive("irsection", function($controller, $timeout, IrSectionService) {
     return {
         templateUrl: "views/directives/irSection.html",
         restrict: "E",
@@ -46,7 +46,7 @@ cap.directive("irsection", function($controller, IrSectionService) {
             });
           };
 
-          $scope.editItem = function(argObj) {
+          $scope.editItem = function(argObj,editValue) {
             $scope.editWorking = true;
             $scope.editAction(argObj).then(function() {
               $scope.editWorking = false;

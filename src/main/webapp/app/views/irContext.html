@@ -156,7 +156,7 @@
                   <div class="input-group">
                     <input type="text" class="form-control" ng-model="editValue" remove-quotes>
                     <div class="input-group-btn">
-                      <button ng-show="!editWorking" class="btn btn-default" ng-click="editItem({triple:t,newObject:editValue})" ng-disabled="t.object===editValue">
+                      <button ng-show="!editWorking" class="btn btn-default" ng-click="editItem({triple:t,newObject:editValue});editValue=null;" ng-disabled="t.object===editValue">
                         <span class="glyphicon glyphicon-ok"></span>
                       </button>
                       <button ng-show="!editWorking" class="btn btn-default" ng-click="editValue=null">
