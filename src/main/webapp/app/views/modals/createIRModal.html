@@ -6,7 +6,6 @@
   <div class="modal-body">
 
     <validationmessage results="irForms.getResults()"></validationmessage>
-    
     <uib-tabset active="activeJustified" justified="true">
       <uib-tab index="0" heading="General">
         <div class="row">
@@ -126,7 +125,7 @@
   </div>     
   <div class="modal-footer">
     <button type="button" class="btn" ng-class="{'btn-default': irForms.create.$pristine, 'btn-warning': !irForms.create.$pristine}" ng-click="cancelCreateIr()">Cancel</button>
-    <button type="submit" class="btn btn-success" ng-disabled="irForms.create.$invalid||verificationResults.status!=='SUCCESS'">Create</button>
+    <button type="submit" class="btn btn-success" ng-disabled="!disableVerify() && (irForms.create.$invalid||verificationResults.status!=='SUCCESS')">Create</button>
   </div>
 </form>
       

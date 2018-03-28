@@ -11,6 +11,17 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
     $scope.irToCreate = IRRepo.getScaffold({
       type: $scope.iRTypes[0].value
     });
+
+    $scope.disableVerify = function() {
+      var typeIsVerifying = false;
+      for(var i in $scope.iRTypes) {
+        var type = $scope.iRTypes[i];
+        if(type.value===$scope.irToCreate.type) {
+          typeIsVerifying = type.verifying===true;
+        }
+      }
+      return $scope.irToCreate.rootUri && !typeIsVerifying;
+    };
   });
   
   $scope.irToDelete = {};
