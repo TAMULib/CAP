@@ -39,7 +39,8 @@ public class IRContextTransactionController {
         cookie.setHttpOnly(false);
         cookie.setPath("/");
         response.addCookie(cookie);
-        return new ApiResponse(SUCCESS, "Transaction successfully created");
+        
+        return new ApiResponse(SUCCESS, "Transaction successfully created", transactionDetails);
     }
 
 }

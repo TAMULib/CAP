@@ -102,12 +102,18 @@ public class ArgumentResolver {
 
     public void augmentContextUri(ProceedingJoinPoint joinPoint) throws IOException, IRInjectionException {
         Optional<Cookie> cookie = Optional.empty();
-        for (Cookie c : request.getCookies()) {
-            if (c.getName().equals("transaction")) {
-                cookie = Optional.of(c);
-                break;
+        
+        Cookie[] cookies = request.getCookies(); 
+        
+        if(cookies != null) {
+            for (Cookie c : cookies) {
+                if (c.getName().equals("transaction")) {
+                    cookie = Optional.of(c);
+                    break;
+                }
             }
         }
+        
         if (cookie.isPresent()) {
             String frx = cookie.get().getValue();
             Method method = getMethodFromJoinPoint(joinPoint);
@@ -124,7 +130,7 @@ public class ArgumentResolver {
                 if (Optional.ofNullable(parameter.getAnnotation(Param.class)).isPresent()) {
                     String contextUri = (String) arguments[i];
                     if (!contextUri.contains(frx)) {
-                        arguments[i] = contextUri.replace(irService.get().getIR().getRootUri(), frx);
+                        arguments[i] = contextUri.replace(irService.get().getIR().getRootUri(), frx+"/");
                     }
                     break;
                 }

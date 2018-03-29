@@ -307,12 +307,19 @@ cap.model("IRContext", function ($q, $filter, HttpMethodVerbs, StorageService) {
       });
 
       transactionPromise.then(function(apiRes) {
+
+        var transactionDetails = angular.fromJson(apiRes.body).payload.HashMap;
+
+        irContext.uri = irContext.uri.replace(irContext.ir.rootUri, transactionDetails.url+"/");
+        irContext.ir.rootUri = transactionDetails.url;
+
         irContext.ir.clearCache();
         irContext.reloadContext();
-        console.log(apiRes);
+        
       });
 
       return transactionPromise;
+
     };
 
     irContext.advancedUpdate = function (query) {

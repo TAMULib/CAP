@@ -11,7 +11,7 @@ cap.directive("breadcrumbs", function() {
             $scope.trimName = function(context, index) {
               var name = context.name;
               if (context.name.indexOf(context.ir.rootUri) === 0) {
-                name = name.replace(context.ir.rootUri, '...');
+                name = name.replace(context.ir.rootUri, '...').replace(/tx:.*\//, '');
               }
               if(index) {
                 var prev = $scope.breadcrumbs.length > 0 ? $scope.breadcrumbs[index - 1] : undefined;

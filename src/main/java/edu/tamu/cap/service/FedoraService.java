@@ -469,8 +469,14 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
             }
 
         });
-
-        irContext.setName(contextUri.equals(ir.getRootUri()) ? "Root" : contextUri);
+        
+        //TODO: Fix this
+        if(contextUri.replaceAll("\\tx:.*\\/", "").equals(ir.getRootUri())) {    
+            irContext.setName("Root");
+        } else {
+            irContext.setName(contextUri);
+        }
+        
 
         if (irContext.isResource()) {
             Optional<String> fileName = getLiteralForProperty(model, model.createProperty(EBU_FILENAME_PREDICATE));
