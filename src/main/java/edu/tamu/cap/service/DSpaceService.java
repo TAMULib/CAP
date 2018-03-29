@@ -100,5 +100,9 @@ public class DSpaceService implements IRService<Model> {
         // TODO Auto-generated method stub
         
     }
+    
+    public IR getIR() {
+        return null;
+    }
 
 }

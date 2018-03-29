@@ -527,4 +527,7 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
         return model;
     }
 
+    public IR getIR() {
+        return ir;
+    }
 }

@@ -43,6 +43,8 @@ public interface IRService<M> {
     
     public IRContext deleteMetadata(String contextUri, Triple triple) throws Exception;
     
+    public IR getIR();
+    
     public default IRContext featureSupport(IRContext context) {  
         for(Class<?> i : this.getClass().getInterfaces()) {
             if(!i.getSimpleName().equals("IRService")) {

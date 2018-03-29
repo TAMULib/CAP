@@ -54,6 +54,8 @@ public class ArgumentResolver {
 
     @Autowired
     private HttpServletRequest request;
+    
+    private Optional<IRService<?>> irService = Optional.empty();
 
     public void injectIrService(ProceedingJoinPoint joinPoint) throws IRInjectionException, JsonProcessingException, IOException {
         Object[] arguments = joinPoint.getArgs();
@@ -61,16 +63,8 @@ public class ArgumentResolver {
         Optional<IRService<?>> irService = Optional.empty();
         int i = 0;
         for (Parameter parameter : method.getParameters()) {
-
-            if (IRService.class.isAssignableFrom(parameter.getType())) {
-                IRService<?> irs = SpringContext.bean(getIRType().getGloss());
-                Optional<Long> irid = getIRId();
-                if (irid.isPresent()) {
-                    irs.setIr(irRepo.read(irid.get()));
-                } else {
-                    irs.setIr(getIRFromRequest());
-                }
-                irService = Optional.of(irs);
+            irService = getIrService(parameter);
+            if (irService.isPresent()) {
                 break;
             }
             i++;
@@ -119,11 +113,18 @@ public class ArgumentResolver {
             Method method = getMethodFromJoinPoint(joinPoint);
             Object[] arguments = joinPoint.getArgs();
             int i = 0;
+            Optional<IRService<?>> irService = Optional.empty();
+            for (Parameter parameter : method.getParameters()) {
+                irService = getIrService(parameter);
+                if (irService.isPresent()) {
+                    break;
+                }
+            }
             for (Parameter parameter : method.getParameters()) {
                 if (Optional.ofNullable(parameter.getAnnotation(Param.class)).isPresent()) {
                     String contextUri = (String) arguments[i];
                     if (!contextUri.contains(frx)) {
-                        arguments[i] = contextUri.replace("http://labs.library.tamu.edu/fcrepo/rest/", frx);
+                        arguments[i] = contextUri.replace(irService.get().getIR().getRootUri(), frx);
                     }
                     break;
                 }
@@ -229,6 +230,22 @@ public class ArgumentResolver {
     private String getPathVariable(String pathKey) {
         Map<String, String> pathVariables = (Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
         return pathVariables.get(pathKey);
+    }
+    
+    protected Optional<IRService<?>> getIrService(Parameter parameter) throws IRInjectionException,IOException {
+        if (!irService.isPresent()) {
+            if (IRService.class.isAssignableFrom(parameter.getType())) {
+                IRService<?> irs = SpringContext.bean(getIRType().getGloss());
+                Optional<Long> irid = getIRId();
+                if (irid.isPresent()) {
+                    irs.setIr(irRepo.read(irid.get()));
+                } else {
+                    irs.setIr(getIRFromRequest());
+                }
+                irService = Optional.of(irs);
+            }
+        }
+        return irService;      
     }
 
 }
