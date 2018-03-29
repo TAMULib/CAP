@@ -2,15 +2,15 @@ package edu.tamu.cap.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.apache.jena.rdf.model.Model;
@@ -38,6 +38,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import edu.tamu.cap.exceptions.IRVerificationException;
 import edu.tamu.cap.model.IR;
+import edu.tamu.cap.model.ircontext.FedoraTransactionDetails;
+import edu.tamu.cap.model.ircontext.TransactionDetails;
 import edu.tamu.cap.model.response.FixityReport;
 import edu.tamu.cap.model.response.IRContext;
 import edu.tamu.cap.model.response.Triple;
@@ -351,18 +353,25 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
     }
     
     @Override
-    public Map<String,String> startTransaction() throws URISyntaxException, FcrepoOperationFailedException, IOException {
+    public TransactionDetails startTransaction() throws Exception {
                
         FcrepoClient client = buildClient();
     
         URI transactionContextURI = new URI(ir.getRootUri()+"/fcr:tx");
         FcrepoResponse response = new PostBuilder(transactionContextURI, client).perform();
-        
-        logger.debug("Creating transaction: {}", response.getLocation());
-        logger.debug("Transaction expires: {}", response.getHeaderValue("Expires"));
-        Map<String,String> transactionDetails = new HashMap<String,String>();
-        transactionDetails.put("url", response.getLocation().toString());
-        transactionDetails.put("expires", response.getHeaderValue("Expires"));
+
+        return makeTransactionDetails(response.getLocation().toString(), response.getHeaderValue("Expires"));
+    }
+    
+    @Override
+    public TransactionDetails makeTransactionDetails(String transactionToken, String expirationString) throws Exception {
+        FedoraTransactionDetails transactionDetails = new FedoraTransactionDetails(transactionToken, expirationString);
+        return transactionDetails;
+    }
+    
+    @Override
+    public TransactionDetails makeTransactionDetails(String transactionToken, int maxAge) throws Exception {
+        FedoraTransactionDetails transactionDetails = new FedoraTransactionDetails(transactionToken, maxAge);
         return transactionDetails;
     }
 
@@ -536,4 +545,5 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
     public IR getIR() {
         return ir;
     }
+
 }

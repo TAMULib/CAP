@@ -35,6 +35,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.tamu.cap.controller.aspect.annotation.PayloadArgName;
 import edu.tamu.cap.exceptions.IRInjectionException;
 import edu.tamu.cap.model.IR;
+import edu.tamu.cap.model.ircontext.TransactionDetails;
 import edu.tamu.cap.model.repo.IRRepo;
 import edu.tamu.weaver.context.SpringContext;
 
@@ -100,7 +101,7 @@ public class ArgumentResolver {
         }
     }
 
-    public void augmentContextUri(ProceedingJoinPoint joinPoint) throws IOException, IRInjectionException {
+    public void augmentContextUri(ProceedingJoinPoint joinPoint) throws Exception {
         Optional<Cookie> cookie = Optional.empty();
         
         Cookie[] cookies = request.getCookies(); 
@@ -119,18 +120,22 @@ public class ArgumentResolver {
             Method method = getMethodFromJoinPoint(joinPoint);
             Object[] arguments = joinPoint.getArgs();
             int i = 0;
-            Optional<IRService<?>> irService = Optional.empty();
+            Optional<TransactingIRService<?>> transactingIrService = Optional.empty();
             for (Parameter parameter : method.getParameters()) {
                 irService = getIrService(parameter);
                 if (irService.isPresent()) {
+                    transactingIrService = Optional.of((TransactingIRService<?>) irService.get());
                     break;
                 }
             }
+            
+            TransactionDetails transactionDetails = transactingIrService.get().makeTransactionDetails(cookie.get().getValue(), cookie.get().getMaxAge());
+            
             for (Parameter parameter : method.getParameters()) {
                 if (Optional.ofNullable(parameter.getAnnotation(Param.class)).isPresent()) {
                     String contextUri = (String) arguments[i];
-                    if (!contextUri.contains(frx)) {
-                        arguments[i] = contextUri.replace(irService.get().getIR().getRootUri(), frx+"/");
+                    if (!contextUri.contains(frx) && transactionDetails.isActive()) {
+                        arguments[i] = contextUri.replace(transactingIrService.get().getIR().getRootUri(), frx+"/");
                     }
                     break;
                 }

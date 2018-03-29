@@ -1,9 +1,13 @@
 package edu.tamu.cap.service;
 
-import java.util.Map;
+import edu.tamu.cap.model.ircontext.TransactionDetails;
 
 public interface TransactingIRService<M> extends IRService<M> {
     
-    public Map<String, String> startTransaction() throws Exception;
+    public TransactionDetails startTransaction() throws Exception;
+    
+    public TransactionDetails makeTransactionDetails(String transactionToken, String expirationString) throws Exception;
+
+    public TransactionDetails makeTransactionDetails(String value, int maxAge) throws Exception;
 
 }
