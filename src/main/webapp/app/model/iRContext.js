@@ -309,6 +309,7 @@ cap.model("IRContext", function ($q, $filter, HttpMethodVerbs, StorageService) {
       transactionPromise.then(function(apiRes) {
         irContext.ir.clearCache();
         irContext.reloadContext();
+        console.log(apiRes);
       });
 
       return transactionPromise;
