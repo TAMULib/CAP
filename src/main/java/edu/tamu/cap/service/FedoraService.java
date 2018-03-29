@@ -8,7 +8,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.apache.jena.rdf.model.Model;
@@ -349,7 +351,7 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
     }
     
     @Override
-    public String startTransaction() throws URISyntaxException, FcrepoOperationFailedException, IOException {
+    public Map<String,String> startTransaction() throws URISyntaxException, FcrepoOperationFailedException, IOException {
                
         FcrepoClient client = buildClient();
     
@@ -357,8 +359,11 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
         FcrepoResponse response = new PostBuilder(transactionContextURI, client).perform();
         
         logger.debug("Creating transaction: {}", response.getLocation());
-        
-        return response.getLocation().toString();
+        logger.debug("Transaction expires: {}", response.getHeaderValue("Expires"));
+        Map<String,String> transactionDetails = new HashMap<String,String>();
+        transactionDetails.put("url", response.getLocation().toString());
+        transactionDetails.put("expires", response.getHeaderValue("Expires"));
+        return transactionDetails;
     }
 
     @Override
