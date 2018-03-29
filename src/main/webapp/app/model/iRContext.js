@@ -298,7 +298,7 @@ cap.model("IRContext", function ($q, $filter, HttpMethodVerbs, StorageService) {
     };
 
     irContext.startTransaction = function() {
-      console.log("Model", irContext.uri);
+
       var transactionPromise = irContext.ir.performRequest(irContext.getMapping().transaction, {
         method: HttpMethodVerbs.GET,
         query: {
@@ -307,12 +307,8 @@ cap.model("IRContext", function ($q, $filter, HttpMethodVerbs, StorageService) {
       });
 
       transactionPromise.then(function(apiRes) {
-        var transactionBaseURI = angular.fromJson(apiRes.body).payload.String;
-        var serializedTransactionObject = angular.toJson({
-          baseURI: transactionBaseURI,
-          createdAt: Date.now()
-        });
-        StorageService.set("transaction", serializedTransactionObject);
+        irContext.ir.clearCache();
+        irContext.reloadContext();
       });
 
       return transactionPromise;

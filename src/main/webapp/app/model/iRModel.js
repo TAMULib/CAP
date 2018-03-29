@@ -1,4 +1,4 @@
-cap.model("IR", function($location, IRContext, WsApi, StorageService) {
+cap.model("IR", function($location, $timeout, IRContext, WsApi, StorageService) {
   return function IR() {
     var ir = this;
 
@@ -14,6 +14,12 @@ cap.model("IR", function($location, IRContext, WsApi, StorageService) {
 
     ir.removeCachedContext = function(contextUri) {
       delete cache[contextUri];
+    };
+
+    ir.clearCache = function() {
+      angular.forEach(cache, function(v,uri){
+        ir.removeCachedContext(uri);
+      });
     };
 
     ir.getContext = function(contextUri, reload) {
@@ -48,26 +54,15 @@ cap.model("IR", function($location, IRContext, WsApi, StorageService) {
       } else {
         options.pathValues = defaultPathValues;
       }
-
-      var rawTransaction = StorageService.get("transaction");
-      if(StorageService.get("transaction")) {
-        var transaction = angular.fromJson(rawTransaction);
-        var currentTime = new Date();
-        var timeDiffInMin = (currentTime - transaction.createdAt)/1000/60; //in ms
-        if(timeDiffInMin<3) {
-          console.info("TOKEN VALID!", timeDiffInMin);
-          var baseURI = transaction.baseURI;
-          if(ir.rootUri[ir.rootUri.length-1]==="/") baseURI+="/";
-          if(options.query.contextUri.indexOf(transaction.baseURI)===-1) options.query.contextUri = options.query.contextUri.replace(ir.rootUri, baseURI);
-          console.log(options.query.contextUri);
-        } else {
-          console.warn("TOKEN EXPIRED!");
-        }
-      } 
-      console.log(options);
+      
       return WsApi.fetch(endpoint, options);
 
     };
+
+    ir.getTransactionTimeRemaining = function() {
+      
+    };
+
 
     WsApi.listen("/queue/context").then(null, null, function(response) {
       var context = angular.fromJson(response.body).payload.IRContext;

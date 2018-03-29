@@ -1,5 +1,8 @@
 package edu.tamu.cap.controller.aspect;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -21,6 +24,9 @@ public class IRInjectionAspect {
     @Lazy
     @Autowired
     private ArgumentResolver argumentResolver;
+    
+    @Autowired
+    private HttpServletRequest request;
 
     @Around("execution(* edu.tamu.cap.controller.VerifyIRSettingsController.*(..))")
     public ApiResponse testIRSettingsInjection(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -33,7 +39,22 @@ public class IRInjectionAspect {
     @Around("execution(* edu.tamu.cap.controller.ircontext..*(..))")
     public ApiResponse irContextInjection(ProceedingJoinPoint joinPoint) throws Throwable {
         logger.debug("Injecting an IR Service at joinPoint: {}", joinPoint.toString());
-             
+
+        Cookie transactionCookie = null;
+        
+        for(Cookie c : request.getCookies()) {
+            if(c.getName().equals("transaction")) {
+                transactionCookie = c;
+                break;
+            }
+        }
+        
+        if(transactionCookie != null) {
+            
+            System.out.println(transactionCookie.getMaxAge());
+            
+        }
+        
         // inject applicable end point arguments from request body
         argumentResolver.injectRequestPayload(joinPoint);
         // inject appropriate IR service
