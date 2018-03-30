@@ -131,8 +131,6 @@ public class ArgumentResolver {
                     break;
                 }
             }
-
-            System.out.println(transactionExpiration);
             
             TransactionDetails transactionDetails = transactingIrService.get().makeTransactionDetails(transactionToken, transactionExpiration);
             

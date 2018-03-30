@@ -1,4 +1,4 @@
-cap.model("IRContext", function ($q, $filter, HttpMethodVerbs, StorageService) {
+cap.model("IRContext", function ($q, $filter, HttpMethodVerbs, $interval, StorageService) {
   return function IRContext() {
 
     var irContext = this;
@@ -27,6 +27,11 @@ cap.model("IRContext", function ($q, $filter, HttpMethodVerbs, StorageService) {
           });
           irContext.ir.cacheContext(irContext);
           defer.resolve(irContext);
+
+          if(irContext.transactionDetails) {
+            irContext.startTransactionTimer();
+          }
+
         });
       } else {
         defer.resolve(irContext);
@@ -307,21 +312,28 @@ cap.model("IRContext", function ($q, $filter, HttpMethodVerbs, StorageService) {
       });
 
       transactionPromise.then(function(apiRes) {
-
-        var transactionDetails = angular.fromJson(apiRes.body).payload.FedoraTransactionDetails;
-
-        console.log(transactionDetails);
-
-        // irContext.uri = irContext.uri.replace(irContext.ir.rootUri, transactionDetails.url+"/");
-        // irContext.ir.rootUri = transactionDetails.url;
-
         irContext.ir.clearCache();
-        irContext.reloadContext();
-        
+        irContext.reloadContext().then(function() {
+          irContext.startTransactionTimer();
+        });
       });
 
       return transactionPromise;
 
+    };
+
+    var transactionTimer;
+    irContext.startTransactionTimer = function() {
+      if(!angular.isDefined(transactionTimer)) {
+        transactionTimer = $interval(function() {
+          irContext.transactionDetails.secondsRemaining -= 1;
+          if(irContext.transactionDetails.secondsRemaining<1) {
+            irContext.transactionDetails = null;
+            $interval.cancel(transactionTimer);
+            transactionTimer = undefined;
+          }
+        }, 1000);
+      }
     };
 
     irContext.advancedUpdate = function (query) {

@@ -9,9 +9,13 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.tamu.cap.model.ircontext.TransactionDetails;
 import edu.tamu.cap.service.TransactingIRService;
@@ -20,15 +24,22 @@ import edu.tamu.weaver.response.ApiResponse;
 @RestController
 @RequestMapping("ir-context/{type}/{irid}/transaction")
 public class IRContextTransactionController {
+    
+    @Autowired
+    ObjectMapper objectMapper;
 
     @RequestMapping(method = GET)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse makeQuery(HttpServletRequest request, HttpServletResponse response, TransactingIRService<?> irService) throws Exception {
+    public ApiResponse startTransaction(HttpServletRequest request, HttpServletResponse response, TransactingIRService<?> irService) throws Exception {
         TransactionDetails transactionDetails = irService.startTransaction();
-        System.out.println("\n\n\n token: "+transactionDetails.getTransactionToken());
-        System.out.println("expires: "+transactionDetails.getExpirationDate());
-        System.out.println("token: "+transactionDetails.getSecondsRemaining());        
-        Cookie cookie = new Cookie("transaction", URLEncoder.encode("{\"token\":\""+transactionDetails.getTransactionToken()+"\",\"expires\":\""+transactionDetails.getExpirationDateString()+"\"}"));
+        
+        ObjectNode cookieNode = objectMapper.createObjectNode();
+        cookieNode.put("token", transactionDetails.getTransactionToken());
+        cookieNode.put("expires", transactionDetails.getExpirationDateString());
+        String cookieJson = objectMapper.writeValueAsString(cookieNode);
+        //"{\"token\":\""+transactionDetails.getTransactionToken()+"\",\"expires\":\""+transactionDetails.getExpirationDateString()+"\"}"
+        
+        Cookie cookie = new Cookie("transaction", URLEncoder.encode(cookieJson, "UTF-8"));
         cookie.setDomain(request.getServerName());
         cookie.setMaxAge(transactionDetails.getSecondsRemaining());
         cookie.setHttpOnly(false);

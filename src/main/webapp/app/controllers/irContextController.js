@@ -1,4 +1,4 @@
-cap.controller("IrContextController", function ($controller, $location, $routeParams, $scope, $interval, IRRepo) {
+cap.controller("IrContextController", function ($controller, $location, $routeParams, $scope, IRRepo) {
 
   angular.extend(this, $controller('CoreAdminController', {
     $scope: $scope
@@ -25,8 +25,6 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     }
 
     $scope.context = $scope.ir.loadContext($scope.ir.contextUri);
-
-    console.log($scope.context);
 
     $scope.createContainer = function (form) {
 
@@ -166,7 +164,7 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
 
     $scope.resetCreateContainer();
     $scope.resetUploadResource();
-
+    
   });
 
 });

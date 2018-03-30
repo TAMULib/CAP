@@ -488,8 +488,12 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
 
         });
         
-        //TODO: Fix this
-        if(contextUri.replaceAll("\\tx:.*\\/", "").equals(ir.getRootUri())) {    
+        
+        String rootUri = transactionDetails != null ? transactionDetails.getTransactionToken() : ir.getRootUri();
+        
+        if(contextUri.endsWith("/")&&!rootUri.endsWith("/")) rootUri += "/";
+        
+        if(contextUri.equals(rootUri)) {    
             irContext.setName("Root");
         } else {
             irContext.setName(contextUri);
@@ -497,7 +501,7 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
         
         if(transactionDetails != null) {
             irContext.setTransactionDetails(transactionDetails);
-        }
+        } 
 
         if (irContext.isResource()) {
             Optional<String> fileName = getLiteralForProperty(model, model.createProperty(EBU_FILENAME_PREDICATE));
