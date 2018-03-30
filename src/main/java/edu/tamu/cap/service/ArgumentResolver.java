@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -57,7 +58,7 @@ public class ArgumentResolver {
     private HttpServletRequest request;
     
     private Optional<IRService<?>> irService = Optional.empty();
-
+    
     public void injectIrService(ProceedingJoinPoint joinPoint) throws IRInjectionException, JsonProcessingException, IOException {
         Object[] arguments = joinPoint.getArgs();
         Method method = getMethodFromJoinPoint(joinPoint);
@@ -116,7 +117,9 @@ public class ArgumentResolver {
         }
         
         if (cookie.isPresent()) {
-            String frx = cookie.get().getValue();
+            JsonNode cookieObject = objectMapper.readTree(URLDecoder.decode(cookie.get().getValue()));
+            String transactionToken = cookieObject.get("token").asText();
+            int transactionSecondsRemaining = cookieObject.get("expires").asInt();
             Method method = getMethodFromJoinPoint(joinPoint);
             Object[] arguments = joinPoint.getArgs();
             int i = 0;
@@ -128,14 +131,14 @@ public class ArgumentResolver {
                     break;
                 }
             }
-            
-            TransactionDetails transactionDetails = transactingIrService.get().makeTransactionDetails(cookie.get().getValue(), cookie.get().getMaxAge());
+
+            TransactionDetails transactionDetails = transactingIrService.get().makeTransactionDetails(transactionToken, transactionSecondsRemaining);
             
             for (Parameter parameter : method.getParameters()) {
                 if (Optional.ofNullable(parameter.getAnnotation(Param.class)).isPresent()) {
                     String contextUri = (String) arguments[i];
-                    if (!contextUri.contains(frx) && transactionDetails.isActive()) {
-                        arguments[i] = contextUri.replace(transactingIrService.get().getIR().getRootUri(), frx+"/");
+                    if (!contextUri.contains(transactionToken) && transactionDetails.isActive()) {
+                        arguments[i] = contextUri.replace(transactingIrService.get().getIR().getRootUri(), transactionToken+"/");
                     }
                     break;
                 }

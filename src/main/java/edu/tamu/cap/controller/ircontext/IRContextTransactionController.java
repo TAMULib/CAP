@@ -3,6 +3,8 @@ package edu.tamu.cap.controller.ircontext;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
+import java.net.URLEncoder;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,7 +28,7 @@ public class IRContextTransactionController {
         System.out.println("\n\n\n token: "+transactionDetails.getTransactionToken());
         System.out.println("expires: "+transactionDetails.getExpirationDate());
         System.out.println("token: "+transactionDetails.getSecondsRemaining());        
-        Cookie cookie = new Cookie("transaction", transactionDetails.getTransactionToken());
+        Cookie cookie = new Cookie("transaction", URLEncoder.encode("{\"token\":\""+transactionDetails.getTransactionToken()+"\",\"expires\":"+transactionDetails.getSecondsRemaining()+"}"));
         cookie.setDomain(request.getServerName());
         cookie.setMaxAge(transactionDetails.getSecondsRemaining());
         cookie.setHttpOnly(false);
