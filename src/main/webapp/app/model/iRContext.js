@@ -327,6 +327,7 @@ cap.model("IRContext", function ($q, $filter, HttpMethodVerbs, $interval, Storag
       if(!angular.isDefined(transactionTimer)) {
         transactionTimer = $interval(function() {
           irContext.transactionDetails.secondsRemaining -= 1;
+          console.log(irContext.transactionDetails.secondsRemaining);
           if(irContext.transactionDetails.secondsRemaining<1) {
             irContext.transactionDetails = null;
             $interval.cancel(transactionTimer);

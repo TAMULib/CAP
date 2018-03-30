@@ -7,7 +7,10 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -16,6 +19,7 @@ import java.util.Optional;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -32,6 +36,7 @@ import org.springframework.web.servlet.HandlerMapping;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.tamu.cap.controller.aspect.annotation.PayloadArgName;
 import edu.tamu.cap.exceptions.IRInjectionException;
@@ -56,6 +61,9 @@ public class ArgumentResolver {
 
     @Autowired
     private HttpServletRequest request;
+    
+    @Autowired
+    private HttpServletResponse response;
     
     private Optional<IRService<?>> irService = Optional.empty();
     
@@ -117,9 +125,34 @@ public class ArgumentResolver {
         }
         
         if (cookie.isPresent()) {
-            JsonNode cookieObject = objectMapper.readTree(URLDecoder.decode(cookie.get().getValue()));
+            JsonNode cookieObject = objectMapper.readTree(URLDecoder.decode(cookie.get().getValue(), "UTF-8"));
             String transactionToken = cookieObject.get("token").asText();
-            String transactionExpiration = cookieObject.get("expires").asText();
+            
+            String transactionExpiration;
+            String httpMethod = request.getMethod();
+            
+            System.out.println(httpMethod);
+            
+            if(httpMethod == "POST" || httpMethod == "PUT" || httpMethod == "DELETE") {
+                
+                System.out.println("WERE IN");
+                
+                transactionExpiration = DateTimeFormatter.ISO_ZONED_DATE_TIME.format(ZonedDateTime.now().plusSeconds(180));
+                
+                ObjectNode cookieNode = objectMapper.createObjectNode();
+                cookieNode.put("token", transactionToken);
+                cookieNode.put("expires", transactionExpiration);
+                String cookieJson = objectMapper.writeValueAsString(cookieNode);
+                
+                cookie.get().setValue(URLEncoder.encode(cookieJson, "UTF-8"));
+                cookie.get().setMaxAge(180);
+                
+                response.addCookie(cookie.get());
+                
+            } else {
+                transactionExpiration = cookieObject.get("expires").asText();
+            }
+            
             Method method = getMethodFromJoinPoint(joinPoint);
             Object[] arguments = joinPoint.getArgs();
             int i = 0;
