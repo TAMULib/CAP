@@ -308,10 +308,12 @@ cap.model("IRContext", function ($q, $filter, HttpMethodVerbs, StorageService) {
 
       transactionPromise.then(function(apiRes) {
 
-        var transactionDetails = angular.fromJson(apiRes.body).payload.HashMap;
+        var transactionDetails = angular.fromJson(apiRes.body).payload.FedoraTransactionDetails;
 
-        irContext.uri = irContext.uri.replace(irContext.ir.rootUri, transactionDetails.url+"/");
-        irContext.ir.rootUri = transactionDetails.url;
+        console.log(transactionDetails);
+
+        // irContext.uri = irContext.uri.replace(irContext.ir.rootUri, transactionDetails.url+"/");
+        // irContext.ir.rootUri = transactionDetails.url;
 
         irContext.ir.clearCache();
         irContext.reloadContext();

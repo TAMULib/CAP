@@ -9,10 +9,7 @@ public class FedoraTransactionDetails implements TransactionDetails {
     
     private String transactionToken;
     private ZonedDateTime expirationDate;
-    
-    
-    private static final String TIME_FORMAT_PATTERN = "EEE, dd MMM uuuu kk:mm:ss z";
-    
+       
     public FedoraTransactionDetails() {}
     
     public FedoraTransactionDetails(String transactionToken) {
@@ -24,24 +21,21 @@ public class FedoraTransactionDetails implements TransactionDetails {
         this(transactionToken);
         setExpirationDate(expirationString);
     }
-    
-    public FedoraTransactionDetails(String transactionToken, int maxAge) { 
-        this(transactionToken);
-        ZonedDateTime now = ZonedDateTime.now(ZoneId.of("GMT"));
-        setExpirationDate(DateTimeFormatter.ofPattern(TIME_FORMAT_PATTERN).format(now).toString());
-    }
 
     public String getTransactionToken() {
         return transactionToken;
     }
     
     public void setExpirationDate(String expirationString) {
-        DateTimeFormatter f = DateTimeFormatter.ofPattern(TIME_FORMAT_PATTERN);
-        expirationDate = ZonedDateTime.parse(expirationString,f);        
+        expirationDate = ZonedDateTime.parse(expirationString, DateTimeFormatter.ISO_ZONED_DATE_TIME);        
     }
     
     public ZonedDateTime getExpirationDate() {
         return expirationDate;
+    }
+    
+    public String getExpirationDateString() {
+        return DateTimeFormatter.ISO_ZONED_DATE_TIME.format(getExpirationDate());
     }
 
     public Boolean isActive() {

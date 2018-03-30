@@ -28,7 +28,7 @@ public class IRContextTransactionController {
         System.out.println("\n\n\n token: "+transactionDetails.getTransactionToken());
         System.out.println("expires: "+transactionDetails.getExpirationDate());
         System.out.println("token: "+transactionDetails.getSecondsRemaining());        
-        Cookie cookie = new Cookie("transaction", URLEncoder.encode("{\"token\":\""+transactionDetails.getTransactionToken()+"\",\"expires\":"+transactionDetails.getSecondsRemaining()+"}"));
+        Cookie cookie = new Cookie("transaction", URLEncoder.encode("{\"token\":\""+transactionDetails.getTransactionToken()+"\",\"expires\":\""+transactionDetails.getExpirationDateString()+"\"}"));
         cookie.setDomain(request.getServerName());
         cookie.setMaxAge(transactionDetails.getSecondsRemaining());
         cookie.setHttpOnly(false);

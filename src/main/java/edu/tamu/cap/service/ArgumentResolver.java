@@ -119,7 +119,7 @@ public class ArgumentResolver {
         if (cookie.isPresent()) {
             JsonNode cookieObject = objectMapper.readTree(URLDecoder.decode(cookie.get().getValue()));
             String transactionToken = cookieObject.get("token").asText();
-            int transactionSecondsRemaining = cookieObject.get("expires").asInt();
+            String transactionExpiration = cookieObject.get("expires").asText();
             Method method = getMethodFromJoinPoint(joinPoint);
             Object[] arguments = joinPoint.getArgs();
             int i = 0;
@@ -132,7 +132,9 @@ public class ArgumentResolver {
                 }
             }
 
-            TransactionDetails transactionDetails = transactingIrService.get().makeTransactionDetails(transactionToken, transactionSecondsRemaining);
+            System.out.println(transactionExpiration);
+            
+            TransactionDetails transactionDetails = transactingIrService.get().makeTransactionDetails(transactionToken, transactionExpiration);
             
             for (Parameter parameter : method.getParameters()) {
                 if (Optional.ofNullable(parameter.getAnnotation(Param.class)).isPresent()) {

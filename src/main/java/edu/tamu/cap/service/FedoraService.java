@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -359,8 +360,13 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
     
         URI transactionContextURI = new URI(ir.getRootUri()+"/fcr:tx");
         FcrepoResponse response = new PostBuilder(transactionContextURI, client).perform();
+        
+        String fedoraDate = response.getHeaderValue("Expires");
+        
+        DateTimeFormatter f = DateTimeFormatter.ofPattern("EEE, dd MMM uuuu kk:mm:ss z");
+        ZonedDateTime expirationDate = ZonedDateTime.parse(fedoraDate,f);
 
-        return makeTransactionDetails(response.getLocation().toString(), response.getHeaderValue("Expires"));
+        return makeTransactionDetails(response.getLocation().toString(), DateTimeFormatter.ISO_ZONED_DATE_TIME.format(expirationDate));
     }
     
     @Override
@@ -369,12 +375,6 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
         return transactionDetails;
     }
     
-    @Override
-    public TransactionDetails makeTransactionDetails(String transactionToken, int maxAge) throws Exception {
-        FedoraTransactionDetails transactionDetails = new FedoraTransactionDetails(transactionToken, maxAge);
-        return transactionDetails;
-    }
-
     @Override
     public void setIr(IR ir) {
         this.ir = ir;
