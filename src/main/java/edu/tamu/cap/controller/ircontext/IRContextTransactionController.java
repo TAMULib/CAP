@@ -37,7 +37,6 @@ public class IRContextTransactionController {
         cookieNode.put("token", transactionDetails.getTransactionToken());
         cookieNode.put("expires", transactionDetails.getExpirationDateString());
         String cookieJson = objectMapper.writeValueAsString(cookieNode);
-        //"{\"token\":\""+transactionDetails.getTransactionToken()+"\",\"expires\":\""+transactionDetails.getExpirationDateString()+"\"}"
         
         Cookie cookie = new Cookie("transaction", URLEncoder.encode(cookieJson, "UTF-8"));
         cookie.setDomain(request.getServerName());

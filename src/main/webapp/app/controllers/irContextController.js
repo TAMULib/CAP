@@ -136,7 +136,6 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     };
 
     $scope.startTransaction = function() {
-      console.log("controller");
       $scope.context.startTransaction();
     };
 

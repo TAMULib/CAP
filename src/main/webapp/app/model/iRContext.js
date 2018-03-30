@@ -331,6 +331,7 @@ cap.model("IRContext", function ($q, $filter, HttpMethodVerbs, $interval, Storag
             irContext.transactionDetails = null;
             $interval.cancel(transactionTimer);
             transactionTimer = undefined;
+            irContext.reloadContext();
           }
         }, 1000);
       }
