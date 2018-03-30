@@ -7,7 +7,6 @@ public interface TransactionDetails {
        public String getTransactionToken();
        public ZonedDateTime getExpirationDate();
        public int getSecondsRemaining();
-       public Boolean isActive();
        public String getExpirationDateString();
     
 }

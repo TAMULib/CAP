@@ -38,10 +38,6 @@ public class FedoraTransactionDetails implements TransactionDetails {
         return DateTimeFormatter.ISO_ZONED_DATE_TIME.format(getExpirationDate());
     }
 
-    public Boolean isActive() {
-        return getSecondsRemaining() < 1;        
-    }
-
     public int getSecondsRemaining() {
         return (int) ChronoUnit.SECONDS.between(ZonedDateTime.now(ZoneId.of("GMT")), getExpirationDate());        
     }

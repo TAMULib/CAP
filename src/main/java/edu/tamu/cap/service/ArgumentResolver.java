@@ -139,14 +139,15 @@ public class ArgumentResolver {
             for (Parameter parameter : method.getParameters()) {
                 if (Optional.ofNullable(parameter.getAnnotation(Param.class)).isPresent()) {
                     String contextUri = (String) arguments[i];
-                    if (!contextUri.contains(transactionToken) && transactionDetails.isActive()) {
+                    if (!contextUri.contains(transactionToken)) {
                         arguments[i] = contextUri.replace(transactingIrService.get().getIR().getRootUri(), transactionToken+"/");
+                        transactingIrService.get().setTransactionDetails(transactionDetails);
                     }
                     break;
                 }
                 i++;
             }
-        }
+        } 
     }
 
     private boolean methodHasRequestParameterAnnotation(Method method) {

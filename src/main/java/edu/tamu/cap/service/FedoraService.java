@@ -1,15 +1,15 @@
 package edu.tamu.cap.service;
 
+import static org.springframework.web.context.WebApplicationContext.SCOPE_REQUEST;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +34,7 @@ import org.fcrepo.client.PatchBuilder;
 import org.fcrepo.client.PostBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,8 +49,9 @@ import edu.tamu.cap.model.response.Version;
 import edu.tamu.cap.util.StringUtil;
 
 @Service("Fedora")
+@Scope(value = SCOPE_REQUEST)
 public class FedoraService implements IRService<Model>, VersioningIRService<Model>, VerifyingIRService<Model>, TransactingIRService<Model>, QueryableIRService<Model> {
-
+    
     private final static String LDP_CONTAINS_PREDICATE = "http://www.w3.org/ns/ldp#contains";
 
     private final static String RDF_TYPE_PREDICATE = "https://www.w3.org/1999/02/22-rdf-syntax-ns#type";
@@ -88,6 +90,8 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private IR ir;
+    
+    private TransactionDetails transactionDetails;
 
     @Override
     public void verifyPing() throws FcrepoOperationFailedException, URISyntaxException, IRVerificationException {
@@ -376,6 +380,11 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
     }
     
     @Override
+    public void setTransactionDetails(TransactionDetails transactionDetails) {
+       this.transactionDetails = transactionDetails;
+    }
+    
+    @Override
     public void setIr(IR ir) {
         this.ir = ir;
     }
@@ -486,6 +495,9 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
             irContext.setName(contextUri);
         }
         
+        if(transactionDetails != null) {
+            irContext.setTransactionDetails(transactionDetails);
+        }
 
         if (irContext.isResource()) {
             Optional<String> fileName = getLiteralForProperty(model, model.createProperty(EBU_FILENAME_PREDICATE));

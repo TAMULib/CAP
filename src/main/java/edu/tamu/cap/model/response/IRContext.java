@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import edu.tamu.cap.model.ircontext.TransactionDetails;
 import edu.tamu.cap.service.FedoraService;
 
 public class IRContext implements Serializable {
@@ -30,6 +31,8 @@ public class IRContext implements Serializable {
     private FixityReport fixity;
 
     private String version;
+    
+    private TransactionDetails transactionDetails;
     
     private Map<String, Boolean> features;
 
@@ -151,6 +154,18 @@ public class IRContext implements Serializable {
         return Optional.ofNullable(version).isPresent();
     }
     
+    public TransactionDetails getTransactionDetails() {
+        return transactionDetails;
+    }
+
+    public void setTransactionDetails(TransactionDetails transactionDetails) {
+        this.transactionDetails = transactionDetails;
+    }
+
+    public static long getSerialversionuid() {
+        return serialVersionUID;
+    }
+
     public Map<String, Boolean> addFeature(String featureName, boolean supported) {
         this.features.put(featureName, supported);
         return features;
