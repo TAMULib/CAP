@@ -473,10 +473,11 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
                
         FcrepoClient client = buildClient();
     
-        URI transactionContextURI = new URI(tokenURI+"/fcr:rollback" );
+        URI transactionContextURI = new URI(tokenURI+"/fcr:tx/fcr:rollback" );
         
         FcrepoResponse response = new PostBuilder(transactionContextURI, client).perform();
-        
+
+        System.out.println("Transaction RollBack: "+tokenURI);
         System.out.println("Transaction RollBack: "+response.getStatusCode());
         
         logger.debug("Transaction RollBack: {}",response.getStatusCode());
