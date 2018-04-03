@@ -116,9 +116,9 @@
         </uib-tab>
     </div>     
     <div class="modal-footer">
-        <small class="text-warning pull-left" ng-if="irForms.edit.$dirty&&verificationResults.status!=='SUCCESS'">IR settings must be verified before edits can be saved</small>
+        <small class="text-warning pull-left" ng-if="!disableVerify(irToEdit) && irForms.edit.$dirty&&verificationResults.status!=='SUCCESS'">IR settings must be verified before edits can be saved</small>
         <button type="button" class="btn btn-default" ng-class="{'btn-default': irForms.edit.$pristine, 'btn-warning': !irForms.edit.$pristine}" ng-click="cancelEditIr()">Cancel</button>
-        <button type="submit" class="btn btn-success" ng-disabled="!irForms.edit.$dirty||irForms.edit.$invalid||(irForms.edit.$dirty&&verificationResults.status!=='SUCCESS')">Edit</button>
+        <button type="submit" class="btn btn-success" ng-disabled="!irForms.edit.$dirty|| irForms.edit.$invalid||(!disableVerify(irToEdit)&&irForms.edit.$dirty&&verificationResults.status!=='SUCCESS')">Edit</button>
     </div>
 </form>
     
