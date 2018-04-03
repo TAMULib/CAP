@@ -4,6 +4,8 @@ cap.model("IR", function($location, $timeout, $cookies, $interval, $q, HttpMetho
 
     var cache = {};
 
+    ir.currentContext;
+
     ir.cacheContext = function(context) {
       cache[context.uri] = context;
     };
@@ -39,7 +41,8 @@ cap.model("IR", function($location, $timeout, $cookies, $interval, $q, HttpMetho
 
     ir.loadContext = function(contextUri, reload) {
       $location.search("context", contextUri);
-      return ir.getContext(contextUri, reload);
+      ir.currentContext = ir.getContext(contextUri, reload);
+      return ir.currentContext;
     };
 
     ir.performRequest = function(endpoint, options) {
@@ -56,6 +59,47 @@ cap.model("IR", function($location, $timeout, $cookies, $interval, $q, HttpMetho
       }
       
       return WsApi.fetch(endpoint, options);
+
+    };
+
+    ir.startTransaction = function() {
+
+      var transactionPromise = ir.performRequest(ir.getMapping().transaction, {
+        method: HttpMethodVerbs.GET,
+      });
+
+      transactionPromise.then(function(apiRes) {
+        var transactionDetails = angular.fromJson(apiRes.body).payload.FedoraTransactionDetails;
+        ir.clearCache();
+        ir.createTransactionCookie(transactionDetails.transactionToken, transactionDetails.secondsRemaining, transactionDetails.transactionDuration);
+        ir.currentContext.reloadContext().then(function() {
+          ir.startTransactionTimer().then(function() {
+            ir.currentContext.reloadContext();
+          });
+        });
+      });
+
+      return transactionPromise;
+
+    };
+
+    ir.refreshTransaction = function() {
+
+      var transaction = ir.getTransaction();
+
+      var refeshPromise = ir.performRequest(ir.getMapping().transaction, {
+        method: HttpMethodVerbs.PUT,
+        query: {
+          contextUri: transaction.transactionToken
+        }
+      });
+
+      refeshPromise.then(function(apiRes) {
+        var transactionDetails = angular.fromJson(apiRes.body).payload.FedoraTransactionDetails;
+        ir.createTransactionCookie(transactionDetails.transactionToken, transactionDetails.secondsRemaining, transactionDetails.transactionDuraction);
+      });
+
+      return refeshPromise;
 
     };
 
@@ -140,7 +184,6 @@ cap.model("IR", function($location, $timeout, $cookies, $interval, $q, HttpMetho
     WsApi.listen("/queue/transaction/"+user.uin).then(null, null, function(apiRes) {
       var transactionDetails = angular.fromJson(apiRes.body).payload.FedoraTransactionDetails;
       ir.createTransactionCookie(transactionDetails.transactionToken, transactionDetails.secondsRemaining, transactionDetails.transactionDuraction);
-
     });
 
     return ir;

@@ -1,38 +1,27 @@
 package edu.tamu.cap.service;
 
-import static edu.tamu.weaver.response.ApiAction.BROADCAST;
-import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static org.springframework.web.context.WebApplicationContext.SCOPE_REQUEST;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.data.repository.query.Param;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.HandlerMapping;
@@ -40,15 +29,12 @@ import org.springframework.web.servlet.HandlerMapping;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.tamu.cap.controller.aspect.annotation.PayloadArgName;
 import edu.tamu.cap.exceptions.IRInjectionException;
 import edu.tamu.cap.model.IR;
-import edu.tamu.cap.model.ircontext.TransactionDetails;
 import edu.tamu.cap.model.repo.IRRepo;
 import edu.tamu.weaver.context.SpringContext;
-import edu.tamu.weaver.response.ApiResponse;
 
 @Service
 @Scope(value = SCOPE_REQUEST)
@@ -66,12 +52,6 @@ public class ArgumentResolver {
 
     @Autowired
     private HttpServletRequest request;
-    
-    @Autowired
-    private HttpServletResponse response;
-    
-    @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
     
     private Optional<IRService<?>> irService = Optional.empty();
     

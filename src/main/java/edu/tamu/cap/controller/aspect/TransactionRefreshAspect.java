@@ -36,7 +36,6 @@ import edu.tamu.cap.exceptions.IRInjectionException;
 import edu.tamu.cap.model.IR;
 import edu.tamu.cap.model.ircontext.TransactionDetails;
 import edu.tamu.cap.model.repo.IRRepo;
-import edu.tamu.cap.model.response.IRContext;
 import edu.tamu.cap.service.IRService;
 import edu.tamu.cap.service.IRType;
 import edu.tamu.cap.service.TransactingIRService;
@@ -113,7 +112,6 @@ public class TransactionRefreshAspect {
             
             TransactionDetails transactionDetails = transactingIrService.get().makeTransactionDetails(transactionToken, transactionExpiration);
             
-            
             simpMessagingTemplate.convertAndSend("/queue/transaction/"+request.getUserPrincipal().getName(), new ApiResponse(SUCCESS, BROADCAST, transactionDetails));
             
         }  
@@ -182,21 +180,5 @@ public class TransactionRefreshAspect {
         }
         return argValue;
     }
-    
-//    protected Optional<IRService<?>> getIrService(Parameter parameter) throws IRInjectionException,IOException {
-//        if (!irService.isPresent()) {
-//            if (IRService.class.isAssignableFrom(parameter.getType())) {
-//                IRService<?> irs = SpringContext.bean(getIRType().getGloss());
-//                Optional<Long> irid = getIRId();
-//                if (irid.isPresent()) {
-//                    irs.setIr(irRepo.read(irid.get()));
-//                } else {
-//                    irs.setIr(getIRFromRequest());
-//                }
-//                irService = Optional.of(irs);
-//            }
-//        }
-//        return irService;      
-//    }
 
 }

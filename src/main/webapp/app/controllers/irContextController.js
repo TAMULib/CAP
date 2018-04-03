@@ -136,7 +136,7 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     };
 
     $scope.startTransaction = function() {
-      $scope.context.startTransaction();
+      $scope.context.ir.startTransaction();
     };
 
     $scope.copyToClipboard = function (text, target) {

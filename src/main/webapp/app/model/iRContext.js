@@ -304,30 +304,6 @@ cap.model("IRContext", function ($q, $filter, $interval, $location, $routeParams
       return fixityPromise;
     };
 
-    irContext.startTransaction = function() {
-
-      var transactionPromise = irContext.ir.performRequest(irContext.getMapping().transaction, {
-        method: HttpMethodVerbs.GET,
-        query: {
-          contextUri: irContext.uri
-        }
-      });
-
-      transactionPromise.then(function(apiRes) {
-        var transactionDetails = angular.fromJson(apiRes.body).payload.FedoraTransactionDetails;
-        irContext.ir.clearCache();
-        irContext.ir.createTransactionCookie(transactionDetails.transactionToken, transactionDetails.secondsRemaining, transactionDetails.transactionDuration);
-        irContext.reloadContext().then(function() {
-          irContext.ir.startTransactionTimer().then(function() {
-            irContext.reloadContext();
-          });
-        });
-      });
-
-      return transactionPromise;
-
-    };
-
     irContext.advancedUpdate = function (query) {
       var updatePromise = irContext.ir.performRequest(irContext.getMapping().advancedQuery, {
         method: HttpMethodVerbs.POST,

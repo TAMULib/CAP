@@ -422,7 +422,25 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
     
         URI transactionContextURI = new URI(ir.getRootUri()+"fcr:tx");
         
-        System.out.println("Transaction Start: "+transactionContextURI);
+        FcrepoResponse response = new PostBuilder(transactionContextURI, client).perform();
+        
+        String fedoraDate = response.getHeaderValue("Expires");
+        
+        DateTimeFormatter f = DateTimeFormatter.ofPattern("EEE, dd MMM uuuu kk:mm:ss z");
+        ZonedDateTime expirationDate = ZonedDateTime.parse(fedoraDate,f);
+        
+        logger.debug("Transaction Start: {}",transactionContextURI);
+
+        return makeTransactionDetails(response.getLocation().toString(), DateTimeFormatter.ISO_ZONED_DATE_TIME.format(expirationDate));
+    }
+    
+    @Override
+    public TransactionDetails refreshTransaction(String tokenURI) throws Exception {
+               
+        FcrepoClient client = buildClient();
+    
+        URI transactionContextURI = new URI(tokenURI+"/fcr:tx");
+        
         
         FcrepoResponse response = new PostBuilder(transactionContextURI, client).perform();
         
@@ -430,8 +448,12 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
         
         DateTimeFormatter f = DateTimeFormatter.ofPattern("EEE, dd MMM uuuu kk:mm:ss z");
         ZonedDateTime expirationDate = ZonedDateTime.parse(fedoraDate,f);
+        
+        String location = response.getLocation() != null ? response.getLocation().toString() : tokenURI;
+        
+        logger.debug("Transaction Refresh: {}",transactionContextURI);
 
-        return makeTransactionDetails(response.getLocation().toString(), DateTimeFormatter.ISO_ZONED_DATE_TIME.format(expirationDate));
+        return makeTransactionDetails(location, DateTimeFormatter.ISO_ZONED_DATE_TIME.format(expirationDate));
     }
     
     @Override
@@ -439,11 +461,6 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
         FedoraTransactionDetails transactionDetails = new FedoraTransactionDetails(transactionToken, expirationString);
         return transactionDetails;
     }
-    
-//    @Override
-//    public void setTransactionDetails(TransactionDetails transactionDetails) {
-//       this.transactionDetails = transactionDetails;
-//    }
     
     @Override
     public void setIr(IR ir) {
