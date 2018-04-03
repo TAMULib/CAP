@@ -21,27 +21,27 @@ public class IRContextResourcesController {
     
     @RequestMapping(method = POST)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse createResource(IRService<?> irService, @Param("contextUri") String resourceUri, @RequestParam("file") MultipartFile file) throws Exception {
-        return new ApiResponse(SUCCESS, irService.createResource(resourceUri, file));
+    public ApiResponse createResource(IRService<?> irService, @Param("contextUri") String contextUri, @RequestParam("file") MultipartFile file) throws Exception {
+        return new ApiResponse(SUCCESS, irService.createResource(contextUri, file));
     }
     
     @RequestMapping(method = GET)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse getResources(IRService<?> irService, @Param("contextUri") String resourceUri) throws Exception {
-        return new ApiResponse(SUCCESS, irService.getResource(resourceUri));
+    public ApiResponse getResources(IRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
+        return new ApiResponse(SUCCESS, irService.getResource(contextUri));
     }
     
     @RequestMapping(method = DELETE)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse deleteResources(IRService<?> irService, @Param("contextUri") String resourceUri) throws Exception {
-        irService.deleteResource(resourceUri);
+    public ApiResponse deleteResources(IRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
+        irService.deleteResource(contextUri);
         return new ApiResponse(SUCCESS);
     }
 
     @RequestMapping(value = "/fixity", method = GET)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse createResource(IRService<?> irService, @Param("contextUri") String resourceUri) throws Exception {
-        return new ApiResponse(SUCCESS, irService.resourceFixity(resourceUri));
+    public ApiResponse createResource(IRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
+        return new ApiResponse(SUCCESS, irService.resourceFixity(contextUri));
     }
 
 }
