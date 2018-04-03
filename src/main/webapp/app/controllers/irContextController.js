@@ -139,6 +139,12 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
       $scope.context.ir.startTransaction();
     };
 
+    $scope.commitTransaction = function() {
+      $scope.context.ir.commitTransaction().then(function() {
+        $scope.closeModal();
+      });
+    };
+
     $scope.copyToClipboard = function (text, target) {
       var textArea = document.createElement("textarea");
       textArea.value = text;

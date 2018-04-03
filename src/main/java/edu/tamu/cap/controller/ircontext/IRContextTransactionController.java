@@ -3,6 +3,7 @@ package edu.tamu.cap.controller.ircontext;
 import static edu.tamu.weaver.response.ApiStatus.ERROR;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 import java.util.Optional;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.cap.model.ircontext.TransactionDetails;
+import edu.tamu.cap.model.response.IRContext;
 import edu.tamu.cap.service.TransactingIRService;
 import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.response.ApiStatus;
@@ -36,23 +38,33 @@ public class IRContextTransactionController {
         return new ApiResponse(SUCCESS, "Transaction successfully created", transactionDetails);
     }
     
+    @RequestMapping(method = POST)
+    @PreAuthorize("hasRole('USER')")
+    public ApiResponse commitTransaction(TransactingIRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
+        
+        Optional<String> trancationToken = Optional.ofNullable(extractTokenFromContextUri(contextUri));
+        
+        String rootUri = irService.getIR().getRootUri();
+        
+        ApiStatus status = trancationToken.isPresent()?SUCCESS:ERROR;
+        String message = trancationToken.isPresent()?"Transaction successfully created":"Failed to find transaction token.";
+        
+        irService.commitTransaction(rootUri+trancationToken.get());
+        
+        return new ApiResponse(status, message);
+    }
+    
     @RequestMapping(method = PUT)
     @PreAuthorize("hasRole('USER')")
     public ApiResponse refreshTransaction(TransactingIRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
         
         Optional<TransactionDetails> transactionDetails = Optional.empty();
+        Optional<String> transactionToken = Optional.ofNullable(extractTokenFromContextUri(contextUri));
         
-        Pattern pattern = Pattern.compile("tx:.*\\/?");
-        System.out.println(pattern.pattern());
-        System.out.println(contextUri);
-        Matcher matcher = pattern.matcher(contextUri);
-        if (matcher.find())
-        {
-            System.out.println(matcher.group(0));
+        if (transactionToken.isPresent()) {
             String rootUri = irService.getIR().getRootUri();
             rootUri += irService.getIR().getRootUri().endsWith("/") ? "" : "/"; 
-            transactionDetails = Optional.ofNullable(irService.refreshTransaction(rootUri+matcher.group(0)));
-            
+            transactionDetails = Optional.ofNullable(irService.refreshTransaction(rootUri+transactionToken.get()));
         }
         
         ApiStatus status = transactionDetails.isPresent()?SUCCESS:ERROR;
@@ -64,6 +76,19 @@ public class IRContextTransactionController {
         } else {
             return new ApiResponse(status, message);
         }
+        
+    }
+    
+    private String extractTokenFromContextUri(String contextUri) {
+        String transactionToken = null;
+        
+        Pattern pattern = Pattern.compile("tx:.*\\/?");
+        Matcher matcher = pattern.matcher(contextUri);
+        if (matcher.find()) { 
+            transactionToken = matcher.group(0);   
+        }
+        
+        return transactionToken;
         
     }
 
