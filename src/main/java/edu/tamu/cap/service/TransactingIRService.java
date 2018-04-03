@@ -1,7 +1,6 @@
 package edu.tamu.cap.service;
 
 import edu.tamu.cap.model.ircontext.TransactionDetails;
-import edu.tamu.cap.model.response.IRContext;
 
 public interface TransactingIRService<M> extends IRService<M> {
     
@@ -12,6 +11,8 @@ public interface TransactingIRService<M> extends IRService<M> {
     public TransactionDetails makeTransactionDetails(String transactionToken, String expirationString) throws Exception;
 
     public void commitTransaction(String contextUri) throws Exception;
+
+    public void rollbackTransaction(String string) throws Exception;
     
 //    public void setTransactionDetails(TransactionDetails transactionDetails);
 

@@ -145,6 +145,12 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
       });
     };
 
+    $scope.rollbackTransaction = function() {
+      $scope.context.ir.rollbackTransaction().then(function() {
+        $scope.closeModal();
+      });
+    };
+
     $scope.copyToClipboard = function (text, target) {
       var textArea = document.createElement("textarea");
       textArea.value = text;

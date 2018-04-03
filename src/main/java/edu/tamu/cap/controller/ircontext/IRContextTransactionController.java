@@ -5,6 +5,7 @@ import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -50,6 +51,22 @@ public class IRContextTransactionController {
         String message = trancationToken.isPresent()?"Transaction successfully created":"Failed to find transaction token.";
         
         irService.commitTransaction(rootUri+trancationToken.get());
+        
+        return new ApiResponse(status, message);
+    }
+    
+    @RequestMapping(method = DELETE)
+    @PreAuthorize("hasRole('USER')")
+    public ApiResponse rollbackTransaction(TransactingIRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
+        
+        Optional<String> trancationToken = Optional.ofNullable(extractTokenFromContextUri(contextUri));
+        
+        String rootUri = irService.getIR().getRootUri();
+        
+        ApiStatus status = trancationToken.isPresent()?SUCCESS:ERROR;
+        String message = trancationToken.isPresent()?"Transaction successfully created":"Failed to find transaction token.";
+        
+        irService.rollbackTransaction(rootUri+trancationToken.get());
         
         return new ApiResponse(status, message);
     }

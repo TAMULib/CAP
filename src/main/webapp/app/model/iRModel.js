@@ -115,7 +115,23 @@ cap.model("IR", function($location, $timeout, $cookies, $interval, $q, HttpMetho
 
       refeshPromise.then(function() {
         ir.stopTransactionTimer();
-        ir.currentContext.reloadContext();
+      });
+
+      return refeshPromise;
+    };
+
+    ir.rollbackTransaction = function() {
+      var transaction = ir.getTransaction();
+
+      var refeshPromise = ir.performRequest(ir.getMapping().transaction, {
+        method: HttpMethodVerbs.DELETE,
+        query: {
+          contextUri: transaction.transactionToken
+        }
+      });
+
+      refeshPromise.then(function() {
+        ir.stopTransactionTimer();
       });
 
       return refeshPromise;
@@ -189,6 +205,7 @@ cap.model("IR", function($location, $timeout, $cookies, $interval, $q, HttpMetho
           $cookies.remove("transaction", {
             path: "/"
           });
+          ir.currentContext.reloadContext();
         }, 500);
       }
     };
