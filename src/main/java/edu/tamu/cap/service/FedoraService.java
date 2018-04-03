@@ -214,6 +214,7 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
         
         Model model = ModelFactory.createDefaultModel();
         metadata.forEach(metadatum->{
+            System.out.println(metadatum.getPredicate());
           Property prop = model.createProperty(metadatum.getPredicate());
           model.createResource("").addProperty(prop, metadatum.getObject());
           ByteArrayOutputStream out = new ByteArrayOutputStream();
