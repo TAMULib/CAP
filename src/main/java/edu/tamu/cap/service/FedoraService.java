@@ -457,6 +457,18 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
     }
     
     @Override
+    public void commitTransaction(String tokenURI) throws Exception {
+               
+        FcrepoClient client = buildClient();
+    
+        URI transactionContextURI = new URI(tokenURI+"/fcr:commit" );
+        
+        FcrepoResponse response = new PostBuilder(transactionContextURI, client).perform();
+        
+        logger.debug("Transaction Commited: {}",response.getStatusCode());
+    }
+    
+    @Override
     public TransactionDetails makeTransactionDetails(String transactionToken, String expirationString) throws Exception {
         FedoraTransactionDetails transactionDetails = new FedoraTransactionDetails(transactionToken, expirationString);
         return transactionDetails;

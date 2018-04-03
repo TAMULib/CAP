@@ -103,6 +103,24 @@ cap.model("IR", function($location, $timeout, $cookies, $interval, $q, HttpMetho
 
     };
 
+    ir.commitTransaction = function() {
+      var transaction = ir.getTransaction();
+
+      var refeshPromise = ir.performRequest(ir.getMapping().transaction, {
+        method: HttpMethodVerbs.POST,
+        query: {
+          contextUri: transaction.transactionToken
+        }
+      });
+
+      refeshPromise.then(function() {
+        ir.stopTransactionTimer();
+        ir.currentContext.reloadContext();
+      });
+
+      return refeshPromise;
+    };
+
     ir.createTransactionCookie = function(token, secondsRemaining, transactionDuration) {
 
       var cookie = {
@@ -114,7 +132,7 @@ cap.model("IR", function($location, $timeout, $cookies, $interval, $q, HttpMetho
       var expiration = new Date();
       expiration.setSeconds(expiration.getSeconds() + secondsRemaining);
 
-      $cookies.put("transaction", angular.toJson(cookie), {
+      $cookies.putObject("transaction", cookie, {
         expires: expiration,
         path: "/"
       });
@@ -125,10 +143,8 @@ cap.model("IR", function($location, $timeout, $cookies, $interval, $q, HttpMetho
     };
 
     ir.getTransaction = function() {
-      var rawTransactionCookie = $cookies.get("transaction");
-      var transactionCookie; 
-      if(rawTransactionCookie)  {
-        transactionCookie = angular.fromJson(rawTransactionCookie.replace(/\+/g, ""));
+      var transactionCookie = $cookies.getObject("transaction"); 
+      if(transactionCookie)  {
         transactionObject.active = true;
       } else {
         transactionObject.active = false;
@@ -155,15 +171,26 @@ cap.model("IR", function($location, $timeout, $cookies, $interval, $q, HttpMetho
           ir.createTransactionCookie(transaction.transactionToken, secondsremaining);
           
           if(ir.getTransaction().secondsRemaining<1) {
-            $interval.cancel(transactionTimer);
-            transactionTimer = undefined;
-            timerDefer.resolve();
+           ir.stopTransactionTimer();
           }
         }, 1000);
       }
 
       return timerDefer.promise;
 
+    };
+
+    ir.stopTransactionTimer = function() {
+      if(ir.transactionTimer) {
+        $interval.cancel(ir.transactionTimer);
+        ir.transactionTimer = undefined;
+        $timeout(function() {
+          transactionObject.active = false;
+          $cookies.remove("transaction", {
+            path: "/"
+          });
+        }, 500);
+      }
     };
 
 

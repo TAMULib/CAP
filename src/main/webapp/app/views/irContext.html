@@ -13,11 +13,11 @@
       </modal>
       <ul ng-if="!context.isVersion" class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
         <li class="dropdown-header">Container Actions</li>
-        <li role="menuitem" ng-if="context.features.transacting" ng-click="startTransaction()"><a href="#"><span class="glyphicon glyphicon-play-circle"></span> Start Transaction</a></li>
-        <li ng-if="context.features.versioning" role="menuitem" ng-click="openModal('#versionsModal')"><a href="#"><span class="glyphicon glyphicon-scissors"></span> Versions</a></li>
-        <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-move"></span> Move</a></li>
-        <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-random"></span> Migrate</a></li>
-        <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-export"></span> Export</a></li>
+        <li role="menuitem" ng-class="{'disabled': context.ir.getTransaction().active}" ng-if="context.features.transacting" ng-click="context.ir.getTransaction().active||startTransaction()"><a href="#"><span class="glyphicon glyphicon-play-circle"></span> Start Transaction</a></li>
+        <li role="menuitem" ng-class="{'disabled': context.ir.getTransaction().active}" ng-if="context.features.versioning" ng-click="context.ir.getTransaction().active||openModal('#versionsModal')"><a href="#"><span class="glyphicon glyphicon-scissors"></span> Versions</a></li>
+        <li role="menuitem" class="disabled"><a href="#"><span class="glyphicon glyphicon-move"></span> Move</a></li>
+        <li role="menuitem" class="disabled"><a href="#"><span class="glyphicon glyphicon-random"></span> Migrate</a></li>
+        <li role="menuitem" class="disabled"><a href="#"><span class="glyphicon glyphicon-export"></span> Export</a></li>
         <li role="menuitem bg-danger" ng-click="openModal('#irContextDeleteModal')"><a href="#" class="bg-danger"><span class="glyphicon glyphicon-trash"></span> Delete</a></li>
 
         <li class="divider"></li>
@@ -70,7 +70,7 @@
     </span>
     <div class="pull-right">
         <button class="btn btn-sm btn-warning" ng-click="">Rollback</button>
-        <button class="btn btn-sm btn-success" ng-click="">Commit</button>
+        <button class="btn btn-sm btn-success" ng-click="openModal('#commitTransactionModal')">Commit</button>
     </div>
   </div>
 
@@ -302,6 +302,13 @@
     modal-id="contextVersionRevertModal"
     modal-view="views/modals/contextVersionRevertModal.html"
     modal-header-class="modal-header-warning"
+    wvr-modal-backdrop="static">
+  </modal>
+
+  <modal
+    modal-id="commitTransactionModal"
+    modal-view="views/modals/commitTransactionModal.html"
+    modal-header-class="modal-header-primary"
     wvr-modal-backdrop="static">
   </modal>
 
