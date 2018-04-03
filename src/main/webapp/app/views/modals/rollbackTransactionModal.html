@@ -1,0 +1,13 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+    <button type="button" class="close modal-close" aria-label="Close" ng-click="cancelDeleteIrContext()"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title">Confirm Rollback</h4>
+  </div>
+  <div class="modal-body">
+    <h3>Are you sure you want to rollback this transaction?</h3>
+    <p>All changes will be lost.</p>
+  </div>     
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="closeModal()">Cancel</button>
+    <button type="button" class="btn btn-warning" ng-click="rollbackTransaction()">Confirm</button>
+  </div>
+  

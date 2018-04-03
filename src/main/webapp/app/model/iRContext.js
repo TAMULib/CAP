@@ -163,7 +163,7 @@ cap.model("IRContext", function ($q, $filter, $interval, $location, $routeParams
 
       var formData = new FormData();
       formData.append("file", file, file.name);
-
+      
       var createPromise = irContext.ir.performRequest(irContext.getMapping().resource, {
         method: HttpMethodVerbs.POST,
         headers: {

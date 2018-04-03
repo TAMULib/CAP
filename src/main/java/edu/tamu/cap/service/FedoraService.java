@@ -469,6 +469,21 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
     }
     
     @Override
+    public void rollbackTransaction(String tokenURI) throws Exception {
+               
+        FcrepoClient client = buildClient();
+    
+        URI transactionContextURI = new URI(tokenURI+"/fcr:tx/fcr:rollback" );
+        
+        FcrepoResponse response = new PostBuilder(transactionContextURI, client).perform();
+
+        System.out.println("Transaction RollBack: "+tokenURI);
+        System.out.println("Transaction RollBack: "+response.getStatusCode());
+        
+        logger.debug("Transaction RollBack: {}",response.getStatusCode());
+    }
+    
+    @Override
     public TransactionDetails makeTransactionDetails(String transactionToken, String expirationString) throws Exception {
         FedoraTransactionDetails transactionDetails = new FedoraTransactionDetails(transactionToken, expirationString);
         return transactionDetails;

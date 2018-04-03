@@ -4,7 +4,7 @@ cap.model("IR", function($location, $timeout, $cookies, $interval, $q, HttpMetho
 
     var cache = {};
 
-    ir.currentContext;
+    ir.currentContext = {};
 
     ir.cacheContext = function(context) {
       cache[context.uri] = context;
@@ -115,7 +115,23 @@ cap.model("IR", function($location, $timeout, $cookies, $interval, $q, HttpMetho
 
       refeshPromise.then(function() {
         ir.stopTransactionTimer();
-        ir.currentContext.reloadContext();
+      });
+
+      return refeshPromise;
+    };
+
+    ir.rollbackTransaction = function() {
+      var transaction = ir.getTransaction();
+
+      var refeshPromise = ir.performRequest(ir.getMapping().transaction, {
+        method: HttpMethodVerbs.DELETE,
+        query: {
+          contextUri: transaction.transactionToken
+        }
+      });
+
+      refeshPromise.then(function() {
+        ir.stopTransactionTimer();
       });
 
       return refeshPromise;
@@ -156,7 +172,7 @@ cap.model("IR", function($location, $timeout, $cookies, $interval, $q, HttpMetho
 
     };
 
-    ir.transactionTimer;
+    ir.transactionTimer = {};
     ir.startTransactionTimer = function() {
 
       var timerDefer = $q.defer();
@@ -189,6 +205,7 @@ cap.model("IR", function($location, $timeout, $cookies, $interval, $q, HttpMetho
           $cookies.remove("transaction", {
             path: "/"
           });
+          ir.currentContext.reloadContext();
         }, 500);
       }
     };

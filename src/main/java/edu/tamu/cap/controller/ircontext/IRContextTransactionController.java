@@ -5,6 +5,7 @@ import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -54,6 +55,22 @@ public class IRContextTransactionController {
         return new ApiResponse(status, message);
     }
     
+    @RequestMapping(method = DELETE)
+    @PreAuthorize("hasRole('USER')")
+    public ApiResponse rollbackTransaction(TransactingIRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
+        
+        Optional<String> trancationToken = Optional.ofNullable(extractTokenFromContextUri(contextUri));
+        
+        String rootUri = irService.getIR().getRootUri();
+        
+        ApiStatus status = trancationToken.isPresent()?SUCCESS:ERROR;
+        String message = trancationToken.isPresent()?"Transaction successfully created":"Failed to find transaction token.";
+        
+        irService.rollbackTransaction(rootUri+trancationToken.get());
+        
+        return new ApiResponse(status, message);
+    }
+    
     @RequestMapping(method = PUT)
     @PreAuthorize("hasRole('USER')")
     public ApiResponse refreshTransaction(TransactingIRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
@@ -67,11 +84,13 @@ public class IRContextTransactionController {
             transactionDetails = Optional.ofNullable(irService.refreshTransaction(rootUri+transactionToken.get()));
         }
         
-        ApiStatus status = transactionDetails.isPresent()?SUCCESS:ERROR;
-        String message = transactionDetails.isPresent()?"Transaction successfully created":"Failed to find transaction token.";
-        TransactionDetails td = transactionDetails.isPresent()?transactionDetails.get():null;
+        boolean transactionDetailsPresent = transactionDetails.isPresent();
         
-        if(transactionDetails.isPresent()) {
+        ApiStatus status = transactionDetailsPresent?SUCCESS:ERROR;
+        String message = transactionDetailsPresent?"Transaction successfully created":"Failed to find transaction token.";
+        TransactionDetails td = transactionDetailsPresent?transactionDetails.get():null;
+        
+        if(transactionDetailsPresent) {
             return new ApiResponse(status, message, td);
         } else {
             return new ApiResponse(status, message);
