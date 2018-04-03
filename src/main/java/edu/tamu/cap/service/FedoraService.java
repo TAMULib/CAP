@@ -154,11 +154,12 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
             
             String transactionToken = cookieObject.get("transactionToken").asText();
             
+            String contextPath = contextUri.replace(ir.getRootUri(), "");
+                    
             URI transactionURI = URI.create(transactionToken);
             URI rootURI = URI.create(ir.getRootUri());
             
             StringBuilder strngBldr = new StringBuilder();
-            
             
             strngBldr
                 .append(transactionToken.contains("https://")?"https":"http")
@@ -172,6 +173,10 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
             } else {
                 strngBldr.append(transactionURI.getPath());
             }
+            
+            if(!transactionURI.getPath().endsWith("/")&&!contextPath.startsWith("/")) strngBldr.append("/").append(contextPath);
+            
+            if(transactionURI.getPath().endsWith("/")&&contextPath.startsWith("/")) strngBldr.append("/").append(contextPath.substring(1));
             
             contextUri = strngBldr.toString();
             
