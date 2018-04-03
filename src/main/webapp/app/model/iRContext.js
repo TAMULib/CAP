@@ -263,7 +263,9 @@ cap.model("IRContext", function ($q, $filter, $interval, $location, $routeParams
         }
       });
 
-      versionPromise.then(function() {
+      versionPromise.then(function(apiRes) {
+        var newContext = angular.fromJson(apiRes.body).payload.IRContext;
+        angular.extend(irContext, newContext);
         if (form) {
           form.$setPristine();
           form.$setUntouched();

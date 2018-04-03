@@ -32,8 +32,8 @@ public class IRContextVersionController {
     
     @RequestMapping(method = DELETE)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse deleteVersion(VersioningIRService<?> irService, @Param("contextUri") String versionUri) throws Exception {
-        irService.deleteVersion(versionUri);
+    public ApiResponse deleteVersion(VersioningIRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
+        irService.deleteVersion(contextUri);
         return new ApiResponse(SUCCESS);
     }
 

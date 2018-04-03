@@ -408,7 +408,6 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
     
     private FcrepoResponse deleteContainer(String uri) throws URISyntaxException, FcrepoOperationFailedException {
         FcrepoClient client = buildClient();
-        
         URI newURI = new URI(uri);
         DeleteBuilder builder = new DeleteBuilder(newURI, client);
         
