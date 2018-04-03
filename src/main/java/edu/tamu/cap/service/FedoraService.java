@@ -180,8 +180,6 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
             
             contextUri = strngBldr.toString();
             
-            System.out.println("THE NEW CONTEXTURI"+ contextUri);
-            
         }
         
         FcrepoClient client = buildClient();
@@ -553,19 +551,16 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
         });
         
         
-//        String rootUri = transactionDetails != null ? transactionDetails.getTransactionToken() : ir.getRootUri();
-//        
-//        if(contextUri.endsWith("/")&&!rootUri.endsWith("/")) rootUri += "/";
-//        
-        if(contextUri.equals(ir.getRootUri())) {    
+        String rootFromContext = contextUri;
+        if(rootFromContext.contains("tx:")) {
+            rootFromContext = rootFromContext.replaceAll("tx:.*\\/", "");
+        }
+        
+        if(rootFromContext.equals(ir.getRootUri())) {    
             irContext.setName("Root");
         } else {
             irContext.setName(contextUri);
         }
-//        
-//        if(transactionDetails != null) {
-//            irContext.setTransactionDetails(transactionDetails);
-//        } 
 
         if (irContext.isResource()) {
             Optional<String> fileName = getLiteralForProperty(model, model.createProperty(EBU_FILENAME_PREDICATE));
