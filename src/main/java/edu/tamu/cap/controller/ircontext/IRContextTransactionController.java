@@ -84,11 +84,13 @@ public class IRContextTransactionController {
             transactionDetails = Optional.ofNullable(irService.refreshTransaction(rootUri+transactionToken.get()));
         }
         
-        ApiStatus status = transactionDetails.isPresent()?SUCCESS:ERROR;
-        String message = transactionDetails.isPresent()?"Transaction successfully created":"Failed to find transaction token.";
-        TransactionDetails td = transactionDetails.isPresent()?transactionDetails.get():null;
+        boolean transactionDetailsPresent = transactionDetails.isPresent();
         
-        if(transactionDetails.isPresent()) {
+        ApiStatus status = transactionDetailsPresent?SUCCESS:ERROR;
+        String message = transactionDetailsPresent?"Transaction successfully created":"Failed to find transaction token.";
+        TransactionDetails td = transactionDetailsPresent?transactionDetails.get():null;
+        
+        if(transactionDetailsPresent) {
             return new ApiResponse(status, message, td);
         } else {
             return new ApiResponse(status, message);
