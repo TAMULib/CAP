@@ -4,7 +4,7 @@ cap.model("IR", function($location, $timeout, $cookies, $interval, $q, HttpMetho
 
     var cache = {};
 
-    ir.currentContext;
+    ir.currentContext = {};
 
     ir.cacheContext = function(context) {
       cache[context.uri] = context;
@@ -172,7 +172,7 @@ cap.model("IR", function($location, $timeout, $cookies, $interval, $q, HttpMetho
 
     };
 
-    ir.transactionTimer;
+    ir.transactionTimer = {};
     ir.startTransactionTimer = function() {
 
       var timerDefer = $q.defer();
