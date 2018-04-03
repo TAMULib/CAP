@@ -37,13 +37,13 @@ public class DSpaceService implements IRService<Model> {
     }
 
     @Override
-    public IRContext createMetadata(Triple triple) throws Exception {
+    public IRContext createMetadata(String contextUri, Triple triple) throws Exception {
 
         return null;
     }
 
     @Override
-    public IRContext updateMetadata(Triple originalTriple, String sparql) throws Exception {
+    public IRContext updateMetadata(String contextUri, Triple originalTriple, String query) throws Exception {
 
         return null;
     }
@@ -60,13 +60,13 @@ public class DSpaceService implements IRService<Model> {
     }
 
     @Override
-    public IRContext deleteMetadata(Triple triple) throws Exception {
+    public IRContext deleteMetadata(String contextUri, Triple triple) throws Exception {
 
         return null;
     }
 
 	@Override
-	public IRContext resourceFixity(Triple tiple) throws Exception {
+	public IRContext resourceFixity(String contextUri) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -99,6 +99,10 @@ public class DSpaceService implements IRService<Model> {
     public void deleteIRContext(String targetUri) throws Exception {
         // TODO Auto-generated method stub
         
+    }
+    
+    public IR getIR() {
+        return null;
     }
 
 }

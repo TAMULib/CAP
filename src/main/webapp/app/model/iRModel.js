@@ -1,8 +1,10 @@
-cap.model("IR", function($location, IRContext, WsApi) {
+cap.model("IR", function($location, $timeout, $cookies, $interval, $q, HttpMethodVerbs, IRContext, WsApi, StorageService, UserService) {
   return function IR() {
     var ir = this;
 
     var cache = {};
+
+    ir.currentContext;
 
     ir.cacheContext = function(context) {
       cache[context.uri] = context;
@@ -14,6 +16,12 @@ cap.model("IR", function($location, IRContext, WsApi) {
 
     ir.removeCachedContext = function(contextUri) {
       delete cache[contextUri];
+    };
+
+    ir.clearCache = function() {
+      angular.forEach(cache, function(v,uri){
+        ir.removeCachedContext(uri);
+      });
     };
 
     ir.getContext = function(contextUri, reload) {
@@ -33,8 +41,131 @@ cap.model("IR", function($location, IRContext, WsApi) {
 
     ir.loadContext = function(contextUri, reload) {
       $location.search("context", contextUri);
-      return ir.getContext(contextUri, reload);
+      ir.currentContext = ir.getContext(contextUri, reload);
+      return ir.currentContext;
     };
+
+    ir.performRequest = function(endpoint, options) {
+
+      var defaultPathValues = {
+        type: ir.type,
+        irid: ir.id
+      };
+
+      if(options.pathValues) {
+        angular.extend(options.pathValues, defaultPathValues);
+      } else {
+        options.pathValues = defaultPathValues;
+      }
+      
+      return WsApi.fetch(endpoint, options);
+
+    };
+
+    ir.startTransaction = function() {
+
+      var transactionPromise = ir.performRequest(ir.getMapping().transaction, {
+        method: HttpMethodVerbs.GET,
+      });
+
+      transactionPromise.then(function(apiRes) {
+        var transactionDetails = angular.fromJson(apiRes.body).payload.FedoraTransactionDetails;
+        ir.clearCache();
+        ir.createTransactionCookie(transactionDetails.transactionToken, transactionDetails.secondsRemaining, transactionDetails.transactionDuration);
+        ir.currentContext.reloadContext().then(function() {
+          ir.startTransactionTimer().then(function() {
+            ir.currentContext.reloadContext();
+          });
+        });
+      });
+
+      return transactionPromise;
+
+    };
+
+    ir.refreshTransaction = function() {
+
+      var transaction = ir.getTransaction();
+
+      var refeshPromise = ir.performRequest(ir.getMapping().transaction, {
+        method: HttpMethodVerbs.PUT,
+        query: {
+          contextUri: transaction.transactionToken
+        }
+      });
+
+      refeshPromise.then(function(apiRes) {
+        var transactionDetails = angular.fromJson(apiRes.body).payload.FedoraTransactionDetails;
+        ir.createTransactionCookie(transactionDetails.transactionToken, transactionDetails.secondsRemaining, transactionDetails.transactionDuraction);
+      });
+
+      return refeshPromise;
+
+    };
+
+    ir.createTransactionCookie = function(token, secondsRemaining, transactionDuration) {
+
+      var cookie = {
+        transactionToken: token,
+        secondsRemaining: secondsRemaining,
+        transactionDuration: transactionDuration
+      };
+
+      var expiration = new Date();
+      expiration.setSeconds(expiration.getSeconds() + secondsRemaining);
+
+      $cookies.put("transaction", angular.toJson(cookie), {
+        expires: expiration,
+        path: "/"
+      });
+    };
+
+    var transactionObject = {
+      active: false
+    };
+
+    ir.getTransaction = function() {
+      var rawTransactionCookie = $cookies.get("transaction");
+      var transactionCookie; 
+      if(rawTransactionCookie)  {
+        transactionCookie = angular.fromJson(rawTransactionCookie.replace(/\+/g, ""));
+        transactionObject.active = true;
+      } else {
+        transactionObject.active = false;
+      }
+
+      angular.extend(transactionObject, transactionCookie);
+
+      return transactionObject;
+
+    };
+
+    ir.transactionTimer;
+    ir.startTransactionTimer = function() {
+
+      var timerDefer = $q.defer();
+
+      if(!angular.isDefined(ir.transactionTimer)) {
+        ir.transactionTimer = $interval(function() {
+          
+          var transaction = ir.getTransaction();
+
+          var secondsremaining = transaction.secondsRemaining-1;
+
+          ir.createTransactionCookie(transaction.transactionToken, secondsremaining);
+          
+          if(ir.getTransaction().secondsRemaining<1) {
+            $interval.cancel(transactionTimer);
+            transactionTimer = undefined;
+            timerDefer.resolve();
+          }
+        }, 1000);
+      }
+
+      return timerDefer.promise;
+
+    };
+
 
     WsApi.listen("/queue/context").then(null, null, function(response) {
       var context = angular.fromJson(response.body).payload.IRContext;
@@ -46,6 +177,13 @@ cap.model("IR", function($location, IRContext, WsApi) {
         });
       }
       angular.extend(cache[context.triple.subject], context);
+    });
+
+    var user = UserService.getCurrentUser();
+
+    WsApi.listen("/queue/transaction/"+user.uin).then(null, null, function(apiRes) {
+      var transactionDetails = angular.fromJson(apiRes.body).payload.FedoraTransactionDetails;
+      ir.createTransactionCookie(transactionDetails.transactionToken, transactionDetails.secondsRemaining, transactionDetails.transactionDuraction);
     });
 
     return ir;

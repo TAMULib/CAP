@@ -29,7 +29,7 @@ public class IRContextQueryController {
     @RequestMapping(method = GET)
     @PreAuthorize("hasRole('USER')")
     public ApiResponse getQueryHelp(QueryableIRService<?> irService) throws Exception {
-        return new ApiResponse(SUCCESS, "SUCCESS", irService.getQueryHelp());
+        return new ApiResponse(SUCCESS, "Successfully retrieved query help.", irService.getQueryHelp());
     }
 
 }

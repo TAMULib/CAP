@@ -1,4 +1,4 @@
-cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
+cap.model("IRContext", function ($q, $filter, $interval, $location, $routeParams, $cookies, WsApi, UserService, HttpMethodVerbs, StorageService) {
   return function IRContext() {
 
     var irContext = this;
@@ -6,12 +6,8 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
     var children = {};
 
     var fetchContext = function (contextUri) {
-      return WsApi.fetch(irContext.getMapping().load, {
+      return irContext.ir.performRequest(irContext.getMapping().load, {
         method: HttpMethodVerbs.GET,
-        pathValues: {
-          type: irContext.ir.type,
-          irid: irContext.ir.id
-        },
         query: {
           contextUri: contextUri
         }
@@ -31,6 +27,13 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
           });
           irContext.ir.cacheContext(irContext);
           defer.resolve(irContext);
+
+          irContext.ready().then(function() {
+            if(irContext.ir.getTransaction().active) {
+              irContext.ir.startTransactionTimer();
+            }
+          });
+
         });
       } else {
         defer.resolve(irContext);
@@ -40,13 +43,11 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
 
     irContext.reloadContext = function() {
       var reloadPromise = fetchContext(irContext.uri);
-
       reloadPromise.then(function (res) {
         angular.extend(irContext, angular.fromJson(res.body).payload.IRContext, {
           fetch: false
         });
       });
-
       return reloadPromise;
     }; 
 
@@ -77,12 +78,8 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
 
     irContext.createContainer = function (metadata) {
 
-      var createPromise = WsApi.fetch(irContext.getMapping().children, {
+      var createPromise = irContext.ir.performRequest(irContext.getMapping().children, {
         method: HttpMethodVerbs.POST,
-        pathValues: {
-          irid: irContext.ir.id,
-          type: irContext.ir.type
-        },
         query: {
           contextUri: irContext.uri
         },
@@ -101,14 +98,10 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
       var promises = [];
 
       angular.forEach(containerTriples, function (containerTriple) {
-        var removePromise = WsApi.fetch(irContext.getMapping().children, {
+        var removePromise = irContext.ir.performRequest(irContext.getMapping().load, {
           method: HttpMethodVerbs.DELETE,
-          pathValues: {
-            irid: irContext.ir.id,
-            type: irContext.ir.type
-          },
           query: {
-            containerUri: containerTriple.subject
+            contextUri: containerTriple.subject
           }
         });
 
@@ -138,14 +131,10 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
       var promises = [];
 
       angular.forEach(resourceTriples, function (resourceTriple) {
-        var removePromise = WsApi.fetch(irContext.getMapping().resource, {
+        var removePromise = irContext.ir.performRequest(irContext.getMapping().resource, {
           method: HttpMethodVerbs.DELETE,
-          pathValues: {
-            irid: irContext.ir.id,
-            type: irContext.ir.type
-          },
           query: {
-            resourceUri: resourceTriple.subject
+            contextUri: resourceTriple.subject
           }
         });
 
@@ -175,17 +164,13 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
       var formData = new FormData();
       formData.append("file", file, file.name);
 
-      var createPromise = WsApi.fetch(irContext.getMapping().resource, {
+      var createPromise = irContext.ir.performRequest(irContext.getMapping().resource, {
         method: HttpMethodVerbs.POST,
         headers: {
           "Content-Type": undefined
         },
-        pathValues: {
-          irid: irContext.ir.id,
-          type: irContext.ir.type
-        },
         query: {
-          resourceUri: irContext.uri
+          contextUri: irContext.uri
         },
         data: formData
       });
@@ -202,11 +187,10 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
       var promises = [];
 
       angular.forEach(metadataTriples, function (metadataTriple) {
-        var createPromise = WsApi.fetch(irContext.getMapping().metadata, {
+        var createPromise = irContext.ir.performRequest(irContext.getMapping().metadata, {
           method: HttpMethodVerbs.POST,
-          pathValues: {
-            irid: irContext.ir.id,
-            type: irContext.ir.type
+          query: {
+            contextUri: irContext.uri
           },
           data: metadataTriple
         });
@@ -229,11 +213,10 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
 
       angular.forEach(metadataTriples, function (metadataTriple) {
 
-        var removePromise = WsApi.fetch(irContext.getMapping().metadata, {
+        var removePromise = irContext.ir.performRequest(irContext.getMapping().metadata, {
           method: HttpMethodVerbs.DELETE,
-          pathValues: {
-            irid: irContext.ir.id,
-            type: irContext.ir.type
+          query: {
+            contextUri: irContext.uri
           },
           data: metadataTriple
         });
@@ -255,13 +238,10 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
 
     irContext.updateMetadatum = function (metadataTriple, newValue) {
       
-      var updatePromise = WsApi.fetch(irContext.getMapping().metadata, {
+      var updatePromise = irContext.ir.performRequest(irContext.getMapping().metadata, {
         method: HttpMethodVerbs.PUT,
-        pathValues: {
-          irid: irContext.ir.id,
-          type: irContext.ir.type
-        },
         query: {
+          contextUri: irContext.uri,
           newValue: newValue
         },
         data: metadataTriple
@@ -273,12 +253,8 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
 
     irContext.createVersion = function(form) {
 
-      var versionPromise = WsApi.fetch(irContext.getMapping().version, {
+      var versionPromise = irContext.ir.performRequest(irContext.getMapping().version, {
         method: HttpMethodVerbs.POST,
-        pathValues: {
-          irid: irContext.ir.id,
-          type: irContext.ir.type
-        },
         query: {
           contextUri: irContext.uri
         },
@@ -299,53 +275,38 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
     };
 
     irContext.deleteVersion = function(versionContext) {
-      return WsApi.fetch(irContext.getMapping().version, {
+      return irContext.ir.performRequest(irContext.getMapping().version, {
         method: HttpMethodVerbs.DELETE,
-        pathValues: {
-          irid: irContext.ir.id,
-          type: irContext.ir.type
-        },
         query: {
-          versionUri: versionContext.uri
+          contextUri: versionContext.uri
         }
       });
     };
 
     irContext.revertVersion = function(context) {
-      var revertVersionPromise = WsApi.fetch(irContext.getMapping().version, {
+      var revertVersionPromise = irContext.ir.performRequest(irContext.getMapping().version, {
         method: HttpMethodVerbs.PATCH,
-        pathValues: {
-          irid: context.ir.id,
-          type: context.ir.type
-        },
         query: {
           contextUri: context.uri
         }
       });
-
       return revertVersionPromise;
     };
 
     irContext.fixityCheck = function () {
-      var fixityPromise = WsApi.fetch(irContext.getMapping().resourceFixity, {
+      var fixityPromise = irContext.ir.performRequest(irContext.getMapping().resourceFixity, {
         method: HttpMethodVerbs.GET,
-        pathValues: {
-          irid: irContext.ir.id,
-          type: irContext.ir.type
-        },
-        query: irContext.triple
+        query: {
+          contextUri: context.uri
+        }
       });
 
       return fixityPromise;
     };
 
     irContext.advancedUpdate = function (query) {
-      var updatePromise = WsApi.fetch(irContext.getMapping().advancedQuery, {
+      var updatePromise = irContext.ir.performRequest(irContext.getMapping().advancedQuery, {
         method: HttpMethodVerbs.POST,
-        pathValues: {
-          irid: irContext.ir.id,
-          type: irContext.ir.type
-        },
         query: {
           contextUri: irContext.uri
         },
@@ -365,11 +326,10 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
 
       if(!queryHelp.message) {
         
-        var updatePromise = WsApi.fetch(irContext.getMapping().advancedQuery, {
+        var updatePromise = irContext.ir.performRequest(irContext.getMapping().advancedQuery, {
           method: HttpMethodVerbs.GET,
-          pathValues: {
-            irid: irContext.ir.id,
-            type: irContext.ir.type
+          query: {
+            contextUri: irContext.uri
           }
         });
   

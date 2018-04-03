@@ -22,8 +22,8 @@ public class IRContextMetadataController {
     
     @RequestMapping(method = POST)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse createMetadata(IRService<?> irService, Triple triple) throws Exception {
-        return new ApiResponse(SUCCESS, irService.createMetadata(triple));
+    public ApiResponse createMetadata(IRService<?> irService, @Param("contextUri") String contextUri, Triple triple) throws Exception {
+        return new ApiResponse(SUCCESS, irService.createMetadata(contextUri, triple));
     }
     
     @RequestMapping(method = GET)
@@ -34,14 +34,14 @@ public class IRContextMetadataController {
 
     @RequestMapping(method = PUT)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse updateMetadata(IRService<?> irService, Triple triple, @Param("newValue") String newValue) throws Exception {
-        return new ApiResponse(SUCCESS, irService.updateMetadata(triple, newValue));
+    public ApiResponse updateMetadata(IRService<?> irService, @Param("contextUri") String contextUri, Triple triple, @Param("newValue") String newValue) throws Exception {
+        return new ApiResponse(SUCCESS, irService.updateMetadata(contextUri, triple, newValue));
     }
     
     @RequestMapping(method = DELETE)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse deleteMetadata(IRService<?> irService, @RequestBody Triple triple) throws Exception {
-        return new ApiResponse(SUCCESS, irService.deleteMetadata(triple));
+    public ApiResponse deleteMetadata(IRService<?> irService, @Param("contextUri") String contextUri, @RequestBody Triple triple) throws Exception {
+        return new ApiResponse(SUCCESS, irService.deleteMetadata(contextUri, triple));
     }
 
 }

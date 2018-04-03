@@ -2,13 +2,21 @@ package edu.tamu.cap.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -30,11 +38,18 @@ import org.fcrepo.client.PatchBuilder;
 import org.fcrepo.client.PostBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import edu.tamu.cap.exceptions.IRVerificationException;
 import edu.tamu.cap.model.IR;
+import edu.tamu.cap.model.ircontext.FedoraTransactionDetails;
+import edu.tamu.cap.model.ircontext.TransactionDetails;
 import edu.tamu.cap.model.response.FixityReport;
 import edu.tamu.cap.model.response.IRContext;
 import edu.tamu.cap.model.response.Triple;
@@ -43,7 +58,7 @@ import edu.tamu.cap.util.StringUtil;
 
 @Service("Fedora")
 public class FedoraService implements IRService<Model>, VersioningIRService<Model>, VerifyingIRService<Model>, TransactingIRService<Model>, QueryableIRService<Model> {
-
+    
     private final static String LDP_CONTAINS_PREDICATE = "http://www.w3.org/ns/ldp#contains";
 
     private final static String RDF_TYPE_PREDICATE = "https://www.w3.org/1999/02/22-rdf-syntax-ns#type";
@@ -78,6 +93,12 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
         "http://pcdm.org/models"
     };
     // @formatter:on
+    
+    @Autowired
+    private HttpServletRequest request;
+    
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -114,6 +135,53 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
     
     @Override
     public IRContext getIRContext(String contextUri) throws Exception {
+        
+        Optional<Cookie> cookie = Optional.empty();
+        
+        Cookie[] cookies = request.getCookies(); 
+        
+        if(cookies != null) {
+            for (Cookie c : cookies) {
+                if (c.getName().equals("transaction")) {
+                    cookie = Optional.of(c);
+                    break;
+                }
+            }
+        }
+        
+        if (cookie.isPresent() && !contextUri.contains("tx:")) {
+            JsonNode cookieObject = objectMapper.readTree(URLDecoder.decode(cookie.get().getValue(), "UTF-8"));
+            
+            String transactionToken = cookieObject.get("transactionToken").asText();
+            
+            String contextPath = contextUri.replace(ir.getRootUri(), "");
+                    
+            URI transactionURI = URI.create(transactionToken);
+            URI rootURI = URI.create(ir.getRootUri());
+            
+            StringBuilder strngBldr = new StringBuilder();
+            
+            strngBldr
+                .append(transactionToken.contains("https://")?"https":"http")
+                .append("://")
+                .append(rootURI.getHost());
+            
+            if(!rootURI.getHost().endsWith("/") && !transactionURI.getPath().startsWith("/")) strngBldr.append("/");
+            
+            if(rootURI.getHost().endsWith("/") && transactionURI.getPath().startsWith("/")) {
+                strngBldr.append(transactionURI.getPath().substring(1));
+            } else {
+                strngBldr.append(transactionURI.getPath());
+            }
+            
+            if(!transactionURI.getPath().endsWith("/")&&!contextPath.startsWith("/")) strngBldr.append("/").append(contextPath);
+            
+            if(transactionURI.getPath().endsWith("/")&&contextPath.startsWith("/")) strngBldr.append("/").append(contextPath.substring(1));
+            
+            contextUri = strngBldr.toString();
+            
+        }
+        
         FcrepoClient client = buildClient();
         FcrepoResponse response = new GetBuilder(new URI(contextUri + "/fcr:metadata"), client).accept("application/rdf+xml").perform();
         Model model = createRdfModel(response.getBody());
@@ -169,9 +237,8 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
     }
     
     @Override
-    public IRContext createMetadata(Triple triple) throws Exception {
+    public IRContext createMetadata(String contextUri,Triple triple) throws Exception {
         FcrepoClient client = buildClient();
-        String contextUri = triple.getSubject();
         PatchBuilder patch = new PatchBuilder(new URI(contextUri + "/fcr:metadata"), client);
         String sparql = "INSERT { " + triple.toString() + " . } WHERE {}";
 
@@ -195,10 +262,8 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
     }
 
     @Override
-    public IRContext updateMetadata(Triple originalTriple, String newValue) throws Exception {
-        
-        String contextUri = originalTriple.getSubject();
-               
+    public IRContext updateMetadata(String contextUri, Triple originalTriple, String newValue) throws Exception {
+                       
         StringBuilder stngBldr = new StringBuilder();
         stngBldr.append("DELETE { <> <").append(originalTriple.getPredicate()).append("> '").append(StringUtil.removeQuotes(originalTriple.getObject())).append("' } ");
         stngBldr.append("INSERT { <> <").append(originalTriple.getPredicate()).append("> '").append(StringUtil.removeQuotes(newValue)).append("' } ");
@@ -216,12 +281,11 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
     }
     
     @Override
-    public IRContext deleteMetadata(Triple triple) throws Exception {
+    public IRContext deleteMetadata(String contextUri, Triple triple) throws Exception {
 
         logger.debug("Attempting to delete");
 
         FcrepoClient client = buildClient();
-        String contextUri = triple.getSubject();
 
         PatchBuilder patch = new PatchBuilder(new URI(contextUri + "/fcr:metadata"), client);
 
@@ -263,8 +327,7 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
     }
 
     @Override
-    public IRContext resourceFixity(Triple tiple) throws Exception {
-        String contextUri = tiple.getSubject();
+    public IRContext resourceFixity(String contextUri) throws Exception {
         FcrepoClient client = buildClient();
         FcrepoResponse response = new GetBuilder(URI.create(contextUri + "/fcr:fixity"), client).perform();
 
@@ -351,7 +414,54 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
         
         return builder.perform();
     }
+    
+    @Override
+    public TransactionDetails startTransaction() throws Exception {
+               
+        FcrepoClient client = buildClient();
+    
+        URI transactionContextURI = new URI(ir.getRootUri()+"fcr:tx");
+        
+        FcrepoResponse response = new PostBuilder(transactionContextURI, client).perform();
+        
+        String fedoraDate = response.getHeaderValue("Expires");
+        
+        DateTimeFormatter f = DateTimeFormatter.ofPattern("EEE, dd MMM uuuu kk:mm:ss z");
+        ZonedDateTime expirationDate = ZonedDateTime.parse(fedoraDate,f);
+        
+        logger.debug("Transaction Start: {}",transactionContextURI);
 
+        return makeTransactionDetails(response.getLocation().toString(), DateTimeFormatter.ISO_ZONED_DATE_TIME.format(expirationDate));
+    }
+    
+    @Override
+    public TransactionDetails refreshTransaction(String tokenURI) throws Exception {
+               
+        FcrepoClient client = buildClient();
+    
+        URI transactionContextURI = new URI(tokenURI+"/fcr:tx");
+        
+        
+        FcrepoResponse response = new PostBuilder(transactionContextURI, client).perform();
+        
+        String fedoraDate = response.getHeaderValue("Expires");
+        
+        DateTimeFormatter f = DateTimeFormatter.ofPattern("EEE, dd MMM uuuu kk:mm:ss z");
+        ZonedDateTime expirationDate = ZonedDateTime.parse(fedoraDate,f);
+        
+        String location = response.getLocation() != null ? response.getLocation().toString() : tokenURI;
+        
+        logger.debug("Transaction Refresh: {}",transactionContextURI);
+
+        return makeTransactionDetails(location, DateTimeFormatter.ISO_ZONED_DATE_TIME.format(expirationDate));
+    }
+    
+    @Override
+    public TransactionDetails makeTransactionDetails(String transactionToken, String expirationString) throws Exception {
+        FedoraTransactionDetails transactionDetails = new FedoraTransactionDetails(transactionToken, expirationString);
+        return transactionDetails;
+    }
+    
     @Override
     public void setIr(IR ir) {
         this.ir = ir;
@@ -387,7 +497,8 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
     }
 
     @Override
-    public synchronized IRContext buildIRContext(Model model, String contextUri) {
+    public synchronized IRContext buildIRContext(Model model, String contextUri) throws JsonProcessingException, UnsupportedEncodingException, IOException {
+        
         IRContext irContext = new IRContext(Triple.of(contextUri, RDF_TYPE_PREDICATE, FEDORA_CONTAINER_PREDICATE));
 
         // System.out.println("\n::\n");
@@ -455,8 +566,18 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
             }
 
         });
-
-        irContext.setName(contextUri.equals(ir.getRootUri()) ? "Root" : contextUri);
+        
+        
+        String rootFromContext = contextUri;
+        if(rootFromContext.contains("tx:")) {
+            rootFromContext = rootFromContext.replaceAll("tx:.*\\/", "");
+        }
+        
+        if(rootFromContext.equals(ir.getRootUri())) {    
+            irContext.setName("Root");
+        } else {
+            irContext.setName(contextUri);
+        }
 
         if (irContext.isResource()) {
             Optional<String> fileName = getLiteralForProperty(model, model.createProperty(EBU_FILENAME_PREDICATE));
@@ -511,6 +632,10 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
         // System.out.println("\n");
 
         return model;
+    }
+
+    public IR getIR() {
+        return ir;
     }
 
 }

@@ -1,4 +1,4 @@
-cap.controller("IrContextController", function ($controller, $location, $routeParams, $scope, $timeout, IRRepo) {
+cap.controller("IrContextController", function ($controller, $location, $routeParams, $scope, IRRepo) {
 
   angular.extend(this, $controller('CoreAdminController', {
     $scope: $scope
@@ -15,6 +15,8 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
   IRRepo.ready().then(function () {
 
     $scope.ir = IRRepo.findByName(decodeURI($routeParams.irName));
+
+    if(!$scope.ir) $location.path("/error/404");
 
     if ($routeParams.context !== undefined) {
       $scope.ir.contextUri = decodeURI($routeParams.context);
@@ -133,6 +135,10 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
       });
     };
 
+    $scope.startTransaction = function() {
+      $scope.context.ir.startTransaction();
+    };
+
     $scope.copyToClipboard = function (text, target) {
       var textArea = document.createElement("textarea");
       textArea.value = text;
@@ -157,7 +163,7 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
 
     $scope.resetCreateContainer();
     $scope.resetUploadResource();
-
+    
   });
 
 });

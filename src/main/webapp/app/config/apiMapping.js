@@ -112,6 +112,11 @@ var apiMapping = {
         'method': '',
         'httpMethod': "DELETE"
     },
+    transaction: {
+      'endpoint': '/private/queue',
+      'controller': 'ir-context',
+      'method': ':type/:irid/transaction'
+    },
     getTypes: {
       'endpoint': '/private/queue',
       'controller': 'ir',
