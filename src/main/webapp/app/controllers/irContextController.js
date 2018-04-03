@@ -67,17 +67,7 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     };
 
     $scope.resetAdvancedUpdate = function () {
-      var defaultSparql = '';
-      angular.forEach($scope.ir.schemas, function (schema) {
-        defaultSparql += 'PREFIX ' + schema.abbreviation + ': <' + schema.namespace + '>\n';
-      });
-      defaultSparql += '\n\n';
-      defaultSparql += 'DELETE { }\n';
-      defaultSparql += 'INSERT { }\n';
-      defaultSparql += 'WHERE { }\n\n';
-      $scope.irForm.advancedUpdate = {
-        sparql: defaultSparql
-      };
+      $scope.irForm.advancedUpdate = $scope.context.getQueryHelp();
       $scope.closeModal();
     };
 

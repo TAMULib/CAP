@@ -45,7 +45,9 @@ public interface IRService<M> {
     
     public default IRContext featureSupport(IRContext context) {  
         for(Class<?> i : this.getClass().getInterfaces()) {
-            context.addFeature(i.getSimpleName().toLowerCase(), true);
+            if(!i.getSimpleName().equals("IRService")) {
+                context.addFeature(i.getSimpleName().replace("IRService", "").toLowerCase(), true);
+            }
         }
         return context;
     }

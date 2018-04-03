@@ -57,27 +57,32 @@ var apiMapping = {
       'controller': 'ir-context',
       'method': ':type/:irid/version'
     },
+    advancedQuery: {
+      'endpoint': '/private/queue',
+      'controller': 'ir-context',
+      'method': ':type/:irid/query'
+    },
     resourceFixity: {
       'endpoint': '/private/queue',
       'controller': 'ir-context',
       'method': ':type/:irid/resource/fixity'
     }
   },
-  TestIRSettings: {
-    testPing: {
+  VerifyIRSettings: {
+    verifyPing: {
       'endpoint': '/private/queue',
       'controller': 'ir',
-      'method': ':type/test/ping'
+      'method': ':type/verify/ping'
     },
-    testAuth: {
+    verifyAuth: {
         'endpoint': '/private/queue',
         'controller': 'ir',
-        'method': ':type/test/ping'
+        'method': ':type/verify/ping'
     },
-    testContent: {
+    verifyContent: {
         'endpoint': '/private/queue',
         'controller': 'ir',
-        'method': ':type/test/ping'
+        'method': ':type/verify/ping'
     }
   },
   IR: {
