@@ -21,12 +21,14 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.mail.javamail.ConfigurableMimeFileTypeMap;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.resource.AppCacheManifestTransformer;
 import org.springframework.web.servlet.resource.ResourceUrlEncodingFilter;
 import org.springframework.web.servlet.resource.VersionResourceResolver;
 
+import edu.tamu.cap.controller.ircontext.interceptor.CookieTransactionInterceptor;
 import edu.tamu.cap.model.User;
 import edu.tamu.cap.model.repo.UserRepo;
 import edu.tamu.weaver.auth.resolver.WeaverCredentialsArgumentResolver;
@@ -96,6 +98,11 @@ public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/node_modules/**")
 				.addResourceLocations("file:node_modules/");
         // @formatter:on
+    }
+    
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+      registry.addInterceptor(new CookieTransactionInterceptor());
     }
 
     @Override

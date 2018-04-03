@@ -12,7 +12,7 @@ public interface IRService<M> {
 
     public void setIr(IR ir);
 
-    public IRContext buildIRContext(M model, String contextUri);
+    public IRContext buildIRContext(M model, String contextUri) throws Exception;
 
     public IRContext getIRContext(String contextUri) throws Exception;
     

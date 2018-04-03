@@ -61,11 +61,13 @@
     </div>
   </div>
 
-  <div ng-if="context.transactionDetails" class="alert alert-info clearfix" role="alert">
+  {{context.ir.getTransaction()}}
+
+  <div ng-if="context.ir.getTransaction().active" class="alert alert-info clearfix" role="alert">
     <span>
       <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> This IR is currently in transaction. 
-      <button ng-if="context.transactionDetails.secondsRemaining<31" class="btn btn-sm btn-info" ng-click="">
-        <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> 0:{{context.transactionDetails.secondsRemaining}} 
+      <button ng-if="context.ir.getTransaction().secondsRemaining<31" class="btn btn-sm btn-info" ng-click="">
+        <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> 0:{{context.ir.getTransaction().secondsRemaining}} 
       </button>
     </span>
     <div class="pull-right">

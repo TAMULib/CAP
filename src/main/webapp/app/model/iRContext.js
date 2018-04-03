@@ -1,4 +1,4 @@
-cap.model("IRContext", function ($q, $filter, HttpMethodVerbs, $interval, StorageService) {
+cap.model("IRContext", function ($q, $filter, $interval, $location, $routeParams, $cookies, WsApi, UserService, HttpMethodVerbs, StorageService) {
   return function IRContext() {
 
     var irContext = this;
@@ -28,9 +28,11 @@ cap.model("IRContext", function ($q, $filter, HttpMethodVerbs, $interval, Storag
           irContext.ir.cacheContext(irContext);
           defer.resolve(irContext);
 
-          if(irContext.transactionDetails) {
-            irContext.startTransactionTimer();
-          }
+          irContext.ready().then(function() {
+            if(irContext.ir.getTransaction().active) {
+              irContext.ir.startTransactionTimer();
+            }
+          });
 
         });
       } else {
@@ -312,30 +314,18 @@ cap.model("IRContext", function ($q, $filter, HttpMethodVerbs, $interval, Storag
       });
 
       transactionPromise.then(function(apiRes) {
+        var transactionDetails = angular.fromJson(apiRes.body).payload.FedoraTransactionDetails;
         irContext.ir.clearCache();
+        irContext.ir.createTransactionCookie(transactionDetails.transactionToken, transactionDetails.secondsRemaining, transactionDetails.transactionDuration);
         irContext.reloadContext().then(function() {
-          irContext.startTransactionTimer();
+          irContext.ir.startTransactionTimer().then(function() {
+            irContext.reloadContext();
+          });
         });
       });
 
       return transactionPromise;
 
-    };
-
-    var transactionTimer;
-    irContext.startTransactionTimer = function() {
-      if(!angular.isDefined(transactionTimer)) {
-        transactionTimer = $interval(function() {
-          irContext.transactionDetails.secondsRemaining -= 1;
-          console.log(irContext.transactionDetails.secondsRemaining);
-          if(irContext.transactionDetails.secondsRemaining<1) {
-            irContext.transactionDetails = null;
-            $interval.cancel(transactionTimer);
-            transactionTimer = undefined;
-            irContext.reloadContext();
-          }
-        }, 1000);
-      }
     };
 
     irContext.advancedUpdate = function (query) {

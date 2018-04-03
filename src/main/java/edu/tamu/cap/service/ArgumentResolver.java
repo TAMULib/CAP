@@ -1,5 +1,7 @@
 package edu.tamu.cap.service;
 
+import static edu.tamu.weaver.response.ApiAction.BROADCAST;
+import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static org.springframework.web.context.WebApplicationContext.SCOPE_REQUEST;
 
 import java.io.IOException;
@@ -22,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
@@ -29,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.repository.query.Param;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.HandlerMapping;
@@ -44,6 +48,7 @@ import edu.tamu.cap.model.IR;
 import edu.tamu.cap.model.ircontext.TransactionDetails;
 import edu.tamu.cap.model.repo.IRRepo;
 import edu.tamu.weaver.context.SpringContext;
+import edu.tamu.weaver.response.ApiResponse;
 
 @Service
 @Scope(value = SCOPE_REQUEST)
@@ -64,6 +69,9 @@ public class ArgumentResolver {
     
     @Autowired
     private HttpServletResponse response;
+    
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
     
     private Optional<IRService<?>> irService = Optional.empty();
     
@@ -108,77 +116,6 @@ public class ArgumentResolver {
                 i++;
             }
         }
-    }
-
-    public void augmentContextUri(ProceedingJoinPoint joinPoint) throws Exception {
-        Optional<Cookie> cookie = Optional.empty();
-        
-        Cookie[] cookies = request.getCookies(); 
-        
-        if(cookies != null) {
-            for (Cookie c : cookies) {
-                if (c.getName().equals("transaction")) {
-                    cookie = Optional.of(c);
-                    break;
-                }
-            }
-        }
-        
-        if (cookie.isPresent()) {
-            JsonNode cookieObject = objectMapper.readTree(URLDecoder.decode(cookie.get().getValue(), "UTF-8"));
-            String transactionToken = cookieObject.get("token").asText();
-            
-            String transactionExpiration;
-            String httpMethod = request.getMethod();
-            
-            System.out.println(httpMethod);
-            
-            if(httpMethod == "POST" || httpMethod == "PUT" || httpMethod == "DELETE") {
-                
-                System.out.println("WERE IN");
-                
-                transactionExpiration = DateTimeFormatter.ISO_ZONED_DATE_TIME.format(ZonedDateTime.now().plusSeconds(180));
-                
-                ObjectNode cookieNode = objectMapper.createObjectNode();
-                cookieNode.put("token", transactionToken);
-                cookieNode.put("expires", transactionExpiration);
-                String cookieJson = objectMapper.writeValueAsString(cookieNode);
-                
-                cookie.get().setValue(URLEncoder.encode(cookieJson, "UTF-8"));
-                cookie.get().setMaxAge(180);
-                
-                response.addCookie(cookie.get());
-                
-            } else {
-                transactionExpiration = cookieObject.get("expires").asText();
-            }
-            
-            Method method = getMethodFromJoinPoint(joinPoint);
-            Object[] arguments = joinPoint.getArgs();
-            int i = 0;
-            Optional<TransactingIRService<?>> transactingIrService = Optional.empty();
-            for (Parameter parameter : method.getParameters()) {
-                irService = getIrService(parameter);
-                if (irService.isPresent()) {
-                    transactingIrService = Optional.of((TransactingIRService<?>) irService.get());
-                    break;
-                }
-            }
-            
-            TransactionDetails transactionDetails = transactingIrService.get().makeTransactionDetails(transactionToken, transactionExpiration);
-            
-            for (Parameter parameter : method.getParameters()) {
-                if (Optional.ofNullable(parameter.getAnnotation(Param.class)).isPresent()) {
-                    String contextUri = (String) arguments[i];
-                    if (!contextUri.contains(transactionToken)) {
-                        arguments[i] = contextUri.replace(transactingIrService.get().getIR().getRootUri(), transactionToken+"/");
-                        transactingIrService.get().setTransactionDetails(transactionDetails);
-                    }
-                    break;
-                }
-                i++;
-            }
-        } 
     }
 
     private boolean methodHasRequestParameterAnnotation(Method method) {

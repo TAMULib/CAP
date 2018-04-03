@@ -1,6 +1,9 @@
 package edu.tamu.cap.controller.aspect;
 
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
@@ -33,8 +36,6 @@ public class IRInjectionAspect {
     @Around("execution(* edu.tamu.cap.controller.ircontext..*(..))")
     public ApiResponse irContextInjection(ProceedingJoinPoint joinPoint) throws Throwable {
         logger.debug("Injecting an IR Service at joinPoint: {}", joinPoint.toString());
-        // augment context URI if cookie for transaction exists
-        argumentResolver.augmentContextUri(joinPoint);
         // inject applicable end point arguments from request body
         argumentResolver.injectRequestPayload(joinPoint);
         // inject appropriate IR service

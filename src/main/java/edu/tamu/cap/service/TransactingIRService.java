@@ -8,6 +8,6 @@ public interface TransactingIRService<M> extends IRService<M> {
     
     public TransactionDetails makeTransactionDetails(String transactionToken, String expirationString) throws Exception;
     
-    public void setTransactionDetails(TransactionDetails transactionDetails);
+//    public void setTransactionDetails(TransactionDetails transactionDetails);
 
 }

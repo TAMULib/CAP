@@ -41,4 +41,9 @@ public class FedoraTransactionDetails implements TransactionDetails {
     public int getSecondsRemaining() {
         return (int) ChronoUnit.SECONDS.between(ZonedDateTime.now(ZoneId.of("GMT")), getExpirationDate());        
     }
+    
+    public int getTransactionDuraction() {
+        return (int) ChronoUnit.SECONDS.between(ZonedDateTime.now(ZoneId.of("GMT")), getExpirationDate());        
+    }
+
 }
