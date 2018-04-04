@@ -41,7 +41,7 @@ public class IRContextResourcesController {
 
     @RequestMapping(value = "/fixity", method = GET)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse createResource(FixityIRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
+    public ApiResponse checkFixity(FixityIRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
         return new ApiResponse(SUCCESS, irService.resourceFixity(contextUri));
     }
 
