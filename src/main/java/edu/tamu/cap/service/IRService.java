@@ -32,8 +32,6 @@ public interface IRService<M> {
     
     public void deleteResource(String contextUri) throws Exception;
     
-    public IRContext resourceFixity(String contextUri) throws Exception;
-
     // Metadata
     public IRContext createMetadata(String contextUri, Triple triple) throws Exception;
     

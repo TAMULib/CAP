@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import edu.tamu.cap.service.FixityIRService;
 import edu.tamu.cap.service.IRService;
 import edu.tamu.weaver.response.ApiResponse;
 
@@ -40,7 +41,7 @@ public class IRContextResourcesController {
 
     @RequestMapping(value = "/fixity", method = GET)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse createResource(IRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
+    public ApiResponse createResource(FixityIRService<?> irService, @Param("contextUri") String contextUri) throws Exception {
         return new ApiResponse(SUCCESS, irService.resourceFixity(contextUri));
     }
 

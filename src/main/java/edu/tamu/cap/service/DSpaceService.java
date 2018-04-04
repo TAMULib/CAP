@@ -65,12 +65,6 @@ public class DSpaceService implements IRService<Model> {
         return null;
     }
 
-	@Override
-	public IRContext resourceFixity(String contextUri) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
     @Override
     public List<Triple> getMetadata(String contextUri) throws Exception {
         // TODO Auto-generated method stub

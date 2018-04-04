@@ -57,7 +57,7 @@ import edu.tamu.cap.model.response.Version;
 import edu.tamu.cap.util.StringUtil;
 
 @Service("Fedora")
-public class FedoraService implements IRService<Model>, VersioningIRService<Model>, VerifyingIRService<Model>, TransactingIRService<Model>, QueryableIRService<Model> {
+public class FedoraService implements IRService<Model>, VersioningIRService<Model>, VerifyingIRService<Model>, TransactingIRService<Model>, QueryableIRService<Model>, FixityIRService<Model> {
     
     private final static String LDP_CONTAINS_PREDICATE = "http://www.w3.org/ns/ldp#contains";
 
