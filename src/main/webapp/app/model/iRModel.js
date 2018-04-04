@@ -123,18 +123,18 @@ cap.model("IR", function($location, $timeout, $cookies, $interval, $q, HttpMetho
     ir.rollbackTransaction = function() {
       var transaction = ir.getTransaction();
 
-      var refeshPromise = ir.performRequest(ir.getMapping().transaction, {
+      var rollbackPromise = ir.performRequest(ir.getMapping().transaction, {
         method: HttpMethodVerbs.DELETE,
         query: {
           contextUri: transaction.transactionToken
         }
       });
 
-      refeshPromise.then(function() {
+      rollbackPromise.then(function() {
         ir.stopTransactionTimer();
       });
 
-      return refeshPromise;
+      return rollbackPromise;
     };
 
     ir.createTransactionCookie = function(token, secondsRemaining, transactionDuration) {
@@ -202,9 +202,11 @@ cap.model("IR", function($location, $timeout, $cookies, $interval, $q, HttpMetho
         ir.transactionTimer = undefined;
         $timeout(function() {
           transactionObject.active = false;
+          var transaction = ir.getTransaction();
           $cookies.remove("transaction", {
             path: "/"
           });
+          ir.currentContext.uri = ir.currentContext.uri.replace(transaction.transactionToken, ir.rootUri);
           ir.currentContext.reloadContext();
         }, 500);
       }
