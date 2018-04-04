@@ -181,11 +181,19 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
             contextUri = strngBldr.toString();
             
         }
-        
+                
         FcrepoClient client = buildClient();
         FcrepoResponse response = new GetBuilder(new URI(contextUri + "/fcr:metadata"), client).accept("application/rdf+xml").perform();
-        Model model = createRdfModel(response.getBody());
+        
+        Model model = createRdyFromResponse(response);
         return buildIRContext(model, contextUri);
+    }
+    
+    private Model createRdyFromResponse(FcrepoResponse response) throws Exception {
+        if(response.getStatusCode()>399) {
+            throw new FcrepoOperationFailedException(response.getUrl(), response.getStatusCode(), "Error response from fedora: " + response.getStatusCode());
+        } 
+        return createRdfModel(response.getBody());
     }
     
     @Override
@@ -469,15 +477,12 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
     
     @Override
     public void rollbackTransaction(String tokenURI) throws Exception {
-               
+                
         FcrepoClient client = buildClient();
     
         URI transactionContextURI = new URI(tokenURI+"/fcr:tx/fcr:rollback" );
         
         FcrepoResponse response = new PostBuilder(transactionContextURI, client).perform();
-
-        System.out.println("Transaction RollBack: "+tokenURI);
-        System.out.println("Transaction RollBack: "+response.getStatusCode());
         
         logger.debug("Transaction RollBack: {}",response.getStatusCode());
     }
