@@ -295,7 +295,7 @@ cap.model("IRContext", function ($q, $filter, $interval, $location, $routeParams
       return revertVersionPromise;
     };
 
-    irContext.fixityCheck = function () {
+    irContext.fixityCheck = function (context) {
       var fixityPromise = irContext.ir.performRequest(irContext.getMapping().resourceFixity, {
         method: HttpMethodVerbs.GET,
         query: {

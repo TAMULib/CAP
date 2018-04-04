@@ -23,7 +23,7 @@
         <li class="divider"></li>
         <li class="dropdown-header">Resource Actions</li>
 
-        <li role="menuitem" ng-class="{'disabled': !context.resource}"><a href="" ng-click="contextToFixityCheck=context;openModal('#fixityModalDD')"><span class="glyphicon glyphicon glyphicon-edit"></span> Fixity</a></li>
+        <li role="menuitem" ng-if="context.features.fixity" ng-class="{'disabled': !context.resource}"><a href="" ng-click="contextToFixityCheck=context;openModal('#fixityModalDD')"><span class="glyphicon glyphicon glyphicon-edit"></span> Fixity</a></li>
 
         <li role="menuitem" ng-class="{'disabled': !context.resource}"><a href="{{context.resourse}}" target="_blank"><span class="glyphicon glyphicon-download-alt"></span> Download</a></li>
         
@@ -108,7 +108,7 @@
               </div>
               <div class="pull-right">
                 <a href="{{context.uri}}" download class="btn btn-primary" role="button"><span class="glyphicon glyphicon-download-alt"></span> Download</a>
-                <a href="" ng-click="contextToFixityCheck=context;openModal('#fixityModalButton')" class="btn btn-default" role="button"><span class="glyphicon glyphicon-ok"></span> Fixity</a>
+                <a ng-if="context.features.fixity" href="" ng-click="contextToFixityCheck=context;openModal('#fixityModalButton')" class="btn btn-default" role="button"><span class="glyphicon glyphicon-ok"></span> Fixity</a>
                 <modal
                   modal-id="fixityModalButton"
                   modal-view="views/modals/fixityModal.html"
