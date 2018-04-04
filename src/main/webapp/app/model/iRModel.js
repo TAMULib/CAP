@@ -172,14 +172,15 @@ cap.model("IR", function($location, $timeout, $cookies, $interval, $q, HttpMetho
 
     };
 
-    ir.transactionTimer = {};
+    ir.transactionTimer = undefined;
     ir.startTransactionTimer = function() {
 
       var timerDefer = $q.defer();
 
       if(!angular.isDefined(ir.transactionTimer)) {
+
         ir.transactionTimer = $interval(function() {
-          
+
           var transaction = ir.getTransaction();
 
           var secondsremaining = transaction.secondsRemaining-1;
