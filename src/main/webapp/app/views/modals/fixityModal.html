@@ -6,22 +6,22 @@
 
 <div class="row" ng-init="fixityResults={}">
     <div class="col-md-2 col-xs-offset-1">
-        <button class="btn btn-primary btn-lg " ng-click="contextToFixityCheck.fixityCheck(context)">Check Fixity</button>
+        <button class="btn btn-primary btn-lg " ng-click="context.fixityCheck(context)">Check Fixity</button>
     </div>
 
-    <div class="col-md-9" ng-if="contextToFixityCheck.fixity">
+    <div class="col-md-9" ng-if="context.fixity">
         <dl class="dl-horizontal">
             <dt>
                 Status:
             </dt>
             <dd>
-                {{contextToFixityCheck.fixity.status | removeQuotes }}
+                {{context.fixity.status | removeQuotes }}
             </dd>
             <dt>
                 Message Digest:
             </dt>
             <dd>
-                {{contextToFixityCheck.fixity.messageDigest}} 
+                {{context.fixity.messageDigest}} 
                 <button class="btn btn-default btn-sm" ng-click="copyToClipboard(context.fixity.messageDigest, 'fixity')" uib-tooltip="Copied!" tooltip-trigger="'none'" tooltip-is-open="fixityCopied === true">
                     <span class="glyphicon glyphicon-copy" style="margin-left: 0px;"></span>
                 </button>
@@ -30,7 +30,7 @@
                 Size:
             </dt>
             <dd>
-                {{contextToFixityCheck.fixity.size.split("^^")[0] | removeQuotes }}
+                {{context.fixity.size.split("^^")[0] | removeQuotes }}
             </dd>
         </dl>
     </div>
