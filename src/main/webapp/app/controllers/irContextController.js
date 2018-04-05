@@ -175,6 +175,16 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
       return URL.createObjectURL(file);
     };
 
+    $scope.fixity = function(context) {
+      $scope.contextToFixityCheck = context;
+      $scope.openModal('#fixityModal')
+    };
+
+    $scope.resetFixity = function(context) {
+      delete context.fixity;
+      $scope.closeModal();
+    };
+
     $scope.resetCreateContainer();
     $scope.resetUploadResource();
     
