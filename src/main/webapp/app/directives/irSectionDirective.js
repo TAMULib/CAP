@@ -11,7 +11,9 @@ cap.directive("irsection", function($controller, $timeout, IrSectionService) {
           listElementAction: "&",
           addAction: "&",
           removeAction: "&",
-          editAction: "&"
+          editAction: "&",
+          fixity: '=',
+          resetFixity: '='
         },
         link: function($scope, elem, attr, ctrl, transclude) {
           
