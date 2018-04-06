@@ -1,4 +1,4 @@
-cap.controller("IrContextController", function ($controller, $location, $routeParams, $scope, $timeout, IRRepo) {
+cap.controller("IrContextController", function ($controller, $location, $routeParams, $scope, IRRepo) {
 
   angular.extend(this, $controller('CoreAdminController', {
     $scope: $scope
@@ -16,6 +16,8 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
 
     $scope.ir = IRRepo.findByName(decodeURI($routeParams.irName));
 
+    if(!$scope.ir) $location.path("/error/404");
+
     if ($routeParams.context !== undefined) {
       $scope.ir.contextUri = decodeURI($routeParams.context);
     } else {
@@ -25,7 +27,19 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     $scope.context = $scope.ir.loadContext($scope.ir.contextUri);
 
     $scope.createContainer = function (form) {
-      $scope.context.createContainer(form).then(function () {
+      var subject = $scope.context.uri;
+      var triples = [];
+      angular.forEach(form.entries, function (entry) {
+        if(entry.property&&entry.value) {
+          triples.push({
+            subject: subject,
+            predicate: entry.property.uri,
+            object: entry.value
+          });
+        }
+      });
+
+      $scope.context.createContainer(triples).then(function () {
         $scope.closeModal();
       });
     };
@@ -38,7 +52,7 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
 
     $scope.uploadResource = function (file) {
       $scope.context.createResource(file).then(function () {
-        $scope.closeModal();
+        $scope.resetUploadResource();
       });
     };
 
@@ -57,17 +71,7 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     };
 
     $scope.resetAdvancedUpdate = function () {
-      var defaultSparql = '';
-      angular.forEach($scope.ir.schemas, function (schema) {
-        defaultSparql += 'PREFIX ' + schema.abbreviation + ': <' + schema.namespace + '>\n';
-      });
-      defaultSparql += '\n\n';
-      defaultSparql += 'DELETE { }\n';
-      defaultSparql += 'INSERT { }\n';
-      defaultSparql += 'WHERE { }\n\n';
-      $scope.irForm.advancedUpdate = {
-        sparql: defaultSparql
-      };
+      $scope.irForm.advancedUpdate = $scope.context.getQueryHelp();
       $scope.closeModal();
     };
 
@@ -92,15 +96,61 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     };
 
     $scope.deleteIrContext = function () {
+
       var ir = $scope.context.ir;
       var currentTriple = $scope.context.triple;
       var isResource = $scope.context.resource;
+      
+      var deleteContext = isResource ? $scope.context.removeResources : $scope.context.removeContainers;
+
       $scope.context = ir.loadContext($scope.context.parent.object);
-      if (isResource) {
-        $scope.context.removeResources([currentTriple]);
-      } else {
-        $scope.context.removeContainers([currentTriple]);
-      }
+
+      deleteContext([currentTriple]).then(function () {
+        $scope.context = ir.loadContext($scope.context.uri, true);
+      });
+
+    };
+
+    $scope.revertVersion = function () {
+
+      var ir = $scope.context.ir;
+      var currentContext = $scope.context;
+
+      $scope.context = ir.loadContext($scope.context.parent.object);
+
+      $scope.context.revertVersion(currentContext).then(function () {
+        $scope.context = ir.loadContext($scope.context.uri, true);
+      });
+    };
+
+    $scope.deleteVersion = function () {
+
+      var ir = $scope.context.ir;
+      var currentContext = $scope.context;
+
+      $scope.context = ir.loadContext($scope.context.parent.object);
+
+      ir.removeCachedContext($scope.context.uri);
+
+      $scope.context.deleteVersion(currentContext).then(function () {
+        $scope.context = ir.loadContext($scope.context.uri, true);
+      });
+    };
+
+    $scope.startTransaction = function() {
+      $scope.context.ir.startTransaction();
+    };
+
+    $scope.commitTransaction = function() {
+      $scope.context.ir.commitTransaction().then(function() {
+        $scope.closeModal();
+      });
+    };
+
+    $scope.rollbackTransaction = function() {
+      $scope.context.ir.rollbackTransaction().then(function() {
+        $scope.closeModal();
+      });
     };
 
     $scope.copyToClipboard = function (text, target) {
@@ -127,7 +177,7 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
 
     $scope.resetCreateContainer();
     $scope.resetUploadResource();
-
+    
   });
 
 });

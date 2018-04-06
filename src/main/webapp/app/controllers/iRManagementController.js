@@ -11,11 +11,36 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
     $scope.irToCreate = IRRepo.getScaffold({
       type: $scope.iRTypes[0].value
     });
+
+    $scope.$watch('irToCreate',function() {
+      resetVerification();
+    },true);
+
+    $scope.$watch('irToEdit',function() {
+      resetVerification();
+    },true);
+
+    $scope.disableVerify = function(activeIr) {
+      var typeIsVerifying = false;
+      for(var i in $scope.iRTypes) {
+        var type = $scope.iRTypes[i];
+        if(type.value===activeIr.type) {
+          typeIsVerifying = type.verifying===true;
+        }
+      }
+      return activeIr.rootUri && !typeIsVerifying;
+    };
   });
+
+  var resetVerification = function(force) {
+    if (force || $scope.verificationResults.status === 'SUCCESS') {
+      $scope.verificationResults = {};
+    }
+  };  
   
   $scope.irToDelete = {};
   $scope.irToEdit = {};
-  $scope.testResults = {};
+  resetVerification(true);
 
   $scope.irForms = {
     validations: IRRepo.getValidations(),
@@ -29,13 +54,15 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
         $scope.irForms[key].$setPristine();
       }
     }
-    delete $scope.irToTest;
+    resetVerification(true);
+    delete $scope.irToVerify;
     $scope.closeModal();    
   };
 
   $scope.resetIrForms(); 
   
   $scope.startCreate = function() {
+    console.log($scope.iRTypes);
     $scope.schemas = SchemaRepo.getAll();
     $scope.openModal("#createIRModal");
   };

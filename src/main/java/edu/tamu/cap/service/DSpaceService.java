@@ -1,5 +1,7 @@
 package edu.tamu.cap.service;
 
+import java.util.List;
+
 import org.apache.jena.rdf.model.Model;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,25 +12,21 @@ import edu.tamu.cap.model.response.Triple;
 
 @Service("DSpace")
 public class DSpaceService implements IRService<Model> {
-
+    
     @Override
-    public void verifyPing() throws Exception {
+    public IRContext getIRContext(String contextUri) throws Exception {
 
+        return null;
+    }
+    
+    @Override
+    public List<Triple> getTriples(IRService<?> irService, String contextUri) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
-    public void verifyAuth() throws Exception {
-
-    }
-
-    @Override
-    public void verifyRoot() throws Exception {
-
-    }
-
-    @Override
-    public IRContext createContainer(String contextUri, String name) throws Exception {
-
+    public IRContext createChild(String contextUri, List<Triple> metadata) throws Exception {
         return null;
     }
 
@@ -39,28 +37,17 @@ public class DSpaceService implements IRService<Model> {
     }
 
     @Override
-    public IRContext getContainer(String contextUri) throws Exception {
+    public IRContext createMetadata(String contextUri, Triple triple) throws Exception {
 
         return null;
     }
 
     @Override
-    public IRContext createMetadata(Triple triple) throws Exception {
+    public IRContext updateMetadata(String contextUri, Triple originalTriple, String query) throws Exception {
 
         return null;
     }
-
-    @Override
-    public IRContext updateMetadata(String contextUri, String sparql) throws Exception {
-
-        return null;
-    }
-
-    @Override
-    public void deleteContainer(String targetUri) throws Exception {
-
-    }
-
+    
     @Override
     public void setIr(IR ir) {
 
@@ -73,15 +60,43 @@ public class DSpaceService implements IRService<Model> {
     }
 
     @Override
-    public IRContext deleteMetadata(Triple triple) throws Exception {
+    public IRContext deleteMetadata(String contextUri, Triple triple) throws Exception {
 
         return null;
     }
 
-	@Override
-	public IRContext resourceFixity(Triple tiple) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public List<Triple> getMetadata(String contextUri) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<Triple> getChildren(String contextUri) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public IRContext getResource(String contextUri) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void deleteResource(String contextUri) throws Exception{
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void deleteIRContext(String targetUri) throws Exception {
+        // TODO Auto-generated method stub
+        
+    }
+    
+    public IR getIR() {
+        return null;
+    }
 
 }

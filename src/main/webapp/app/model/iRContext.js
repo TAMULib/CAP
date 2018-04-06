@@ -1,4 +1,4 @@
-cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
+cap.model("IRContext", function ($q, $filter, $interval, $location, $routeParams, $cookies, WsApi, UserService, HttpMethodVerbs, StorageService) {
   return function IRContext() {
 
     var irContext = this;
@@ -6,12 +6,8 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
     var children = {};
 
     var fetchContext = function (contextUri) {
-      return WsApi.fetch(irContext.getMapping().load, {
+      return irContext.ir.performRequest(irContext.getMapping().load, {
         method: HttpMethodVerbs.GET,
-        pathValues: {
-          type: irContext.ir.type,
-          irid: irContext.ir.id
-        },
         query: {
           contextUri: contextUri
         }
@@ -31,12 +27,29 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
           });
           irContext.ir.cacheContext(irContext);
           defer.resolve(irContext);
+
+          irContext.ready().then(function() {
+            if(irContext.ir.getTransaction().active) {
+              irContext.ir.startTransactionTimer();
+            }
+          });
+
         });
       } else {
         defer.resolve(irContext);
       }
       return defer.promise;
     });
+
+    irContext.reloadContext = function() {
+      var reloadPromise = fetchContext(irContext.uri);
+      reloadPromise.then(function (res) {
+        angular.extend(irContext, angular.fromJson(res.body).payload.IRContext, {
+          fetch: false
+        });
+      });
+      return reloadPromise;
+    }; 
 
     irContext.getChildContext = function (triple) {
       if (!children[triple.object]) {
@@ -63,19 +76,14 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
       return children[contextUri];
     };
 
-    irContext.createContainer = function (createForm) {
-      var createPromise = WsApi.fetch(irContext.getMapping().container, {
+    irContext.createContainer = function (metadata) {
+
+      var createPromise = irContext.ir.performRequest(irContext.getMapping().children, {
         method: HttpMethodVerbs.POST,
-        pathValues: {
-          irid: irContext.ir.id,
-          type: irContext.ir.type
-        },
         query: {
           contextUri: irContext.uri
         },
-        data: {
-          name: createForm.name
-        }
+        data: metadata
       });
 
       createPromise.then(function (res) {
@@ -90,14 +98,10 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
       var promises = [];
 
       angular.forEach(containerTriples, function (containerTriple) {
-        var removePromise = WsApi.fetch(irContext.getMapping().container, {
+        var removePromise = irContext.ir.performRequest(irContext.getMapping().load, {
           method: HttpMethodVerbs.DELETE,
-          pathValues: {
-            irid: irContext.ir.id,
-            type: irContext.ir.type
-          },
           query: {
-            containerUri: containerTriple.subject
+            contextUri: containerTriple.subject
           }
         });
 
@@ -122,21 +126,48 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
       return allRemovePromses;
     };
 
-    irContext.removeResources = irContext.removeContainers;
+    irContext.removeResources = function (resourceTriples) {
+
+      var promises = [];
+
+      angular.forEach(resourceTriples, function (resourceTriple) {
+        var removePromise = irContext.ir.performRequest(irContext.getMapping().resource, {
+          method: HttpMethodVerbs.DELETE,
+          query: {
+            contextUri: resourceTriple.subject
+          }
+        });
+
+        removePromise.then(function (res) {
+          var children = irContext.children;
+          for (var i in children) {
+            if (children.hasOwnProperty(i)) {
+              var child = children[i];
+              if (child.triple.object === resourceTriple.subject) {
+                children.splice(i, 1);
+                break;
+              }
+            }
+          }
+        });
+
+        promises.push(removePromise);
+      });
+
+      var allRemovePromses = $q.all(promises);
+
+      return allRemovePromses;
+    };
 
     irContext.createResource = function (file) {
 
       var formData = new FormData();
       formData.append("file", file, file.name);
-
-      var createPromise = WsApi.fetch(irContext.getMapping().resource, {
+      
+      var createPromise = irContext.ir.performRequest(irContext.getMapping().resource, {
         method: HttpMethodVerbs.POST,
         headers: {
           "Content-Type": undefined
-        },
-        pathValues: {
-          irid: irContext.ir.id,
-          type: irContext.ir.type
         },
         query: {
           contextUri: irContext.uri
@@ -156,11 +187,10 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
       var promises = [];
 
       angular.forEach(metadataTriples, function (metadataTriple) {
-        var createPromise = WsApi.fetch(irContext.getMapping().metadata, {
-          method: HttpMethodVerbs.PUT,
-          pathValues: {
-            irid: irContext.ir.id,
-            type: irContext.ir.type
+        var createPromise = irContext.ir.performRequest(irContext.getMapping().metadata, {
+          method: HttpMethodVerbs.POST,
+          query: {
+            contextUri: irContext.uri
           },
           data: metadataTriple
         });
@@ -172,9 +202,9 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
         promises.push(createPromise);
       });
 
-      var allRemovePromses = $q.all(promises);
+      var allCreatePromses = $q.all(promises);
 
-      return allRemovePromses;
+      return allCreatePromses;
     };
 
     irContext.removeMetadata = function (metadataTriples) {
@@ -182,23 +212,23 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
       var promises = [];
 
       angular.forEach(metadataTriples, function (metadataTriple) {
-        var createPromise = WsApi.fetch(irContext.getMapping().metadata, {
+
+        var removePromise = irContext.ir.performRequest(irContext.getMapping().metadata, {
           method: HttpMethodVerbs.DELETE,
-          pathValues: {
-            irid: irContext.ir.id,
-            type: irContext.ir.type
+          query: {
+            contextUri: irContext.uri
           },
-          query: metadataTriple
+          data: metadataTriple
         });
 
-        createPromise.then(function (response) {
+        removePromise.then(function (response) {
           var payload = angular.fromJson(response.body).payload;
           if (payload) {
             angular.extend(irContext, payload.IRContext);
           }
         });
 
-        promises.push(createPromise);
+        promises.push(removePromise);
       });
 
       var allRemovePromses = $q.all(promises);
@@ -206,39 +236,90 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
       return allRemovePromses;
     };
 
-    irContext.updateMetadatum = function (triple, newObject) {
-      var sparql = "DELETE { <> <" + triple.predicate + "> '" + removeQuotes(triple.object) + "' } ";
-      sparql += "INSERT { <> <" + triple.predicate + "> '" + removeQuotes(newObject) + "' } ";
-      sparql += "WHERE { }";
-      return irContext.advancedUpdate(sparql).then(function () {
-        newObject = undefined;
+    irContext.updateMetadatum = function (metadataTriple, newValue) {
+      
+      var updatePromise = irContext.ir.performRequest(irContext.getMapping().metadata, {
+        method: HttpMethodVerbs.PUT,
+        query: {
+          contextUri: irContext.uri,
+          newValue: newValue
+        },
+        data: metadataTriple
+      });
+      
+      return updatePromise;
+
+    };
+
+    irContext.createVersion = function(form) {
+
+      var versionPromise = irContext.ir.performRequest(irContext.getMapping().version, {
+        method: HttpMethodVerbs.POST,
+        query: {
+          contextUri: irContext.uri
+        },
+        data: {
+          name: form.name
+        }
+      });
+
+      versionPromise.then(function(apiRes) {
+
+        var newContext = angular.fromJson(apiRes.body).payload.IRContext;
+        angular.extend(irContext, newContext);
+
+        if (form) {
+          form.$setPristine();
+          form.$setUntouched();
+          form.name = "";
+        }
+      });
+
+      return versionPromise;
+    };
+
+    irContext.deleteVersion = function(versionContext) {
+      return irContext.ir.performRequest(irContext.getMapping().version, {
+        method: HttpMethodVerbs.DELETE,
+        query: {
+          contextUri: versionContext.uri
+        }
       });
     };
 
-    irContext.fixityCheck = function () {
-      var fixityPromise = WsApi.fetch(irContext.getMapping().resourceFixity, {
+    irContext.revertVersion = function(context) {
+      var revertVersionPromise = irContext.ir.performRequest(irContext.getMapping().version, {
+        method: HttpMethodVerbs.PATCH,
+        query: {
+          contextUri: context.uri
+        }
+      });
+      return revertVersionPromise;
+    };
+
+    irContext.fixityCheck = function (context) {
+      var fixityPromise = irContext.ir.performRequest(irContext.getMapping().resourceFixity, {
         method: HttpMethodVerbs.GET,
-        pathValues: {
-          irid: irContext.ir.id,
-          type: irContext.ir.type
-        },
-        query: irContext.triple
+        query: {
+          contextUri: context.uri
+        }
+      });
+
+      fixityPromise.then(function(apiRes) {
+        var newContext = angular.fromJson(apiRes.body).payload.IRContext;
+        angular.extend(irContext, newContext);
       });
 
       return fixityPromise;
     };
 
-    irContext.advancedUpdate = function (sparql) {
-      var updatePromise = WsApi.fetch(irContext.getMapping().metadata, {
-        method: HttpMethodVerbs.PATCH,
-        pathValues: {
-          irid: irContext.ir.id,
-          type: irContext.ir.type
-        },
+    irContext.advancedUpdate = function (query) {
+      var updatePromise = irContext.ir.performRequest(irContext.getMapping().advancedQuery, {
+        method: HttpMethodVerbs.POST,
         query: {
           contextUri: irContext.uri
         },
-        data: sparql
+        data: query
       });
 
       updatePromise.then(function (res) {
@@ -246,6 +327,27 @@ cap.model("IRContext", function ($q, $filter, WsApi, HttpMethodVerbs) {
       });
 
       return updatePromise;
+    };
+
+    var queryHelp = {};
+
+    irContext.getQueryHelp = function () {
+
+      if(!queryHelp.message) {
+        
+        var updatePromise = irContext.ir.performRequest(irContext.getMapping().advancedQuery, {
+          method: HttpMethodVerbs.GET,
+          query: {
+            contextUri: irContext.uri
+          }
+        });
+  
+        updatePromise.then(function (res) {
+          queryHelp.query = angular.fromJson(res.body).payload.String;
+        });
+      }
+
+      return queryHelp;
     };
 
     return this;

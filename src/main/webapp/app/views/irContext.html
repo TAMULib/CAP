@@ -11,26 +11,38 @@
         modal-fullscreen="true"
         wvr-modal-backdrop="static">
       </modal>
-      <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
+      <ul ng-if="!context.isVersion" class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
         <li class="dropdown-header">Container Actions</li>
-        <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-play-circle"></span> Start Transaction</a></li>
-        <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-scissors"></span> Cut Version</a></li>
-        <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-move"></span> Move</a></li>
-        <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-random"></span> Migrate</a></li>
-        <li role="menuitem"><a href="#"><span class="glyphicon glyphicon-export"></span> Export</a></li>
+        <li role="menuitem" ng-class="{'disabled': context.ir.getTransaction().active}" ng-if="context.features.transacting" ng-click="context.ir.getTransaction().active||startTransaction()"><a href="#"><span class="glyphicon glyphicon-play-circle"></span> Start Transaction</a></li>
+        <li role="menuitem" ng-class="{'disabled': context.ir.getTransaction().active}" ng-if="context.features.versioning" ng-click="context.ir.getTransaction().active||openModal('#versionsModal')"><a href="#"><span class="glyphicon glyphicon-scissors"></span> Versions</a></li>
+        <li role="menuitem" class="disabled"><a href="#"><span class="glyphicon glyphicon-move"></span> Move</a></li>
+        <li role="menuitem" class="disabled"><a href="#"><span class="glyphicon glyphicon-random"></span> Migrate</a></li>
+        <li role="menuitem" class="disabled"><a href="#"><span class="glyphicon glyphicon-export"></span> Export</a></li>
         <li role="menuitem bg-danger" ng-click="openModal('#irContextDeleteModal')"><a href="#" class="bg-danger"><span class="glyphicon glyphicon-trash"></span> Delete</a></li>
 
         <li class="divider"></li>
         <li class="dropdown-header">Resource Actions</li>
 
-        <li role="menuitem" ng-class="{'disabled': !context.resource}"><a href="" ng-click="contextToFixityCheck=context;openModal('#fixityModalDD')"><span class="glyphicon glyphicon glyphicon-edit"></span> Fixity</a></li>
+        <li role="menuitem" ng-if="context.features.fixity" ng-class="{'disabled': !context.resource}"><a href="" ng-click="openModal('#fixityModalDD')"><span class="glyphicon glyphicon glyphicon-edit"></span> Fixity</a></li>
 
         <li role="menuitem" ng-class="{'disabled': !context.resource}"><a href="{{context.resourse}}" target="_blank"><span class="glyphicon glyphicon-download-alt"></span> Download</a></li>
         
         <!-- These ngIf calls should be executed once we enable user management -->
         <li ng-if="isAdmin" class="divider"></li>
         <li ng-if="isAdmin" class="dropdown-header">Admin Actions</li>
-        <li ng-if="isAdmin" role="menuitem"><a href="" ng-click="openModal('#advancedUpdate')"><span class="glyphicon glyphicon glyphicon-edit"></span> Advanced Update</a></li>
+        <li ng-if="isAdmin && context.features.queryable" role="menuitem"><a href="" ng-click="openModal('#advancedUpdate')"><span class="glyphicon glyphicon glyphicon-edit"></span> Advanced Update</a></li>
+        <li ng-if="isAdmin" role="menuitem"><a href="/admin/ir"><span class="glyphicon glyphicon-cog"></span> Admin Settings</a></li>
+        
+      </ul>
+      <ul ng-if="context.isVersion && context.features.versioning" class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
+        <li class="dropdown-header">Version Actions</li>
+        <li role="menuitem" ng-click="openModal('#contextVersionRevertModal')"><a href="#"><span class="glyphicon glyphicon-repeat"></span> Restore</a></li>
+        <li role="menuitem bg-danger" ng-click="openModal('#contextVersionDeleteModal')"><a href="#" class="bg-danger"><span class="glyphicon glyphicon-trash"></span> Delete</a></li>
+
+        <!-- These ngIf calls should be executed once we enable user management -->
+        <li ng-if="isAdmin" class="divider"></li>
+        <li ng-if="isAdmin" class="dropdown-header">Admin Actions</li>
+        <li ng-if="isAdmin && context.features.queryable" role="menuitem"><a href="" ng-click="openModal('#advancedUpdate')"><span class="glyphicon glyphicon glyphicon-edit"></span> Advanced Update</a></li>
         <li ng-if="isAdmin" role="menuitem"><a href="/admin/ir"><span class="glyphicon glyphicon-cog"></span> Admin Settings</a></li>
         
       </ul>
@@ -39,6 +51,28 @@
   </div>
 
   <breadcrumbs ng-if="context.hasParent !== undefined" context="context"></breadcrumbs>
+
+  <div ng-if="context.isVersion && context.features.versioning" class="alert alert-warning clearfix" role="alert">
+    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+    <span>This is a historical version and is not editable.</span>
+    <div class="pull-right">
+        <button class="btn btn-warning" ng-click="openModal('#contextVersionRevertModal')">Restore</button>
+        <button class="btn btn-danger" ng-click="openModal('#contextVersionDeleteModal')">Delete</button>
+    </div>
+  </div>
+
+  <div ng-if="context.ir.getTransaction().active" class="alert alert-info clearfix" role="alert">
+    <span>
+      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> This IR is currently in transaction. 
+      <button ng-if="context.ir.getTransaction().secondsRemaining<31" class="btn btn-sm btn-info" ng-click="context.ir.refreshTransaction()">
+        <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> 0:{{context.ir.getTransaction().secondsRemaining}} 
+      </button>
+    </span>
+    <div class="pull-right">
+        <button class="btn btn-sm btn-warning" ng-click="openModal('#rollbackTransactionModal')">Rollback</button>
+        <button class="btn btn-sm btn-success" ng-click="openModal('#commitTransactionModal')">Commit</button>
+    </div>
+  </div>
 
   <div class="container-fluid">
     <div class="properties-section">
@@ -74,7 +108,7 @@
               </div>
               <div class="pull-right">
                 <a href="{{context.uri}}" download class="btn btn-primary" role="button"><span class="glyphicon glyphicon-download-alt"></span> Download</a>
-                <a href="" ng-click="contextToFixityCheck=context;openModal('#fixityModalButton')" class="btn btn-default" role="button"><span class="glyphicon glyphicon-ok"></span> Fixity</a>
+                <a ng-if="context.features.fixity" href="" ng-click="openModal('#fixityModalButton')" class="btn btn-default" role="button"><span class="glyphicon glyphicon-ok"></span> Fixity</a>
                 <modal
                   modal-id="fixityModalButton"
                   modal-view="views/modals/fixityModal.html"
@@ -89,7 +123,7 @@
 
         <div class="properties" ng-class="{'col-md-6 col-md-pull-6': context.resource&&!theaterMode, 'col-md-12': !context.resource||theaterMode}">
           <h4>
-            <span>Properties {{theaterMode}}</span>
+            <span>Properties</span>
             <span class="glyphicon glyphicon-minus clickable" ng-click="propertiesCollapsed=true;setOrToggleTheaterMode(true)" ng-show="context.resource&&!theaterMode"></span>
             <span class="glyphicon glyphicon-plus clickable" ng-click="propertiesCollapsed=false" ng-show="(!context.resource||theaterMode)&&propertiesCollapsed"></span>
             <span class="glyphicon glyphicon-minus clickable" ng-click="propertiesCollapsed=true" ng-show="(!context.resource||theaterMode)&&!propertiesCollapsed"></span>
@@ -128,14 +162,14 @@
             <input ng-show="removeListElements" type="checkbox" ng-checked="selectedListElements.indexOf(t)!==-1" ng-click="selectedListElements.indexOf(t)===-1?selectedListElements.push(t):selectedListElements.splice(selectedListElements.indexOf(t),1)">
             <span ng-show="!editValue&&selectedListElements.indexOf(t)===-1">
               {{t.object | removeQuotes}}
-              <span ng-show="showEditBtn" class="glyphicon glyphicon-pencil clickable" ng-click="editValue=t.object"></span>
+              <span ng-show="showEditBtn&&!context.isVersion" class="glyphicon glyphicon-pencil clickable" ng-click="editValue=t.object"></span>
             </span>
             <div ng-show="editValue" class="row">
               <div class="col-md-6">
                   <div class="input-group">
                     <input type="text" class="form-control" ng-model="editValue" remove-quotes>
                     <div class="input-group-btn">
-                      <button ng-show="!editWorking" class="btn btn-default" ng-click="editItem({triple:t,newObject:editValue})" ng-disabled="t.object===editValue">
+                      <button ng-show="!editWorking" class="btn btn-default" ng-click="editItem({triple:t,newObject:editValue});editValue=null;" ng-disabled="t.object===editValue">
                         <span class="glyphicon glyphicon-ok"></span>
                       </button>
                       <button ng-show="!editWorking" class="btn btn-default" ng-click="editValue=null">
@@ -185,8 +219,9 @@
           <li  class="list-group-item" ng-repeat="le in filteredList = (list | filterResources:context) track by $index" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le.triple)!==-1}">
             <a href="" ng-click="listElementAction({'le':le.triple.subject})">{{(le.name || le.triple.object) | removeQuotes}}</a>
 
-            <a href="" ng-show="!removeListElements"><span title="swap" class="glyphicon glyphicon-transfer pull-right clickable"></span></a>
-            <a href="" ng-show="!removeListElements" ng-click="contextToFixityCheck=le;openModal('#fixityModal'+$index)"><span title="fixity" class="glyphicon glyphicon-check pull-right clickable"></span></a>
+            <!--<a href="" ng-show="!removeListElements" ng-click="resourceToUpdate=le;openModal('#updateResourceModalModal'+$index)"><span title="swap" class="glyphicon glyphicon-transfer pull-right clickable"></span></a>-->
+            
+            <a href="" ng-show="!removeListElements" ng-click="openModal('#fixityModal'+$index)"><span title="fixity" class="glyphicon glyphicon-check pull-right clickable"></span></a>
             <modal
               modal-id="{{'fixityModal'+$index}}"
               modal-view="views/modals/fixityModal.html"
@@ -195,7 +230,6 @@
               wvr-modal-backdrop="static">
             </modal>
             <a href="{{le.triple.subject}}" download><span ng-show="!removeListElements" title="download" class="glyphicon glyphicon-download-alt pull-right"></span></a>
-
             <input ng-show="removeListElements" type="checkbox" class="pull-right" ng-checked="selectedListElements.indexOf(le.triple)!==-1" ng-click="selectedListElements.indexOf(le.triple)===-1?selectedListElements.push(le.triple):selectedListElements.splice(selectedListElements.indexOf(le.triple),1)">
           </li>
         </ol>
@@ -207,6 +241,7 @@
     modal-id="createContainer"
     modal-view="views/modals/createContainerModal.html"
     modal-header-class="modal-header-primary"
+    modal-fullscreen="true"
     wvr-modal-backdrop="static">
   </modal>
 
@@ -226,6 +261,7 @@
   </modal>
 
   <modal
+    ng-if="isAdmin && context.features.queryable"
     modal-id="advancedUpdate"
     modal-view="views/modals/advancedUpdateModal.html"
     modal-header-class="modal-header-primary"
@@ -244,6 +280,43 @@
     modal-view="views/modals/resourceFullScreen.html"
     modal-header-class="modal-header-danger"
     wvr-modal-backdrop="true">
+  </modal>
+
+  <modal
+    ng-if="context.features.versioning"
+    modal-id="versionsModal"
+    modal-view="views/modals/versionsModal.html"
+    modal-header-class="modal-header-primary"
+    modal-fullscreen="true"    
+    wvr-modal-backdrop="static">
+  </modal>
+
+  <modal
+    modal-id="contextVersionDeleteModal"
+    modal-view="views/modals/contextVersionDeleteModal.html"
+    modal-header-class="modal-header-danger"
+    wvr-modal-backdrop="static">
+  </modal>
+
+  <modal
+    modal-id="contextVersionRevertModal"
+    modal-view="views/modals/contextVersionRevertModal.html"
+    modal-header-class="modal-header-warning"
+    wvr-modal-backdrop="static">
+  </modal>
+
+  <modal
+    modal-id="commitTransactionModal"
+    modal-view="views/modals/commitTransactionModal.html"
+    modal-header-class="modal-header-primary"
+    wvr-modal-backdrop="static">
+  </modal>
+
+  <modal
+    modal-id="rollbackTransactionModal"
+    modal-view="views/modals/rollbackTransactionModal.html"
+    modal-header-class="modal-header-warning"
+    wvr-modal-backdrop="static">
   </modal>
 
 </div>

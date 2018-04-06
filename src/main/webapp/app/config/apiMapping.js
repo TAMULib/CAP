@@ -32,20 +32,35 @@ var apiMapping = {
       'controller': 'ir-context',
       'method': ':type/:irid'
     },
+    irContext: {
+      'endpoint': '/private/queue',
+      'controller': 'ir-context',
+      'method': ':type/:irid'
+    },
     metadata: {
       'endpoint': '/private/queue',
       'controller': 'ir-context',
       'method': ':type/:irid/metadata'
     },
-    container: {
+    children: {
       'endpoint': '/private/queue',
       'controller': 'ir-context',
-      'method': ':type/:irid/container'
+      'method': ':type/:irid/children'
     },
     resource: {
       'endpoint': '/private/queue',
       'controller': 'ir-context',
       'method': ':type/:irid/resource'
+    },
+    version: {
+      'endpoint': '/private/queue',
+      'controller': 'ir-context',
+      'method': ':type/:irid/version'
+    },
+    advancedQuery: {
+      'endpoint': '/private/queue',
+      'controller': 'ir-context',
+      'method': ':type/:irid/query'
     },
     resourceFixity: {
       'endpoint': '/private/queue',
@@ -53,21 +68,21 @@ var apiMapping = {
       'method': ':type/:irid/resource/fixity'
     }
   },
-  TestIRSettings: {
-    testPing: {
+  VerifyIRSettings: {
+    verifyPing: {
       'endpoint': '/private/queue',
-      'controller': 'ir-test',
-      'method': ':type/ping'
+      'controller': 'ir',
+      'method': ':type/verify/ping'
     },
-    testAuth: {
+    verifyAuth: {
         'endpoint': '/private/queue',
-        'controller': 'ir-test',
-        'method': ':type/auth'
+        'controller': 'ir',
+        'method': ':type/verify/ping'
     },
-    testContent: {
+    verifyContent: {
         'endpoint': '/private/queue',
-        'controller': 'ir-test',
-        'method': ':type/content'
+        'controller': 'ir',
+        'method': ':type/verify/ping'
     }
   },
   IR: {
@@ -76,22 +91,31 @@ var apiMapping = {
     all: {
         'endpoint': '/private/queue',
         'controller': 'ir',
-        'method': 'all'
+        'method': '',
+        'httpMethod': "GET"
     },
     create: {
       'endpoint': '/private/queue',
       'controller': 'ir',
-      'method': 'create'
+      'method': '',
+      'httpMethod': "POST"
     },
     update: {
         'endpoint': '/private/queue',
         'controller': 'ir',
-        'method': 'update'
+        'method': '',
+        'httpMethod': "PUT"
     },
     remove: {
         'endpoint': '/private/queue',
         'controller': 'ir',
-        'method': 'delete'
+        'method': '',
+        'httpMethod': "DELETE"
+    },
+    transaction: {
+      'endpoint': '/private/queue',
+      'controller': 'ir-context',
+      'method': ':type/:irid/transaction'
     },
     getTypes: {
       'endpoint': '/private/queue',
@@ -105,22 +129,26 @@ var apiMapping = {
     all: {
         'endpoint': '/private/queue',
         'controller': 'schema',
-        'method': 'all'
+        'method': '',
+        'httpMethod': 'GET'
     },
     create: {
       'endpoint': '/private/queue',
       'controller': 'schema',
-      'method': 'create'
+      'method': '',
+      'httpMethod': 'POST'
     },
     update: {
         'endpoint': '/private/queue',
         'controller': 'schema',
-        'method': 'update'
+        'method': '',
+        'httpMethod': 'PUT'
     },
     remove: {
         'endpoint': '/private/queue',
         'controller': 'schema',
-        'method': 'delete'
+        'method': '',
+        'httpMethod': 'DELETE'
     },
     findProperties: {
       'endpoint': '/private/queue',

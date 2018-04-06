@@ -5,16 +5,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.tamu.cap.model.response.IRContext;
+import edu.tamu.weaver.context.SpringContext;
+
 public enum IRType {
 	FEDORA("Fedora"), DSPACE("DSpace");
 
 	private final String gloss;
 
-	private static List<Map<String, String>> values = new ArrayList<Map<String, String>>();
+	private static List<Map<String, Object>> values = new ArrayList<Map<String, Object>>();
 
 	static {
 		for (IRType type : IRType.values()) {
-			Map<String, String> valueGloss = new HashMap<String, String>();
+			Map<String, Object> valueGloss = new HashMap<String, Object>();
 			valueGloss.put("value", type.name());
 			valueGloss.put("gloss", type.getGloss());
 			values.add(valueGloss);
@@ -29,7 +32,15 @@ public enum IRType {
 		return this.gloss;
 	}
 
-	public static List<Map<String, String>> getValues() {
+	public static List<Map<String, Object>> getValues() {
+	    
+	    values.forEach(valueMap->{
+	        String thisEnumType = (String) valueMap.get("gloss");
+	        IRService<?> irs = SpringContext.bean(thisEnumType);
+	        IRContext irc = new IRContext();
+	        valueMap.putAll(irs.featureSupport(irc).getFeatures());
+	    });
+	    	    
 		return values;
 	}
 

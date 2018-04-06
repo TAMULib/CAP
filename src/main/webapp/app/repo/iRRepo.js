@@ -28,8 +28,8 @@ cap.repo("IRRepo", function($q, WsApi, api, HttpMethodVerbs) {
     }
   };
 
-  iRRepo.testPing = function(ir) {
-    return WsApi.fetch(api.TestIRSettings.testPing, {
+  iRRepo.verifyPing = function(ir) {
+    return WsApi.fetch(api.VerifyIRSettings.verifyPing, {
       pathValues: {
         type: ir.type
       },
@@ -37,8 +37,8 @@ cap.repo("IRRepo", function($q, WsApi, api, HttpMethodVerbs) {
     });
   };
 
-  iRRepo.testAuth = function(ir) {
-    return WsApi.fetch(api.TestIRSettings.testAuth, {
+  iRRepo.verifyAuth = function(ir) {
+    return WsApi.fetch(api.VerifyIRSettings.verifyAuth, {
       pathValues: {
         type: ir.type
       },
@@ -46,8 +46,8 @@ cap.repo("IRRepo", function($q, WsApi, api, HttpMethodVerbs) {
     });
   };
 
-  iRRepo.testContent = function(ir) {
-    return WsApi.fetch(api.TestIRSettings.testContent, {
+  iRRepo.verifyContent = function(ir) {
+    return WsApi.fetch(api.VerifyIRSettings.verifyContent, {
       pathValues: {
         type: ir.type
       },
