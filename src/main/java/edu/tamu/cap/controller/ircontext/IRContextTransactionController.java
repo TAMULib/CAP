@@ -48,7 +48,7 @@ public class IRContextTransactionController {
         String rootUri = irService.getIR().getRootUri();
         
         ApiStatus status = trancationToken.isPresent()?SUCCESS:ERROR;
-        String message = trancationToken.isPresent()?"Transaction successfully created":"Failed to find transaction token.";
+        String message = trancationToken.isPresent()?"Transaction successfully commited":"Failed to find transaction token.";
         
         irService.commitTransaction(rootUri+trancationToken.get());
         

@@ -468,7 +468,7 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
                
         FcrepoClient client = buildClient();
     
-        URI transactionContextURI = new URI(tokenURI+"/fcr:commit" );
+        URI transactionContextURI = new URI(tokenURI+"/fcr:tx/fcr:commit" );
         
         FcrepoResponse response = new PostBuilder(transactionContextURI, client).perform();
         
