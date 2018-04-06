@@ -264,8 +264,10 @@ cap.model("IRContext", function ($q, $filter, $interval, $location, $routeParams
       });
 
       versionPromise.then(function(apiRes) {
+
         var newContext = angular.fromJson(apiRes.body).payload.IRContext;
         angular.extend(irContext, newContext);
+
         if (form) {
           form.$setPristine();
           form.$setUntouched();
@@ -301,6 +303,11 @@ cap.model("IRContext", function ($q, $filter, $interval, $location, $routeParams
         query: {
           contextUri: context.uri
         }
+      });
+
+      fixityPromise.then(function(apiRes) {
+        var newContext = angular.fromJson(apiRes.body).payload.IRContext;
+        angular.extend(irContext, newContext);
       });
 
       return fixityPromise;
