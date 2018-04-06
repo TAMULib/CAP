@@ -208,8 +208,9 @@ cap.model("IR", function($location, $timeout, $cookies, $interval, $q, HttpMetho
             path: "/"
           });
           ir.currentContext.uri = ir.currentContext.uri.replace(transaction.transactionToken, ir.rootUri);
-          ir.currentContext.reloadContext();
-        }, 500);
+          ir.clearCache();
+          $location.search("context", ir.currentContext.uri);
+        },250);
       }
     };
 
