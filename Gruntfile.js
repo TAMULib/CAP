@@ -56,27 +56,19 @@ module.exports = function (grunt) {
   
                       'node_modules/angular/angular.min.js',
   
+                      'node_modules/angular-sanitize/angular-cookies.min.js',
                       'node_modules/angular-sanitize/angular-sanitize.min.js',
                       'node_modules/angular-route/angular-route.min.js',
                       'node_modules/angular-loader/angular-loader.min.js',
                       'node_modules/angular-messages/angular-messages.min.js',
                       'node_modules/angular-mocks/angular-mocks.js',
-  
-                      'node_modules/ng-csv/build/ng-csv.min.js',
-  
-                      'node_modules/ng-sortable/dist/ng-sortable.min.js',
-  
+    
                       'node_modules/ng-table/bundles/ng-table.min.js',
   
                       'node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js',
                       'node_modules/ng-file-upload/dist/ng-file-upload.min.js',
-  
-                      'node_modules/tinymce/tinymce.min.js',
-                      'node_modules/angular-ui-tinymce/dist/tinymce.min.js',
-  
-                      'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
-  
-                      'node_modules/file-saver/FileSaver.min.js'
+    
+                      'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js'
                   ],
                   dest: '<%= build.app %>/resources/scripts/vendor_concat.js'
               },
@@ -87,31 +79,34 @@ module.exports = function (grunt) {
                       'node_modules/weaver-ui-core/app/components/version/version.js',
                       'node_modules/weaver-ui-core/app/components/version/version-directive.js',
                       'node_modules/weaver-ui-core/app/components/version/interpolate-filter.js',
-  
+
                       '<%= build.app %>/config/appConfig.js',
                       '<%= build.app %>/config/apiMapping.js',
-  
+
                       '<%= build.app %>/components/version/version.js',
                       '<%= build.app %>/components/version/version-directive.js',
                       '<%= build.app %>/components/version/interpolate-filter.js',
-  
+
                       'node_modules/weaver-ui-core/app/core.js',
                       'node_modules/weaver-ui-core/app/setup.js',
                       'node_modules/weaver-ui-core/app/config/coreRuntime.js',
                       'node_modules/weaver-ui-core/app/config/coreAngularConfig.js',
                       'node_modules/weaver-ui-core/app/config/logging.js',
-  
+
                       'node_modules/weaver-ui-core/app/constants/apiResponseActions.js',
-  
+                      'node_modules/weaver-ui-core/app/constants/httpMethodVerbs.js',
+
                       'node_modules/weaver-ui-core/app/directives/headerDirective.js',
                       'node_modules/weaver-ui-core/app/directives/footerDirective.js',
                       'node_modules/weaver-ui-core/app/directives/userDirective.js',
                       'node_modules/weaver-ui-core/app/directives/modalDirective.js',
+                      'node_modules/weaver-ui-core/app/directives/tooltipDirective.js',
                       'node_modules/weaver-ui-core/app/directives/alertDirective.js',
+                      'node_modules/weaver-ui-core/app/directives/validatedInputDirective.js',
                       'node_modules/weaver-ui-core/app/directives/validationMessageDirective.js',
                       'node_modules/weaver-ui-core/app/directives/validatedSelectDirective.js',
                       'node_modules/weaver-ui-core/app/directives/validatedTextAreaDirective.js',
-  
+
                       'node_modules/weaver-ui-core/app/services/accessControlService.js',
                       'node_modules/weaver-ui-core/app/services/wsService.js',
                       'node_modules/weaver-ui-core/app/services/wsApi.js',
@@ -126,13 +121,13 @@ module.exports = function (grunt) {
                       'node_modules/weaver-ui-core/app/services/modalService.js',
                       'node_modules/weaver-ui-core/app/services/modelCache.js',
                       'node_modules/weaver-ui-core/app/services/modelUpdateService.js',
-  
+
                       'node_modules/weaver-ui-core/app/repo/abstractRepo.js',
-  
+
                       'node_modules/weaver-ui-core/app/model/abstractModel.js',
                       'node_modules/weaver-ui-core/app/model/assumedControl.js',
                       'node_modules/weaver-ui-core/app/model/user.js',
-  
+
                       'node_modules/weaver-ui-core/app/controllers/abstractController.js',
                       'node_modules/weaver-ui-core/app/controllers/coreAdminController.js',
                       'node_modules/weaver-ui-core/app/controllers/authenticationController.js',
@@ -193,26 +188,6 @@ module.exports = function (grunt) {
           },
   
           copy: {
-              styles: {
-                  files: [{
-                      cwd: 'node_modules/ng-sortable/dist/',
-                      src: 'ng-sortable.min.css',
-                      dest: '<%= build.app %>/resources/styles/',
-                      expand: true
-                  }]
-              },
-              tinymce: {
-                  files: [{
-                      cwd: 'node_modules/tinymce/',
-                      src: [
-                          'plugins/**/*',
-                          'themes/**/*',
-                          'skins/**/*'
-                      ],
-                      dest: '<%= build.app %>/resources/scripts/',
-                      expand: true
-                  }]
-              },
               weaver: {
                   files: [{
                       src: [
@@ -246,11 +221,11 @@ module.exports = function (grunt) {
       grunt.loadNpmTasks('grunt-contrib-uglify');
       grunt.loadNpmTasks('grunt-contrib-symlink');
   
-      grunt.registerTask('default', ['jshint', 'copy:styles', 'clean', 'symlink']);
+      grunt.registerTask('default', ['jshint', 'clean', 'symlink']);
   
       grunt.registerTask('watch', ['watch']);
   
-      grunt.registerTask('develop', ['jshint', 'concat', 'usemin', 'copy:styles', 'clean', 'symlink', 'watch']);
+      grunt.registerTask('develop', ['jshint', 'concat', 'usemin', 'clean', 'symlink', 'watch']);
   
       grunt.registerTask('deploy', ['jshint', 'concat', 'uglify', 'usemin', 'clean', 'copy']);
   
