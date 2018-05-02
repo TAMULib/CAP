@@ -1,16 +1,26 @@
 package edu.tamu.cap.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+import java.io.IOException;
+import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import edu.tamu.cap.CapApplication;
@@ -18,7 +28,6 @@ import edu.tamu.cap.model.IR;
 import edu.tamu.cap.model.response.IRContext;
 import edu.tamu.cap.model.response.Version;
 
-@ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { CapApplication.class }, webEnvironment = WebEnvironment.DEFINED_PORT)
 public class FedoraServiceTest {
@@ -31,11 +40,31 @@ public class FedoraServiceTest {
 
     private final static String TEST_CONTEXT_URI = ROOT_CONTEXT_URI + "/path/to/container";
 
-    @Autowired
+    private HttpServletRequest request;
+
+    @InjectMocks
     private FedoraService fedoraService;
 
     @Before
-    public void setup() {
+    public void setup() throws IOException {
+
+        request = mock(HttpServletRequest.class);
+
+        when(request.getCookies()).thenReturn(new Cookie[0]);
+        when(request.getMethod()).thenReturn("POST");
+        when(request.getUserPrincipal()).thenReturn((Principal) new UsernamePasswordAuthenticationToken("aggieJack", ""));
+        when(request.getAttribute(any(String.class))).thenReturn(new HashMap<String, String>() {
+            private static final long serialVersionUID = 3185237776585513150L;
+            {
+                put("type", "fedora");
+                put("irid", "fedora");
+            }
+        });
+
+        when(request.getInputStream()).thenReturn(null);
+
+        MockitoAnnotations.initMocks(this);
+
         fedoraService.setIr(new IR(IRType.FEDORA, "Mock Fedora", "http://localhost:9100/mock/fcrepo/rest"));
     }
 
