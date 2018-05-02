@@ -15,7 +15,6 @@ import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletCon
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.mail.javamail.ConfigurableMimeFileTypeMap;
@@ -23,9 +22,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.resource.AppCacheManifestTransformer;
 import org.springframework.web.servlet.resource.ResourceUrlEncodingFilter;
-import org.springframework.web.servlet.resource.VersionResourceResolver;
 
 import edu.tamu.cap.model.User;
 import edu.tamu.cap.model.repo.UserRepo;
@@ -39,11 +36,11 @@ import edu.tamu.weaver.validation.resolver.WeaverValidatedModelMethodProcessor;
 @EnableJpaRepositories(basePackages = { "edu.tamu.cap.model.repo", "edu.tamu.weaver.wro.model.repo" })
 public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
 
-	@Value("${app.ui.path}")
+    @Value("${app.ui.path}")
     private String path;
-	
-    @Autowired
-    private Environment env;
+
+    @Value("${info.build.production:false}")
+    private boolean production;
 
     @Autowired
     private List<HttpMessageConverter<?>> converters;
@@ -73,7 +70,6 @@ public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
      * Executor Service configuration.
      * 
      * @return ExecutorSevice
-     * 
      */
     @Bean(name = "executorService")
     private static ExecutorService configureExecutorService() {
@@ -83,19 +79,12 @@ public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        boolean devMode = this.env.acceptsProfiles("dev");
-        boolean useResourceCache = !devMode;
-        Integer cachePeriod = devMode ? 0 : null;
-        // @formatter:off
-        registry.addResourceHandler("/**")
-                .addResourceLocations("classpath:static/")
-                .addResourceLocations(path + "/")
-                .setCachePeriod(cachePeriod)
-                .resourceChain(useResourceCache)
-                .addResolver(new VersionResourceResolver().addContentVersionStrategy("/**")).addTransformer(new AppCacheManifestTransformer());
-        registry.addResourceHandler("/node_modules/**")
-				.addResourceLocations("file:node_modules/");
-        // @formatter:on
+        if (!production) {
+            registry.addResourceHandler("/node_modules/**").addResourceLocations("file:node_modules/");
+        }
+        registry.addResourceHandler("/**").addResourceLocations(path + "/");
+        registry.addResourceHandler("/public/**").addResourceLocations("file:public/");
+        registry.setOrder(Integer.MAX_VALUE - 2);
     }
 
     @Override
@@ -104,10 +93,10 @@ public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
         argumentResolvers.add(new WeaverCredentialsArgumentResolver());
         argumentResolvers.add(new WeaverUserArgumentResolver<User, UserRepo>(userRepo));
     }
-    
+
     @Bean
     public TomcatEmbeddedServletContainerFactory tomcatEmbeddedServletContainerFactory() {
-        return new TomcatEmbeddedServletContainerFactory(){
+        return new TomcatEmbeddedServletContainerFactory() {
             @Override
             protected void customizeConnector(Connector connector) {
                 super.customizeConnector(connector);

@@ -31,7 +31,7 @@
         <li ng-if="isAdmin" class="divider"></li>
         <li ng-if="isAdmin" class="dropdown-header">Admin Actions</li>
         <li ng-if="isAdmin && context.features.queryable" role="menuitem"><a href="" ng-click="openModal('#advancedUpdate')"><span class="glyphicon glyphicon glyphicon-edit"></span> Advanced Update</a></li>
-        <li ng-if="isAdmin" role="menuitem"><a href="/admin/ir"><span class="glyphicon glyphicon-cog"></span> Admin Settings</a></li>
+        <li ng-if="isAdmin" role="menuitem"><a href="admin/ir"><span class="glyphicon glyphicon-cog"></span> Admin Settings</a></li>
         
       </ul>
       <ul ng-if="context.isVersion && context.features.versioning" class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
@@ -43,7 +43,7 @@
         <li ng-if="isAdmin" class="divider"></li>
         <li ng-if="isAdmin" class="dropdown-header">Admin Actions</li>
         <li ng-if="isAdmin && context.features.queryable" role="menuitem"><a href="" ng-click="openModal('#advancedUpdate')"><span class="glyphicon glyphicon glyphicon-edit"></span> Advanced Update</a></li>
-        <li ng-if="isAdmin" role="menuitem"><a href="/admin/ir"><span class="glyphicon glyphicon-cog"></span> Admin Settings</a></li>
+        <li ng-if="isAdmin" role="menuitem"><a href="admin/ir"><span class="glyphicon glyphicon-cog"></span> Admin Settings</a></li>
         
       </ul>
     </div>

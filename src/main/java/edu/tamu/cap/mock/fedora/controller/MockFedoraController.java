@@ -15,8 +15,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.tamu.cap.mock.fedora.loader.MockFedoraLoader;
 
-@RestController
 @Profile("test")
+@RestController
 @RequestMapping("/mock/fcrepo/rest")
 public class MockFedoraController {
 
@@ -28,7 +28,7 @@ public class MockFedoraController {
     public @ResponseBody String getContainer() throws JsonProcessingException, IOException {
         return mockFedoraLoader.getContainer();
     }
-    
+
     @RequestMapping(value = "/**/*/fcr:versions", headers = "Accept=application/rdf+xml", method = RequestMethod.GET, produces = "application/rdf+xml")
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody String getVersions() throws JsonProcessingException, IOException {
