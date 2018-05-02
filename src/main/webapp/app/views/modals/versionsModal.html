@@ -26,7 +26,7 @@
               </div>
               <div class="properties-list-group">
                   <div class="list-group-item" ng-repeat="version in context.versions">
-                      <h4 class="list-group-item-heading">{{version.name}}<a class="pull-right" href="/ir/{{context.ir.name}}?context={{version.triple.object}}">View</a></h4>
+                      <h4 class="list-group-item-heading">{{version.name}}<a class="pull-right" href="ir/{{context.ir.name}}?context={{version.triple.object}}">View</a></h4>
                       <small class="list-group-item-text">Created: {{version.time | propertyValue | date:'MM-dd-yy h:mma' }}</small>
                   </div>
               </div>
