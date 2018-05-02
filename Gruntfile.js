@@ -56,7 +56,7 @@ module.exports = function (grunt) {
   
                       'node_modules/angular/angular.min.js',
   
-                      'node_modules/angular-sanitize/angular-cookies.min.js',
+                      'node_modules/angular-cookies/angular-cookies.min.js',
                       'node_modules/angular-sanitize/angular-sanitize.min.js',
                       'node_modules/angular-route/angular-route.min.js',
                       'node_modules/angular-loader/angular-loader.min.js',
