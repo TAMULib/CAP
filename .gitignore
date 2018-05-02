@@ -23,3 +23,5 @@ node_modules/
 *.log*
 
 .DS_Store
+
+src/main/webapp/app/resources/scripts/

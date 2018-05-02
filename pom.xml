@@ -19,6 +19,7 @@
   </parent>
 
   <properties>
+    <production>false</production>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
@@ -61,6 +62,12 @@
       <groupId>org.fcrepo.client</groupId>
       <artifactId>fcrepo-java-client</artifactId>
       <version>0.3.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.codehaus.mojo</groupId>
+      <artifactId>properties-maven-plugin</artifactId>
+      <version>1.0.0</version>
     </dependency>
 
     <dependency>
@@ -186,6 +193,7 @@
   <build>
     <finalName>ROOT</finalName>
     <plugins>
+
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
@@ -194,6 +202,7 @@
           <addResources>false</addResources>
         </configuration>
       </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
@@ -211,6 +220,67 @@
         <version>2.20.1</version>
         <configuration>
           <useSystemClassLoader>false</useSystemClassLoader>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.0.2</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven.shared</groupId>
+            <artifactId>maven-filtering</artifactId>
+            <version>3.1.1</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+          <webResources>
+            <webResource>
+              <filtering>true</filtering>
+              <directory>src/main/resources</directory>
+              <targetPath>WEB-INF</targetPath>
+              <includes>
+                <include>application.properties</include>
+              </includes>
+              <excludes>
+                <exclude>**/*.xls</exclude>
+              </excludes>
+            </webResource>
+            <webResource>
+              <filtering>false</filtering>
+              <directory>src/main/resources</directory>
+              <targetPath>WEB-INF/classes</targetPath>
+              <exclude>application.properties</exclude>
+            </webResource>
+            <webResource>
+              <filtering>false</filtering>
+              <directory>src/main/webapp/app/resources/styles</directory>
+              <targetPath>WEB-INF/classes</targetPath>
+              <excludes>
+                <exclude>**/*.css</exclude>
+              </excludes>
+            </webResource>
+          </webResources>
+          <webResource>
+            <filtering>false</filtering>
+            <directory>node_modules/weaver-ui-core/app/resources/styles</directory>
+            <targetPath>WEB-INF/classes</targetPath>
+            <excludes>
+              <exclude>**/*.css</exclude>
+            </excludes>
+          </webResource>
+          <webResource>
+            <filtering>false</filtering>
+            <directory>node_modules/bootstrap-sass/assets</directory>
+            <targetPath>WEB-INF/classes</targetPath>
+            <excludes>
+              <exclude>fonts/**</exclude>
+              <exclude>images/**</exclude>
+              <exclude>javascript/**</exclude>
+            </excludes>
+          </webResource>
         </configuration>
       </plugin>
 
@@ -276,65 +346,24 @@
       </plugin>
 
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>3.0.2</version>
-        <dependencies>
-          <dependency>
-            <groupId>org.apache.maven.shared</groupId>
-            <artifactId>maven-filtering</artifactId>
-            <version>3.1.1</version>
-          </dependency>
-        </dependencies>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>properties-maven-plugin</artifactId>
+        <version>1.0.0</version>
+        <executions>
+          <execution>
+            <phase>initialize</phase>
+            <goals>
+              <goal>read-project-properties</goal>
+            </goals>
+          </execution>
+        </executions>
         <configuration>
-          <failOnMissingWebXml>false</failOnMissingWebXml>
-          <webResources>
-            <webResource>
-              <filtering>true</filtering>
-              <directory>src/main/resources</directory>
-              <targetPath>WEB-INF</targetPath>
-              <includes>
-                <include>application.properties</include>
-              </includes>
-              <excludes>
-                <exclude>**/*.xls</exclude>
-              </excludes>
-            </webResource>
-            <webResource>
-              <filtering>false</filtering>
-              <directory>src/main/resources</directory>
-              <targetPath>WEB-INF/classes</targetPath>
-              <exclude>application.properties</exclude>
-            </webResource>
-            <webResource>
-              <filtering>false</filtering>
-              <directory>src/main/webapp/app/resources/styles</directory>
-              <targetPath>WEB-INF/classes</targetPath>
-              <excludes>
-                <exclude>**/*.css</exclude>
-              </excludes>
-            </webResource>
-          </webResources>
-          <webResource>
-            <filtering>false</filtering>
-            <directory>node_modules/weaver-ui-core/app/resources/styles</directory>
-            <targetPath>WEB-INF/classes</targetPath>
-            <excludes>
-              <exclude>**/*.css</exclude>
-            </excludes>
-          </webResource>
-          <webResource>
-            <filtering>false</filtering>
-            <directory>node_modules/bootstrap-sass/assets</directory>
-            <targetPath>WEB-INF/classes</targetPath>
-            <excludes>
-              <exclude>fonts/**</exclude>
-              <exclude>images/**</exclude>
-              <exclude>javascript/**</exclude>
-            </excludes>
-          </webResource>
+          <files>
+            <file>src/main/resources/application.properties</file>
+          </files>
         </configuration>
       </plugin>
+
     </plugins>
 
     <resources>
@@ -375,5 +404,299 @@
         </excludes>
       </resource>
     </resources>
+
+    <pluginManagement>
+      <plugins>
+        <!--This plugin's configuration is used to store Eclipse m2e settings 
+          only. It has no influence on the Maven build itself. -->
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <versionRange>[1.6.0,)</versionRange>
+                    <goals>
+                      <goal>exec</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore></ignore>
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
   </build>
+
+  <profiles>
+
+    <profile>
+      <id>windows-profile</id>
+      <activation>
+        <os>
+          <family>Windows</family>
+        </os>
+      </activation>
+      <properties>
+        <npm-extension>.cmd</npm-extension>
+        <grunt-extension>.cmd</grunt-extension>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>non-windows-profile</id>
+      <activation>
+        <os>
+          <family>!Windows</family>
+        </os>
+      </activation>
+      <properties>
+        <npm-extension></npm-extension>
+        <grunt-extension></grunt-extension>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>development</id>
+      <activation>
+        <property>
+          <name>!production</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.6.0</version>
+            <executions>
+
+              <!-- NPM Unlink -->
+              <execution>
+                <id>exec-npm-unlink</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <executable>npm${npm-extension}</executable>
+                  <arguments>
+                    <argument>unlink</argument>
+                    <argument>${link}</argument>
+                    <argument>--no-save</argument>
+                  </arguments>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+
+              <!-- NPM Install -->
+              <execution>
+                <id>exec-npm-install</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <executable>npm${npm-extension}</executable>
+                  <arguments>
+                    <argument>install</argument>
+                  </arguments>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+
+              <!-- Grunt Default -->
+              <execution>
+                <id>exec-grunt-deploy</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <executable>grunt${grunt-extension}</executable>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+
+              <!-- NPM Link -->
+              <execution>
+                <id>exec-npm-link</id>
+                <phase>process-classes</phase>
+                <configuration>
+                  <executable>npm${npm-extension}</executable>
+                  <arguments>
+                    <argument>link</argument>
+                    <argument>${link}</argument>
+                  </arguments>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>production</id>
+      <activation>
+        <property>
+          <name>production</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.6.0</version>
+            <executions>
+
+              <!-- NPM Unlink -->
+              <execution>
+                <id>exec-npm-unlink</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <executable>npm${npm-extension}</executable>
+                  <arguments>
+                    <argument>unlink</argument>
+                    <argument>${link}</argument>
+                    <argument>--no-save</argument>
+                  </arguments>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+
+              <!-- NPM Install -->
+              <execution>
+                <id>exec-npm-install</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <executable>npm${npm-extension}</executable>
+                  <arguments>
+                    <argument>install</argument>
+                  </arguments>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+
+              <!-- Grunt Deploy -->
+              <execution>
+                <id>exec-grunt-deploy</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <executable>grunt${grunt-extension}</executable>
+                  <arguments>
+                    <argument>deploy</argument>
+                  </arguments>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>test-client</id>
+      <activation>
+        <property>
+          <name>testClient</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.6.0</version>
+            <executions>
+
+              <!-- NPM Unlink -->
+              <execution>
+                <id>exec-npm-unlink</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <executable>npm${npm-extension}</executable>
+                  <arguments>
+                    <argument>unlink</argument>
+                    <argument>${link}</argument>
+                    <argument>--no-save</argument>
+                  </arguments>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+
+              <!-- NPM Install -->
+              <execution>
+                <id>exec-npm-install</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <executable>npm${npm-extension}</executable>
+                  <arguments>
+                    <argument>install</argument>
+                  </arguments>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+
+              <!-- Grunt Default -->
+              <execution>
+                <id>exec-grunt-deploy</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <executable>grunt${grunt-extension}</executable>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+
+              <!-- Karma Testing for AngularJS -->
+              <execution>
+                <id>exec-npm-run-test</id>
+                <phase>test</phase>
+                <configuration>
+                  <executable>npm${npm-extension}</executable>
+                  <arguments>
+                    <argument>run</argument>
+                    <argument>test</argument>
+                  </arguments>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+
+            </executions>
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
+
+  </profiles>
+
 </project>
