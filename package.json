@@ -7,22 +7,26 @@
   "license": "MIT",
   "scripts": {
     "pretest": "npm install",
+    "postinstall": "grunt",
     "test": "karma start karma.conf.js",
-    "test-single-run": "karma start karma.conf.js  --single-run",
+    "test-single-run": "karma start karma.conf.js --single-run",
+    "test-ci": "karma start karma.conf.js --no-auto-watch --single-run --browsers=Chrome",
     "preupdate-webdriver": "npm install",
     "update-webdriver": "webdriver-manager update",
     "preprotractor": "npm run update-webdriver",
-    "protractor": "protractor e2e-tests/protractor.conf.js",
     "stop": "wvr server --stop",
-    "start": "wvr server -b /cap --prod --uid magpie-webserver",
-    "start-dev": "wvr server -b /magpie --uid magpie-webserver"
+    "start": "wvr server -b /cap --prod --uid cap-webserver",
+    "start-dev": "wvr server -b /cap --uid cap-webserver"
   },
   "dependencies": {
-    "angular-cookies": "^1.6.9",
+    "angular-cookies": "1.6.9",
+    "grunt-contrib-jshint": "1.1.0",
+    "grunt-karma-coveralls": "2.5.4",
+    "grunt-ngdocs": "0.2.10",
     "ng-csv": "0.3.6",
     "ng-file-upload": "12.2.13",
     "ng-table": "3.0.1",
-    "weaver-ui-core": "git+https://github.com/TAMULib/Weaver-UI-Core.git#2.x"
+    "weaver-ui-core": "git+https://github.com/TAMULib/Weaver-UI-Core.git#2.x-preinstall"
   },
   "devDependencies": {
     "grunt": "1.0.1",
@@ -30,7 +34,6 @@
     "grunt-contrib-clean": "1.1.0",
     "grunt-contrib-concat": "1.0.1",
     "grunt-contrib-copy": "1.0.0",
-    "grunt-contrib-jshint": "1.1.0",
     "grunt-contrib-symlink": "1.0.0",
     "grunt-contrib-uglify": "3.0.1",
     "grunt-contrib-watch": "1.0.0",
