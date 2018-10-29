@@ -62,7 +62,6 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
   $scope.resetIrForms(); 
   
   $scope.startCreate = function() {
-    console.log($scope.iRTypes);
     $scope.schemas = SchemaRepo.getAll();
     $scope.openModal("#createIRModal");
   };
