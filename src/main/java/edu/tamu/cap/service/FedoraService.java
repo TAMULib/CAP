@@ -253,7 +253,6 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
         FcrepoClient client = buildClient();
         PatchBuilder patch = new PatchBuilder(new URI(contextUri + "/fcr:metadata"), client);
         String sparql = "INSERT { " + triple.toString() + " . } WHERE {}";
-
         UpdateRequest request = UpdateFactory.create();
 
         request.add(sparql);
@@ -277,8 +276,9 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
     public IRContext updateMetadata(String contextUri, Triple originalTriple, String newValue) throws Exception {
 
         StringBuilder stngBldr = new StringBuilder();
-        stngBldr.append("DELETE { <> <").append(originalTriple.getPredicate()).append("> '").append(StringUtil.removeQuotes(originalTriple.getObject())).append("' } ");
-        stngBldr.append("INSERT { <> <").append(originalTriple.getPredicate()).append("> '").append(StringUtil.removeQuotes(newValue)).append("' } ");
+
+        stngBldr.append("DELETE { <> <").append(originalTriple.getPredicate()).append("> '").append(StringUtil.escape(StringUtil.removeQuotes(originalTriple.getObject()))).append("' } ");
+        stngBldr.append("INSERT { <> <").append(originalTriple.getPredicate()).append("> '").append(StringUtil.escape(StringUtil.removeQuotes(newValue))).append("' } ");
         stngBldr.append("WHERE { }");
         String sparql = stngBldr.toString();
 
