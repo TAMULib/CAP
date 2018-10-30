@@ -21,7 +21,7 @@
     <div class="panel-body">
       <table ng-table="tableParams" class="table table-hover ir-table">
         <tbody>
-          <tr ng-repeat="schema in $data">
+          <tr ng-repeat="schema in $data | orderBy: 'name'">
             <td data-title="'Name'">
               {{schema.name}} ({{schema.abbreviation}})
             </td>
