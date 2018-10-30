@@ -3,7 +3,7 @@ cap.repo("IRRepo", function($q, WsApi, api, HttpMethodVerbs) {
 
   iRRepo.scaffold = {
     name: "Labs Fedora",
-    rootUri: "http://labs.library.tamu.edu/fcrepo/rest/",
+    rootUri: "https://api-dev.library.tamu.edu/fcrepo/rest/",
     username: "fedoraAdmin",
     password: "secret3",
     type: "",

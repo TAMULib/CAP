@@ -77,12 +77,12 @@ var apiMapping = {
     verifyAuth: {
         'endpoint': '/private/queue',
         'controller': 'ir',
-        'method': ':type/verify/ping'
+        'method': ':type/verify/auth'
     },
     verifyContent: {
         'endpoint': '/private/queue',
         'controller': 'ir',
-        'method': ':type/verify/ping'
+        'method': ':type/verify/content'
     }
   },
   IR: {
