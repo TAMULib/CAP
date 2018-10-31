@@ -1,5 +1,5 @@
 cap.directive("contentviewer", function() {
-    var viewerMap = {"image": ["image/jpeg","image/png","image/gif"],"pdf": ["application/pdf"]};
+    var viewerMap = appConfig.contentMap;
 
     return {
         templateUrl: "views/directives/viewers/viewerWrapper.html",
