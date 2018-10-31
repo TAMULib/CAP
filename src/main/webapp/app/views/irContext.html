@@ -87,7 +87,7 @@
                   <span class="glyphicon glyphicon-fullscreen clickable" ng-click="openModal('#resourceFullScreen')"></span>
               </div>
             </div>
-            <img src="{{context.uri}}">
+            <contentviewer content-type="getContentType()" resource="context.uri" ng-if="context.resource"></contentviewer>
             <div class="caption clearfix">
               <h3 class="text-center">{{context.name}}</h3>
               <hr/>
