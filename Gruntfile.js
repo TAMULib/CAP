@@ -68,7 +68,10 @@ module.exports = function (grunt) {
                     'node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js',
                     'node_modules/ng-file-upload/dist/ng-file-upload.min.js',
 
-                    'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js'
+                    'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
+
+                    'node_modules/openseadragon/build/openseadragon/openseadragon.min.js',
+                    'node_modules/ng-openseadragon/dist/ng-openseadragon.min.js'
                 ],
                 dest: '<%= build.app %>/resources/scripts/vendor_concat.js'
             },
