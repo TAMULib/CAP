@@ -178,7 +178,7 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     $scope.canPreview = function(fileType) {
         var previewable = ['image/png','image/jpeg','image/gif','image/bmp'];
         return (previewable.indexOf(fileType) !== -1);
-    }
+    };
 
     $scope.resetCreateContainer();
     $scope.resetUploadResource();
