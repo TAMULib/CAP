@@ -1,4 +1,4 @@
-cap.controller("IrContextController", function ($controller, $location, $routeParams, $scope, IRRepo) {
+cap.controller("IrContextController", function ($controller, $location, $routeParams, $scope, $filter, IRRepo) {
 
   angular.extend(this, $controller('CoreAdminController', {
     $scope: $scope
@@ -175,9 +175,37 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
       return URL.createObjectURL(file);
     };
 
+    $scope.getContentType = function() {
+      var contentType = null;
+      var backupContentType = null;
+      var typeMap = {"jpg":"image/jpeg","png":"image/png","pdf":"application/pdf"};
+
+      for (var i in $scope.context.properties) {
+        var triple = $scope.context.properties[i];
+        if (triple.predicate.indexOf("#hasMimeType") !== -1) {
+          contentType = $filter("removeQuotes")(triple.object);
+          break;
+        }
+
+        if (triple.predicate.indexOf("#filename") !== -1) {
+          var temp = triple.object.split(".");
+          temp = temp[temp.length-1];
+          backupContentType = temp.substring(0,temp.length-1);
+          if (typeMap[backupContentType] !== undefined) {
+            backupContentType = typeMap[backupContentType];
+          }
+        }
+      }
+
+      if (!contentType && backupContentType) {
+          contentType = backupContentType;
+      }
+      return contentType;
+    };
+
     $scope.resetCreateContainer();
     $scope.resetUploadResource();
-    
+
   });
 
 });

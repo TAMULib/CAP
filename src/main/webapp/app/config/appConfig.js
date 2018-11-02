@@ -31,6 +31,8 @@ var appConfig = {
     // Set this to 'admin' or 'user' if using mock AuthService
     // otherwise set to null or false
 
-    'mockRole': 'admin'
+    'mockRole': 'admin',
+
+    'contentMap': {"image": ["image/jpeg","image/png","image/gif"]}
 
 };
