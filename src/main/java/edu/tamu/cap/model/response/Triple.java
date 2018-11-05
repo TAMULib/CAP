@@ -53,15 +53,15 @@ public class Triple implements Serializable {
     public static Triple of(String subject, String predicate, String object) {
         return new Triple(subject, predicate, object);
     }
-    
+
     public static Triple of(Map<String, String> tripleMap) {
         return new Triple(tripleMap.get("subject"), tripleMap.get("predicate"), tripleMap.get("object"));
     }
-    
+
     public static Triple of(org.apache.jena.graph.Triple asTriple) {
         return Triple.of(asTriple.getSubject().toString(), asTriple.getPredicate().toString(), asTriple.getObject().toString());
     }
-    
+
     @Override
     public String toString() {
         StringBuilder stngBldr = new StringBuilder();
@@ -70,9 +70,9 @@ public class Triple implements Serializable {
         if(object.contains("http://")||object.contains("https://")) {
             stngBldr.append("<").append(object).append("> ");
         } else {
-            stngBldr.append("'").append(StringUtil.removeQuotes(object)).append("' ");
+            stngBldr.append("'").append(StringUtil.escape(StringUtil.removeQuotes(object))).append("' ");
         }
         return stngBldr.toString();
     }
- 
+
 }
