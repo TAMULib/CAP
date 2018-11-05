@@ -16,9 +16,7 @@ public class StringUtil {
         .put("\r", "\\r")
         .put("\b", "\\b")
         .put("\f", "\\f")
-        .put("\"", "\\\"")
         .put("'", "\\'")
-        .put("\\", "\\\\")
         .build();
 
     public static String escape(String string) {
