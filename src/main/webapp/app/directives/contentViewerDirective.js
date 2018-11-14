@@ -23,7 +23,7 @@ cap.directive("contentviewer", function($filter) {
 
                 if (viewerTemplate == 'seadragon') {
                   $scope.options = {};
-                  $scope.options.prefixUrl = '/resources/images/';
+                  $scope.options.prefixUrl = 'resources/images/';
                   $scope.options.tileSources = [$filter("cantaloupeUrl")($scope.resource)];
                 }
                 $scope.includeTemplateUrl = "views/directives/viewers/"+viewerTemplate+"Viewer.html";
