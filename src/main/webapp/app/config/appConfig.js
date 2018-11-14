@@ -31,6 +31,11 @@ var appConfig = {
     // Set this to 'admin' or 'user' if using mock AuthService
     // otherwise set to null or false
 
-    'mockRole': 'admin'
+    'mockRole': 'admin',
+
+    'contentMap': {"image": ["image/jpeg","image/png","image/gif"],"seadragon": ["image/jp2","image/tiff"]},
+
+    'cantaloupeBaseUrl': 'https://api-dev.library.tamu.edu/iiif/2/',
+    'fedoraPath': '/fcrepo/rest/'
 
 };

@@ -26,13 +26,13 @@
         <li role="menuitem" ng-if="context.features.fixity" ng-class="{'disabled': !context.resource}"><a href="" ng-click="openModal('#fixityModalDD')"><span class="glyphicon glyphicon glyphicon-edit"></span> Fixity</a></li>
 
         <li role="menuitem" ng-class="{'disabled': !context.resource}"><a href="{{context.resourse}}" target="_blank"><span class="glyphicon glyphicon-download-alt"></span> Download</a></li>
-        
+
         <!-- These ngIf calls should be executed once we enable user management -->
         <li ng-if="isAdmin" class="divider"></li>
         <li ng-if="isAdmin" class="dropdown-header">Admin Actions</li>
         <li ng-if="isAdmin && context.features.queryable" role="menuitem"><a href="" ng-click="openModal('#advancedUpdate')"><span class="glyphicon glyphicon glyphicon-edit"></span> Advanced Update</a></li>
         <li ng-if="isAdmin" role="menuitem"><a href="admin/ir"><span class="glyphicon glyphicon-cog"></span> Admin Settings</a></li>
-        
+
       </ul>
       <ul ng-if="context.isVersion && context.features.versioning" class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
         <li class="dropdown-header">Version Actions</li>
@@ -44,7 +44,7 @@
         <li ng-if="isAdmin" class="dropdown-header">Admin Actions</li>
         <li ng-if="isAdmin && context.features.queryable" role="menuitem"><a href="" ng-click="openModal('#advancedUpdate')"><span class="glyphicon glyphicon glyphicon-edit"></span> Advanced Update</a></li>
         <li ng-if="isAdmin" role="menuitem"><a href="admin/ir"><span class="glyphicon glyphicon-cog"></span> Admin Settings</a></li>
-        
+
       </ul>
     </div>
     <h1>{{ir.name}} <small class="clickable" ng-click="ir.loadContext(ir.rootUri)">(<span class="glyphicon glyphicon-home"></span> {{ir.rootUri}})</small></h1>
@@ -63,9 +63,9 @@
 
   <div ng-if="context.ir.getTransaction().active" class="alert alert-info clearfix" role="alert">
     <span>
-      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> This IR is currently in transaction. 
+      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> This IR is currently in transaction.
       <button ng-if="context.ir.getTransaction().secondsRemaining<31" class="btn btn-sm btn-info" ng-click="context.ir.refreshTransaction()">
-        <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> 0:{{context.ir.getTransaction().secondsRemaining}} 
+        <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> 0:{{context.ir.getTransaction().secondsRemaining}}
       </button>
     </span>
     <div class="pull-right">
@@ -79,15 +79,13 @@
       <div class="row">
         <div class="preview" ng-class="{'col-md-6 col-md-push-6': !theaterMode, 'col-md-12': theaterMode}" ng-if="context.resource">
           <div class="thumbnail" ng-mouseover="showImageControls=true" ng-mouseleave="showImageControls=false" >
+            <contentviewer content-type="getContentType()" resource="context.uri" ng-if="context.resource"></contentviewer>
             <div class="image-controls" ng-show="showImageControls">
               <div class="image-control">
                   <span class="glyphicon glyphicon-resize-horizontal" ng-click="setOrToggleTheaterMode()"></span>
               </div>
-              <div class="image-control">
-                  <span class="glyphicon glyphicon-fullscreen clickable" ng-click="openModal('#resourceFullScreen')"></span>
-              </div>
             </div>
-            <img src="{{context.uri}}">
+
             <div class="caption clearfix">
               <h3 class="text-center">{{context.name}}</h3>
               <hr/>
@@ -198,7 +196,7 @@
         add-action="openModal('#createContainer')"
         remove-action="context.removeContainers(items)">
         <ol class="list-group" ng-show="contentExpanded">
-          <li  class="list-group-item" ng-repeat="le in filteredList = (list | filterContainers:context)" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le.triple)!==-1}">
+          <li  class="list-group-item" ng-repeat="le in filteredList = (list | filterContainers:context | orderBy: 'name')" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le.triple)!==-1}">
             <a href="" ng-click="listElementAction({'le':le.triple.subject})">{{(le.name || le.triple.object) | removeQuotes}}</a>
             <input ng-show="removeListElements" type="checkbox" class="pull-right" ng-checked="selectedListElements.indexOf(le.triple)!==-1" ng-click="selectedListElements.indexOf(le.triple)===-1?selectedListElements.push(le.triple):selectedListElements.splice(selectedListElements.indexOf(le.triple),1)">
           </li>
@@ -220,7 +218,7 @@
             <a href="" ng-click="listElementAction({'le':le.triple.subject})">{{(le.name || le.triple.object) | removeQuotes}}</a>
 
             <!--<a href="" ng-show="!removeListElements" ng-click="resourceToUpdate=le;openModal('#updateResourceModalModal'+$index)"><span title="swap" class="glyphicon glyphicon-transfer pull-right clickable"></span></a>-->
-            
+
             <a href="" ng-show="!removeListElements" ng-click="openModal('#fixityModal'+$index)"><span title="fixity" class="glyphicon glyphicon-check pull-right clickable"></span></a>
             <modal
               modal-id="{{'fixityModal'+$index}}"
@@ -276,18 +274,11 @@
   </modal>
 
   <modal
-    modal-id="resourceFullScreen"
-    modal-view="views/modals/resourceFullScreen.html"
-    modal-header-class="modal-header-danger"
-    wvr-modal-backdrop="true">
-  </modal>
-
-  <modal
     ng-if="context.features.versioning"
     modal-id="versionsModal"
     modal-view="views/modals/versionsModal.html"
     modal-header-class="modal-header-primary"
-    modal-fullscreen="true"    
+    modal-fullscreen="true"
     wvr-modal-backdrop="static">
   </modal>
 

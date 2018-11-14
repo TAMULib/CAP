@@ -20,7 +20,7 @@
     <div class="panel-body">
       <table ng-table="tableParams" class="table table-hover ir-table">
         <tbody>
-          <tr ng-repeat="ir in $data">
+          <tr ng-repeat="ir in $data | orderBy: 'name'">
             <td data-title="'Name'">
               {{ir.name}}
             </td>
