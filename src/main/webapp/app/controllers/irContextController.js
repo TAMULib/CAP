@@ -6,6 +6,8 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
 
   $scope.irForm = {};
 
+  $scope.submitClicked = false;
+
   $scope.theaterMode = false;
 
   $scope.setOrToggleTheaterMode = function (mode) {
@@ -27,6 +29,7 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     $scope.context = $scope.ir.loadContext($scope.ir.contextUri);
 
     $scope.createContainer = function (form) {
+      $scope.submitClicked = true;
       var subject = $scope.context.uri;
       var triples = [];
       angular.forEach(form.entries, function (entry) {
@@ -41,18 +44,23 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
 
       $scope.context.createContainer(triples).then(function () {
         $scope.closeModal();
+        $scope.submitClicked = false;
       });
     };
 
     $scope.advancedUpdate = function (sparql) {
+      $scope.submitClicked = true;
       $scope.context.advancedUpdate(sparql).then(function () {
         $scope.closeModal();
+        $scope.submitClicked = false;
       });
     };
 
     $scope.uploadResource = function (file) {
+      $scope.submitClicked = true;
       $scope.context.createResource(file).then(function () {
         $scope.resetUploadResource();
+        $scope.submitClicked = false;
       });
     };
 
@@ -76,6 +84,8 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     };
 
     $scope.addMetadata = function (form) {
+      $scope.submitClicked = true;
+
       var triples = [];
       angular.forEach(form.entries, function (entry) {
         triples.push({
@@ -87,6 +97,7 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
 
       $scope.context.createMetadata(triples).then(function () {
         $scope.closeModal();
+        $scope.submitClicked = false;
       });
     };
 
@@ -96,22 +107,25 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     };
 
     $scope.deleteIrContext = function () {
+      $scope.submitClicked = true;
 
       var ir = $scope.context.ir;
       var currentTriple = $scope.context.triple;
       var isResource = $scope.context.resource;
-      
+
       var deleteContext = isResource ? $scope.context.removeResources : $scope.context.removeContainers;
 
       $scope.context = ir.loadContext($scope.context.parent.object);
 
       deleteContext([currentTriple]).then(function () {
         $scope.context = ir.loadContext($scope.context.uri, true);
+        $scope.submitClicked = false;
       });
 
     };
 
     $scope.revertVersion = function () {
+      $scope.submitClicked = true;
 
       var ir = $scope.context.ir;
       var currentContext = $scope.context;
@@ -120,10 +134,12 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
 
       $scope.context.revertVersion(currentContext).then(function () {
         $scope.context = ir.loadContext($scope.context.uri, true);
+        $scope.submitClicked = false;
       });
     };
 
     $scope.deleteVersion = function () {
+      $scope.submitClicked = true;
 
       var ir = $scope.context.ir;
       var currentContext = $scope.context;
@@ -134,6 +150,7 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
 
       $scope.context.deleteVersion(currentContext).then(function () {
         $scope.context = ir.loadContext($scope.context.uri, true);
+        $scope.submitClicked = false;
       });
     };
 
@@ -142,14 +159,18 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     };
 
     $scope.commitTransaction = function() {
+      $scope.submitClicked = true;
       $scope.context.ir.commitTransaction().then(function() {
         $scope.closeModal();
+        $scope.submitClicked = false;
       });
     };
 
     $scope.rollbackTransaction = function() {
+      $scope.submitClicked = true;
       $scope.context.ir.rollbackTransaction().then(function() {
         $scope.closeModal();
+        $scope.submitClicked = false;
       });
     };
 

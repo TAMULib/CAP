@@ -4,9 +4,11 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
       $scope: $scope
   }));
 
-  $scope.irs = IRRepo.getAll();  
+  $scope.irs = IRRepo.getAll();
   $scope.iRTypes = [];
-  
+
+  $scope.submitClicked = false;
+
   IRRepo.getTypes($scope.iRTypes).then(function() {
     $scope.irToCreate = IRRepo.getScaffold({
       type: $scope.iRTypes[0].value
@@ -36,8 +38,8 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
     if (force || $scope.verificationResults.status === 'SUCCESS') {
       $scope.verificationResults = {};
     }
-  };  
-  
+  };
+
   $scope.irToDelete = {};
   $scope.irToEdit = {};
   resetVerification(true);
@@ -56,24 +58,26 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
     }
     resetVerification(true);
     delete $scope.irToVerify;
-    $scope.closeModal();    
+    $scope.closeModal();
   };
 
-  $scope.resetIrForms(); 
-  
+  $scope.resetIrForms();
+
   $scope.startCreate = function() {
     $scope.schemas = SchemaRepo.getAll();
     $scope.openModal("#createIRModal");
   };
 
   $scope.createIr = function() {
+    $scope.submitClicked = true;
     IRRepo.create($scope.irToCreate).then(function(res) {
       if(angular.fromJson(res.body).meta.status === "SUCCESS") {
         $scope.cancelCreateIr();
       }
+      $scope.submitClicked = false;
     });
   };
-  
+
   $scope.cancelCreateIr = function() {
     angular.extend($scope.irToCreate, IRRepo.getScaffold());
     $scope.resetIrForms();
@@ -86,15 +90,17 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
   };
 
   $scope.updateIr = function() {
+    $scope.submitClicked = true;
     $scope.irToEdit.dirty(true);
     $scope.irToEdit.save().then(function() {
       $scope.cancelEditIr();
+      $scope.submitClicked = false;
     });
   };
 
   $scope.cancelEditIr = function(ir) {
     $scope.irToEdit.refresh();
-    $scope.irToEdit = {};        
+    $scope.irToEdit = {};
     $scope.resetIrForms();
   };
 
@@ -104,14 +110,16 @@ cap.controller("IrManagementController", function($controller, $scope, $q, $loca
   };
 
   $scope.cancelDeleteIr = function(ir) {
-    $scope.irToDelete = {};        
+    $scope.irToDelete = {};
     $scope.closeModal();
   };
 
   $scope.deleteIr = function(ir) {
+    $scope.submitClicked = true;
     IRRepo.delete(ir).then(function(res) {
       if(angular.fromJson(res.body).meta.status === "SUCCESS") {
         $scope.cancelDeleteIr();
+        $scope.submitClicked = false;
       }
     });
   };

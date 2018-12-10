@@ -13,6 +13,6 @@
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-default" ng-click="resetAdvancedUpdate()">Cancel</button>
-    <button type="submit" class="btn btn-success" ng-disabled="irForm.advancedUpdate.query.length === 0">Update</button>
+    <button type="submit" class="btn btn-success" ng-disabled="irForm.advancedUpdate.query.length === 0 || submitClicked">Update</button>
   </div>
 </form>

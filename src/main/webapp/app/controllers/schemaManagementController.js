@@ -1,10 +1,10 @@
 cap.controller("SchemaManagementController", function($controller, $scope, SchemaRepo, NgTableParams) {
-  
+
   angular.extend(this, $controller('CoreAdminController', {
       $scope: $scope
   }));
 
-  $scope.schemas = SchemaRepo.getAll();    
+  $scope.schemas = SchemaRepo.getAll();
 
   $scope.schemaToCreate = SchemaRepo.getScaffold();
   $scope.schemaToEdit = SchemaRepo.getScaffold();
@@ -14,7 +14,9 @@ cap.controller("SchemaManagementController", function($controller, $scope, Schem
     validations: SchemaRepo.getValidations(),
     getResults: SchemaRepo.getValidationResults
   };
-  
+
+  $scope.submitClicked = false;
+
   $scope.resetSchemaForms = function() {
     SchemaRepo.clearValidationResults();
     for (var key in $scope.schemaForms) {
@@ -22,16 +24,18 @@ cap.controller("SchemaManagementController", function($controller, $scope, Schem
         $scope.schemaForms[key].$setPristine();
       }
     }
-    $scope.closeModal();    
+    $scope.closeModal();
   };
 
   $scope.resetSchemaForms();
 
   $scope.createSchema = function() {
+    $scope.submitClicked = true;
     SchemaRepo.create($scope.schemaToCreate).then(function(res) {
       if(angular.fromJson(res.body).meta.status === "SUCCESS") {
         $scope.cancelCreateSchema();
       }
+      $scope.submitClicked = false;
     });
   };
 
@@ -46,14 +50,16 @@ cap.controller("SchemaManagementController", function($controller, $scope, Schem
   };
 
   $scope.updateSchema = function() {
+    $scope.submitClicked = true;
     $scope.schemaToEdit.save().then(function() {
       $scope.cancelEditSchema();
+      $scope.submitClicked = false;
     });
   };
 
   $scope.cancelEditSchema = function(schema) {
     $scope.schemaToEdit.refresh();
-    $scope.schemaToEdit = SchemaRepo.getScaffold();        
+    $scope.schemaToEdit = SchemaRepo.getScaffold();
     $scope.resetSchemaForms();
   };
 
@@ -63,15 +69,17 @@ cap.controller("SchemaManagementController", function($controller, $scope, Schem
   };
 
   $scope.cancelDeleteSchema = function(schema) {
-    $scope.schemaToDelete = {};        
+    $scope.schemaToDelete = {};
     $scope.closeModal();
   };
 
   $scope.deleteSchema = function(schema) {
+    $scope.submitClicked = true;
     SchemaRepo.delete(schema).then(function(res) {
       if(angular.fromJson(res.body).meta.status === "SUCCESS") {
         $scope.resetSchemaForms();
       }
+      $scope.submitClicked = false;
     });
   };
 
@@ -96,6 +104,6 @@ cap.controller("SchemaManagementController", function($controller, $scope, Schem
       });
     };
     $scope.setTable();
-  }); 
-  
+  });
+
 });

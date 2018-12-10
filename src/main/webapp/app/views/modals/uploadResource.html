@@ -48,6 +48,6 @@
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-default" ng-click="resetUploadResource()">Cancel</button>
-    <button type="submit" class="btn btn-success" ng-disabled="!irForm.uploadResource.file">Upload</button>
+    <button type="submit" class="btn btn-success" ng-disabled="!irForm.uploadResource.file || submitClicked">Upload</button>
   </div>
 </form>
