@@ -1,11 +1,11 @@
-/* 
- * AppUser.java 
- * 
- * Version: 
- *     $Id$ 
- * 
- * Revisions: 
- *     $Log$ 
+/*
+ * AppUser.java
+ *
+ * Version:
+ *     $Id$
+ *
+ * Revisions:
+ *     $Log$
  */
 package edu.tamu.cap.model;
 
@@ -28,7 +28,7 @@ import edu.tamu.weaver.auth.model.AbstractWeaverUserDetails;
 
 /**
  * Application User entity.
- * 
+ *
  * @author
  *
  */
@@ -48,7 +48,7 @@ public class User extends AbstractWeaverUserDetails {
 
     /**
      * Constructor for the application user
-     * 
+     *
      */
     public User() {
         super();
@@ -56,7 +56,7 @@ public class User extends AbstractWeaverUserDetails {
 
     /**
      * Constructor for the application user
-     * 
+     *
      */
     public User(String uin) {
         setUsername(uin);
@@ -64,18 +64,18 @@ public class User extends AbstractWeaverUserDetails {
 
     /**
      * Constructor for application user with uin passed.
-     * 
+     *
      * @param uin
      *            Long
-     * 
+     *
      */
     public User(String uin, String firstName, String lastName, String role) {
         this(uin);
         setFirstName(firstName);
         setLastName(lastName);
-        setRole(Role.valueOf(role));
+        setRole(role == null ? null : Role.valueOf(role));
     }
-    
+
     public User(User user) {
     	this(user.getUsername());
     	setFirstName(user.getFirstName());
@@ -86,6 +86,7 @@ public class User extends AbstractWeaverUserDetails {
     /**
      * @return the role
      */
+    @Override
     @JsonDeserialize(as = Role.class)
     public IRole getRole() {
         return role;
@@ -95,15 +96,16 @@ public class User extends AbstractWeaverUserDetails {
      * @param role
      *            the role to set
      */
+    @Override
     @JsonSerialize(as = Role.class)
     public void setRole(IRole role) {
         this.role = (Role) role;
     }
 
     /**
-     * 
+     *
      * @return firstName
-     * 
+     *
      */
     public String getFirstName() {
         return firstName;
@@ -112,7 +114,7 @@ public class User extends AbstractWeaverUserDetails {
     /**
      * @param firstName
      *            String
-     * 
+     *
      */
     public void setFirstName(String firstName) {
         this.firstName = firstName;
@@ -120,7 +122,7 @@ public class User extends AbstractWeaverUserDetails {
 
     /**
      * @return lastName
-     * 
+     *
      */
     public String getLastName() {
         return lastName;
@@ -129,7 +131,7 @@ public class User extends AbstractWeaverUserDetails {
     /**
      * @param lastName
      *            String
-     * 
+     *
      */
     public void setLastName(String lastName) {
         this.lastName = lastName;
