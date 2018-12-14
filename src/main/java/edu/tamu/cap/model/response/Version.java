@@ -4,11 +4,11 @@ import java.io.Serializable;
 
 public class Version implements Serializable {
 
-    String name;
+    private String name;
 
-    String time;
+    private String time;
 
-    Triple triple;
+    private Triple triple;
 
     private static final long serialVersionUID = 6125496651739394381L;
 
