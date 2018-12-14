@@ -22,6 +22,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+import edu.tamu.cap.auth.AuthMockTests;
 import edu.tamu.cap.model.Role;
 import edu.tamu.cap.model.User;
 import edu.tamu.cap.model.repo.UserRepo;
@@ -30,7 +31,7 @@ import edu.tamu.weaver.auth.model.Credentials;
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(SpringExtension.class)
 @MockitoSettings(strictness = Strictness.WARN)
-public final class AppUserCredentialsServiceTest /*extends AuthMockTests */{
+public final class AppUserCredentialsServiceTest extends AuthMockTests {
 
     @Mock
     private UserRepo userRepo;
@@ -101,28 +102,6 @@ public final class AppUserCredentialsServiceTest /*extends AuthMockTests */{
         assertEquals(aggiejackCredentialsUpdated.getFirstName(), userUpdate.getFirstName(), "User had the incorrect first name!");
         assertEquals(aggiejackCredentialsUpdated.getUin(), userUpdate.getUsername(), "User had the incorrect username!");
         assertEquals(Role.valueOf(aggiejackCredentialsUpdated.getRole()), userUpdate.getRole(), "User had the incorrect role!");
-    }
-
-    protected Credentials getMockAggieJackCredentials() {
-        Credentials credentials = new Credentials();
-        credentials.setFirstName("Aggie");
-        credentials.setLastName("Jack");
-        credentials.setUin("123456789");
-        credentials.setNetid("aggiejack");
-        credentials.setRole("ROLE_ADMIN");
-        credentials.setEmail("aggiejack@tamu.edu");
-        return credentials;
-    }
-
-    protected Credentials getMockAggieJaneCredentials() {
-        Credentials credentials = new Credentials();
-        credentials.setFirstName("Aggie");
-        credentials.setLastName("Jane");
-        credentials.setUin("987654321");
-        credentials.setNetid("aggiejane");
-        credentials.setRole("ROLE_MANAGER");
-        credentials.setEmail("aggiejane@tamu.edu");
-        return credentials;
     }
 
 }
