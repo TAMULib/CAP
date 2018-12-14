@@ -25,15 +25,15 @@ public class IRContext implements Serializable {
     private List<Triple> metadata;
 
     private List<IRContext> children;
-    
+
     private List<Version> versions;
-    
+
     private FixityReport fixity;
 
     private String version;
-    
+
     private TransactionDetails transactionDetails;
-    
+
     private Map<String, Boolean> features;
 
 	public IRContext() {
@@ -117,7 +117,7 @@ public class IRContext implements Serializable {
     public void addChild(IRContext child) {
         children.add(child);
     }
-    
+
     public List<Version> getVersions() {
         return versions;
     }
@@ -125,13 +125,13 @@ public class IRContext implements Serializable {
     public void setVersions(List<Version> versions) {
         this.versions = versions;
     }
-    
+
     public void addVersion(Version version) {
         this.versions.add(version);
     }
-    
-    public void removeVersion(Triple triple) {
-        this.versions.remove(triple);
+
+    public void removeVersion(Version version) {
+        this.versions.remove(version);
     }
 
     public FixityReport getFixity() {
@@ -145,15 +145,15 @@ public class IRContext implements Serializable {
     public void setVersion(String version) {
         this.version = version;
     }
-    
+
     public String getVersion() {
         return version;
     }
-    
+
     public boolean getIsVersion() {
         return Optional.ofNullable(version).isPresent();
     }
-    
+
     public TransactionDetails getTransactionDetails() {
         return transactionDetails;
     }
@@ -170,7 +170,7 @@ public class IRContext implements Serializable {
         this.features.put(featureName, supported);
         return features;
     }
-    
+
     public Map<String, Boolean> removeFeature(String featureName) {
         this.features.remove(featureName);
         return features;
