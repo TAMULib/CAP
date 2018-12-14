@@ -339,6 +339,8 @@
           <version>2.22.1</version>
           <configuration>
             <useSystemClassLoader>false</useSystemClassLoader>
+            <!--<parallel>classes</parallel>
+            <threadCount>4</threadCount>-->
           </configuration>
         </plugin>
 
