@@ -4,8 +4,8 @@
 </div>
 <div class="modal-body">
   <h3>Are you sure you want to commit this transaction?</h3>
-</div>     
+</div>
 <div class="modal-footer">
   <button type="button" class="btn btn-default" ng-click="closeModal()">Cancel</button>
-  <button type="button" class="btn btn-success" ng-click="commitTransaction()">Confirm</button>
+  <button type="button" class="btn btn-success" ng-click="commitTransaction()" ng-disabled="submitClicked">Confirm</button>
 </div>

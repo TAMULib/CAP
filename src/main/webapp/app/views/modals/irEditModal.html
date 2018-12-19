@@ -6,7 +6,7 @@
     <div class="modal-body">
 
         <validationmessage results="irForms.getResults()"></validationmessage>
-              
+
         <uib-tabset active="activeJustified" justified="true">
             <uib-tab index="0" heading="General">
                 <div class="row">
@@ -22,7 +22,7 @@
                     form="irForms.edit"
                     validations="irForms.validations"
                     results="irForms.getResults()">
-                  </validatedselect>  
+                  </validatedselect>
                   <validatedinput
                     model="irToEdit"
                     property="name"
@@ -44,7 +44,7 @@
                     autocomplete="off">
                   </validatedinput>
                 </div>
-            </div>  
+            </div>
         </uib-tab>
         <uib-tab index="1" heading="Authentication">
             <div class="row">
@@ -59,7 +59,7 @@
                         results="irForms.getResults()"
                         autocomplete="off">
                     </validatedinput>
-                    
+
                     <validatedinput
                         model="irToEdit"
                         property="password"
@@ -76,9 +76,9 @@
         <uib-tab index="2" heading="Schemas">
 
             <div class="row">
-    
+
                 <div class="col-xs-6">
-                
+
                 <div class="panel panel-default">
                     <div class="panel-heading">
                     <h3 class="panel-title">This Repository</h3>
@@ -90,11 +90,11 @@
                     </li>
                     </ul>
                 </div>
-    
+
                 </div>
-                
+
                 <div class="col-xs-6">
-    
+
                 <div class="panel panel-default">
                     <div class="panel-heading">
                     <h3 class="panel-title">All Schemas</h3>
@@ -106,19 +106,18 @@
                     </li>
                     </ul>
                 </div>
-    
+
                 </div>
             </div>
-    
+
         </uib-tab>
         <uib-tab index="3" heading="Verification">
             <irverification ir="irToEdit" results="verificationResults"></irverification>
         </uib-tab>
-    </div>     
+    </div>
     <div class="modal-footer">
         <small class="text-warning pull-left" ng-if="!disableVerify(irToEdit) && irForms.edit.$dirty&&verificationResults.status!=='SUCCESS'">IR settings must be verified before edits can be saved</small>
         <button type="button" class="btn btn-default" ng-class="{'btn-default': irForms.edit.$pristine, 'btn-warning': !irForms.edit.$pristine}" ng-click="cancelEditIr()">Cancel</button>
-        <button type="submit" class="btn btn-success" ng-disabled="!irForms.edit.$dirty|| irForms.edit.$invalid||(!disableVerify(irToEdit)&&irForms.edit.$dirty&&verificationResults.status!=='SUCCESS')">Edit</button>
+        <button type="submit" class="btn btn-success" ng-disabled="!irForms.edit.$dirty || irForms.edit.$invalid || submitClicked || (!disableVerify(irToEdit) && irForms.edit.$dirty && verificationResults.status !== 'SUCCESS')">Edit</button>
     </div>
 </form>
-    

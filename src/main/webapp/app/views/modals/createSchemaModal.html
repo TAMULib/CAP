@@ -6,9 +6,9 @@
   <div class="modal-body">
 
     <validationmessage results="schemaForms.getResults()"></validationmessage>
-    
+
     <div class="row">
-      <div class="col-sm-5 col-sm-offset-1">            
+      <div class="col-sm-5 col-sm-offset-1">
 
         <validatedinput
           model="schemaToCreate"
@@ -20,7 +20,7 @@
           results="schemaForms.getResults()"
           autocomplete="off">
         </validatedinput>
-        
+
         <validatedinput
           model="schemaToCreate"
           property="abbreviation"
@@ -42,17 +42,16 @@
           results="schemaForms.getResults()"
           autocomplete="off">
         </validatedinput>
-        
+
       </div>
       <div class="col-sm-5">
         <findproperties schema="schemaToCreate"></findproperties>
       </div>
     </div>
-    
-  </div>     
+
+  </div>
   <div class="modal-footer">
     <button type="button" class="btn" ng-class="{'btn-default': schemaForms.create.$pristine, 'btn-warning': !schemaForms.create.$pristine}" ng-click="cancelCreateSchema()">Cancel</button>
-    <button type="submit" class="btn btn-success" ng-disabled="schemaForms.create.$invalid||!schemaToCreate.properties.length">Create</button>
+    <button type="submit" class="btn btn-success" ng-disabled="schemaForms.create.$invalid || !schemaToCreate.properties.length || submitClicked">Create</button>
   </div>
 </form>
-      
