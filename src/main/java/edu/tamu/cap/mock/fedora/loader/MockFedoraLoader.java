@@ -15,10 +15,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 @Profile("test")
 public class MockFedoraLoader {
 
-    @Value("classpath:mock/container.xml")
+    @Value("classpath:mock/fedora/container.xml")
     private Resource container;
 
-    @Value("classpath:mock/versions.xml")
+    @Value("classpath:mock/fedora/versions.xml")
     private Resource versions;
 
     public String getContainer() throws JsonProcessingException, IOException {

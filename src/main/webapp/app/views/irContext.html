@@ -214,7 +214,7 @@
         add-action="openModal('#uploadResource')"
         remove-action="context.removeResources(items)">
         <ol class="list-group" ng-show="contentExpanded">
-          <li  class="list-group-item" ng-repeat="le in filteredList = (list | filterResources:context) track by $index" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le.triple)!==-1}">
+          <li  class="list-group-item" ng-repeat="le in filteredList = (list | filterResources:context | orderBy: 'name') track by $index" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le.triple)!==-1}">
             <a href="" ng-click="listElementAction({'le':le.triple.subject})">{{(le.name || le.triple.object) | removeQuotes}}</a>
 
             <!--<a href="" ng-show="!removeListElements" ng-click="resourceToUpdate=le;openModal('#updateResourceModalModal'+$index)"><span title="swap" class="glyphicon glyphicon-transfer pull-right clickable"></span></a>-->

@@ -6,9 +6,9 @@
     <div class="modal-body">
       <h3>Are you sure you want to remove:</h3>
       <p>{{context.name}}</p>
-    </div>     
+    </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-default" ng-click="cancelDeleteIrContext()">Cancel</button>
-      <button type="submit" class="btn btn-danger">Confirm</button>
+      <button type="submit" class="btn btn-danger" ng-disabled="submitClicked">Confirm</button>
     </div>
-</form>  
+</form>

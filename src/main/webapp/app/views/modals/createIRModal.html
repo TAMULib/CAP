@@ -9,8 +9,8 @@
     <uib-tabset active="activeJustified" justified="true">
       <uib-tab index="0" heading="General">
         <div class="row">
-          <div class="col-sm-10 col-sm-offset-1">            
-            
+          <div class="col-sm-10 col-sm-offset-1">
+
             <validatedselect
               model="irToCreate"
               property="type"
@@ -34,7 +34,7 @@
               results="irForms.getResults()"
               autocomplete="off">
             </validatedinput>
-            
+
             <validatedinput
               model="irToCreate"
               property="rootUri"
@@ -46,12 +46,12 @@
               autocomplete="off">
             </validatedinput>
           </div>
-        </div>  
+        </div>
       </uib-tab>
 
       <uib-tab index="1" heading="Authentication">
         <div class="row">
-            <div class="col-sm-10 col-sm-offset-1">                  
+            <div class="col-sm-10 col-sm-offset-1">
               <validatedinput
                 model="irToCreate"
                 property="username"
@@ -62,7 +62,7 @@
                 results="irForms.getResults()"
                 autocomplete="off">
               </validatedinput>
-              
+
               <validatedinput
                 model="irToCreate"
                 property="password"
@@ -82,7 +82,7 @@
         <div class="row">
 
           <div class="col-xs-6">
-          
+
             <div class="panel panel-default">
               <div class="panel-heading">
                 <h3 class="panel-title">This Repository</h3>
@@ -96,7 +96,7 @@
             </div>
 
           </div>
-          
+
           <div class="col-xs-6">
 
             <div class="panel panel-default">
@@ -121,11 +121,10 @@
       </uib-tab>
 
     </uib-tabset>
-    
-  </div>     
+
+  </div>
   <div class="modal-footer">
     <button type="button" class="btn" ng-class="{'btn-default': irForms.create.$pristine, 'btn-warning': !irForms.create.$pristine}" ng-click="cancelCreateIr()">Cancel</button>
-    <button type="submit" class="btn btn-success" ng-disabled="!disableVerify(irToCreate) && (irForms.create.$invalid||verificationResults.status!=='SUCCESS')">Create</button>
+    <button type="submit" class="btn btn-success" ng-disabled="!disableVerify(irToCreate) && (irForms.create.$invalid || verificationResults.status !== 'SUCCESS') || submitClicked">Create</button>
   </div>
 </form>
-      
