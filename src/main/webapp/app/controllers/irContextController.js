@@ -83,6 +83,13 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
       $scope.closeModal();
     };
 
+    $scope.resetAddMetadataModal = function() {
+      $scope.irForm.addMetadata.$setPristine(); 
+      $scope.irForm.addMetadata.entries.length = 0;
+      $scope.irForm.addMetadata.entries.push({});
+      $scope.closeModal();
+    };
+
     $scope.addMetadata = function (form) {
       $scope.submitClicked = true;
 
@@ -96,9 +103,10 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
       });
 
       $scope.context.createMetadata(triples).then(function () {
-        $scope.closeModal();
+        $scope.resetAddMetadataModal();
         $scope.submitClicked = false;
       });
+      
     };
 
     $scope.cancelDeleteIrContext = function (irContext) {
