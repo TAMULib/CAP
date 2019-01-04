@@ -19,6 +19,7 @@
         <li role="menuitem" class="disabled"><a href="#"><span class="glyphicon glyphicon-random"></span> Migrate</a></li>
         <li role="menuitem" class="disabled"><a href="#"><span class="glyphicon glyphicon-export"></span> Export</a></li>
         <li role="menuitem bg-danger" ng-click="openModal('#irContextDeleteModal')"><a href="#" class="bg-danger"><span class="glyphicon glyphicon-trash"></span> Delete</a></li>
+        <li ng-if="!context.resource && getIIIFUrl()" role="menuitem"><a href="" ng-click="copyToClipboard(getIIIFUrl(), 'IIIFUrl')">Copy IIIF Manifest URL</a></li>
 
         <li class="divider"></li>
         <li class="dropdown-header">Resource Actions</li>
@@ -101,6 +102,7 @@
                     <li role="menuitem" class="disabled"><a href="#">Create thumbnail</a></li>
                     <li role="menuitem" class="disabled"><a href="#">View in Mirador</a></li>
                     <li role="menuitem"><a href="" ng-click="copyToClipboard(context.uri, 'contextUri')">Copy Resource URL</a></li>
+                    <li ng-if="getIIIFUrl()" role="menuitem"><a href="" ng-click="copyToClipboard(getIIIFUrl(), 'contextUri')">Copy IIIF Manifest URL</a></li>
                   </ul>
                 </div>
               </div>
