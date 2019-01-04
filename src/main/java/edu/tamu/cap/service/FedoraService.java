@@ -342,7 +342,7 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
     }
 
     @Override
-    public IRContext resourceFixity(String contextUri) throws Exception {
+    public FixityReport resourceFixity(String contextUri) throws Exception {
         FcrepoClient client = buildClient();
         FcrepoResponse response = new GetBuilder(URI.create(contextUri + "/fcr:fixity"), client).perform();
 
@@ -351,10 +351,8 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
         model.createResource("").addProperty(DC.title, "Fixity Report");
 
         FixityReport fixityReportContext = FixityReport.of(buildIRContext(model, contextUri).getProperties());
-        IRContext thisContext = getIRContext(contextUri);
-        thisContext.setFixity(fixityReportContext);
 
-        return thisContext;
+        return fixityReportContext;
     }
 
     @Override

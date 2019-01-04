@@ -297,22 +297,6 @@ cap.model("IRContext", function ($q, $filter, $interval, $location, $routeParams
       return revertVersionPromise;
     };
 
-    irContext.fixityCheck = function (context) {
-      var fixityPromise = irContext.ir.performRequest(irContext.getMapping().resourceFixity, {
-        method: HttpMethodVerbs.GET,
-        query: {
-          contextUri: context.uri
-        }
-      });
-
-      fixityPromise.then(function(apiRes) {
-        var newContext = angular.fromJson(apiRes.body).payload.IRContext;
-        angular.extend(irContext, newContext);
-      });
-
-      return fixityPromise;
-    };
-
     irContext.advancedUpdate = function (query) {
       var updatePromise = irContext.ir.performRequest(irContext.getMapping().advancedQuery, {
         method: HttpMethodVerbs.POST,
