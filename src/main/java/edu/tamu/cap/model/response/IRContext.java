@@ -28,8 +28,6 @@ public class IRContext implements Serializable {
 
     private List<Version> versions;
 
-    private FixityReport fixity;
-
     private String version;
 
     private TransactionDetails transactionDetails;
@@ -133,14 +131,6 @@ public class IRContext implements Serializable {
     public void removeVersion(Version version) {
         this.versions.remove(version);
     }
-
-    public FixityReport getFixity() {
-		return fixity;
-	}
-
-	public void setFixity(FixityReport fixity) {
-		this.fixity = fixity;
-	}
 
     public void setVersion(String version) {
         this.version = version;
