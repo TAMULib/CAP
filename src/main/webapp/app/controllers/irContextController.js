@@ -1,4 +1,4 @@
-cap.controller("IrContextController", function ($controller, $location, $routeParams, $scope, $filter, $timeout, IRRepo) {
+cap.controller("IrContextController", function ($controller, $location, $routeParams, $scope, $timeout, $filter, IRRepo, FixityReport) {
 
   angular.extend(this, $controller('CoreAdminController', {
     $scope: $scope
@@ -83,6 +83,13 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
       $scope.closeModal();
     };
 
+    $scope.resetAddMetadataModal = function() {
+      $scope.irForm.addMetadata.$setPristine();
+      $scope.irForm.addMetadata.entries.length = 0;
+      $scope.irForm.addMetadata.entries.push({});
+      $scope.closeModal();
+    };
+
     $scope.addMetadata = function (form) {
       $scope.submitClicked = true;
 
@@ -96,9 +103,10 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
       });
 
       $scope.context.createMetadata(triples).then(function () {
-        $scope.closeModal();
+        $scope.resetAddMetadataModal();
         $scope.submitClicked = false;
       });
+
     };
 
     $scope.cancelDeleteIrContext = function (irContext) {
@@ -152,6 +160,19 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
         $scope.context = ir.loadContext($scope.context.uri, true);
         $scope.submitClicked = false;
       });
+    };
+
+    $scope.openFixity = function(uriOfContextToCheck) {
+      $scope.fixityReport = new FixityReport({
+        ir: $scope.context.ir,
+        contextUri: uriOfContextToCheck
+      });
+      $scope.openModal('#fixityModalButton');
+    };
+
+    $scope.cancelFixity = function() {
+      $scope.fixityReport = {};
+      $scope.closeModal();
     };
 
     $scope.startTransaction = function() {

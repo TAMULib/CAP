@@ -1,28 +1,28 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-    <button type="button" class="close modal-close" aria-label="Close" ng-click="resetCreateContainer()"><span aria-hidden="true">&times;</span></button>
+    <button type="button" class="close modal-close" aria-label="Close" ng-click="cancelFixity()"><span aria-hidden="true">&times;</span></button>
     <h4 class="modal-title">Run Fixity</h4>
 </div>
 <div class="modal-body">
 
 <div class="row" ng-init="fixityResults={}">
     <div class="col-md-2 col-xs-offset-1">
-        <button class="btn btn-primary btn-lg " ng-click="context.fixityCheck(context)">Check Fixity</button>
+        <button class="btn btn-primary btn-lg " ng-click="fixityReport.run()">Check Fixity</button>
     </div>
 
-    <div class="col-md-9" ng-if="context.fixity">
+    <div class="col-md-9" ng-if="fixityReport.finished">
         <dl class="dl-horizontal">
             <dt>
                 Status:
             </dt>
             <dd>
-                {{context.fixity.status | removeQuotes }}
+                {{fixityReport.status | removeQuotes }}
             </dd>
             <dt>
                 Message Digest:
             </dt>
             <dd>
-                {{context.fixity.messageDigest}} 
-                <button class="btn btn-default btn-sm" ng-click="copyToClipboard(context.fixity.messageDigest, 'fixity')" uib-tooltip="Copied!" tooltip-trigger="'none'" tooltip-is-open="fixityCopied === true">
+                {{fixityReport.messageDigest}} 
+                <button class="btn btn-default btn-sm" ng-click="copyToClipboard(fixityReport.messageDigest, 'fixity')" uib-tooltip="Copied!" tooltip-trigger="'none'" tooltip-is-open="fixityCopied === true">
                     <span class="glyphicon glyphicon-copy" style="margin-left: 0px;"></span>
                 </button>
             </dd>
@@ -30,7 +30,7 @@
                 Size:
             </dt>
             <dd>
-                {{context.fixity.size.split("^^")[0] | removeQuotes }}
+                {{fixityReport.size.split("^^")[0] | removeQuotes }}
             </dd>
         </dl>
     </div>
@@ -39,5 +39,5 @@
 
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-default" ng-click="closeModal()">Cancel</button>
+    <button type="button" class="btn btn-default" ng-click="cancelFixity()">Cancel</button>
 </div>

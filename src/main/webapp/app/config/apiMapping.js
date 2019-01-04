@@ -68,6 +68,23 @@ var apiMapping = {
       'method': ':type/:irid/resource/fixity'
     }
   },
+  FixityReport: {
+    validations: false,
+    method: "",
+    lazy: false,
+    load: {
+      'endpoint': '/private/queue',
+      'httpMethod': 'GET',
+      'controller': 'ir-context',
+      'method': ':type/:irid/resource/fixity'
+    },
+    instantiate: {
+      'endpoint': '/private/queue',
+      'httpMethod': 'GET',
+      'controller': 'ir-context',
+      'method': ':type/:irid/resource/fixity'
+    }
+  },
   VerifyIRSettings: {
     verifyPing: {
       'endpoint': '/private/queue',

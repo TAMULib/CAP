@@ -1,6 +1,6 @@
 <form class="add-metadata-model" name="irForm.addMetadata" ng-submit="addMetadata(irForm.addMetadata)" novalidate ng-init="irForm.addMetadata.entries=[]">
     <div class="modal-header {{attr.modalHeaderClass}}">
-      <button type="button" class="close modal-close" aria-label="Close" ng-click="cancelDeleteIr()"><span aria-hidden="true">&times;</span></button>
+      <button type="button" class="close modal-close" aria-label="Close" ng-click="resetAddMetadataModal()"><span aria-hidden="true">&times;</span></button>
       <h4 class="modal-title">Add Metadata</h4>
     </div>
     <div class="modal-body" ng-init="irForm.addMetadata.entries=[{label:'',value:''}]">
@@ -62,7 +62,7 @@
 
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-default" ng-class="{'btn-warning': irForm.addMetadata.$dirty}" ng-click="closeModal()">Cancel</button>
+      <button type="button" class="btn btn-default" ng-class="{'btn-warning': irForm.addMetadata.$dirty}" ng-click="resetAddMetadataModal()">Cancel</button>
       <button type="submit" class="btn btn-success" ng-disabled="irForm.addMetadata.$invalid || submitClicked">Add</button>
     </div>
 </form>
