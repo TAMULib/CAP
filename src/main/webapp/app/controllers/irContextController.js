@@ -1,4 +1,4 @@
-cap.controller("IrContextController", function ($controller, $location, $routeParams, $scope, $filter, IRRepo) {
+cap.controller("IrContextController", function ($controller, $location, $routeParams, $scope, $timeout, $filter, IRRepo, FixityReport) {
 
   angular.extend(this, $controller('CoreAdminController', {
     $scope: $scope
@@ -160,6 +160,19 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
         $scope.context = ir.loadContext($scope.context.uri, true);
         $scope.submitClicked = false;
       });
+    };
+
+    $scope.openFixity = function(uriOfContextToCheck) {
+      $scope.fixityReport = new FixityReport({
+        ir: $scope.context.ir,
+        contextUri: uriOfContextToCheck
+      });
+      $scope.openModal('#fixityModalButton');
+    };
+  
+    $scope.cancelFixity = function() {
+      $scope.fixityReport = {};
+      $scope.closeModal();
     };
 
     $scope.startTransaction = function() {
