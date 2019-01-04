@@ -21,8 +21,6 @@ cap.directive("irsection", function($controller, $timeout, IrSectionService) {
 
           $scope.contextScope = $scope.$parent.$parent;
 
-          console.log($scope.contextScope);
-
           transclude($scope, function(clone, $scope) {
             elem.find('.transclude').replaceWith(clone);
           });

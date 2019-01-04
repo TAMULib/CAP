@@ -1,6 +1,5 @@
 cap.model("FixityReport", function FixityReport(HttpMethodVerbs) {
   return function FixityReport() {
-    console.log();
 
     var fixityReport = this;
 
