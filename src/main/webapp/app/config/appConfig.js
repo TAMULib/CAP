@@ -36,6 +36,8 @@ var appConfig = {
     'contentMap': {"image": ["image/jpeg","image/png","image/gif"],"seadragon": ["image/jp2","image/tiff"]},
 
     'cantaloupeBaseUrl': 'https://api-dev.library.tamu.edu/iiif/2/',
-    'fedoraPath': '/fcrepo/rest/'
+    'fedoraPath': '/fcrepo/rest/',
+
+    'iiifServiceUrl': 'https://api-dev.library.tamu.edu/iiif-service/'
 
 };

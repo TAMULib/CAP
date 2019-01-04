@@ -84,7 +84,7 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     };
 
     $scope.resetAddMetadataModal = function() {
-      $scope.irForm.addMetadata.$setPristine(); 
+      $scope.irForm.addMetadata.$setPristine();
       $scope.irForm.addMetadata.entries.length = 0;
       $scope.irForm.addMetadata.entries.push({});
       $scope.closeModal();
@@ -106,7 +106,7 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
         $scope.resetAddMetadataModal();
         $scope.submitClicked = false;
       });
-      
+
     };
 
     $scope.cancelDeleteIrContext = function (irContext) {
@@ -169,7 +169,7 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
       });
       $scope.openModal('#fixityModalButton');
     };
-  
+
     $scope.cancelFixity = function() {
       $scope.fixityReport = {};
       $scope.closeModal();
@@ -248,6 +248,54 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     $scope.canPreview = function(fileType) {
         var previewable = ['image/png','image/jpeg','image/gif','image/bmp'];
         return (previewable.indexOf(fileType) !== -1);
+    };
+
+    $scope.getIIIFUrl = function() {
+      if (typeof appConfig.iiifServiceUrl !== 'undefined') {
+        var contextProperties = [];
+        var iiifUri = null;
+
+        if ($scope.context.resource && $scope.context.hasParent) {
+          var parentContext = $scope.context.ir.getContext($scope.context.parent.object);
+          if (parentContext.hasParent) {
+            var grandParentContext = $scope.context.ir.getContext(parentContext.parent.object);
+            contextProperties = grandParentContext.properties;
+            iiifUri = grandParentContext.uri;
+          }
+        } else {
+          contextProperties = $scope.context.properties;
+          iiifUri = $scope.context.uri;
+        }
+
+        if (iiifUri && contextProperties) {
+          var hasManifest = false;
+          var hasFile = false;
+          var isPCDM = false;
+          for (var i in contextProperties) {
+            var triple = contextProperties[i];
+            if (!hasFile) {
+              if (triple.predicate.indexOf("#hasFile") !== -1) {
+                hasFile = true;
+              }
+            }
+            if (!isPCDM) {
+              if (triple.predicate.indexOf("#type") !== -1) {
+                  if (triple.object === "http://pcdm.org/models#Object") {
+                    isPCDM = true;
+                  }
+              }
+            }
+            if (isPCDM && hasFile) {
+              hasManifest = true;
+              break;
+            }
+          }
+          if (hasManifest) {
+            return appConfig.iiifServiceUrl+$scope.ir.type.toLowerCase()+"/presentation/"+iiifUri.replace($scope.ir.rootUri,"");
+          }
+        }
+      }
+      return null;
     };
 
     $scope.resetCreateContainer();
