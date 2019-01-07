@@ -50,13 +50,13 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
 
     $scope.updateMetadatum = function(triple, newValue) {
       var defer = $q.defer();
-      var pomise = defer.promise;
+      var promise = defer.promise;
       if(newValue && (newValue.length === 0 || newValue !== "\"\"")) {
-        pomise = $scope.context.updateMetadatum(triple, newValue);
+        promise = $scope.context.updateMetadatum(triple, newValue);
       } else {
         defer.reject("Update Rejected: Value was empty.");
       }
-      return pomise;
+      return promise;
     };
 
     $scope.advancedUpdate = function (sparql) {
