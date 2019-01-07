@@ -29,6 +29,7 @@ import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateRequest;
 import org.apache.jena.vocabulary.DC;
+import org.apache.jena.vocabulary.RDFS;
 import org.fcrepo.client.DeleteBuilder;
 import org.fcrepo.client.FcrepoClient;
 import org.fcrepo.client.FcrepoOperationFailedException;
@@ -622,7 +623,11 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
                 irContext.setName(fileName.get());
             }
         } else {
-            Optional<String> title = getLiteralForProperty(model, DC.title);
+            Optional<String> title = getLiteralForProperty(model, RDFS.label);
+            if (!title.isPresent()) {
+                title = getLiteralForProperty(model, DC.title);
+            }
+
             if (title.isPresent()) {
                 irContext.setName(title.get());
             }
