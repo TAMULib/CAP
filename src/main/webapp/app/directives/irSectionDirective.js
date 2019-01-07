@@ -52,6 +52,8 @@ cap.directive("irsection", function($controller, $timeout, IrSectionService) {
             $scope.editWorking = true;
             $scope.editAction(argObj).then(function() {
               $scope.editWorking = false;
+            }, function(reason) {
+              console.warn(reason);
             });
           };
 
