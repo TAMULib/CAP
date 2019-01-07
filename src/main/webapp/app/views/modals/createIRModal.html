@@ -21,7 +21,8 @@
               placeholder="Type of the new IR"
               form="irForms.create"
               validations="irForms.validations"
-              results="irForms.getResults()">
+              results="irForms.getResults()"
+              no-id="true">
             </validatedselect>
 
             <validatedinput
@@ -32,7 +33,8 @@
               form="irForms.create"
               validations="irForms.validations"
               results="irForms.getResults()"
-              autocomplete="off">
+              autocomplete="off"
+              no-id="true">
             </validatedinput>
 
             <validatedinput
@@ -43,7 +45,8 @@
               form="irForms.create"
               validations="irForms.validations"
               results="irForms.getResults()"
-              autocomplete="off">
+              autocomplete="off"
+              no-id="true">
             </validatedinput>
           </div>
         </div>
@@ -60,10 +63,12 @@
                 form="irForms.create"
                 validations="irForms.validations"
                 results="irForms.getResults()"
-                autocomplete="off">
+                autocomplete="off"
+                no-id="true">
               </validatedinput>
 
               <validatedinput
+                id="createPassword"
                 model="irToCreate"
                 property="password"
                 label="Password"
@@ -71,7 +76,9 @@
                 form="irForms.create"
                 validations="irForms.validations"
                 results="irForms.getResults()"
-                autocomplete="off">
+                autocomplete="off"
+                type="password"
+                no-id="true">
               </validatedinput>
           </div>
         </div>
