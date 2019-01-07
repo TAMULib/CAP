@@ -1,4 +1,4 @@
-cap.controller("IrContextController", function ($controller, $location, $routeParams, $scope, $timeout, $filter, IRRepo, FixityReport) {
+cap.controller("IrContextController", function ($controller, $location, $routeParams, $scope, $timeout, $filter, $q, IRRepo, FixityReport) {
 
   angular.extend(this, $controller('CoreAdminController', {
     $scope: $scope
@@ -46,6 +46,17 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
         $scope.closeModal();
         $scope.submitClicked = false;
       });
+    };
+
+    $scope.updateMetadatum = function(triple, newValue) {
+      var defer = $q.defer();
+      var pomise = defer.promise;
+      if(newValue && (newValue.length === 0 || newValue !== "\"\"")) {
+        pomise = $scope.context.updateMetadatum(triple, newValue);
+      } else {
+        defer.reject("Update Rejected: Value was empty.");
+      }
+      return pomise;
     };
 
     $scope.advancedUpdate = function (sparql) {
