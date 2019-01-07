@@ -1,4 +1,4 @@
-cap.controller("SchemaManagementController", function($controller, $scope, SchemaRepo, NgTableParams) {
+cap.controller("SchemaManagementController", function($controller, $scope, $timeout, SchemaRepo, NgTableParams) {
 
   angular.extend(this, $controller('CoreAdminController', {
       $scope: $scope
@@ -16,6 +16,8 @@ cap.controller("SchemaManagementController", function($controller, $scope, Schem
   };
 
   $scope.submitClicked = false;
+
+  $scope.resetCreateSchemaPropertyList = true;
 
   $scope.resetSchemaForms = function() {
     SchemaRepo.clearValidationResults();
@@ -42,6 +44,12 @@ cap.controller("SchemaManagementController", function($controller, $scope, Schem
   $scope.cancelCreateSchema = function() {
     angular.extend($scope.schemaToCreate, SchemaRepo.getScaffold());
     $scope.resetSchemaForms();
+    $scope.resetCreateSchemaPropertyList = false;
+    var timer = $timeout(function(){
+        $scope.resetCreateSchemaPropertyList = true;
+        $timeout.cancel(timer);
+    }, 500);
+
   };
 
   $scope.editSchema = function(schema) {
