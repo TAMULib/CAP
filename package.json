@@ -21,34 +21,34 @@
     "start-dev": "wvr server -b /cap --uid cap-webserver"
   },
   "dependencies": {
-    "angular-cookies": "1.6.9",
+    "angular-cookies": "1.7.5",
     "ng-csv": "0.3.6",
     "ng-file-upload": "12.2.13",
-    "ng-openseadragon": "^1.3.5",
+    "ng-openseadragon": "1.3.5",
     "ng-table": "3.0.1",
-    "openseadragon": "^2.4.0",
-    "weaver-ui-core": "git+https://github.com/TAMULib/Weaver-UI-Core.git#2.x"
+    "openseadragon": "2.4.0",
+    "weaver-ui-core": "git+https://github.com/TAMULib/Weaver-UI-Core.git#v2.0.0"
   },
   "devDependencies": {
-    "grunt": "1.0.1",
-    "grunt-cli": "1.2.0",
-    "grunt-contrib-clean": "1.1.0",
+    "grunt": "1.0.3",
+    "grunt-cli": "1.3.2",
+    "grunt-contrib-clean": "2.0.0",
     "grunt-contrib-concat": "1.0.1",
     "grunt-contrib-copy": "1.0.0",
-    "grunt-contrib-jshint": "1.1.0",
+    "grunt-contrib-jshint": "2.0.0",
     "grunt-contrib-symlink": "1.0.0",
-    "grunt-contrib-uglify": "3.0.1",
-    "grunt-contrib-watch": "1.0.0",
+    "grunt-contrib-uglify": "4.0.0",
+    "grunt-contrib-watch": "1.1.0",
     "grunt-karma-coveralls": "2.5.4",
-    "grunt-ngdocs": "0.2.10",
+    "grunt-ngdocs": "0.2.11",
     "grunt-usemin": "3.1.1",
-    "http-server": "0.10.0",
+    "http-server": "0.11.1",
     "jshint-stylish": "2.2.1",
-    "karma": "1.7.0",
-    "karma-chrome-launcher": "2.0.0",
-    "karma-firefox-launcher": "1.0",
-    "karma-jasmine": "1.1.0",
+    "karma": "3.1.4",
+    "karma-chrome-launcher": "2.2.0",
+    "karma-firefox-launcher": "1.1",
+    "karma-jasmine": "2.0.1",
     "karma-junit-reporter": "1.2.0",
-    "protractor": "5.1.1"
+    "protractor": "5.4.2"
   }
 }
