@@ -45,11 +45,9 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
     angular.extend($scope.schemaToCreate, SchemaRepo.getScaffold());
     $scope.resetSchemaForms();
     $scope.resetCreateSchemaPropertyList = false;
-    var timer = $timeout(function(){
-        $scope.resetCreateSchemaPropertyList = true;
-        $timeout.cancel(timer);
-    }, 500);
-
+    $timeout(function(){
+      $scope.resetCreateSchemaPropertyList = true;
+    });
   };
 
   $scope.editSchema = function(schema) {
