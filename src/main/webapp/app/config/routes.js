@@ -21,7 +21,9 @@ cap.config(function ($locationProvider, $routeProvider) {
         templateUrl: 'views/irContext.html',
         controller: 'IrContextController'
       }).
-
+      when('/users', {
+          templateUrl: 'views/users.html'
+      }).
       // Error Routes
       when('/error/403', {
           templateUrl: 'views/errors/403.html',
