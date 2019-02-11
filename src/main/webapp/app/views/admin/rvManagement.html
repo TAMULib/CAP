@@ -1,0 +1,66 @@
+<div class="rv-management">
+
+  <admintabs></admintabs>
+
+  <h1>Repository Management</h1>
+
+  <div class="panel panel-default rv-container">
+
+    <div class="panel-heading clearfix">
+      <button class="btn btn-success pull-right" ng-click="startCreate()">New</button>
+      <modal
+        modal-id="createRVModal"
+        modal-view="views/modals/createRVModal.html"
+        modal-header-class="modal-header-primary"
+        modal-fullscreen="true"
+        wvr-modal-backdrop="static">
+      </modal>
+    </div>
+
+    <div class="panel-body">
+      <table ng-table="tableParams" class="table table-hover rv-table">
+        <tbody>
+          <tr ng-repeat="rv in $data | orderBy: 'name'">
+            <td data-title="'Name'">
+              {{rv.name}}
+            </td>
+            <td data-title="'Root URI'">
+                {{rv.rootUri}}
+            </td>
+            <td data-title="'Schemas'">
+              <span class="badge clickable" ng-click="showSchemas(rv.schemas)">{{rv.schemas.length || 0}}</span>
+            </td>
+            <td data-title="'Actions'" class="actions">
+                <a href="rv/{{rv.name}}?context={{rv.rootUri}}" title="view" class="glyphicon glyphicon-eye-open action"></a>
+                <span title="edit" ng-click="editRv(rv)" class="glyphicon glyphicon-pencil action"></span>
+                <span title="delete" ng-click="confirmDeleteRv(rv)" class="glyphicon glyphicon-trash action"></span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <modal
+    modal-id="rvDeleteModal"
+    modal-view="views/modals/rvDeleteModal.html"
+    modal-header-class="modal-header-danger"
+    wvr-modal-backdrop="static">
+  </modal>
+
+  <modal
+    modal-id="rvEditModal"
+    modal-view="views/modals/rvEditModal.html"
+    modal-header-class="modal-header-warning"
+    modal-fullscreen="true"
+    wvr-modal-backdrop="static">
+  </modal>
+
+  <modal
+    modal-id="showSchemasModal"
+    modal-view="views/modals/showSchemasModal.html"
+    modal-header-class="modal-header-info"
+    wvr-modal-backdrop="static">
+  </modal>
+
+</div>

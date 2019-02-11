@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
-import edu.tamu.cap.model.response.IRContext;
+import edu.tamu.cap.model.response.RVContext;
 import edu.tamu.weaver.response.ApiResponse;
 
 @Aspect
@@ -23,8 +23,8 @@ public class ContextBroadcastAspect {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
-    @AfterReturning(pointcut = "execution(edu.tamu.cap.model.response.IRContext edu.tamu.cap.service.IRService.*(..)) && !execution(edu.tamu.cap.model.response.IRContext edu.tamu.cap.service.IRService.featureSupport(..)) && !execution(edu.tamu.cap.model.response.IRContext edu.tamu.cap.service.IRService.getContainer(..)) && !execution(edu.tamu.cap.model.response.IRContext edu.tamu.cap.service.IRService.buildIRContext(..))", returning = "context")
-    public void broadcastContext(IRContext context) throws Throwable {
+    @AfterReturning(pointcut = "execution(edu.tamu.cap.model.response.RVContext edu.tamu.cap.service.RVService.*(..)) && !execution(edu.tamu.cap.model.response.RVContext edu.tamu.cap.service.RVService.featureSupport(..)) && !execution(edu.tamu.cap.model.response.RVContext edu.tamu.cap.service.RVService.getContainer(..)) && !execution(edu.tamu.cap.model.response.RVContext edu.tamu.cap.service.RVService.buildRVContext(..))", returning = "context")
+    public void broadcastContext(RVContext context) throws Throwable {
         logger.info("Broadcasting " + context.getTriple().getSubject());
         simpMessagingTemplate.convertAndSend("/queue/context", new ApiResponse(SUCCESS, BROADCAST, context));    
     }

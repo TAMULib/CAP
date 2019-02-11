@@ -23,49 +23,49 @@ var apiMapping = {
         'method': 'delete'
     }
   },
-  IRContext: {
-    channel: '/channel/ir-context',
+  RVContext: {
+    channel: '/channel/rv-context',
     validations: false,
     lazy: true,
     load: {
       'endpoint': '/private/queue',
-      'controller': 'ir-context',
-      'method': ':type/:irid'
+      'controller': 'rv-context',
+      'method': ':type/:rvid'
     },
-    irContext: {
+    rvContext: {
       'endpoint': '/private/queue',
-      'controller': 'ir-context',
-      'method': ':type/:irid'
+      'controller': 'rv-context',
+      'method': ':type/:rvid'
     },
     metadata: {
       'endpoint': '/private/queue',
-      'controller': 'ir-context',
-      'method': ':type/:irid/metadata'
+      'controller': 'rv-context',
+      'method': ':type/:rvid/metadata'
     },
     children: {
       'endpoint': '/private/queue',
-      'controller': 'ir-context',
-      'method': ':type/:irid/children'
+      'controller': 'rv-context',
+      'method': ':type/:rvid/children'
     },
     resource: {
       'endpoint': '/private/queue',
-      'controller': 'ir-context',
-      'method': ':type/:irid/resource'
+      'controller': 'rv-context',
+      'method': ':type/:rvid/resource'
     },
     version: {
       'endpoint': '/private/queue',
-      'controller': 'ir-context',
-      'method': ':type/:irid/version'
+      'controller': 'rv-context',
+      'method': ':type/:rvid/version'
     },
     advancedQuery: {
       'endpoint': '/private/queue',
-      'controller': 'ir-context',
-      'method': ':type/:irid/query'
+      'controller': 'rv-context',
+      'method': ':type/:rvid/query'
     },
     resourceFixity: {
       'endpoint': '/private/queue',
-      'controller': 'ir-context',
-      'method': ':type/:irid/resource/fixity'
+      'controller': 'rv-context',
+      'method': ':type/:rvid/resource/fixity'
     }
   },
   FixityReport: {
@@ -75,68 +75,68 @@ var apiMapping = {
     load: {
       'endpoint': '/private/queue',
       'httpMethod': 'GET',
-      'controller': 'ir-context',
-      'method': ':type/:irid/resource/fixity'
+      'controller': 'rv-context',
+      'method': ':type/:rvid/resource/fixity'
     },
     instantiate: {
       'endpoint': '/private/queue',
       'httpMethod': 'GET',
-      'controller': 'ir-context',
-      'method': ':type/:irid/resource/fixity'
+      'controller': 'rv-context',
+      'method': ':type/:rvid/resource/fixity'
     }
   },
-  VerifyIRSettings: {
+  VerifyRVSettings: {
     verifyPing: {
       'endpoint': '/private/queue',
-      'controller': 'ir',
+      'controller': 'rv',
       'method': ':type/verify/ping'
     },
     verifyAuth: {
         'endpoint': '/private/queue',
-        'controller': 'ir',
+        'controller': 'rv',
         'method': ':type/verify/auth'
     },
     verifyContent: {
         'endpoint': '/private/queue',
-        'controller': 'ir',
+        'controller': 'rv',
         'method': ':type/verify/content'
     }
   },
-  IR: {
-    channel: '/channel/ir',
+  RV: {
+    channel: '/channel/rv',
     validations: true,
     all: {
         'endpoint': '/private/queue',
-        'controller': 'ir',
+        'controller': 'rv',
         'method': '',
         'httpMethod': "GET"
     },
     create: {
       'endpoint': '/private/queue',
-      'controller': 'ir',
+      'controller': 'rv',
       'method': '',
       'httpMethod': "POST"
     },
     update: {
         'endpoint': '/private/queue',
-        'controller': 'ir',
+        'controller': 'rv',
         'method': '',
         'httpMethod': "PUT"
     },
     remove: {
         'endpoint': '/private/queue',
-        'controller': 'ir',
+        'controller': 'rv',
         'method': '',
         'httpMethod': "DELETE"
     },
     transaction: {
       'endpoint': '/private/queue',
-      'controller': 'ir-context',
-      'method': ':type/:irid/transaction'
+      'controller': 'rv-context',
+      'method': ':type/:rvid/transaction'
     },
     getTypes: {
       'endpoint': '/private/queue',
-      'controller': 'ir',
+      'controller': 'rv',
       'method': 'types'
     }
   },

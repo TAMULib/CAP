@@ -1,0 +1,129 @@
+<form name="irForms.edit" ng-submit="updateRv()" novalidate>
+    <div class="modal-header {{attr.modalHeaderClass}}">
+        <button type="button" class="close modal-close" aria-label="Close" ng-click="cancelEditRv()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Edit VR</h4>
+    </div>
+    <div class="modal-body">
+
+        <validationmessage results="irForms.getResults()"></validationmessage>
+
+        <uib-tabset active="activeJustified" justified="true">
+            <uib-tab index="0" heading="General">
+                <div class="row">
+                <div class="col-sm-10 col-sm-offset-1">
+                  <validatedselect
+                    model="rvToEdit"
+                    property="type"
+                    options="rvTypes"
+                    optionproperty="gloss"
+                    optionvalue="value"
+                    label="Type"
+                    placeholder="Type of the new VR"
+                    form="irForms.edit"
+                    validations="irForms.validations"
+                    results="irForms.getResults()"
+                    no-id="true">
+                  </validatedselect>
+                  <validatedinput
+                    model="rvToEdit"
+                    property="name"
+                    label="Name"
+                    placeholder="Name of the VR"
+                    form="irForms.edit"
+                    validations="irForms.validations"
+                    results="irForms.getResults()"
+                    autocomplete="off"
+                    no-id="true">
+                  </validatedinput>
+                  <validatedinput
+                    model="rvToEdit"
+                    property="rootUri"
+                    label="Root URI"
+                    placeholder="Root URI of the VR"
+                    form="irForms.edit"
+                    validations="irForms.validations"
+                    results="irForms.getResults()"
+                    autocomplete="off"
+                    no-id="true">
+                  </validatedinput>
+                </div>
+            </div>
+        </uib-tab>
+        <uib-tab index="1" heading="Authentication">
+            <div class="row">
+                <div class="col-sm-10 col-sm-offset-1">
+                    <validatedinput
+                        model="rvToEdit"
+                        property="username"
+                        label="Username"
+                        placeholder="Username of the VR"
+                        form="irForms.create"
+                        validations="irForms.validations"
+                        results="irForms.getResults()"
+                        autocomplete="off"
+                        no-id="true">
+                    </validatedinput>
+
+                    <validatedinput
+                        model="rvToEdit"
+                        property="password"
+                        label="Password"
+                        placeholder="Password of the VR"
+                        form="irForms.create"
+                        validations="irForms.validations"
+                        results="irForms.getResults()"
+                        autocomplete="off"
+                        type="password"
+                        no-id="true">
+                    </validatedinput>
+                </div>
+            </div>
+        </uib-tab>
+        <uib-tab index="2" heading="Schemas">
+
+            <div class="row">
+
+                <div class="col-xs-6">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                    <h3 class="panel-title">This Repository</h3>
+                    </div>
+                    <ul class="list-group">
+                    <li class="list-group-item clickable" ng-repeat="s in rvToEdit.schemas track by $index" ng-click="irForms.edit.$setDirty();rvToEdit.schemas.splice($index,1);">
+                        {{s.name}}
+                        <span class="glyphicon glyphicon-arrow-right pull-right"></span>
+                    </li>
+                    </ul>
+                </div>
+
+                </div>
+
+                <div class="col-xs-6">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                    <h3 class="panel-title">All Schemas</h3>
+                    </div>
+                    <ul class="list-group">
+                    <li class="list-group-item clickable" ng-repeat="s in schemas | containedIn:rvToEdit.schemas:'namespace'" ng-click="irForms.edit.$setDirty();rvToEdit.schemas.push(s);">
+                        <span class="glyphicon glyphicon-arrow-left"></span>
+                        {{s.name}}
+                    </li>
+                    </ul>
+                </div>
+
+                </div>
+            </div>
+
+        </uib-tab>
+        <uib-tab index="3" heading="Verification">
+            <rvverification rv="rvToEdit" results="verificationResults"></rvverification>
+        </uib-tab>
+    </div>
+    <div class="modal-footer">
+        <small class="text-warning pull-left" ng-if="!disableVerify(rvToEdit) && irForms.edit.$dirty&&verificationResults.status!=='SUCCESS'">VR settings must be verified before edits can be saved</small>
+        <button type="button" class="btn btn-default" ng-class="{'btn-default': irForms.edit.$pristine, 'btn-warning': !irForms.edit.$pristine}" ng-click="cancelEditRv()">Cancel</button>
+        <button type="submit" class="btn btn-success" ng-disabled="!irForms.edit.$dirty || irForms.edit.$invalid || submitClicked || (!disableVerify(rvToEdit) && irForms.edit.$dirty && verificationResults.status !== 'SUCCESS')">Edit</button>
+    </div>
+</form>

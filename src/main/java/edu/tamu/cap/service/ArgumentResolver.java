@@ -31,9 +31,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.cap.controller.aspect.annotation.PayloadArgName;
-import edu.tamu.cap.exceptions.IRInjectionException;
-import edu.tamu.cap.model.IR;
-import edu.tamu.cap.model.repo.IRRepo;
+import edu.tamu.cap.exceptions.RVInjectionException;
+import edu.tamu.cap.model.RV;
+import edu.tamu.cap.model.repo.RVRepo;
 import edu.tamu.weaver.context.SpringContext;
 
 @Service
@@ -45,7 +45,7 @@ public class ArgumentResolver {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private IRRepo irRepo;
+    private RVRepo rvRepo;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -53,28 +53,28 @@ public class ArgumentResolver {
     @Autowired
     private HttpServletRequest request;
     
-    private Optional<IRService<?>> irService = Optional.empty();
+    private Optional<RVService<?>> rvService = Optional.empty();
     
-    public void injectIrService(ProceedingJoinPoint joinPoint) throws IRInjectionException, JsonProcessingException, IOException {
+    public void injectRVService(ProceedingJoinPoint joinPoint) throws RVInjectionException, JsonProcessingException, IOException {
         Object[] arguments = joinPoint.getArgs();
         Method method = getMethodFromJoinPoint(joinPoint);
-        Optional<IRService<?>> irService = Optional.empty();
+        Optional<RVService<?>> rvService = Optional.empty();
         int i = 0;
         for (Parameter parameter : method.getParameters()) {
-            irService = getIrService(parameter);
-            if (irService.isPresent()) {
+            rvService = getRvService(parameter);
+            if (rvService.isPresent()) {
                 break;
             }
             i++;
         }
-        if (irService.isPresent()) {
-            arguments[i] = irService.get();
+        if (rvService.isPresent()) {
+            arguments[i] = rvService.get();
         } else {
-            throw new IRInjectionException("No IR service argument!");
+            throw new RVInjectionException("No RV service argument!");
         }
     }
 
-    public void injectRequestPayload(ProceedingJoinPoint joinPoint) throws IOException, IRInjectionException {
+    public void injectRequestPayload(ProceedingJoinPoint joinPoint) throws IOException, RVInjectionException {
         Method method = getMethodFromJoinPoint(joinPoint);
 
         boolean hasRequestParam = methodHasRequestParameterAnnotation(method);
@@ -86,7 +86,7 @@ public class ArgumentResolver {
             int i = 0;
             for (Parameter parameter : method.getParameters()) {
                 Optional<PayloadArgName> payloadArgName = Optional.ofNullable(parameter.getAnnotation(PayloadArgName.class));
-                if (!IRService.class.isAssignableFrom(parameter.getType()) && injectArgument(parameter)) {
+                if (!RVService.class.isAssignableFrom(parameter.getType()) && injectArgument(parameter)) {
                     if (payloadNode.isPresent()) {
                         arguments[i] = getArgumentFromBody(parameter.getType(), payloadArgName, payloadNode.get());
                     } else {
@@ -109,9 +109,9 @@ public class ArgumentResolver {
         return hasAnnotation;
     }
 
-    private IR getIRFromRequest() throws JsonProcessingException, IOException, IRInjectionException {
+    private RV getRVFromRequest() throws JsonProcessingException, IOException, RVInjectionException {
         JsonNode payloadNode = objectMapper.readTree(request.getInputStream());
-        return (IR) getArgumentFromBody(IR.class, Optional.empty(), payloadNode);
+        return (RV) getArgumentFromBody(RV.class, Optional.empty(), payloadNode);
     }
 
     private boolean injectArgument(Parameter parameter) {
@@ -138,7 +138,7 @@ public class ArgumentResolver {
         return payloadNode;
     }
 
-    private Object getArgumentFromBody(Class<?> argClass, Optional<PayloadArgName> payloadArgName, JsonNode payloadNode) throws IRInjectionException {
+    private Object getArgumentFromBody(Class<?> argClass, Optional<PayloadArgName> payloadArgName, JsonNode payloadNode) throws RVInjectionException {
         Optional<Object> argValue = mapObjectFromNode(argClass, payloadNode);
         if (!argValue.isPresent()) {
             Iterator<Map.Entry<String, JsonNode>> iterator = payloadNode.fields();
@@ -153,7 +153,7 @@ public class ArgumentResolver {
             if (argClass.equals(String.class)) {
                 argValue = Optional.of("");
             } else {
-                throw new IRInjectionException("No " + argClass.getSimpleName() + " argument!");
+                throw new RVInjectionException("No " + argClass.getSimpleName() + " argument!");
             }
         }
         return argValue.get();
@@ -162,7 +162,7 @@ public class ArgumentResolver {
     private Optional<Object> mapObjectFromNode(Class<?> argClass, JsonNode node) {
         Optional<Object> argValue = Optional.empty();
         try {
-            if (!IRService.class.isAssignableFrom(argClass)) {
+            if (!RVService.class.isAssignableFrom(argClass)) {
                 if (argClass.equals(String.class)) {
                     if (node.isTextual()) {
                         argValue = Optional.of(node.asText());
@@ -177,14 +177,14 @@ public class ArgumentResolver {
         return argValue;
     }
 
-    private IRType getIRType() {
-        return IRType.valueOf(getPathVariable("type"));
+    private RVType getRVType() {
+        return RVType.valueOf(getPathVariable("type"));
     }
 
-    private Optional<Long> getIRId() {
+    private Optional<Long> getRVId() {
         Optional<Long> id = Optional.empty();
         try {
-            id = Optional.of(Long.parseLong(getPathVariable("irid")));
+            id = Optional.of(Long.parseLong(getPathVariable("rvid")));
         } catch (NumberFormatException e) {
             logger.info("Id not provided in path!");
         }
@@ -197,20 +197,20 @@ public class ArgumentResolver {
         return pathVariables.get(pathKey);
     }
     
-    protected Optional<IRService<?>> getIrService(Parameter parameter) throws IRInjectionException,IOException {
-        if (!irService.isPresent()) {
-            if (IRService.class.isAssignableFrom(parameter.getType())) {
-                IRService<?> irs = SpringContext.bean(getIRType().getGloss());
-                Optional<Long> irid = getIRId();
-                if (irid.isPresent()) {
-                    irs.setIr(irRepo.read(irid.get()));
+    protected Optional<RVService<?>> getRvService(Parameter parameter) throws RVInjectionException,IOException {
+        if (!rvService.isPresent()) {
+            if (RVService.class.isAssignableFrom(parameter.getType())) {
+                RVService<?> rvs = SpringContext.bean(getRVType().getGloss());
+                Optional<Long> rvid = getRVId();
+                if (rvid.isPresent()) {
+                    rvs.setRv(rvRepo.read(rvid.get()));
                 } else {
-                    irs.setIr(getIRFromRequest());
+                    rvs.setRv(getRVFromRequest());
                 }
-                irService = Optional.of(irs);
+                rvService = Optional.of(rvs);
             }
         }
-        return irService;      
+        return rvService;      
     }
 
 }

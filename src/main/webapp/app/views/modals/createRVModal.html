@@ -1,0 +1,136 @@
+<form name="rvForms.create" ng-submit="createRv()" novalidate class="ir-forms-create">
+  <div class="modal-header {{attr.modalHeaderClass}}">
+    <button type="button" class="close modal-close" aria-label="Close" ng-click="cancelCreateRv()"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title">Create VR</h4>
+  </div>
+  <div class="modal-body">
+
+    <validationmessage results="rvForms.getResults()"></validationmessage>
+    <uib-tabset active="activeJustified" justified="true">
+      <uib-tab index="0" heading="General">
+        <div class="row">
+          <div class="col-sm-10 col-sm-offset-1">
+
+            <validatedselect
+              model="rvToCreate"
+              property="type"
+              options="rvTypes"
+              optionproperty="gloss"
+              optionvalue="value"
+              label="Type"
+              placeholder="Type of the new VR"
+              form="rvForms.create"
+              validations="rvForms.validations"
+              results="rvForms.getResults()"
+              no-id="true">
+            </validatedselect>
+
+            <validatedinput
+              model="rvToCreate"
+              property="name"
+              label="Name"
+              placeholder="Name of the new VR"
+              form="rvForms.create"
+              validations="rvForms.validations"
+              results="rvForms.getResults()"
+              autocomplete="off"
+              no-id="true">
+            </validatedinput>
+
+            <validatedinput
+              model="rvToCreate"
+              property="rootUri"
+              label="Root URI"
+              placeholder="Root URI of the new VR"
+              form="rvForms.create"
+              validations="rvForms.validations"
+              results="rvForms.getResults()"
+              autocomplete="off"
+              no-id="true">
+            </validatedinput>
+          </div>
+        </div>
+      </uib-tab>
+
+      <uib-tab index="1" heading="Authentication">
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-1">
+              <validatedinput
+                model="rvToCreate"
+                property="username"
+                label="Username"
+                placeholder="Username of the new VR"
+                form="rvForms.create"
+                validations="rvForms.validations"
+                results="rvForms.getResults()"
+                autocomplete="off"
+                no-id="true">
+              </validatedinput>
+
+              <validatedinput
+                model="rvToCreate"
+                property="password"
+                label="Password"
+                placeholder="Password of the new VR"
+                form="rvForms.create"
+                validations="rvForms.validations"
+                results="rvForms.getResults()"
+                autocomplete="off"
+                type="password"
+                no-id="true">
+              </validatedinput>
+          </div>
+        </div>
+      </uib-tab>
+
+      <uib-tab index="2" heading="Schemas">
+
+        <div class="row">
+
+          <div class="col-xs-6">
+
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">This Repository</h3>
+              </div>
+              <ul class="list-group">
+                <li class="list-group-item clickable" ng-repeat="s in rvToCreate.schemas track by $index" ng-click="rvToCreate.schemas.splice($index,1)">
+                  {{s.name}}
+                  <span class="glyphicon glyphicon-arrow-right pull-right"></span>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+
+          <div class="col-xs-6">
+
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">All Schemas</h3>
+              </div>
+              <ul class="list-group">
+                <li class="list-group-item clickable" ng-repeat="s in schemas | containedIn:rvToCreate.schemas:'namespace'" ng-click="rvToCreate.schemas.push(s)">
+                  <span class="glyphicon glyphicon-arrow-left"></span>
+                  {{s.name}}
+                </li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+      </uib-tab>
+
+      <uib-tab index="3" heading="Verify">
+        <rvverification rv="rvToCreate" results="verificationResults"></rvverification>
+      </uib-tab>
+
+    </uib-tabset>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn" ng-class="{'btn-default': rvForms.create.$pristine, 'btn-warning': !rvForms.create.$pristine}" ng-click="cancelCreateRv()">Cancel</button>
+    <button type="submit" class="btn btn-success" ng-disabled="!disableVerify(rvToCreate) && (rvForms.create.$invalid || verificationResults.status !== 'SUCCESS') || submitClicked">Create</button>
+  </div>
+</form>

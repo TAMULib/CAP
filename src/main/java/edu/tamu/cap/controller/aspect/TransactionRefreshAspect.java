@@ -32,13 +32,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.cap.controller.aspect.annotation.PayloadArgName;
-import edu.tamu.cap.exceptions.IRInjectionException;
-import edu.tamu.cap.model.IR;
-import edu.tamu.cap.model.ircontext.TransactionDetails;
-import edu.tamu.cap.model.repo.IRRepo;
-import edu.tamu.cap.service.IRService;
-import edu.tamu.cap.service.IRType;
-import edu.tamu.cap.service.TransactingIRService;
+import edu.tamu.cap.exceptions.RVInjectionException;
+import edu.tamu.cap.model.RV;
+import edu.tamu.cap.model.repo.RVRepo;
+import edu.tamu.cap.model.rvcontext.TransactionDetails;
+import edu.tamu.cap.service.RVService;
+import edu.tamu.cap.service.RVType;
+import edu.tamu.cap.service.TransactingRVService;
 import edu.tamu.weaver.context.SpringContext;
 import edu.tamu.weaver.response.ApiResponse;
 
@@ -49,7 +49,7 @@ public class TransactionRefreshAspect {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private IRRepo irRepo;
+    private RVRepo rvRepo;
     
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
@@ -60,7 +60,7 @@ public class TransactionRefreshAspect {
     @Autowired
     private HttpServletRequest request;
 
-    @AfterReturning(pointcut = "execution(* edu.tamu.cap.controller.ircontext..*(..))", returning="apiResponse")
+    @AfterReturning(pointcut = "execution(* edu.tamu.cap.controller.rvcontext..*(..))", returning="apiResponse")
     public void refreshTransaction(JoinPoint joinPoint, ApiResponse apiResponse) throws Throwable {
                 
         Optional<Cookie> cookie = Optional.empty();
@@ -88,43 +88,43 @@ public class TransactionRefreshAspect {
             MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
             Method method = methodSignature.getMethod();
 
-            Optional<TransactingIRService<?>> transactingIrService = Optional.empty();
+            Optional<TransactingRVService<?>> transactingRVService = Optional.empty();
             for (Parameter parameter : method.getParameters()) {
-                Optional<IRService<?>> irService = Optional.empty();
+                Optional<RVService<?>> rvService = Optional.empty();
                 
-                if (IRService.class.isAssignableFrom(parameter.getType())) {
-                    IRService<?> irs = SpringContext.bean(getIRType().getGloss());
-                    Optional<Long> irid = getIRId();
-                    if (irid.isPresent()) {
-                        irs.setIr(irRepo.read(irid.get()));
+                if (RVService.class.isAssignableFrom(parameter.getType())) {
+                    RVService<?> rvs = SpringContext.bean(getRVType().getGloss());
+                    Optional<Long> rvid = getRVId();
+                    if (rvid.isPresent()) {
+                        rvs.setRv(rvRepo.read(rvid.get()));
                     } else {
-                        irs.setIr(getIRFromRequest());
+                        rvs.setRv(getRVFromRequest());
                     }
-                    irService = Optional.of(irs);
+                    rvService = Optional.of(rvs);
                 }
                 
                 
-                if (irService.isPresent()) {
-                    transactingIrService = Optional.of((TransactingIRService<?>) irService.get());
+                if (rvService.isPresent()) {
+                    transactingRVService = Optional.of((TransactingRVService<?>) rvService.get());
                     break;
                 }
             }
             
-            TransactionDetails transactionDetails = transactingIrService.get().makeTransactionDetails(transactionToken, transactionExpiration);
+            TransactionDetails transactionDetails = transactingRVService.get().makeTransactionDetails(transactionToken, transactionExpiration);
             
             simpMessagingTemplate.convertAndSend("/queue/transaction/"+request.getUserPrincipal().getName(), new ApiResponse(SUCCESS, BROADCAST, transactionDetails));
             
         }  
     }
     
-    private IRType getIRType() {
-        return IRType.valueOf(getPathVariable("type"));
+    private RVType getRVType() {
+        return RVType.valueOf(getPathVariable("type"));
     }
 
-    private Optional<Long> getIRId() {
+    private Optional<Long> getRVId() {
         Optional<Long> id = Optional.empty();
         try {
-            id = Optional.of(Long.parseLong(getPathVariable("irid")));
+            id = Optional.of(Long.parseLong(getPathVariable("rvid")));
         } catch (NumberFormatException e) {
             logger.info("Id not provided in path!");
         }
@@ -137,12 +137,12 @@ public class TransactionRefreshAspect {
         return pathVariables.get(pathKey);
     }
     
-    private IR getIRFromRequest() throws JsonProcessingException, IOException, IRInjectionException {
+    private RV getRVFromRequest() throws JsonProcessingException, IOException, RVInjectionException {
         JsonNode payloadNode = objectMapper.readTree(request.getInputStream());
-        return (IR) getArgumentFromBody(IR.class, Optional.empty(), payloadNode);
+        return (RV) getArgumentFromBody(RV.class, Optional.empty(), payloadNode);
     }
     
-    private Object getArgumentFromBody(Class<?> argClass, Optional<PayloadArgName> payloadArgName, JsonNode payloadNode) throws IRInjectionException {
+    private Object getArgumentFromBody(Class<?> argClass, Optional<PayloadArgName> payloadArgName, JsonNode payloadNode) throws RVInjectionException {
         Optional<Object> argValue = mapObjectFromNode(argClass, payloadNode);
         if (!argValue.isPresent()) {
             Iterator<Map.Entry<String, JsonNode>> iterator = payloadNode.fields();
@@ -157,7 +157,7 @@ public class TransactionRefreshAspect {
             if (argClass.equals(String.class)) {
                 argValue = Optional.of("");
             } else {
-                throw new IRInjectionException("No " + argClass.getSimpleName() + " argument!");
+                throw new RVInjectionException("No " + argClass.getSimpleName() + " argument!");
             }
         }
         return argValue.get();
@@ -166,7 +166,7 @@ public class TransactionRefreshAspect {
     private Optional<Object> mapObjectFromNode(Class<?> argClass, JsonNode node) {
         Optional<Object> argValue = Optional.empty();
         try {
-            if (!IRService.class.isAssignableFrom(argClass)) {
+            if (!RVService.class.isAssignableFrom(argClass)) {
                 if (argClass.equals(String.class)) {
                     if (node.isTextual()) {
                         argValue = Optional.of(node.asText());
