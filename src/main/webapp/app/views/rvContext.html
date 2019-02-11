@@ -48,7 +48,7 @@
 
       </ul>
     </div>
-    <h1>{{rv.name}} <small class="clickable" ng-click="ir.loadContext(rv.rootUri)">(<span class="glyphicon glyphicon-home"></span> {{rv.rootUri}})</small></h1>
+    <h1>{{rv.name}} <small class="clickable" ng-click="rv.loadContext(rv.rootUri)">(<span class="glyphicon glyphicon-home"></span> {{rv.rootUri}})</small></h1>
   </div>
 
   <breadcrumbs ng-if="context.hasParent !== undefined" context="context"></breadcrumbs>
@@ -141,7 +141,7 @@
         title="'Metadata'"
         type="'metadatum'"
         list="context.metadata"
-        list-element-action="ir.loadContext(le)"
+        list-element-action="rv.loadContext(le)"
         add-action="openModal('#addMetadata')"
         edit-action="updateMetadatum(triple,newObject)"
         remove-action="context.removeMetadata(items)">
@@ -187,7 +187,7 @@
         title="'Children'"
         type="'child'"
         list="context.children"
-        list-element-action="ir.loadContext(le)"
+        list-element-action="rv.loadContext(le)"
         add-action="openModal('#createContainer')"
         remove-action="context.removeContainers(items)">
         <ol class="list-group" ng-show="contentExpanded">
@@ -205,7 +205,7 @@
         title="'Resources'"
         type="'resource'"
         list="context.children"
-        list-element-action="ir.loadContext(le)"
+        list-element-action="rv.loadContext(le)"
         add-action="openModal('#uploadResource')"
         remove-action="context.removeResources(items)">
         <ol class="list-group" ng-show="contentExpanded">

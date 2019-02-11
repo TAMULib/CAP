@@ -32,6 +32,7 @@ cap.model("RV", function($location, $timeout, $cookies, $interval, $q, HttpMetho
           uri: contextUri,
           fetch: true
         });
+        console.log(context.rv);
         rv.cacheContext(context);
       } else if(reload) {
        context.reloadContext();

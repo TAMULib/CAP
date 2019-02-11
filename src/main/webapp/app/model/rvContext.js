@@ -1,12 +1,12 @@
 cap.model("RVContext", function ($q, $filter, $interval, $location, $routeParams, $cookies, WsApi, UserService, HttpMethodVerbs, StorageService) {
   return function RVContext() {
 
-    var irContext = this;
+    var rvContext = this;
 
     var children = {};
 
     var fetchContext = function (contextUri) {
-      return irContext.rv.performRequest(irContext.getMapping().load, {
+      return rvContext.rv.performRequest(rvContext.getMapping().load, {
         method: HttpMethodVerbs.GET,
         query: {
           contextUri: contextUri
@@ -18,87 +18,87 @@ cap.model("RVContext", function ($q, $filter, $interval, $location, $routeParams
       return $filter('removeQuotes')(value);
     };
 
-    irContext.before(function () {
+    rvContext.before(function () {
       var defer = $q.defer();
-      if (irContext.fetch) {
-        fetchContext(irContext.uri).then(function (res) {
-          angular.extend(irContext, angular.fromJson(res.body).payload.RVContext, {
+      if (rvContext.fetch) {
+        fetchContext(rvContext.uri).then(function (res) {
+          angular.extend(rvContext, angular.fromJson(res.body).payload.RVContext, {
             fetch: false
           });
-          irContext.rv.cacheContext(irContext);
-          defer.resolve(irContext);
+          rvContext.rv.cacheContext(rvContext);
+          defer.resolve(rvContext);
 
-          irContext.ready().then(function() {
-            if(irContext.rv.getTransaction().active) {
-              irContext.rv.startTransactionTimer();
+          rvContext.ready().then(function() {
+            if(rvContext.rv.getTransaction().active) {
+              rvContext.rv.startTransactionTimer();
             }
           });
 
         });
       } else {
-        defer.resolve(irContext);
+        defer.resolve(rvContext);
       }
       return defer.promise;
     });
 
-    irContext.reloadContext = function() {
-      var reloadPromise = fetchContext(irContext.uri);
+    rvContext.reloadContext = function() {
+      var reloadPromise = fetchContext(rvContext.uri);
       reloadPromise.then(function (res) {
-        angular.extend(irContext, angular.fromJson(res.body).payload.RVContext, {
+        angular.extend(rvContext, angular.fromJson(res.body).payload.RVContext, {
           fetch: false
         });
       });
       return reloadPromise;
     }; 
 
-    irContext.getChildContext = function (triple) {
+    rvContext.getChildContext = function (triple) {
       if (!children[triple.object]) {
         children[triple.object] = new RVContext({
           fetch: false
         });
-        var cachedContext = irContext.rv.getCachedContext(triple.object);
+        var cachedContext = rvContext.rv.getCachedContext(triple.object);
         if (cachedContext) {
           angular.extend(children[triple.object], cachedContext);
         } else {
           fetchContext(triple.object).then(function (res) {
             angular.extend(children[triple.object], angular.fromJson(res.body).payload.RVContext, {
-              rv: irContext.ir,
+              rv: rvContext.rv,
               uri: triple.object
             });
-            irContext.rv.cacheContext(children[triple.object]);
+            rvContext.rv.cacheContext(children[triple.object]);
           });
         }
       }
       return children[triple.object];
     };
 
-    irContext.getCachedChildContext = function (contextUri) {
+    rvContext.getCachedChildContext = function (contextUri) {
       return children[contextUri];
     };
 
-    irContext.createContainer = function (metadata) {
+    rvContext.createContainer = function (metadata) {
 
-      var createPromise = irContext.rv.performRequest(irContext.getMapping().children, {
+      var createPromise = rvContext.rv.performRequest(rvContext.getMapping().children, {
         method: HttpMethodVerbs.POST,
         query: {
-          contextUri: irContext.uri
+          contextUri: rvContext.uri
         },
         data: metadata
       });
 
       createPromise.then(function (res) {
-        angular.extend(irContext, angular.fromJson(res.body).payload.RVContext);
+        angular.extend(rvContext, angular.fromJson(res.body).payload.RVContext);
       });
 
       return createPromise;
     };
 
-    irContext.removeContainers = function (containerTriples) {
+    rvContext.removeContainers = function (containerTriples) {
 
       var promises = [];
 
       angular.forEach(containerTriples, function (containerTriple) {
-        var removePromise = irContext.rv.performRequest(irContext.getMapping().load, {
+        var removePromise = rvContext.rv.performRequest(rvContext.getMapping().load, {
           method: HttpMethodVerbs.DELETE,
           query: {
             contextUri: containerTriple.subject
@@ -106,7 +106,7 @@ cap.model("RVContext", function ($q, $filter, $interval, $location, $routeParams
         });
 
         removePromise.then(function (res) {
-          var children = irContext.children;
+          var children = rvContext.children;
           for (var i in children) {
             if (children.hasOwnProperty(i)) {
               var child = children[i];
@@ -126,12 +126,12 @@ cap.model("RVContext", function ($q, $filter, $interval, $location, $routeParams
       return allRemovePromses;
     };
 
-    irContext.removeResources = function (resourceTriples) {
+    rvContext.removeResources = function (resourceTriples) {
 
       var promises = [];
 
       angular.forEach(resourceTriples, function (resourceTriple) {
-        var removePromise = irContext.rv.performRequest(irContext.getMapping().resource, {
+        var removePromise = rvContext.rv.performRequest(rvContext.getMapping().resource, {
           method: HttpMethodVerbs.DELETE,
           query: {
             contextUri: resourceTriple.subject
@@ -139,7 +139,7 @@ cap.model("RVContext", function ($q, $filter, $interval, $location, $routeParams
         });
 
         removePromise.then(function (res) {
-          var children = irContext.children;
+          var children = rvContext.children;
           for (var i in children) {
             if (children.hasOwnProperty(i)) {
               var child = children[i];
@@ -159,44 +159,44 @@ cap.model("RVContext", function ($q, $filter, $interval, $location, $routeParams
       return allRemovePromses;
     };
 
-    irContext.createResource = function (file) {
+    rvContext.createResource = function (file) {
 
       var formData = new FormData();
       formData.append("file", file, file.name);
       
-      var createPromise = irContext.rv.performRequest(irContext.getMapping().resource, {
+      var createPromise = rvContext.rv.performRequest(rvContext.getMapping().resource, {
         method: HttpMethodVerbs.POST,
         headers: {
           "Content-Type": undefined
         },
         query: {
-          contextUri: irContext.uri
+          contextUri: rvContext.uri
         },
         data: formData
       });
 
       createPromise.then(function (res) {
-        angular.extend(irContext, angular.fromJson(res.body).payload.RVContext);
+        angular.extend(rvContext, angular.fromJson(res.body).payload.RVContext);
       });
 
       return createPromise;
     };
 
-    irContext.createMetadata = function (metadataTriples) {
+    rvContext.createMetadata = function (metadataTriples) {
 
       var promises = [];
 
       angular.forEach(metadataTriples, function (metadataTriple) {
-        var createPromise = irContext.rv.performRequest(irContext.getMapping().metadata, {
+        var createPromise = rvContext.rv.performRequest(rvContext.getMapping().metadata, {
           method: HttpMethodVerbs.POST,
           query: {
-            contextUri: irContext.uri
+            contextUri: rvContext.uri
           },
           data: metadataTriple
         });
 
         createPromise.then(function (res) {
-          angular.extend(irContext, angular.fromJson(res.body).payload.RVContext);
+          angular.extend(rvContext, angular.fromJson(res.body).payload.RVContext);
         });
 
         promises.push(createPromise);
@@ -207,16 +207,16 @@ cap.model("RVContext", function ($q, $filter, $interval, $location, $routeParams
       return allCreatePromses;
     };
 
-    irContext.removeMetadata = function (metadataTriples) {
+    rvContext.removeMetadata = function (metadataTriples) {
 
       var promises = [];
 
       angular.forEach(metadataTriples, function (metadataTriple) {
 
-        var removePromise = irContext.rv.performRequest(irContext.getMapping().metadata, {
+        var removePromise = rvContext.rv.performRequest(rvContext.getMapping().metadata, {
           method: HttpMethodVerbs.DELETE,
           query: {
-            contextUri: irContext.uri
+            contextUri: rvContext.uri
           },
           data: metadataTriple
         });
@@ -224,7 +224,7 @@ cap.model("RVContext", function ($q, $filter, $interval, $location, $routeParams
         removePromise.then(function (response) {
           var payload = angular.fromJson(response.body).payload;
           if (payload) {
-            angular.extend(irContext, payload.RVContext);
+            angular.extend(rvContext, payload.RVContext);
           }
         });
 
@@ -236,12 +236,12 @@ cap.model("RVContext", function ($q, $filter, $interval, $location, $routeParams
       return allRemovePromses;
     };
 
-    irContext.updateMetadatum = function (metadataTriple, newValue) {
+    rvContext.updateMetadatum = function (metadataTriple, newValue) {
       
-      var updatePromise = irContext.rv.performRequest(irContext.getMapping().metadata, {
+      var updatePromise = rvContext.rv.performRequest(rvContext.getMapping().metadata, {
         method: HttpMethodVerbs.PUT,
         query: {
-          contextUri: irContext.uri,
+          contextUri: rvContext.uri,
           newValue: newValue
         },
         data: metadataTriple
@@ -251,12 +251,12 @@ cap.model("RVContext", function ($q, $filter, $interval, $location, $routeParams
 
     };
 
-    irContext.createVersion = function(form) {
+    rvContext.createVersion = function(form) {
 
-      var versionPromise = irContext.rv.performRequest(irContext.getMapping().version, {
+      var versionPromise = rvContext.rv.performRequest(rvContext.getMapping().version, {
         method: HttpMethodVerbs.POST,
         query: {
-          contextUri: irContext.uri
+          contextUri: rvContext.uri
         },
         data: {
           name: form.name
@@ -266,7 +266,7 @@ cap.model("RVContext", function ($q, $filter, $interval, $location, $routeParams
       versionPromise.then(function(apiRes) {
 
         var newContext = angular.fromJson(apiRes.body).payload.RVContext;
-        angular.extend(irContext, newContext);
+        angular.extend(rvContext, newContext);
 
         if (form) {
           form.$setPristine();
@@ -278,8 +278,8 @@ cap.model("RVContext", function ($q, $filter, $interval, $location, $routeParams
       return versionPromise;
     };
 
-    irContext.deleteVersion = function(versionContext) {
-      return irContext.rv.performRequest(irContext.getMapping().version, {
+    rvContext.deleteVersion = function(versionContext) {
+      return rvContext.rv.performRequest(rvContext.getMapping().version, {
         method: HttpMethodVerbs.DELETE,
         query: {
           contextUri: versionContext.uri
@@ -287,8 +287,8 @@ cap.model("RVContext", function ($q, $filter, $interval, $location, $routeParams
       });
     };
 
-    irContext.revertVersion = function(context) {
-      var revertVersionPromise = irContext.rv.performRequest(irContext.getMapping().version, {
+    rvContext.revertVersion = function(context) {
+      var revertVersionPromise = rvContext.rv.performRequest(rvContext.getMapping().version, {
         method: HttpMethodVerbs.PATCH,
         query: {
           contextUri: context.uri
@@ -297,17 +297,17 @@ cap.model("RVContext", function ($q, $filter, $interval, $location, $routeParams
       return revertVersionPromise;
     };
 
-    irContext.advancedUpdate = function (query) {
-      var updatePromise = irContext.rv.performRequest(irContext.getMapping().advancedQuery, {
+    rvContext.advancedUpdate = function (query) {
+      var updatePromise = rvContext.rv.performRequest(rvContext.getMapping().advancedQuery, {
         method: HttpMethodVerbs.POST,
         query: {
-          contextUri: irContext.uri
+          contextUri: rvContext.uri
         },
         data: query
       });
 
       updatePromise.then(function (res) {
-        angular.extend(irContext, angular.fromJson(res.body).payload.RVContext);
+        angular.extend(rvContext, angular.fromJson(res.body).payload.RVContext);
       });
 
       return updatePromise;
@@ -315,14 +315,14 @@ cap.model("RVContext", function ($q, $filter, $interval, $location, $routeParams
 
     var queryHelp = {};
 
-    irContext.getQueryHelp = function () {
+    rvContext.getQueryHelp = function () {
 
       if(!queryHelp.message) {
         
-        var updatePromise = irContext.rv.performRequest(irContext.getMapping().advancedQuery, {
+        var updatePromise = rvContext.rv.performRequest(rvContext.getMapping().advancedQuery, {
           method: HttpMethodVerbs.GET,
           query: {
-            contextUri: irContext.uri
+            contextUri: rvContext.uri
           }
         });
   

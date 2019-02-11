@@ -80,15 +80,15 @@ cap.directive("rvsection", function($controller, $timeout, IrSectionService) {
 
 cap.service("IrSectionService", function() {
 
-    var irSectionServ = this;
+    var rvSectionServ = this;
 
     var manuallyCollapsed = {};
 
-    irSectionServ.setManuallyCollapsed = function(title, collapsed) {
+    rvSectionServ.setManuallyCollapsed = function(title, collapsed) {
       manuallyCollapsed[title] = collapsed;
     };
 
-    irSectionServ.getManuallyCollapsed = function(title) {
+    rvSectionServ.getManuallyCollapsed = function(title) {
       return manuallyCollapsed[title];
     };
 

@@ -128,16 +128,16 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     $scope.deleteRvContext = function () {
       $scope.submitClicked = true;
 
-      var ir = $scope.context.ir;
+      var rv = $scope.context.rv;
       var currentTriple = $scope.context.triple;
       var isResource = $scope.context.resource;
 
       var deleteContext = isResource ? $scope.context.removeResources : $scope.context.removeContainers;
 
-      $scope.context = ir.loadContext($scope.context.parent.object);
+      $scope.context = rv.loadContext($scope.context.parent.object);
 
       deleteContext([currentTriple]).then(function () {
-        $scope.context = ir.loadContext($scope.context.uri, true);
+        $scope.context = rv.loadContext($scope.context.uri, true);
         $scope.submitClicked = false;
       });
 
@@ -146,13 +146,13 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     $scope.revertVersion = function () {
       $scope.submitClicked = true;
 
-      var ir = $scope.context.ir;
+      var rv = $scope.context.rv;
       var currentContext = $scope.context;
 
-      $scope.context = ir.loadContext($scope.context.parent.object);
+      $scope.context = rv.loadContext($scope.context.parent.object);
 
       $scope.context.revertVersion(currentContext).then(function () {
-        $scope.context = ir.loadContext($scope.context.uri, true);
+        $scope.context = rv.loadContext($scope.context.uri, true);
         $scope.submitClicked = false;
       });
     };
@@ -160,22 +160,22 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     $scope.deleteVersion = function () {
       $scope.submitClicked = true;
 
-      var ir = $scope.context.ir;
+      var rv = $scope.context.rv;
       var currentContext = $scope.context;
 
-      $scope.context = ir.loadContext($scope.context.parent.object);
+      $scope.context = rv.loadContext($scope.context.parent.object);
 
-      ir.removeCachedContext($scope.context.uri);
+      rv.removeCachedContext($scope.context.uri);
 
       $scope.context.deleteVersion(currentContext).then(function () {
-        $scope.context = ir.loadContext($scope.context.uri, true);
+        $scope.context = rv.loadContext($scope.context.uri, true);
         $scope.submitClicked = false;
       });
     };
 
     $scope.openFixity = function(uriOfContextToCheck) {
       $scope.fixityReport = new FixityReport({
-        rv: $scope.context.ir,
+        rv: $scope.context.rv,
         contextUri: uriOfContextToCheck
       });
       $scope.openModal('#fixityModalButton');
