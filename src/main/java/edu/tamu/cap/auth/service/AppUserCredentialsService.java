@@ -59,6 +59,17 @@ public class AppUserCredentialsService extends UserCredentialsService<User, User
 
 	}
 
+    public User createUserFromRegistration(String email, String firstName, String lastName, String password) {
+        Role role = Role.ROLE_USER;
+        for (String adminEmail : admins) {
+            if (adminEmail.equals(email)) {
+                role = Role.ROLE_ADMIN;
+                break;
+            }
+        }
+        return userRepo.create(email, firstName, lastName, password, role.toString());
+    }
+
 	@Override
 	public String getAnonymousRole() {
 		return Role.ROLE_ANONYMOUS.toString();

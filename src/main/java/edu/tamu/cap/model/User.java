@@ -19,12 +19,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import edu.tamu.weaver.user.model.IRole;
 
 import edu.tamu.weaver.auth.model.AbstractWeaverUserDetails;
+import edu.tamu.weaver.response.ApiView;
 
 /**
  * Application User entity.
@@ -45,6 +47,14 @@ public class User extends AbstractWeaverUserDetails {
 
     @Column(name = "last_name")
     private String lastName;
+
+    @JsonView(ApiView.Partial.class)
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column
+    @JsonIgnore
+    private String password = null;
 
     /**
      * Constructor for the application user
@@ -74,6 +84,14 @@ public class User extends AbstractWeaverUserDetails {
         setFirstName(firstName);
         setLastName(lastName);
         setRole(role == null ? null : Role.valueOf(role));
+    }
+
+    public User(String email, String firstName, String lastName, String role, String password) {
+        this(email);
+        setFirstName(firstName);
+        setLastName(lastName);
+        setRole(role == null ? null : Role.valueOf(role));
+        setPassword(password);
     }
 
     public User(User user) {
@@ -137,6 +155,38 @@ public class User extends AbstractWeaverUserDetails {
         this.lastName = lastName;
     }
 
+    /**
+     * @return the email
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * @param email
+     *            the email to set
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+	@Override
+	@JsonIgnore
+	public String getPassword() {
+		return null;
+	}
+
+    /**
+     * Stores an encoded password
+     *
+     * @param password
+     *            the password to set
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -145,11 +195,5 @@ public class User extends AbstractWeaverUserDetails {
         authorities.add(authority);
         return authorities;
     }
-
-	@Override
-	@JsonIgnore
-	public String getPassword() {
-		return null;
-	}
 
 }
