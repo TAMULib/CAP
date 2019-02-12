@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import edu.tamu.cap.model.rvcontext.TransactionDetails;
+import edu.tamu.cap.model.repositoryviewcontext.TransactionDetails;
 import edu.tamu.cap.service.FedoraService;
 
-public class RVContext implements Serializable {
+public class RepositoryViewContext implements Serializable {
 
     private static final long serialVersionUID = -8489156248122941988L;
 
@@ -24,7 +24,7 @@ public class RVContext implements Serializable {
 
     private List<Triple> metadata;
 
-    private List<RVContext> children;
+    private List<RepositoryViewContext> children;
 
     private List<Version> versions;
 
@@ -34,16 +34,16 @@ public class RVContext implements Serializable {
 
     private Map<String, Boolean> features;
 
-	public RVContext() {
+	public RepositoryViewContext() {
         super();
         properties = new ArrayList<Triple>();
         metadata = new ArrayList<Triple>();
         versions = new ArrayList<Version>();
-        children = new ArrayList<RVContext>();
+        children = new ArrayList<RepositoryViewContext>();
         features = new HashMap<String, Boolean>();
     }
 
-    public RVContext(Triple triple) {
+    public RepositoryViewContext(Triple triple) {
         this();
         this.triple = triple;
     }
@@ -104,15 +104,15 @@ public class RVContext implements Serializable {
         metadata.add(metadatum);
     }
 
-    public List<RVContext> getChildren() {
+    public List<RepositoryViewContext> getChildren() {
         return children;
     }
 
-    public void setChildren(List<RVContext> children) {
+    public void setChildren(List<RepositoryViewContext> children) {
         this.children = children;
     }
 
-    public void addChild(RVContext child) {
+    public void addChild(RepositoryViewContext child) {
         children.add(child);
     }
 

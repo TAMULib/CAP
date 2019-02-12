@@ -27,8 +27,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import edu.tamu.cap.CapApplication;
-import edu.tamu.cap.model.RV;
-import edu.tamu.cap.model.response.RVContext;
+import edu.tamu.cap.model.RepositoryView;
+import edu.tamu.cap.model.response.RepositoryViewContext;
 import edu.tamu.cap.model.response.Version;
 
 @ExtendWith(MockitoExtension.class)
@@ -70,12 +70,12 @@ public final class FedoraServiceTest {
 
         MockitoAnnotations.initMocks(this);
 
-        fedoraService.setRv(new RV(RVType.FEDORA, "Mock Fedora", "http://localhost:9100/mock/fcrepo/rest"));
+        fedoraService.setRepositoryView(new RepositoryView(RepositoryViewType.FEDORA, "Mock Fedora", "http://localhost:9100/mock/fcrepo/rest"));
     }
 
     @Test
     public void createVersion() throws Exception {
-        RVContext context = fedoraService.createVersion(TEST_CONTEXT_URI, TEST_VERSION1_NAME);
+        RepositoryViewContext context = fedoraService.createVersion(TEST_CONTEXT_URI, TEST_VERSION1_NAME);
         assertVersions(context.getVersions());
     }
 

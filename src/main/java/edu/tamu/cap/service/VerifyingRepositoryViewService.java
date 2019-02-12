@@ -1,6 +1,6 @@
 package edu.tamu.cap.service;
 
-public interface VerifyingRVService<M> extends RVService<M> {
+public interface VerifyingRepositoryViewService<M> extends RepositoryViewService<M> {
     
     public void verifyPing() throws Exception;
 

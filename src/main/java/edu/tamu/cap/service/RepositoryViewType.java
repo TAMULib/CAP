@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import edu.tamu.cap.model.response.RVContext;
+import edu.tamu.cap.model.response.RepositoryViewContext;
 import edu.tamu.weaver.context.SpringContext;
 
-public enum RVType {
+public enum RepositoryViewType {
 	FEDORA("Fedora"), DSPACE("DSpace");
 
 	private final String gloss;
@@ -16,7 +16,7 @@ public enum RVType {
 	private static List<Map<String, Object>> values = new ArrayList<Map<String, Object>>();
 
 	static {
-		for (RVType type : RVType.values()) {
+		for (RepositoryViewType type : RepositoryViewType.values()) {
 			Map<String, Object> valueGloss = new HashMap<String, Object>();
 			valueGloss.put("value", type.name());
 			valueGloss.put("gloss", type.getGloss());
@@ -24,7 +24,7 @@ public enum RVType {
 		}
 	}
 
-	RVType(String gloss) {
+	RepositoryViewType(String gloss) {
 		this.gloss = gloss;
 	}
 
@@ -36,9 +36,9 @@ public enum RVType {
 	    
 	    values.forEach(valueMap->{
 	        String thisEnumType = (String) valueMap.get("gloss");
-	        RVService<?> rvs = SpringContext.bean(thisEnumType);
-	        RVContext rvc = new RVContext();
-	        valueMap.putAll(rvs.featureSupport(rvc).getFeatures());
+	        RepositoryViewService<?> repositoryViews = SpringContext.bean(thisEnumType);
+	        RepositoryViewContext repositoryViewContext = new RepositoryViewContext();
+	        valueMap.putAll(repositoryViews.featureSupport(repositoryViewContext).getFeatures());
 	    });
 	    	    
 		return values;

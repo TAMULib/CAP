@@ -5,9 +5,9 @@ import edu.tamu.weaver.validation.utility.ValidationUtility;
 import edu.tamu.weaver.validation.validators.BaseModelValidator;
 import edu.tamu.weaver.validation.validators.InputValidator;
 
-public class RVValidator extends BaseModelValidator {
+public class RepositoryViewValidator extends BaseModelValidator {
 
-    public RVValidator() {
+    public RepositoryViewValidator() {
     	String typeProperty = "type";
         this.addInputValidator(new InputValidator(InputValidationType.required, "A repository view requires a type", typeProperty, true));
     	

@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.tamu.cap.exceptions.RVVerificationException;
+import edu.tamu.cap.exceptions.RepositoryViewVerificationException;
 import edu.tamu.weaver.response.ApiResponse;
 
 @RestController
 @ControllerAdvice
-public class RVControllerAdvice {
+public class RepositoryViewControllerAdvice {
 
 	@ResponseStatus(value = HttpStatus.OK)
 	@ExceptionHandler(FcrepoOperationFailedException.class)
@@ -23,8 +23,8 @@ public class RVControllerAdvice {
 	}
 
 	@ResponseStatus(value = HttpStatus.OK)
-	@ExceptionHandler(RVVerificationException.class)
-	public ApiResponse handleIRVerificationException(RVVerificationException e) {
+	@ExceptionHandler(RepositoryViewVerificationException.class)
+	public ApiResponse handleRepositoryViewVerificationException(RepositoryViewVerificationException e) {
 		return new ApiResponse(ERROR, e.getMessage());
 	}
 

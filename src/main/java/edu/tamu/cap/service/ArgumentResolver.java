@@ -31,9 +31,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.cap.controller.aspect.annotation.PayloadArgName;
-import edu.tamu.cap.exceptions.RVInjectionException;
-import edu.tamu.cap.model.RV;
-import edu.tamu.cap.model.repo.RVRepo;
+import edu.tamu.cap.exceptions.RepositoryViewInjectionException;
+import edu.tamu.cap.model.RepositoryView;
+import edu.tamu.cap.model.repo.RepositoryViewRepo;
 import edu.tamu.weaver.context.SpringContext;
 
 @Service
@@ -45,7 +45,7 @@ public class ArgumentResolver {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private RVRepo rvRepo;
+    private RepositoryViewRepo rvRepo;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -53,28 +53,28 @@ public class ArgumentResolver {
     @Autowired
     private HttpServletRequest request;
     
-    private Optional<RVService<?>> rvService = Optional.empty();
+    private Optional<RepositoryViewService<?>> repositoryViewService = Optional.empty();
     
-    public void injectRVService(ProceedingJoinPoint joinPoint) throws RVInjectionException, JsonProcessingException, IOException {
+    public void injectRepositoryViewService(ProceedingJoinPoint joinPoint) throws RepositoryViewInjectionException, JsonProcessingException, IOException {
         Object[] arguments = joinPoint.getArgs();
         Method method = getMethodFromJoinPoint(joinPoint);
-        Optional<RVService<?>> rvService = Optional.empty();
+        Optional<RepositoryViewService<?>> repositoryViewService = Optional.empty();
         int i = 0;
         for (Parameter parameter : method.getParameters()) {
-            rvService = getRvService(parameter);
-            if (rvService.isPresent()) {
+            repositoryViewService = getRepositoryViewService(parameter);
+            if (repositoryViewService.isPresent()) {
                 break;
             }
             i++;
         }
-        if (rvService.isPresent()) {
-            arguments[i] = rvService.get();
+        if (repositoryViewService.isPresent()) {
+            arguments[i] = repositoryViewService.get();
         } else {
-            throw new RVInjectionException("No RV service argument!");
+            throw new RepositoryViewInjectionException("No Repository View service argument!");
         }
     }
 
-    public void injectRequestPayload(ProceedingJoinPoint joinPoint) throws IOException, RVInjectionException {
+    public void injectRequestPayload(ProceedingJoinPoint joinPoint) throws IOException, RepositoryViewInjectionException {
         Method method = getMethodFromJoinPoint(joinPoint);
 
         boolean hasRequestParam = methodHasRequestParameterAnnotation(method);
@@ -86,7 +86,7 @@ public class ArgumentResolver {
             int i = 0;
             for (Parameter parameter : method.getParameters()) {
                 Optional<PayloadArgName> payloadArgName = Optional.ofNullable(parameter.getAnnotation(PayloadArgName.class));
-                if (!RVService.class.isAssignableFrom(parameter.getType()) && injectArgument(parameter)) {
+                if (!RepositoryViewService.class.isAssignableFrom(parameter.getType()) && injectArgument(parameter)) {
                     if (payloadNode.isPresent()) {
                         arguments[i] = getArgumentFromBody(parameter.getType(), payloadArgName, payloadNode.get());
                     } else {
@@ -109,9 +109,9 @@ public class ArgumentResolver {
         return hasAnnotation;
     }
 
-    private RV getRVFromRequest() throws JsonProcessingException, IOException, RVInjectionException {
+    private RepositoryView getRepositoryViewFromRequest() throws JsonProcessingException, IOException, RepositoryViewInjectionException {
         JsonNode payloadNode = objectMapper.readTree(request.getInputStream());
-        return (RV) getArgumentFromBody(RV.class, Optional.empty(), payloadNode);
+        return (RepositoryView) getArgumentFromBody(RepositoryView.class, Optional.empty(), payloadNode);
     }
 
     private boolean injectArgument(Parameter parameter) {
@@ -138,7 +138,7 @@ public class ArgumentResolver {
         return payloadNode;
     }
 
-    private Object getArgumentFromBody(Class<?> argClass, Optional<PayloadArgName> payloadArgName, JsonNode payloadNode) throws RVInjectionException {
+    private Object getArgumentFromBody(Class<?> argClass, Optional<PayloadArgName> payloadArgName, JsonNode payloadNode) throws RepositoryViewInjectionException {
         Optional<Object> argValue = mapObjectFromNode(argClass, payloadNode);
         if (!argValue.isPresent()) {
             Iterator<Map.Entry<String, JsonNode>> iterator = payloadNode.fields();
@@ -153,7 +153,7 @@ public class ArgumentResolver {
             if (argClass.equals(String.class)) {
                 argValue = Optional.of("");
             } else {
-                throw new RVInjectionException("No " + argClass.getSimpleName() + " argument!");
+                throw new RepositoryViewInjectionException("No " + argClass.getSimpleName() + " argument!");
             }
         }
         return argValue.get();
@@ -162,7 +162,7 @@ public class ArgumentResolver {
     private Optional<Object> mapObjectFromNode(Class<?> argClass, JsonNode node) {
         Optional<Object> argValue = Optional.empty();
         try {
-            if (!RVService.class.isAssignableFrom(argClass)) {
+            if (!RepositoryViewService.class.isAssignableFrom(argClass)) {
                 if (argClass.equals(String.class)) {
                     if (node.isTextual()) {
                         argValue = Optional.of(node.asText());
@@ -177,14 +177,14 @@ public class ArgumentResolver {
         return argValue;
     }
 
-    private RVType getRVType() {
-        return RVType.valueOf(getPathVariable("type"));
+    private RepositoryViewType getRepositoryViewType() {
+        return RepositoryViewType.valueOf(getPathVariable("type"));
     }
 
-    private Optional<Long> getRVId() {
+    private Optional<Long> getRepositoryViewId() {
         Optional<Long> id = Optional.empty();
         try {
-            id = Optional.of(Long.parseLong(getPathVariable("rvid")));
+            id = Optional.of(Long.parseLong(getPathVariable("repositoryViewId")));
         } catch (NumberFormatException e) {
             logger.info("Id not provided in path!");
         }
@@ -197,20 +197,20 @@ public class ArgumentResolver {
         return pathVariables.get(pathKey);
     }
     
-    protected Optional<RVService<?>> getRvService(Parameter parameter) throws RVInjectionException,IOException {
-        if (!rvService.isPresent()) {
-            if (RVService.class.isAssignableFrom(parameter.getType())) {
-                RVService<?> rvs = SpringContext.bean(getRVType().getGloss());
-                Optional<Long> rvid = getRVId();
-                if (rvid.isPresent()) {
-                    rvs.setRv(rvRepo.read(rvid.get()));
+    protected Optional<RepositoryViewService<?>> getRepositoryViewService(Parameter parameter) throws RepositoryViewInjectionException,IOException {
+        if (!repositoryViewService.isPresent()) {
+            if (RepositoryViewService.class.isAssignableFrom(parameter.getType())) {
+                RepositoryViewService<?> rvs = SpringContext.bean(getRepositoryViewType().getGloss());
+                Optional<Long> repositoryViewId = getRepositoryViewId();
+                if (repositoryViewId.isPresent()) {
+                    rvs.setRepositoryView(rvRepo.read(repositoryViewId.get()));
                 } else {
-                    rvs.setRv(getRVFromRequest());
+                    rvs.setRepositoryView(getRepositoryViewFromRequest());
                 }
-                rvService = Optional.of(rvs);
+                repositoryViewService = Optional.of(rvs);
             }
         }
-        return rvService;      
+        return repositoryViewService;      
     }
 
 }

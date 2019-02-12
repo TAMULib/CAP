@@ -14,7 +14,7 @@ import edu.tamu.weaver.response.ApiResponse;
 
 @Aspect
 @Component
-public class RVInjectionAspect {
+public class RepositoryViewInjectionAspect {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -22,21 +22,21 @@ public class RVInjectionAspect {
     @Autowired
     private ArgumentResolver argumentResolver;
 
-    @Around("execution(* edu.tamu.cap.controller.VerifyRVSettingsController.*(..))")
-    public ApiResponse testRVSettingsInjection(ProceedingJoinPoint joinPoint) throws Throwable {
-        logger.debug("Injecting an VR Service at joinPoint: {}", joinPoint.toString());
-        // inject appropriate VR service
-        argumentResolver.injectRVService(joinPoint);
+    @Around("execution(* edu.tamu.cap.controller.VerifyRepositoryViewSettingsController.*(..))")
+    public ApiResponse testRepositoryViewSettingsInjection(ProceedingJoinPoint joinPoint) throws Throwable {
+        logger.debug("Injecting an Repository View Service at joinPoint: {}", joinPoint.toString());
+        // inject appropriate Repository View service
+        argumentResolver.injectRepositoryViewService(joinPoint);
         return (ApiResponse) joinPoint.proceed(joinPoint.getArgs());
     }
 
-    @Around("execution(* edu.tamu.cap.controller.rvcontext..*(..))")
-    public ApiResponse rvContextInjection(ProceedingJoinPoint joinPoint) throws Throwable {
-        logger.debug("Injecting an RV Service at joinPoint: {}", joinPoint.toString());
+    @Around("execution(* edu.tamu.cap.controller.repositoryviewcontext..*(..))")
+    public ApiResponse repositoryViewContextInjection(ProceedingJoinPoint joinPoint) throws Throwable {
+        logger.debug("Injecting an Repository View Service at joinPoint: {}", joinPoint.toString());
         // inject applicable end point arguments from request body
         argumentResolver.injectRequestPayload(joinPoint);
-        // inject appropriate RV service
-        argumentResolver.injectRVService(joinPoint);
+        // inject appropriate Repository View service
+        argumentResolver.injectRepositoryViewService(joinPoint);
         return (ApiResponse) joinPoint.proceed(joinPoint.getArgs());
     }
 

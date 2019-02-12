@@ -1,4 +1,4 @@
-package edu.tamu.cap.controller.rvcontext;
+package edu.tamu.cap.controller.repositoryviewcontext;
 
 import static edu.tamu.weaver.response.ApiStatus.ERROR;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
@@ -16,65 +16,65 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.tamu.cap.model.rvcontext.TransactionDetails;
-import edu.tamu.cap.service.TransactingRVService;
+import edu.tamu.cap.model.repositoryviewcontext.TransactionDetails;
+import edu.tamu.cap.service.TransactingRepositoryViewService;
 import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.response.ApiStatus;
 
 @RestController
-@RequestMapping("rv-context/{type}/{rvid}/transaction")
-public class RVContextTransactionController {
+@RequestMapping("repository-view-context/{type}/{repositoryViewId}/transaction")
+public class RepositoryViewContextTransactionController {
 
     @RequestMapping(method = GET)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse startTransaction(TransactingRVService<?> rvService) throws Exception {
-        TransactionDetails transactionDetails = rvService.startTransaction();
+    public ApiResponse startTransaction(TransactingRepositoryViewService<?> repositoryViewService) throws Exception {
+        TransactionDetails transactionDetails = repositoryViewService.startTransaction();
         return new ApiResponse(SUCCESS, "Transaction successfully created", transactionDetails);
     }
 
     @RequestMapping(method = POST)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse commitTransaction(TransactingRVService<?> rvService, @Param("contextUri") String contextUri) throws Exception {
+    public ApiResponse commitTransaction(TransactingRepositoryViewService<?> repositoryViewService, @Param("contextUri") String contextUri) throws Exception {
 
         Optional<String> trancationToken = Optional.ofNullable(extractTokenFromContextUri(contextUri));
 
-        String rootUri = rvService.getRV().getRootUri();
+        String rootUri = repositoryViewService.getRepositoryView().getRootUri();
 
         ApiStatus status = trancationToken.isPresent()?SUCCESS:ERROR;
         String message = trancationToken.isPresent()?"Transaction successfully commited":"Failed to find transaction token.";
 
-        rvService.commitTransaction(rootUri+trancationToken.get());
+        repositoryViewService.commitTransaction(rootUri+trancationToken.get());
 
         return new ApiResponse(status, message);
     }
 
     @RequestMapping(method = DELETE)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse rollbackTransaction(TransactingRVService<?> rvService, @Param("contextUri") String contextUri) throws Exception {
+    public ApiResponse rollbackTransaction(TransactingRepositoryViewService<?> repositoryViewService, @Param("contextUri") String contextUri) throws Exception {
 
         Optional<String> trancationToken = Optional.ofNullable(extractTokenFromContextUri(contextUri));
 
-        String rootUri = rvService.getRV().getRootUri();
+        String rootUri = repositoryViewService.getRepositoryView().getRootUri();
 
         ApiStatus status = trancationToken.isPresent()?SUCCESS:ERROR;
         String message = trancationToken.isPresent()?"Transaction successfully created":"Failed to find transaction token.";
 
-        rvService.rollbackTransaction(rootUri+trancationToken.get());
+        repositoryViewService.rollbackTransaction(rootUri+trancationToken.get());
 
         return new ApiResponse(status, message);
     }
 
     @RequestMapping(method = PUT)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse refreshTransaction(TransactingRVService<?> rvService, @Param("contextUri") String contextUri) throws Exception {
+    public ApiResponse refreshTransaction(TransactingRepositoryViewService<?> repositoryViewService, @Param("contextUri") String contextUri) throws Exception {
 
         Optional<TransactionDetails> transactionDetails = Optional.empty();
         Optional<String> transactionToken = Optional.ofNullable(extractTokenFromContextUri(contextUri));
 
         if (transactionToken.isPresent()) {
-            String rootUri = rvService.getRV().getRootUri();
-            rootUri += rvService.getRV().getRootUri().endsWith("/") ? "" : "/";
-            transactionDetails = Optional.ofNullable(rvService.refreshTransaction(rootUri+transactionToken.get()));
+            String rootUri = repositoryViewService.getRepositoryView().getRootUri();
+            rootUri += repositoryViewService.getRepositoryView().getRootUri().endsWith("/") ? "" : "/";
+            transactionDetails = Optional.ofNullable(repositoryViewService.refreshTransaction(rootUri+transactionToken.get()));
         }
 
         boolean transactionDetailsPresent = transactionDetails.isPresent();

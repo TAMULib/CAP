@@ -7,31 +7,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.tamu.cap.service.VerifyingRVService;
+import edu.tamu.cap.service.VerifyingRepositoryViewService;
 import edu.tamu.weaver.response.ApiResponse;
 
 @RestController
-@RequestMapping("rv/{type}/verify")
-public class VerifyRVSettingsController {
+@RequestMapping("repository-view/{type}/verify")
+public class VerifyRepositoryViewSettingsController {
 
     @RequestMapping(value = "/ping", method = RequestMethod.POST)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse verifyRVPing(VerifyingRVService<?> rvService) throws Exception {
+    public ApiResponse verifyRVPing(VerifyingRepositoryViewService<?> rvService) throws Exception {
         rvService.verifyPing();
         return new ApiResponse(SUCCESS, "Ping was successful!");
     }
 
     @RequestMapping(value = "/auth", method = RequestMethod.POST)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse verifyRVAuth(VerifyingRVService<?> rvService) throws Exception {
-        rvService.verifyAuth();
+    public ApiResponse verifyRepositoryViewAuth(VerifyingRepositoryViewService<?> repositoryViewService) throws Exception {
+        repositoryViewService.verifyAuth();
         return new ApiResponse(SUCCESS);
     }
 
     @RequestMapping(value = "/content", method = RequestMethod.POST)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse verifyIRContent(VerifyingRVService<?> rvService) throws Exception {
-        rvService.verifyRoot();
+    public ApiResponse verifyRepositoryViewContent(VerifyingRepositoryViewService<?> repositoryViewService) throws Exception {
+        repositoryViewService.verifyRoot();
         return new ApiResponse(SUCCESS);
     }
 

@@ -1,5 +1,5 @@
 package edu.tamu.cap.model.repo.custom;
 
-public interface RVRepoCustom {
+public interface RepositoryViewRepoCustom {
 
 }

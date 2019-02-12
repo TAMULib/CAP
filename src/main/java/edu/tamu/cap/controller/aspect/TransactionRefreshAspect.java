@@ -32,13 +32,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.cap.controller.aspect.annotation.PayloadArgName;
-import edu.tamu.cap.exceptions.RVInjectionException;
-import edu.tamu.cap.model.RV;
-import edu.tamu.cap.model.repo.RVRepo;
-import edu.tamu.cap.model.rvcontext.TransactionDetails;
-import edu.tamu.cap.service.RVService;
-import edu.tamu.cap.service.RVType;
-import edu.tamu.cap.service.TransactingRVService;
+import edu.tamu.cap.exceptions.RepositoryViewInjectionException;
+import edu.tamu.cap.model.RepositoryView;
+import edu.tamu.cap.model.repo.RepositoryViewRepo;
+import edu.tamu.cap.model.repositoryviewcontext.TransactionDetails;
+import edu.tamu.cap.service.RepositoryViewService;
+import edu.tamu.cap.service.RepositoryViewType;
+import edu.tamu.cap.service.TransactingRepositoryViewService;
 import edu.tamu.weaver.context.SpringContext;
 import edu.tamu.weaver.response.ApiResponse;
 
@@ -49,7 +49,7 @@ public class TransactionRefreshAspect {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private RVRepo rvRepo;
+    private RepositoryViewRepo repositoryViewRepo;
     
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
@@ -60,7 +60,7 @@ public class TransactionRefreshAspect {
     @Autowired
     private HttpServletRequest request;
 
-    @AfterReturning(pointcut = "execution(* edu.tamu.cap.controller.rvcontext..*(..))", returning="apiResponse")
+    @AfterReturning(pointcut = "execution(* edu.tamu.cap.controller.repositoryviewcontext..*(..))", returning="apiResponse")
     public void refreshTransaction(JoinPoint joinPoint, ApiResponse apiResponse) throws Throwable {
                 
         Optional<Cookie> cookie = Optional.empty();
@@ -88,43 +88,43 @@ public class TransactionRefreshAspect {
             MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
             Method method = methodSignature.getMethod();
 
-            Optional<TransactingRVService<?>> transactingRVService = Optional.empty();
+            Optional<TransactingRepositoryViewService<?>> transactingRepositoryViewService = Optional.empty();
             for (Parameter parameter : method.getParameters()) {
-                Optional<RVService<?>> rvService = Optional.empty();
+                Optional<RepositoryViewService<?>> repositoryViewService = Optional.empty();
                 
-                if (RVService.class.isAssignableFrom(parameter.getType())) {
-                    RVService<?> rvs = SpringContext.bean(getRVType().getGloss());
-                    Optional<Long> rvid = getRVId();
-                    if (rvid.isPresent()) {
-                        rvs.setRv(rvRepo.read(rvid.get()));
+                if (RepositoryViewService.class.isAssignableFrom(parameter.getType())) {
+                    RepositoryViewService<?> repositoryViews = SpringContext.bean(getRepositoryViewType().getGloss());
+                    Optional<Long> repositoryViewid = getRepositoryViewId();
+                    if (repositoryViewid.isPresent()) {
+                        repositoryViews.setRepositoryView(repositoryViewRepo.read(repositoryViewid.get()));
                     } else {
-                        rvs.setRv(getRVFromRequest());
+                        repositoryViews.setRepositoryView(getRepositoryViewFromRequest());
                     }
-                    rvService = Optional.of(rvs);
+                    repositoryViewService = Optional.of(repositoryViews);
                 }
                 
                 
-                if (rvService.isPresent()) {
-                    transactingRVService = Optional.of((TransactingRVService<?>) rvService.get());
+                if (repositoryViewService.isPresent()) {
+                    transactingRepositoryViewService = Optional.of((TransactingRepositoryViewService<?>) repositoryViewService.get());
                     break;
                 }
             }
             
-            TransactionDetails transactionDetails = transactingRVService.get().makeTransactionDetails(transactionToken, transactionExpiration);
+            TransactionDetails transactionDetails = transactingRepositoryViewService.get().makeTransactionDetails(transactionToken, transactionExpiration);
             
             simpMessagingTemplate.convertAndSend("/queue/transaction/"+request.getUserPrincipal().getName(), new ApiResponse(SUCCESS, BROADCAST, transactionDetails));
             
         }  
     }
     
-    private RVType getRVType() {
-        return RVType.valueOf(getPathVariable("type"));
+    private RepositoryViewType getRepositoryViewType() {
+        return RepositoryViewType.valueOf(getPathVariable("type"));
     }
 
-    private Optional<Long> getRVId() {
+    private Optional<Long> getRepositoryViewId() {
         Optional<Long> id = Optional.empty();
         try {
-            id = Optional.of(Long.parseLong(getPathVariable("rvid")));
+            id = Optional.of(Long.parseLong(getPathVariable("repositoryViewId")));
         } catch (NumberFormatException e) {
             logger.info("Id not provided in path!");
         }
@@ -137,12 +137,12 @@ public class TransactionRefreshAspect {
         return pathVariables.get(pathKey);
     }
     
-    private RV getRVFromRequest() throws JsonProcessingException, IOException, RVInjectionException {
+    private RepositoryView getRepositoryViewFromRequest() throws JsonProcessingException, IOException, RepositoryViewInjectionException {
         JsonNode payloadNode = objectMapper.readTree(request.getInputStream());
-        return (RV) getArgumentFromBody(RV.class, Optional.empty(), payloadNode);
+        return (RepositoryView) getArgumentFromBody(RepositoryView.class, Optional.empty(), payloadNode);
     }
     
-    private Object getArgumentFromBody(Class<?> argClass, Optional<PayloadArgName> payloadArgName, JsonNode payloadNode) throws RVInjectionException {
+    private Object getArgumentFromBody(Class<?> argClass, Optional<PayloadArgName> payloadArgName, JsonNode payloadNode) throws RepositoryViewInjectionException {
         Optional<Object> argValue = mapObjectFromNode(argClass, payloadNode);
         if (!argValue.isPresent()) {
             Iterator<Map.Entry<String, JsonNode>> iterator = payloadNode.fields();
@@ -157,7 +157,7 @@ public class TransactionRefreshAspect {
             if (argClass.equals(String.class)) {
                 argValue = Optional.of("");
             } else {
-                throw new RVInjectionException("No " + argClass.getSimpleName() + " argument!");
+                throw new RepositoryViewInjectionException("No " + argClass.getSimpleName() + " argument!");
             }
         }
         return argValue.get();
@@ -166,7 +166,7 @@ public class TransactionRefreshAspect {
     private Optional<Object> mapObjectFromNode(Class<?> argClass, JsonNode node) {
         Optional<Object> argValue = Optional.empty();
         try {
-            if (!RVService.class.isAssignableFrom(argClass)) {
+            if (!RepositoryViewService.class.isAssignableFrom(argClass)) {
                 if (argClass.equals(String.class)) {
                     if (node.isTextual()) {
                         argValue = Optional.of(node.asText());

@@ -1,6 +1,6 @@
 package edu.tamu.cap.controller;
 
-import static edu.tamu.cap.service.RVType.FEDORA;
+import static edu.tamu.cap.service.RepositoryViewType.FEDORA;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -22,9 +22,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-import edu.tamu.cap.model.RV;
+import edu.tamu.cap.model.RepositoryView;
 import edu.tamu.cap.model.Schema;
-import edu.tamu.cap.model.repo.RVRepo;
+import edu.tamu.cap.model.repo.RepositoryViewRepo;
 import edu.tamu.weaver.response.ApiResponse;
 
 
@@ -33,12 +33,12 @@ import edu.tamu.weaver.response.ApiResponse;
 public final class RVControllerTest {
 
     @InjectMocks
-    private RVController rVController;
+    private RepositoryViewController rVController;
 
     @Mock
-    private RVRepo iVRepo;
+    private RepositoryViewRepo iVRepo;
 
-    private RV fedoraRV;
+    private RepositoryView fedoraRV;
 
     @BeforeEach
     public void setup() throws JsonParseException, JsonMappingException, IOException {
@@ -49,14 +49,14 @@ public final class RVControllerTest {
 
     @Test
     public void testCreateRV() {
-        RV responseRV = null;
+        RepositoryView responseRV = null;
 
-        when(iVRepo.create(any(RV.class))).thenReturn(fedoraRV);
+        when(iVRepo.create(any(RepositoryView.class))).thenReturn(fedoraRV);
 
-        ApiResponse response = rVController.createRV(fedoraRV);
+        ApiResponse response = rVController.createRepositoryView(fedoraRV);
         Collection<Object> payload = response.getPayload().values();
         if (payload.size() == 1) {
-            responseRV = (RV) payload.toArray()[0];
+            responseRV = (RepositoryView) payload.toArray()[0];
         }
 
         assertEquals(fedoraRV.getId(), responseRV.getId(), "Fedora RV has incorrect ID!");
@@ -68,7 +68,7 @@ public final class RVControllerTest {
         assertEquals(fedoraRV.getPassword(), responseRV.getPassword(), "Fedora IR has incorrect Password!");
     }
 
-    private RV getMockFedoraRV() {
+    private RepositoryView getMockFedoraRV() {
         // TODO: convert this into json file to be imported.
         List<Schema> schemas = new ArrayList<Schema>();
         Schema schema = new Schema();
@@ -78,7 +78,7 @@ public final class RVControllerTest {
         schema.setAbbreviation("Schema Abbreviation");
         schemas.add(schema);
 
-        RV rv = new RV();
+        RepositoryView rv = new RepositoryView();
         rv.setId(123456789L);
         rv.setName("RV Name");
         rv.setRootUri("http://localhost/fedora");

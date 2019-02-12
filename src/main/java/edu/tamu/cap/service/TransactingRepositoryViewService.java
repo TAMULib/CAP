@@ -1,8 +1,8 @@
 package edu.tamu.cap.service;
 
-import edu.tamu.cap.model.rvcontext.TransactionDetails;
+import edu.tamu.cap.model.repositoryviewcontext.TransactionDetails;
 
-public interface TransactingRVService<M> extends RVService<M> {
+public interface TransactingRepositoryViewService<M> extends RepositoryViewService<M> {
     
     public TransactionDetails startTransaction() throws Exception;
     

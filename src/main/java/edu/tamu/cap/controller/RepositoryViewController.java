@@ -15,63 +15,63 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.tamu.cap.model.RV;
-import edu.tamu.cap.model.repo.RVRepo;
-import edu.tamu.cap.service.RVType;
+import edu.tamu.cap.model.RepositoryView;
+import edu.tamu.cap.model.repo.RepositoryViewRepo;
+import edu.tamu.cap.service.RepositoryViewType;
 import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 
 @RestController
-@RequestMapping("/rv")
-public class RVController {
+@RequestMapping("/repository-view")
+public class RepositoryViewController {
 
 	@Autowired
-	private RVRepo rvRepo;
+	private RepositoryViewRepo repositoryViewRepo;
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@RequestMapping(method = RequestMethod.POST)
     @PreAuthorize("hasRole('USER')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
-    public ApiResponse createRV(@RequestBody @WeaverValidatedModel RV rv) {
-        logger.info("Creating RV:  " + rv.getName() + " with schema " + rv.getSchemas());
-        return new ApiResponse(SUCCESS, rvRepo.create(rv));
+    public ApiResponse createRepositoryView(@RequestBody @WeaverValidatedModel RepositoryView repositoryView) {
+        logger.info("Creating Repository View:  " + repositoryView.getName() + " with schema " + repositoryView.getSchemas());
+        return new ApiResponse(SUCCESS, repositoryViewRepo.create(repositoryView));
     }
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasRole('USER')")
-	public ApiResponse allRVs() {
-		return new ApiResponse(SUCCESS, rvRepo.findAll());
+	public ApiResponse allRepositoryViews() {
+		return new ApiResponse(SUCCESS, repositoryViewRepo.findAll());
 	}
 
 	@RequestMapping(method = RequestMethod.PUT)
 	@PreAuthorize("hasRole('USER')")
 	@WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
-	public ApiResponse updateRV(@RequestBody @WeaverValidatedModel RV rv) {
-		logger.info("Updating RV:  " + rv.getName());
-		return new ApiResponse(SUCCESS, rvRepo.update(rv));
+	public ApiResponse updateRV(@RequestBody @WeaverValidatedModel RepositoryView repositoryView) {
+		logger.info("Updating Repository View:  " + repositoryView.getName());
+		return new ApiResponse(SUCCESS, repositoryViewRepo.update(repositoryView));
 	}
 
 	@RequestMapping(method = RequestMethod.DELETE)
 	@PreAuthorize("hasRole('USER')")
 	@WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
-	public ApiResponse deleteRV(@RequestBody @WeaverValidatedModel RV rv) {
-		logger.info("Deleating RV:  " + rv.getName());
-		rvRepo.delete(rv);
+	public ApiResponse deleteRepositoryView(@RequestBody @WeaverValidatedModel RepositoryView repositoryView) {
+		logger.info("Deleating Repository View:  " + repositoryView.getName());
+		repositoryViewRepo.delete(repositoryView);
 		return new ApiResponse(SUCCESS);
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse getRV(@PathVariable Long id) {
-        return new ApiResponse(SUCCESS, rvRepo.read(id));
+    public ApiResponse getRepositoryView(@PathVariable Long id) {
+        return new ApiResponse(SUCCESS, repositoryViewRepo.read(id));
     }
 
 	@RequestMapping(value = "/types", method = RequestMethod.GET)
 	@PreAuthorize("hasRole('USER')")
-	public ApiResponse getRVTypes() {
-		return new ApiResponse(SUCCESS, RVType.getValues());
+	public ApiResponse getRepositoryViewTypes() {
+		return new ApiResponse(SUCCESS, RepositoryViewType.getValues());
 	}
 	
 }

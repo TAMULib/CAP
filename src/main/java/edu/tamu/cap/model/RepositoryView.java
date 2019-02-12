@@ -11,8 +11,8 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToMany;
 
-import edu.tamu.cap.model.validation.RVValidator;
-import edu.tamu.cap.service.RVType;
+import edu.tamu.cap.model.validation.RepositoryViewValidator;
+import edu.tamu.cap.service.RepositoryViewType;
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 /**
@@ -22,11 +22,11 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
  *
  */
 @Entity
-public class RV extends ValidatingBaseEntity {
+public class RepositoryView extends ValidatingBaseEntity {
 
     @Column
     @Enumerated(EnumType.STRING)
-    private RVType type;
+    private RepositoryViewType type;
 
     @Column(unique = true)
     private String name;
@@ -43,28 +43,28 @@ public class RV extends ValidatingBaseEntity {
     @ManyToMany(fetch = EAGER)
     private List<Schema> schemas;
 
-    public RV() {
-        setModelValidator(new RVValidator());
+    public RepositoryView() {
+        setModelValidator(new RepositoryViewValidator());
         setSchemas(new ArrayList<Schema>());
     }
 
-    public RV(RVType type, String name, String rootUri) {
+    public RepositoryView(RepositoryViewType type, String name, String rootUri) {
         this();
         setType(type);
         setName(name);
         setRootUri(rootUri);
     }
 
-    public RV(RVType type, String name, String rootUri, List<Schema> schemas) {
+    public RepositoryView(RepositoryViewType type, String name, String rootUri, List<Schema> schemas) {
         this(type, name, rootUri);
         setSchemas(schemas);
     }
 
-    public RVType getType() {
+    public RepositoryViewType getType() {
         return type;
     }
 
-    public void setType(RVType type) {
+    public void setType(RepositoryViewType type) {
         this.type = type;
     }
 

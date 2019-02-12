@@ -1,4 +1,4 @@
-package edu.tamu.cap.controller.rvcontext;
+package edu.tamu.cap.controller.repositoryviewcontext;
 
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 
@@ -13,22 +13,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.tamu.cap.service.QueryableRVService;
+import edu.tamu.cap.service.QueryableRepositoryViewService;
 import edu.tamu.weaver.response.ApiResponse;
 
 @RestController
-@RequestMapping("rv-context/{type}/{rvid}/query")
-public class RVContextQueryController {
+@RequestMapping("repository-view-context/{type}/{repositoryViewId}/query")
+public class RepositoryViewContextQueryController {
     
     @RequestMapping(method = POST)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse makeQuery(QueryableRVService<?> rvService, @Param("contextUri") String contextUri, @RequestBody String query) throws Exception {
-        return new ApiResponse(SUCCESS, rvService.query(contextUri, query));
+    public ApiResponse makeQuery(QueryableRepositoryViewService<?> repositoryViewService, @Param("contextUri") String contextUri, @RequestBody String query) throws Exception {
+        return new ApiResponse(SUCCESS, repositoryViewService.query(contextUri, query));
     }
     
     @RequestMapping(method = GET)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse getQueryHelp(QueryableRVService<?> rvService) throws Exception {
+    public ApiResponse getQueryHelp(QueryableRepositoryViewService<?> rvService) throws Exception {
         return new ApiResponse(SUCCESS, "Successfully retrieved query help.", rvService.getQueryHelp());
     }
 
