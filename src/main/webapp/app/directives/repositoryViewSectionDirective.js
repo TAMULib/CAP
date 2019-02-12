@@ -1,4 +1,4 @@
-cap.directive("repository-view-section", function($controller, $timeout, RepositoryViewSectionService) {
+cap.directive("repositoryViewSection", function($controller, $timeout, RepositoryViewSectionService) {
     return {
         templateUrl: "views/directives/repositoryViewSection.html",
         restrict: "E",

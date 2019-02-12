@@ -72,7 +72,7 @@ cap.controller("RepositoryViewManagementController", function($controller, $scop
     $scope.submitClicked = true;
     RepositoryViewRepo.create($scope.repositoryViewToCreate).then(function(res) {
       if(angular.fromJson(res.body).meta.status === "SUCCESS") {
-        $scope.cancelCreate();
+        $scope.cancelCreateRepositoryView();
       }
       $scope.submitClicked = false;
     });

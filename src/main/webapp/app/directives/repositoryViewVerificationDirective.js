@@ -1,4 +1,4 @@
-cap.directive("repository-view-verification", function(RepositoryViewRepo, $q) {
+cap.directive("repositoryViewVerification", function(RepositoryViewRepo, $q) {
   return {
     templateUrl: "views/directives/repositoryViewVerification.html",
     restrict: "E",
