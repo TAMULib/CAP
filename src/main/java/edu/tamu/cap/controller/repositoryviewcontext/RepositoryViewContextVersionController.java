@@ -16,7 +16,7 @@ import edu.tamu.weaver.response.ApiResponse;
 
 @RestController
 @RequestMapping("repository-view-context/{type}/{repositoryViewId}/version")
-public class RVContextVersionController {
+public class RepositoryViewContextVersionController {
     
     @RequestMapping(method = POST)
     @PreAuthorize("hasRole('USER')")
