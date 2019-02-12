@@ -1,7 +1,7 @@
 <form name="irForms.edit" ng-submit="updateRepositoryView()" novalidate>
     <div class="modal-header {{attr.modalHeaderClass}}">
         <button type="button" class="close modal-close" aria-label="Close" ng-click="cancelEditRepositoryView()"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Edit VR</h4>
+        <h4 class="modal-title">Edit Repository View</h4>
     </div>
     <div class="modal-body">
 
@@ -28,7 +28,7 @@
                     model="repositoryViewToEdit"
                     property="name"
                     label="Name"
-                    placeholder="Name of the VR"
+                    placeholder="Name of the Repository View"
                     form="irForms.edit"
                     validations="irForms.validations"
                     results="irForms.getResults()"
@@ -39,7 +39,7 @@
                     model="repositoryViewToEdit"
                     property="rootUri"
                     label="Root URI"
-                    placeholder="Root URI of the VR"
+                    placeholder="Root URI of the Repository View"
                     form="irForms.edit"
                     validations="irForms.validations"
                     results="irForms.getResults()"
@@ -56,7 +56,7 @@
                         model="repositoryViewToEdit"
                         property="username"
                         label="Username"
-                        placeholder="Username of the VR"
+                        placeholder="Username of the Repository View"
                         form="irForms.create"
                         validations="irForms.validations"
                         results="irForms.getResults()"
@@ -68,7 +68,7 @@
                         model="repositoryViewToEdit"
                         property="password"
                         label="Password"
-                        placeholder="Password of the VR"
+                        placeholder="Password of the Repository View"
                         form="irForms.create"
                         validations="irForms.validations"
                         results="irForms.getResults()"
