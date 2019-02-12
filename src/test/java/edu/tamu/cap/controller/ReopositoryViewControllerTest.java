@@ -30,45 +30,45 @@ import edu.tamu.weaver.response.ApiResponse;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(SpringExtension.class)
-public final class RVControllerTest {
+public final class ReopositoryViewControllerTest {
 
     @InjectMocks
-    private RepositoryViewController rVController;
+    private RepositoryViewController repositoryViewController;
 
     @Mock
-    private RepositoryViewRepo iVRepo;
+    private RepositoryViewRepo repositoryViewRepo;
 
-    private RepositoryView fedoraRV;
+    private RepositoryView fedoraRepositoryView;
 
     @BeforeEach
     public void setup() throws JsonParseException, JsonMappingException, IOException {
         MockitoAnnotations.initMocks(this);
 
-        fedoraRV = getMockFedoraRV();
+        fedoraRepositoryView = getMockFedoraRepositoryView();
     }
 
     @Test
-    public void testCreateRV() {
+    public void testCreateRepositoryView() {
         RepositoryView responseRV = null;
 
-        when(iVRepo.create(any(RepositoryView.class))).thenReturn(fedoraRV);
+        when(repositoryViewRepo.create(any(RepositoryView.class))).thenReturn(fedoraRepositoryView);
 
-        ApiResponse response = rVController.createRepositoryView(fedoraRV);
+        ApiResponse response = repositoryViewController.createRepositoryView(fedoraRepositoryView);
         Collection<Object> payload = response.getPayload().values();
         if (payload.size() == 1) {
             responseRV = (RepositoryView) payload.toArray()[0];
         }
 
-        assertEquals(fedoraRV.getId(), responseRV.getId(), "Fedora RV has incorrect ID!");
-        assertEquals(fedoraRV.getName(), responseRV.getName(), "Fedora IR has incorrect Name!");
-        assertEquals(fedoraRV.getRootUri(), responseRV.getRootUri(), "Fedora IR has incorrect Root URI!");
-        assertEquals(fedoraRV.getSchemas(), responseRV.getSchemas(), "Fedora IR has incorrect Schemas!");
-        assertEquals(fedoraRV.getType(), responseRV.getType(), "Fedora IR has incorrect Type!");
-        assertEquals(fedoraRV.getUsername(), responseRV.getUsername(), "Fedora IR has incorrect Username!");
-        assertEquals(fedoraRV.getPassword(), responseRV.getPassword(), "Fedora IR has incorrect Password!");
+        assertEquals(fedoraRepositoryView.getId(), responseRV.getId(), "Fedora Repository View has incorrect ID!");
+        assertEquals(fedoraRepositoryView.getName(), responseRV.getName(), "Fedora Repository View has incorrect Name!");
+        assertEquals(fedoraRepositoryView.getRootUri(), responseRV.getRootUri(), "Fedora Repository View has incorrect Root URI!");
+        assertEquals(fedoraRepositoryView.getSchemas(), responseRV.getSchemas(), "Fedora Repository View has incorrect Schemas!");
+        assertEquals(fedoraRepositoryView.getType(), responseRV.getType(), "Fedora Repository View has incorrect Type!");
+        assertEquals(fedoraRepositoryView.getUsername(), responseRV.getUsername(), "Fedora Repository View has incorrect Username!");
+        assertEquals(fedoraRepositoryView.getPassword(), responseRV.getPassword(), "Fedora Repository View has incorrect Password!");
     }
 
-    private RepositoryView getMockFedoraRV() {
+    private RepositoryView getMockFedoraRepositoryView() {
         // TODO: convert this into json file to be imported.
         List<Schema> schemas = new ArrayList<Schema>();
         Schema schema = new Schema();
@@ -80,7 +80,7 @@ public final class RVControllerTest {
 
         RepositoryView rv = new RepositoryView();
         rv.setId(123456789L);
-        rv.setName("RV Name");
+        rv.setName("Repository View Name");
         rv.setRootUri("http://localhost/fedora");
         rv.setSchemas(schemas);
         rv.setType(FEDORA);
