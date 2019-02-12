@@ -16,8 +16,8 @@ public class VerifyRepositoryViewSettingsController {
 
     @RequestMapping(value = "/ping", method = RequestMethod.POST)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse verifyRVPing(VerifyingRepositoryViewService<?> rvService) throws Exception {
-        rvService.verifyPing();
+    public ApiResponse verifyRVPing(VerifyingRepositoryViewService<?> repositoryViewService) throws Exception {
+        repositoryViewService.verifyPing();
         return new ApiResponse(SUCCESS, "Ping was successful!");
     }
 
