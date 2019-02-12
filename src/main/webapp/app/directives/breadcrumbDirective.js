@@ -10,14 +10,14 @@ cap.directive("breadcrumbs", function() {
 
             $scope.trimName = function(context, index) {
               var name = context.name;
-              if (context.name.indexOf(context.rv.rootUri) === 0) {
-                name = name.replace(context.rv.rootUri, '...').replace(/tx:.*\//, '');
+              if (context.name.indexOf(context.repositoryView.rootUri) === 0) {
+                name = name.replace(context.repositoryView.rootUri, '...').replace(/tx:.*\//, '');
               }
               if(index) {
                 var prev = $scope.breadcrumbs.length > 0 ? $scope.breadcrumbs[index - 1] : undefined;
                 
                 if(prev && !context.isVersion) {
-                  var prevName = prev.name.replace(context.rv.rootUri, '...');
+                  var prevName = prev.name.replace(context.repositoryView.rootUri, '...');
                   name = name.replace(prevName, '...');
                 }
                 if(index === $scope.breadcrumbs.length) {
@@ -33,7 +33,7 @@ cap.directive("breadcrumbs", function() {
             };
 
             var getParent = function(context) {
-                var parentContext = $scope.context.rv.getContext(context.parent.object);
+                var parentContext = $scope.context.repositoryView.getContext(context.parent.object);
                 if(parentContext.hasParent) {
                     getParent(parentContext);
                     $scope.breadcrumbs.push(parentContext);

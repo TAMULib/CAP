@@ -1,50 +1,50 @@
-<form name="rvForms.create" ng-submit="createRv()" novalidate class="ir-forms-create">
+<form name="repositoryViewForms.create" ng-submit="createRepositoryView()" novalidate class="ir-forms-create">
   <div class="modal-header {{attr.modalHeaderClass}}">
-    <button type="button" class="close modal-close" aria-label="Close" ng-click="cancelCreateRv()"><span aria-hidden="true">&times;</span></button>
+    <button type="button" class="close modal-close" aria-label="Close" ng-click="cancelCreateRepositoryView()"><span aria-hidden="true">&times;</span></button>
     <h4 class="modal-title">Create VR</h4>
   </div>
   <div class="modal-body">
 
-    <validationmessage results="rvForms.getResults()"></validationmessage>
+    <validationmessage results="repositoryViewForms.getResults()"></validationmessage>
     <uib-tabset active="activeJustified" justified="true">
       <uib-tab index="0" heading="General">
         <div class="row">
           <div class="col-sm-10 col-sm-offset-1">
 
             <validatedselect
-              model="rvToCreate"
+              model="repositoryViewToCreate"
               property="type"
-              options="rvTypes"
+              options="repositoryViewTypes"
               optionproperty="gloss"
               optionvalue="value"
               label="Type"
               placeholder="Type of the new VR"
-              form="rvForms.create"
-              validations="rvForms.validations"
-              results="rvForms.getResults()"
+              form="repositoryViewForms.create"
+              validations="repositoryViewForms.validations"
+              results="repositoryViewForms.getResults()"
               no-id="true">
             </validatedselect>
 
             <validatedinput
-              model="rvToCreate"
+              model="repositoryViewToCreate"
               property="name"
               label="Name"
               placeholder="Name of the new VR"
-              form="rvForms.create"
-              validations="rvForms.validations"
-              results="rvForms.getResults()"
+              form="repositoryViewForms.create"
+              validations="repositoryViewForms.validations"
+              results="repositoryViewForms.getResults()"
               autocomplete="off"
               no-id="true">
             </validatedinput>
 
             <validatedinput
-              model="rvToCreate"
+              model="repositoryViewToCreate"
               property="rootUri"
               label="Root URI"
               placeholder="Root URI of the new VR"
-              form="rvForms.create"
-              validations="rvForms.validations"
-              results="rvForms.getResults()"
+              form="repositoryViewForms.create"
+              validations="repositoryViewForms.validations"
+              results="repositoryViewForms.getResults()"
               autocomplete="off"
               no-id="true">
             </validatedinput>
@@ -56,25 +56,25 @@
         <div class="row">
             <div class="col-sm-10 col-sm-offset-1">
               <validatedinput
-                model="rvToCreate"
+                model="repositoryViewToCreate"
                 property="username"
                 label="Username"
                 placeholder="Username of the new VR"
-                form="rvForms.create"
-                validations="rvForms.validations"
-                results="rvForms.getResults()"
+                form="repositoryViewForms.create"
+                validations="repositoryViewForms.validations"
+                results="repositoryViewForms.getResults()"
                 autocomplete="off"
                 no-id="true">
               </validatedinput>
 
               <validatedinput
-                model="rvToCreate"
+                model="repositoryViewToCreate"
                 property="password"
                 label="Password"
                 placeholder="Password of the new VR"
-                form="rvForms.create"
-                validations="rvForms.validations"
-                results="rvForms.getResults()"
+                form="repositoryViewForms.create"
+                validations="repositoryViewForms.validations"
+                results="repositoryViewForms.getResults()"
                 autocomplete="off"
                 type="password"
                 no-id="true">
@@ -94,7 +94,7 @@
                 <h3 class="panel-title">This Repository</h3>
               </div>
               <ul class="list-group">
-                <li class="list-group-item clickable" ng-repeat="s in rvToCreate.schemas track by $index" ng-click="rvToCreate.schemas.splice($index,1)">
+                <li class="list-group-item clickable" ng-repeat="s in repositoryViewToCreate.schemas track by $index" ng-click="repositoryViewToCreate.schemas.splice($index,1)">
                   {{s.name}}
                   <span class="glyphicon glyphicon-arrow-right pull-right"></span>
                 </li>
@@ -110,7 +110,7 @@
                 <h3 class="panel-title">All Schemas</h3>
               </div>
               <ul class="list-group">
-                <li class="list-group-item clickable" ng-repeat="s in schemas | containedIn:rvToCreate.schemas:'namespace'" ng-click="rvToCreate.schemas.push(s)">
+                <li class="list-group-item clickable" ng-repeat="s in schemas | containedIn:repositoryViewToCreate.schemas:'namespace'" ng-click="repositoryViewToCreate.schemas.push(s)">
                   <span class="glyphicon glyphicon-arrow-left"></span>
                   {{s.name}}
                 </li>
@@ -123,14 +123,14 @@
       </uib-tab>
 
       <uib-tab index="3" heading="Verify">
-        <rvverification rv="rvToCreate" results="verificationResults"></rvverification>
+        <repository-view-verification repository-view="repositoryViewToCreate" results="verificationResults"></repository-view-verification>
       </uib-tab>
 
     </uib-tabset>
 
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn" ng-class="{'btn-default': rvForms.create.$pristine, 'btn-warning': !rvForms.create.$pristine}" ng-click="cancelCreateRv()">Cancel</button>
-    <button type="submit" class="btn btn-success" ng-disabled="!disableVerify(rvToCreate) && (rvForms.create.$invalid || verificationResults.status !== 'SUCCESS') || submitClicked">Create</button>
+    <button type="button" class="btn" ng-class="{'btn-default': repositoryViewForms.create.$pristine, 'btn-warning': !repositoryViewForms.create.$pristine}" ng-click="cancelCreateRepositoryView()">Cancel</button>
+    <button type="submit" class="btn btn-success" ng-disabled="!disableVerify(repositoryViewToCreate) && (repositoryViewForms.create.$invalid || verificationResults.status !== 'SUCCESS') || submitClicked">Create</button>
   </div>
 </form>

@@ -23,49 +23,49 @@ var apiMapping = {
         'method': 'delete'
     }
   },
-  RVContext: {
-    channel: '/channel/rv-context',
+  RepositoryViewContext: {
+    channel: '/channel/repository-view-context',
     validations: false,
     lazy: true,
     load: {
       'endpoint': '/private/queue',
-      'controller': 'rv-context',
-      'method': ':type/:rvid'
+      'controller': 'repository-view-context',
+      'method': ':type/:repositoryViewId'
     },
-    rvContext: {
+    repositoryViewContext: {
       'endpoint': '/private/queue',
-      'controller': 'rv-context',
-      'method': ':type/:rvid'
+      'controller': 'repository-view-context',
+      'method': ':type/:repositoryViewId'
     },
     metadata: {
       'endpoint': '/private/queue',
-      'controller': 'rv-context',
-      'method': ':type/:rvid/metadata'
+      'controller': 'repository-view-context',
+      'method': ':type/:repositoryViewId/metadata'
     },
     children: {
       'endpoint': '/private/queue',
-      'controller': 'rv-context',
-      'method': ':type/:rvid/children'
+      'controller': 'repository-view-context',
+      'method': ':type/:repositoryViewId/children'
     },
     resource: {
       'endpoint': '/private/queue',
-      'controller': 'rv-context',
-      'method': ':type/:rvid/resource'
+      'controller': 'repository-view-context',
+      'method': ':type/:repositoryViewId/resource'
     },
     version: {
       'endpoint': '/private/queue',
-      'controller': 'rv-context',
-      'method': ':type/:rvid/version'
+      'controller': 'repository-view-context',
+      'method': ':type/:repositoryViewId/version'
     },
     advancedQuery: {
       'endpoint': '/private/queue',
-      'controller': 'rv-context',
-      'method': ':type/:rvid/query'
+      'controller': 'repository-view-context',
+      'method': ':type/:repositoryViewId/query'
     },
     resourceFixity: {
       'endpoint': '/private/queue',
-      'controller': 'rv-context',
-      'method': ':type/:rvid/resource/fixity'
+      'controller': 'repository-view-context',
+      'method': ':type/:repositoryViewId/resource/fixity'
     }
   },
   FixityReport: {
@@ -75,68 +75,68 @@ var apiMapping = {
     load: {
       'endpoint': '/private/queue',
       'httpMethod': 'GET',
-      'controller': 'rv-context',
-      'method': ':type/:rvid/resource/fixity'
+      'controller': 'repository-view-context',
+      'method': ':type/:repositoryViewId/resource/fixity'
     },
     instantiate: {
       'endpoint': '/private/queue',
       'httpMethod': 'GET',
-      'controller': 'rv-context',
-      'method': ':type/:rvid/resource/fixity'
+      'controller': 'repository-view-context',
+      'method': ':type/:repositoryViewId/resource/fixity'
     }
   },
-  VerifyRVSettings: {
+  VerifyRepositoryViewSettings: {
     verifyPing: {
       'endpoint': '/private/queue',
-      'controller': 'rv',
+      'controller': 'repositoryView',
       'method': ':type/verify/ping'
     },
     verifyAuth: {
         'endpoint': '/private/queue',
-        'controller': 'rv',
+        'controller': 'repositoryView',
         'method': ':type/verify/auth'
     },
     verifyContent: {
         'endpoint': '/private/queue',
-        'controller': 'rv',
+        'controller': 'repositoryView',
         'method': ':type/verify/content'
     }
   },
-  RV: {
-    channel: '/channel/rv',
+  RepositoryView: {
+    channel: '/channel/repository-view',
     validations: true,
     all: {
         'endpoint': '/private/queue',
-        'controller': 'rv',
+        'controller': 'repositoryView',
         'method': '',
         'httpMethod': "GET"
     },
     create: {
       'endpoint': '/private/queue',
-      'controller': 'rv',
+      'controller': 'repositoryView',
       'method': '',
       'httpMethod': "POST"
     },
     update: {
         'endpoint': '/private/queue',
-        'controller': 'rv',
+        'controller': 'repositoryView',
         'method': '',
         'httpMethod': "PUT"
     },
     remove: {
         'endpoint': '/private/queue',
-        'controller': 'rv',
+        'controller': 'repositoryView',
         'method': '',
         'httpMethod': "DELETE"
     },
     transaction: {
       'endpoint': '/private/queue',
-      'controller': 'rv-context',
-      'method': ':type/:rvid/transaction'
+      'controller': 'repository-view-context',
+      'method': ':type/:repositoryViewId/transaction'
     },
     getTypes: {
       'endpoint': '/private/queue',
-      'controller': 'rv',
+      'controller': 'repositoryView',
       'method': 'types'
     }
   },

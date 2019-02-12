@@ -1,71 +1,71 @@
-cap.directive("rvverification", function(RVRepo, $q) {
+cap.directive("repository-view-verification", function(RepositoryViewRepo, $q) {
   return {
-    templateUrl: "views/directives/rvVerification.html",
+    templateUrl: "views/directives/repositoryViewVerification.html",
     restrict: "E",
     scope: {
-        rv: "=",
+        repositoryView: "=",
         results: "="
     },
     link: function($scope, attr, elem) {
       $scope.$watch('ir',function() {
-        $scope.rvVerifications = [];
+        $scope.repositoryViewVerifications = [];
       },true);
 
       var types = [];
-      RVRepo.getTypes(types).then(function() {
+      RepositoryViewRepo.getTypes(types).then(function() {
         $scope.disableVerify = function() {
           var typeIsVerifying = false;
           for(var i in types) {
             var type = types[i];
-            if(type.value===$scope.rv.type) {
+            if(type.value===$scope.repositoryView.type) {
               typeIsVerifying = type.verifying===true;
             }
           }
-          return $scope.rv.rootUri && !typeIsVerifying;
+          return $scope.repositoryView.rootUri && !typeIsVerifying;
         };
       });
 
-      $scope.verifyRvConnection = function() {
+      $scope.verifyRepositroyViewConnection = function() {
 
         $scope.results.status = false;
 
-        $scope.rvVerifications = [
+        $scope.repositoryViewVerifications = [
           {
-            name: "Pinging "+$scope.rv.rootUri,
+            name: "Pinging "+$scope.repositoryView.rootUri,
             key: "verifyingPing",
-            execute: RVRepo.verifyPing,
+            execute: RepositoryViewRepo.verifyPing,
             status: "PENDING"
           }
         ];
 
-        if($scope.rv.username && $scope.rv.password) {
-          $scope.rvVerifications.push({
+        if($scope.repositoryView.username && $scope.repositoryView.password) {
+          $scope.repositoryViewVerifications.push({
             name: "Verifyinging Authentication",
             key: "verifyingAuth",
-            execute: RVRepo.verifyAuth,
+            execute: RepositoryViewRepo.verifyAuth,
             status: "PENDING"
           });
         }
 
-        $scope.rvVerifications.push({
+        $scope.repositoryViewVerifications.push({
           name: "Retrieving Top Level Content",
           key: "VerifyingContent",
-          execute: RVRepo.verifyContent,
+          execute: RepositoryViewRepo.verifyContent,
           status: "PENDING"
         });
 
         var chain = $q.when();
-        angular.forEach($scope.rvVerifications, function (verification) {
+        angular.forEach($scope.repositoryViewVerifications, function (verification) {
           chain = chain.then(function() {
-            return verification.execute($scope.rv).then(function(res) {
+            return verification.execute($scope.repositoryView).then(function(res) {
               verification.status = angular.fromJson(res.body).meta.status;
             });
           });
         });
         chain.then(function() {
           var status = "SUCCESS";
-          for(var i in $scope.rvVerifications) {
-            var verification = $scope.rvVerifications[i];
+          for(var i in $scope.repositoryViewVerifications) {
+            var verification = $scope.repositoryViewVerifications[i];
             if(verification.status!==status) {
               status=verification.status;
               break;

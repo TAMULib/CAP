@@ -1,10 +1,10 @@
-cap.controller("IrContextController", function ($controller, $location, $routeParams, $scope, $timeout, $filter, $q, RVRepo, FixityReport) {
+cap.controller("IrContextController", function ($controller, $location, $routeParams, $scope, $timeout, $filter, $q, RepositoryViewRepo, FixityReport) {
 
   angular.extend(this, $controller('CoreAdminController', {
     $scope: $scope
   }));
 
-  $scope.rvForm = {};
+  $scope.repositoryViewForm = {};
 
   $scope.submitClicked = false;
 
@@ -14,19 +14,19 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     $scope.theaterMode = mode ? mode : !$scope.theaterMode;
   };
 
-  RVRepo.ready().then(function () {
+  RepositoryViewRepo.ready().then(function () {
 
-    $scope.rv = RVRepo.findByName(decodeURI($routeParams.irName));
+    $scope.repositoryView = RepositoryViewRepo.findByName(decodeURI($routeParams.irName));
 
-    if(!$scope.rv) $location.path("/error/404");
+    if(!$scope.repositoryView) $location.path("/error/404");
 
     if ($routeParams.context !== undefined) {
-      $scope.rv.contextUri = decodeURI($routeParams.context);
+      $scope.repositoryView.contextUri = decodeURI($routeParams.context);
     } else {
-      $location.search("context", $scope.rv.contextUri);
+      $location.search("context", $scope.repositoryView.contextUri);
     }
 
-    $scope.context = $scope.rv.loadContext($scope.rv.contextUri);
+    $scope.context = $scope.repositoryView.loadContext($scope.repositoryView.contextUri);
 
     $scope.createContainer = function (form) {
       $scope.submitClicked = true;
@@ -76,28 +76,28 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     };
 
     $scope.resetCreateContainer = function () {
-      $scope.rvForm.createContainer = {
+      $scope.repositoryViewForm.createContainer = {
         name: ""
       };
       $scope.closeModal();
     };
 
     $scope.resetUploadResource = function () {
-      if ($scope.rvForm.uploadResource) {
-        delete $scope.rvForm.uploadResource.file;
+      if ($scope.repositoryViewForm.uploadResource) {
+        delete $scope.repositoryViewForm.uploadResource.file;
       }
       $scope.closeModal();
     };
 
     $scope.resetAdvancedUpdate = function () {
-      $scope.rvForm.advancedUpdate = $scope.context.getQueryHelp();
+      $scope.repositoryViewForm.advancedUpdate = $scope.context.getQueryHelp();
       $scope.closeModal();
     };
 
     $scope.resetAddMetadataModal = function() {
-      $scope.rvForm.addMetadata.$setPristine();
-      $scope.rvForm.addMetadata.entries.length = 0;
-      $scope.rvForm.addMetadata.entries.push({});
+      $scope.repositoryViewForm.addMetadata.$setPristine();
+      $scope.repositoryViewForm.addMetadata.entries.length = 0;
+      $scope.repositoryViewForm.addMetadata.entries.push({});
       $scope.closeModal();
     };
 
@@ -120,24 +120,24 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
 
     };
 
-    $scope.cancelDeleteRvContext = function (rvContext) {
-      $scope.rvContextToDelete = {};
+    $scope.cancelDeleteRepositoryViewContext = function (repositoryViewContext) {
+      $scope.repositoryViewContextToDelete = {};
       $scope.closeModal();
     };
 
-    $scope.deleteRvContext = function () {
+    $scope.deleteRepositoryViewContext = function () {
       $scope.submitClicked = true;
 
-      var rv = $scope.context.rv;
+      var repositoryView = $scope.context.repositoryView;
       var currentTriple = $scope.context.triple;
       var isResource = $scope.context.resource;
 
       var deleteContext = isResource ? $scope.context.removeResources : $scope.context.removeContainers;
 
-      $scope.context = rv.loadContext($scope.context.parent.object);
+      $scope.context = repositoryView.loadContext($scope.context.parent.object);
 
       deleteContext([currentTriple]).then(function () {
-        $scope.context = rv.loadContext($scope.context.uri, true);
+        $scope.context = repositoryView.loadContext($scope.context.uri, true);
         $scope.submitClicked = false;
       });
 
@@ -146,13 +146,13 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     $scope.revertVersion = function () {
       $scope.submitClicked = true;
 
-      var rv = $scope.context.rv;
+      var repositoryView = $scope.context.repositoryView;
       var currentContext = $scope.context;
 
-      $scope.context = rv.loadContext($scope.context.parent.object);
+      $scope.context = repositoryView.loadContext($scope.context.parent.object);
 
       $scope.context.revertVersion(currentContext).then(function () {
-        $scope.context = rv.loadContext($scope.context.uri, true);
+        $scope.context = repositoryView.loadContext($scope.context.uri, true);
         $scope.submitClicked = false;
       });
     };
@@ -160,22 +160,22 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     $scope.deleteVersion = function () {
       $scope.submitClicked = true;
 
-      var rv = $scope.context.rv;
+      var repositoryView = $scope.context.repositoryView;
       var currentContext = $scope.context;
 
-      $scope.context = rv.loadContext($scope.context.parent.object);
+      $scope.context = repositoryView.loadContext($scope.context.parent.object);
 
-      rv.removeCachedContext($scope.context.uri);
+      repositoryView.removeCachedContext($scope.context.uri);
 
       $scope.context.deleteVersion(currentContext).then(function () {
-        $scope.context = rv.loadContext($scope.context.uri, true);
+        $scope.context = repositoryView.loadContext($scope.context.uri, true);
         $scope.submitClicked = false;
       });
     };
 
     $scope.openFixity = function(uriOfContextToCheck) {
       $scope.fixityReport = new FixityReport({
-        rv: $scope.context.rv,
+        repositoryView: $scope.context.repositoryView,
         contextUri: uriOfContextToCheck
       });
       $scope.openModal('#fixityModalButton');
@@ -187,12 +187,12 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     };
 
     $scope.startTransaction = function() {
-      $scope.context.rv.startTransaction();
+      $scope.context.repositoryView.startTransaction();
     };
 
     $scope.commitTransaction = function() {
       $scope.submitClicked = true;
-      $scope.context.rv.commitTransaction().then(function() {
+      $scope.context.repositoryView.commitTransaction().then(function() {
         $scope.closeModal();
         $scope.submitClicked = false;
       });
@@ -200,7 +200,7 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
 
     $scope.rollbackTransaction = function() {
       $scope.submitClicked = true;
-      $scope.context.rv.rollbackTransaction().then(function() {
+      $scope.context.repositoryView.rollbackTransaction().then(function() {
         $scope.closeModal();
         $scope.submitClicked = false;
       });
@@ -267,9 +267,9 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
         var iiifUri = null;
 
         if ($scope.context.resource && $scope.context.hasParent) {
-          var parentContext = $scope.context.rv.getContext($scope.context.parent.object);
+          var parentContext = $scope.context.repositoryView.getContext($scope.context.parent.object);
           if (parentContext.hasParent) {
-            var grandParentContext = $scope.context.rv.getContext(parentContext.parent.object);
+            var grandParentContext = $scope.context.repositoryView.getContext(parentContext.parent.object);
             contextProperties = grandParentContext.properties;
             iiifUri = grandParentContext.uri;
           }
@@ -302,7 +302,7 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
             }
           }
           if (hasManifest) {
-            return appConfig.iiifServiceUrl+$scope.rv.type.toLowerCase()+"/presentation/"+iiifUri.replace($scope.rv.rootUri,"");
+            return appConfig.iiifServiceUrl+$scope.repositoryView.type.toLowerCase()+"/presentation/"+iiifUri.replace($scope.repositoryView.rootUri,"");
           }
         }
       }

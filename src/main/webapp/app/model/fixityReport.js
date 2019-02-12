@@ -7,7 +7,7 @@ cap.model("FixityReport", function FixityReport(HttpMethodVerbs) {
       
       fixityReport.finished = false;
 
-      var fixityPromise = fixityReport.rv.performRequest(fixityReport.getMapping().load, {
+      var fixityPromise = fixityReport.repositoryView.performRequest(fixityReport.getMapping().load, {
         method: HttpMethodVerbs.GET,
         query: {
           contextUri: fixityReport.contextUri

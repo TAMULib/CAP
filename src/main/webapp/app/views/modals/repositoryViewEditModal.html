@@ -1,6 +1,6 @@
-<form name="irForms.edit" ng-submit="updateRv()" novalidate>
+<form name="irForms.edit" ng-submit="updateRepositoryView()" novalidate>
     <div class="modal-header {{attr.modalHeaderClass}}">
-        <button type="button" class="close modal-close" aria-label="Close" ng-click="cancelEditRv()"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close modal-close" aria-label="Close" ng-click="cancelEditRepositoryView()"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title">Edit VR</h4>
     </div>
     <div class="modal-body">
@@ -12,9 +12,9 @@
                 <div class="row">
                 <div class="col-sm-10 col-sm-offset-1">
                   <validatedselect
-                    model="rvToEdit"
+                    model="repositoryViewToEdit"
                     property="type"
-                    options="rvTypes"
+                    options="repositoryViewTypes"
                     optionproperty="gloss"
                     optionvalue="value"
                     label="Type"
@@ -25,7 +25,7 @@
                     no-id="true">
                   </validatedselect>
                   <validatedinput
-                    model="rvToEdit"
+                    model="repositoryViewToEdit"
                     property="name"
                     label="Name"
                     placeholder="Name of the VR"
@@ -36,7 +36,7 @@
                     no-id="true">
                   </validatedinput>
                   <validatedinput
-                    model="rvToEdit"
+                    model="repositoryViewToEdit"
                     property="rootUri"
                     label="Root URI"
                     placeholder="Root URI of the VR"
@@ -53,7 +53,7 @@
             <div class="row">
                 <div class="col-sm-10 col-sm-offset-1">
                     <validatedinput
-                        model="rvToEdit"
+                        model="repositoryViewToEdit"
                         property="username"
                         label="Username"
                         placeholder="Username of the VR"
@@ -65,7 +65,7 @@
                     </validatedinput>
 
                     <validatedinput
-                        model="rvToEdit"
+                        model="repositoryViewToEdit"
                         property="password"
                         label="Password"
                         placeholder="Password of the VR"
@@ -90,7 +90,7 @@
                     <h3 class="panel-title">This Repository</h3>
                     </div>
                     <ul class="list-group">
-                    <li class="list-group-item clickable" ng-repeat="s in rvToEdit.schemas track by $index" ng-click="irForms.edit.$setDirty();rvToEdit.schemas.splice($index,1);">
+                    <li class="list-group-item clickable" ng-repeat="s in repositoryViewToEdit.schemas track by $index" ng-click="irForms.edit.$setDirty();repositoryViewToEdit.schemas.splice($index,1);">
                         {{s.name}}
                         <span class="glyphicon glyphicon-arrow-right pull-right"></span>
                     </li>
@@ -106,7 +106,7 @@
                     <h3 class="panel-title">All Schemas</h3>
                     </div>
                     <ul class="list-group">
-                    <li class="list-group-item clickable" ng-repeat="s in schemas | containedIn:rvToEdit.schemas:'namespace'" ng-click="irForms.edit.$setDirty();rvToEdit.schemas.push(s);">
+                    <li class="list-group-item clickable" ng-repeat="s in schemas | containedIn:repositoryViewToEdit.schemas:'namespace'" ng-click="irForms.edit.$setDirty();repositoryViewToEdit.schemas.push(s);">
                         <span class="glyphicon glyphicon-arrow-left"></span>
                         {{s.name}}
                     </li>
@@ -118,12 +118,12 @@
 
         </uib-tab>
         <uib-tab index="3" heading="Verification">
-            <rvverification rv="rvToEdit" results="verificationResults"></rvverification>
+            <repository-view-verification repository-view="repositoryViewToEdit" results="verificationResults"></repository-view-verification>
         </uib-tab>
     </div>
     <div class="modal-footer">
-        <small class="text-warning pull-left" ng-if="!disableVerify(rvToEdit) && irForms.edit.$dirty&&verificationResults.status!=='SUCCESS'">VR settings must be verified before edits can be saved</small>
-        <button type="button" class="btn btn-default" ng-class="{'btn-default': irForms.edit.$pristine, 'btn-warning': !irForms.edit.$pristine}" ng-click="cancelEditRv()">Cancel</button>
-        <button type="submit" class="btn btn-success" ng-disabled="!irForms.edit.$dirty || irForms.edit.$invalid || submitClicked || (!disableVerify(rvToEdit) && irForms.edit.$dirty && verificationResults.status !== 'SUCCESS')">Edit</button>
+        <small class="text-warning pull-left" ng-if="!disableVerify(repositoryViewToEdit) && irForms.edit.$dirty&&verificationResults.status!=='SUCCESS'">VR settings must be verified before edits can be saved</small>
+        <button type="button" class="btn btn-default" ng-class="{'btn-default': irForms.edit.$pristine, 'btn-warning': !irForms.edit.$pristine}" ng-click="cancelEditRepositoryView()">Cancel</button>
+        <button type="submit" class="btn btn-success" ng-disabled="!irForms.edit.$dirty || irForms.edit.$invalid || submitClicked || (!disableVerify(repositoryViewToEdit) && irForms.edit.$dirty && verificationResults.status !== 'SUCCESS')">Edit</button>
     </div>
 </form>

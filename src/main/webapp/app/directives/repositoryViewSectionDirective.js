@@ -1,6 +1,6 @@
-cap.directive("rvsection", function($controller, $timeout, IrSectionService) {
+cap.directive("repository-view-section", function($controller, $timeout, RepositoryViewSectionService) {
     return {
-        templateUrl: "views/directives/rvSection.html",
+        templateUrl: "views/directives/repositoryViewSection.html",
         restrict: "E",
         transclude: true,
         scope: {
@@ -29,12 +29,12 @@ cap.directive("rvsection", function($controller, $timeout, IrSectionService) {
 
           $scope.manuallyCollapse = function() {
             $scope.contentExpanded = false;
-            IrSectionService.setManuallyCollapsed($scope.title, true);
+            RepositoryViewSectionService.setManuallyCollapsed($scope.title, true);
           };
 
           $scope.manuallyExpande = function() {
             $scope.contentExpanded = true;
-            IrSectionService.setManuallyCollapsed($scope.title, false);
+            RepositoryViewSectionService.setManuallyCollapsed($scope.title, false);
           };
 
           $scope.selectAll = function(array) {
@@ -69,7 +69,7 @@ cap.directive("rvsection", function($controller, $timeout, IrSectionService) {
           var un = $scope.$watchCollection("filteredList||list", function() {
             if($scope.getListLength()) {
               $scope.isArray = Array.isArray($scope.list);
-              $scope.contentExpanded = IrSectionService.getManuallyCollapsed($scope.title) ? false : true;
+              $scope.contentExpanded = RepositoryViewSectionService.getManuallyCollapsed($scope.title) ? false : true;
               un();
             }
           });
@@ -78,17 +78,17 @@ cap.directive("rvsection", function($controller, $timeout, IrSectionService) {
     };
 });
 
-cap.service("IrSectionService", function() {
+cap.service("RepositoryViewSectionService", function() {
 
-    var rvSectionServ = this;
+    var repositoryViewSectionService = this;
 
     var manuallyCollapsed = {};
 
-    rvSectionServ.setManuallyCollapsed = function(title, collapsed) {
+    repositoryViewSectionService.setManuallyCollapsed = function(title, collapsed) {
       manuallyCollapsed[title] = collapsed;
     };
 
-    rvSectionServ.getManuallyCollapsed = function(title) {
+    repositoryViewSectionService.getManuallyCollapsed = function(title) {
       return manuallyCollapsed[title];
     };
 

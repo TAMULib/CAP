@@ -1,4 +1,4 @@
-<div class="rv-context">
+<div class="repository-view-context">
   <div class="page-header clearfix">
     <div class="btn-group pull-right context-actions-btn" uib-dropdown keyboard-nav>
       <button type="button" class="btn btn-default" uib-dropdown-toggle>
@@ -13,12 +13,12 @@
       </modal>
       <ul ng-if="!context.isVersion" class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
         <li class="dropdown-header">Container Actions</li>
-        <li role="menuitem" ng-class="{'disabled': context.rv.getTransaction().active}" ng-if="context.features.transacting" ng-click="context.rv.getTransaction().active||startTransaction()"><a href="#"><span class="glyphicon glyphicon-play-circle"></span> Start Transaction</a></li>
-        <li role="menuitem" ng-class="{'disabled': context.rv.getTransaction().active}" ng-if="context.features.versioning" ng-click="context.rv.getTransaction().active||openModal('#versionsModal')"><a href="#"><span class="glyphicon glyphicon-scissors"></span> Versions</a></li>
+        <li role="menuitem" ng-class="{'disabled': context.repositoryView.getTransaction().active}" ng-if="context.features.transacting" ng-click="context.repositoryView.getTransaction().active||startTransaction()"><a href="#"><span class="glyphicon glyphicon-play-circle"></span> Start Transaction</a></li>
+        <li role="menuitem" ng-class="{'disabled': context.repositoryView.getTransaction().active}" ng-if="context.features.versioning" ng-click="context.repositoryView.getTransaction().active||openModal('#versionsModal')"><a href="#"><span class="glyphicon glyphicon-scissors"></span> Versions</a></li>
         <li role="menuitem" class="disabled"><a href="#"><span class="glyphicon glyphicon-move"></span> Move</a></li>
         <li role="menuitem" class="disabled"><a href="#"><span class="glyphicon glyphicon-random"></span> Migrate</a></li>
         <li role="menuitem" class="disabled"><a href="#"><span class="glyphicon glyphicon-export"></span> Export</a></li>
-        <li role="menuitem bg-danger" ng-click="openModal('#rvContextDeleteModal')"><a href="#" class="bg-danger"><span class="glyphicon glyphicon-trash"></span> Delete</a></li>
+        <li role="menuitem bg-danger" ng-click="openModal('#repositoryViewContextDeleteModal')"><a href="#" class="bg-danger"><span class="glyphicon glyphicon-trash"></span> Delete</a></li>
         <li ng-if="!context.resource && getIIIFUrl()" role="menuitem"><a href="" ng-click="copyToClipboard(getIIIFUrl(), 'IIIFUrl')">Copy IIIF Manifest URL</a></li>
 
         <li class="divider"></li>
@@ -32,7 +32,7 @@
         <li ng-if="isAdmin" class="divider"></li>
         <li ng-if="isAdmin" class="dropdown-header">Admin Actions</li>
         <li ng-if="isAdmin && context.features.queryable" role="menuitem"><a href="" ng-click="openModal('#advancedUpdate')"><span class="glyphicon glyphicon glyphicon-edit"></span> Advanced Update</a></li>
-        <li ng-if="isAdmin" role="menuitem"><a href="admin/rv"><span class="glyphicon glyphicon-cog"></span> Admin Settings</a></li>
+        <li ng-if="isAdmin" role="menuitem"><a href="admin/repository-view"><span class="glyphicon glyphicon-cog"></span> Admin Settings</a></li>
 
       </ul>
       <ul ng-if="context.isVersion && context.features.versioning" class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
@@ -44,11 +44,11 @@
         <li ng-if="isAdmin" class="divider"></li>
         <li ng-if="isAdmin" class="dropdown-header">Admin Actions</li>
         <li ng-if="isAdmin && context.features.queryable" role="menuitem"><a href="" ng-click="openModal('#advancedUpdate')"><span class="glyphicon glyphicon glyphicon-edit"></span> Advanced Update</a></li>
-        <li ng-if="isAdmin" role="menuitem"><a href="admin/rv"><span class="glyphicon glyphicon-cog"></span> Admin Settings</a></li>
+        <li ng-if="isAdmin" role="menuitem"><a href="admin/repository-view"><span class="glyphicon glyphicon-cog"></span> Admin Settings</a></li>
 
       </ul>
     </div>
-    <h1>{{rv.name}} <small class="clickable" ng-click="rv.loadContext(rv.rootUri)">(<span class="glyphicon glyphicon-home"></span> {{rv.rootUri}})</small></h1>
+    <h1>{{repositoryView.name}} <small class="clickable" ng-click="repositoryView.loadContext(repositoryView.rootUri)">(<span class="glyphicon glyphicon-home"></span> {{repositoryView.rootUri}})</small></h1>
   </div>
 
   <breadcrumbs ng-if="context.hasParent !== undefined" context="context"></breadcrumbs>
@@ -62,11 +62,11 @@
     </div>
   </div>
 
-  <div ng-if="context.rv.getTransaction().active" class="alert alert-info clearfix" role="alert">
+  <div ng-if="context.repositoryView.getTransaction().active" class="alert alert-info clearfix" role="alert">
     <span>
       <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> This VR is currently in transaction.
-      <button ng-if="context.rv.getTransaction().secondsRemaining<31" class="btn btn-sm btn-info" ng-click="context.rv.refreshTransaction()">
-        <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> 0:{{context.rv.getTransaction().secondsRemaining}}
+      <button ng-if="context.repositoryView.getTransaction().secondsRemaining<31" class="btn btn-sm btn-info" ng-click="context.repositoryView.refreshTransaction()">
+        <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> 0:{{context.repositoryView.getTransaction().secondsRemaining}}
       </button>
     </span>
     <div class="pull-right">
@@ -136,12 +136,12 @@
     </div>
 
     <div class="row">
-      <rvsection
+      <repository-view-section
         context="context"
         title="'Metadata'"
         type="'metadatum'"
         list="context.metadata"
-        list-element-action="rv.loadContext(le)"
+        list-element-action="repositoryView.loadContext(le)"
         add-action="openModal('#addMetadata')"
         edit-action="updateMetadatum(triple,newObject)"
         remove-action="context.removeMetadata(items)">
@@ -178,16 +178,16 @@
             <del ng-if="removeListElements && selectedListElements.indexOf(t)!==-1">{{t.object | removeQuotes}}</del>
           </dd>
         </dl>
-      </rvsection>
+      </repository-viewsection>
     </div>
 
     <div class="row" ng-if="!context.resource">
-      <rvsection
+      <repository-view-section
         context="context"
         title="'Children'"
         type="'child'"
         list="context.children"
-        list-element-action="rv.loadContext(le)"
+        list-element-action="repositoryView.loadContext(le)"
         add-action="openModal('#createContainer')"
         remove-action="context.removeContainers(items)">
         <ol class="list-group" ng-show="contentExpanded">
@@ -196,16 +196,16 @@
             <input ng-show="removeListElements" type="checkbox" class="pull-right" ng-checked="selectedListElements.indexOf(le.triple)!==-1" ng-click="selectedListElements.indexOf(le.triple)===-1?selectedListElements.push(le.triple):selectedListElements.splice(selectedListElements.indexOf(le.triple),1)">
           </li>
         </ol>
-      </rvsection>
+      </repository-viewsection>
     </div>
 
     <div class="row resource-section" ng-if="!context.resource">
-      <rvsection
+      <repository-view-section
         context="context"
         title="'Resources'"
         type="'resource'"
         list="context.children"
-        list-element-action="rv.loadContext(le)"
+        list-element-action="repositoryView.loadContext(le)"
         add-action="openModal('#uploadResource')"
         remove-action="context.removeResources(items)">
         <ol class="list-group" ng-show="contentExpanded">
@@ -217,7 +217,7 @@
             <input ng-show="removeListElements" type="checkbox" class="pull-right" ng-checked="selectedListElements.indexOf(le.triple)!==-1" ng-click="selectedListElements.indexOf(le.triple)===-1?selectedListElements.push(le.triple):selectedListElements.splice(selectedListElements.indexOf(le.triple),1)">
           </li>
         </ol>
-      </rvsection>
+      </repository-viewsection>
     </div>
   </div>
 
@@ -253,8 +253,8 @@
   </modal>
 
   <modal
-    modal-id="rvContextDeleteModal"
-    modal-view="views/modals/rvContextDeleteModal.html"
+    modal-id="repositoryViewContextDeleteModal"
+    modal-view="views/modals/repositoryViewContextDeleteModal.html"
     modal-header-class="modal-header-danger"
     wvr-modal-backdrop="static">
   </modal>

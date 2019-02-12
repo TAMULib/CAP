@@ -4,7 +4,7 @@
 
   <h1>Schema Management</h1>
 
-  <div class="panel panel-default rv-container">
+  <div class="panel panel-default repository-view-container">
 
     <div class="panel-heading clearfix">
       <modal
@@ -19,7 +19,7 @@
     </div>
 
     <div class="panel-body">
-      <table ng-table="tableParams" class="table table-hover rv-table">
+      <table ng-table="tableParams" class="table table-hover repository-view-table">
         <tbody>
           <tr ng-repeat="schema in $data | orderBy: 'name'">
             <td data-title="'Name'">
