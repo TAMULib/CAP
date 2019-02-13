@@ -32,13 +32,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.cap.controller.aspect.annotation.PayloadArgName;
-import edu.tamu.cap.exceptions.IRInjectionException;
-import edu.tamu.cap.model.IR;
-import edu.tamu.cap.model.ircontext.TransactionDetails;
-import edu.tamu.cap.model.repo.IRRepo;
-import edu.tamu.cap.service.IRService;
-import edu.tamu.cap.service.IRType;
-import edu.tamu.cap.service.TransactingIRService;
+import edu.tamu.cap.exceptions.RepositoryViewInjectionException;
+import edu.tamu.cap.model.RepositoryView;
+import edu.tamu.cap.model.repo.RepositoryViewRepo;
+import edu.tamu.cap.model.repositoryviewcontext.TransactionDetails;
+import edu.tamu.cap.service.RepositoryViewService;
+import edu.tamu.cap.service.RepositoryViewType;
+import edu.tamu.cap.service.TransactingRepositoryViewService;
 import edu.tamu.weaver.context.SpringContext;
 import edu.tamu.weaver.response.ApiResponse;
 
@@ -49,7 +49,7 @@ public class TransactionRefreshAspect {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private IRRepo irRepo;
+    private RepositoryViewRepo repositoryViewRepo;
     
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
@@ -60,7 +60,7 @@ public class TransactionRefreshAspect {
     @Autowired
     private HttpServletRequest request;
 
-    @AfterReturning(pointcut = "execution(* edu.tamu.cap.controller.ircontext..*(..))", returning="apiResponse")
+    @AfterReturning(pointcut = "execution(* edu.tamu.cap.controller.repositoryviewcontext..*(..))", returning="apiResponse")
     public void refreshTransaction(JoinPoint joinPoint, ApiResponse apiResponse) throws Throwable {
                 
         Optional<Cookie> cookie = Optional.empty();
@@ -88,43 +88,43 @@ public class TransactionRefreshAspect {
             MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
             Method method = methodSignature.getMethod();
 
-            Optional<TransactingIRService<?>> transactingIrService = Optional.empty();
+            Optional<TransactingRepositoryViewService<?>> transactingRepositoryViewService = Optional.empty();
             for (Parameter parameter : method.getParameters()) {
-                Optional<IRService<?>> irService = Optional.empty();
+                Optional<RepositoryViewService<?>> repositoryViewService = Optional.empty();
                 
-                if (IRService.class.isAssignableFrom(parameter.getType())) {
-                    IRService<?> irs = SpringContext.bean(getIRType().getGloss());
-                    Optional<Long> irid = getIRId();
-                    if (irid.isPresent()) {
-                        irs.setIr(irRepo.read(irid.get()));
+                if (RepositoryViewService.class.isAssignableFrom(parameter.getType())) {
+                    RepositoryViewService<?> repositoryViews = SpringContext.bean(getRepositoryViewType().getGloss());
+                    Optional<Long> repositoryViewid = getRepositoryViewId();
+                    if (repositoryViewid.isPresent()) {
+                        repositoryViews.setRepositoryView(repositoryViewRepo.read(repositoryViewid.get()));
                     } else {
-                        irs.setIr(getIRFromRequest());
+                        repositoryViews.setRepositoryView(getRepositoryViewFromRequest());
                     }
-                    irService = Optional.of(irs);
+                    repositoryViewService = Optional.of(repositoryViews);
                 }
                 
                 
-                if (irService.isPresent()) {
-                    transactingIrService = Optional.of((TransactingIRService<?>) irService.get());
+                if (repositoryViewService.isPresent()) {
+                    transactingRepositoryViewService = Optional.of((TransactingRepositoryViewService<?>) repositoryViewService.get());
                     break;
                 }
             }
             
-            TransactionDetails transactionDetails = transactingIrService.get().makeTransactionDetails(transactionToken, transactionExpiration);
+            TransactionDetails transactionDetails = transactingRepositoryViewService.get().makeTransactionDetails(transactionToken, transactionExpiration);
             
             simpMessagingTemplate.convertAndSend("/queue/transaction/"+request.getUserPrincipal().getName(), new ApiResponse(SUCCESS, BROADCAST, transactionDetails));
             
         }  
     }
     
-    private IRType getIRType() {
-        return IRType.valueOf(getPathVariable("type"));
+    private RepositoryViewType getRepositoryViewType() {
+        return RepositoryViewType.valueOf(getPathVariable("type"));
     }
 
-    private Optional<Long> getIRId() {
+    private Optional<Long> getRepositoryViewId() {
         Optional<Long> id = Optional.empty();
         try {
-            id = Optional.of(Long.parseLong(getPathVariable("irid")));
+            id = Optional.of(Long.parseLong(getPathVariable("repositoryViewId")));
         } catch (NumberFormatException e) {
             logger.info("Id not provided in path!");
         }
@@ -137,12 +137,12 @@ public class TransactionRefreshAspect {
         return pathVariables.get(pathKey);
     }
     
-    private IR getIRFromRequest() throws JsonProcessingException, IOException, IRInjectionException {
+    private RepositoryView getRepositoryViewFromRequest() throws JsonProcessingException, IOException, RepositoryViewInjectionException {
         JsonNode payloadNode = objectMapper.readTree(request.getInputStream());
-        return (IR) getArgumentFromBody(IR.class, Optional.empty(), payloadNode);
+        return (RepositoryView) getArgumentFromBody(RepositoryView.class, Optional.empty(), payloadNode);
     }
     
-    private Object getArgumentFromBody(Class<?> argClass, Optional<PayloadArgName> payloadArgName, JsonNode payloadNode) throws IRInjectionException {
+    private Object getArgumentFromBody(Class<?> argClass, Optional<PayloadArgName> payloadArgName, JsonNode payloadNode) throws RepositoryViewInjectionException {
         Optional<Object> argValue = mapObjectFromNode(argClass, payloadNode);
         if (!argValue.isPresent()) {
             Iterator<Map.Entry<String, JsonNode>> iterator = payloadNode.fields();
@@ -157,7 +157,7 @@ public class TransactionRefreshAspect {
             if (argClass.equals(String.class)) {
                 argValue = Optional.of("");
             } else {
-                throw new IRInjectionException("No " + argClass.getSimpleName() + " argument!");
+                throw new RepositoryViewInjectionException("No " + argClass.getSimpleName() + " argument!");
             }
         }
         return argValue.get();
@@ -166,7 +166,7 @@ public class TransactionRefreshAspect {
     private Optional<Object> mapObjectFromNode(Class<?> argClass, JsonNode node) {
         Optional<Object> argValue = Optional.empty();
         try {
-            if (!IRService.class.isAssignableFrom(argClass)) {
+            if (!RepositoryViewService.class.isAssignableFrom(argClass)) {
                 if (argClass.equals(String.class)) {
                     if (node.isTextual()) {
                         argValue = Optional.of(node.asText());

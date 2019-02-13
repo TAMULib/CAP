@@ -9,16 +9,16 @@ cap.config(function ($locationProvider, $routeProvider) {
       when('/home', {
         redirectTo: '/',
       }).
-      when('/admin/ir', {
-        templateUrl: 'views/admin/irManagement.html',
-        controller: 'IrManagementController'
+      when('/admin/repository-view', {
+        templateUrl: 'views/admin/repositoryViewManagement.html',
+        controller: 'RepositoryViewManagementController'
       }).
       when('/admin/schema', {
         templateUrl: 'views/admin/schemaManagement.html',
         controller: 'SchemaManagementController'
       }).
-      when('/ir/:irName', {
-        templateUrl: 'views/irContext.html',
+      when('/repository-view/:irName', {
+        templateUrl: 'views/repositoryViewContext.html',
         controller: 'IrContextController'
       }).
       when('/users', {

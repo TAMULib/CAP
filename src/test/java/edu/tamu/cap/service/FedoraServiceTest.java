@@ -27,8 +27,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import edu.tamu.cap.CapApplication;
-import edu.tamu.cap.model.IR;
-import edu.tamu.cap.model.response.IRContext;
+import edu.tamu.cap.model.RepositoryView;
+import edu.tamu.cap.model.response.RepositoryViewContext;
 import edu.tamu.cap.model.response.Version;
 
 @ExtendWith(MockitoExtension.class)
@@ -62,7 +62,7 @@ public final class FedoraServiceTest {
             private static final long serialVersionUID = 3185237776585513150L;
             {
                 put("type", "fedora");
-                put("irid", "fedora");
+                put("rvid", "fedora");
             }
         });
 
@@ -70,12 +70,12 @@ public final class FedoraServiceTest {
 
         MockitoAnnotations.initMocks(this);
 
-        fedoraService.setIr(new IR(IRType.FEDORA, "Mock Fedora", "http://localhost:9100/mock/fcrepo/rest"));
+        fedoraService.setRepositoryView(new RepositoryView(RepositoryViewType.FEDORA, "Mock Fedora", "http://localhost:9100/mock/fcrepo/rest"));
     }
 
     @Test
     public void createVersion() throws Exception {
-        IRContext context = fedoraService.createVersion(TEST_CONTEXT_URI, TEST_VERSION1_NAME);
+        RepositoryViewContext context = fedoraService.createVersion(TEST_CONTEXT_URI, TEST_VERSION1_NAME);
         assertVersions(context.getVersions());
     }
 

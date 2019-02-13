@@ -47,18 +47,18 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import edu.tamu.cap.exceptions.IRVerificationException;
-import edu.tamu.cap.model.IR;
-import edu.tamu.cap.model.ircontext.FedoraTransactionDetails;
-import edu.tamu.cap.model.ircontext.TransactionDetails;
+import edu.tamu.cap.exceptions.RepositoryViewVerificationException;
+import edu.tamu.cap.model.RepositoryView;
+import edu.tamu.cap.model.repositoryviewcontext.FedoraTransactionDetails;
+import edu.tamu.cap.model.repositoryviewcontext.TransactionDetails;
 import edu.tamu.cap.model.response.FixityReport;
-import edu.tamu.cap.model.response.IRContext;
+import edu.tamu.cap.model.response.RepositoryViewContext;
 import edu.tamu.cap.model.response.Triple;
 import edu.tamu.cap.model.response.Version;
 import edu.tamu.cap.util.StringUtil;
 
 @Service("Fedora")
-public class FedoraService implements IRService<Model>, VersioningIRService<Model>, VerifyingIRService<Model>, TransactingIRService<Model>, QueryableIRService<Model>, FixityIRService<Model> {
+public class FedoraService implements RepositoryViewService<Model>, VersioningRepositoryViewService<Model>, VerifyingRepositoryViewService<Model>, TransactingRepositoryViewService<Model>, QueryableRepositoryViewService<Model>, FixityRepositoryViewService<Model> {
 
     private final static String LDP_CONTAINS_PREDICATE = "http://www.w3.org/ns/ldp#contains";
 
@@ -103,39 +103,39 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private IR ir;
+    private RepositoryView repositoryView;
 
     @Override
-    public void verifyPing() throws FcrepoOperationFailedException, URISyntaxException, IRVerificationException {
+    public void verifyPing() throws FcrepoOperationFailedException, URISyntaxException, RepositoryViewVerificationException {
         FcrepoClient client = buildClient();
-        FcrepoResponse response = new GetBuilder(new URI(ir.getRootUri()), client).perform();
+        FcrepoResponse response = new GetBuilder(new URI(repositoryView.getRootUri()), client).perform();
         if (response.getStatusCode() == -1) {
-            throw new IRVerificationException("No response from " + ir.getRootUri());
+            throw new RepositoryViewVerificationException("No response from " + repositoryView.getRootUri());
         }
     }
 
     @Override
-    public void verifyAuth() throws FcrepoOperationFailedException, URISyntaxException, IRVerificationException {
+    public void verifyAuth() throws FcrepoOperationFailedException, URISyntaxException, RepositoryViewVerificationException {
         FcrepoClient client = buildClient();
-        FcrepoResponse response = new GetBuilder(new URI(ir.getRootUri()), client).perform();
+        FcrepoResponse response = new GetBuilder(new URI(repositoryView.getRootUri()), client).perform();
         if (response.getStatusCode() != 200) {
-            throw new IRVerificationException("Authenitcation failed. Status " + response.getStatusCode());
+            throw new RepositoryViewVerificationException("Authenitcation failed. Status " + response.getStatusCode());
         }
     }
 
     @Override
     public void verifyRoot() throws Exception {
         FcrepoClient client = buildClient();
-        FcrepoResponse response = new GetBuilder(new URI(ir.getRootUri() + "/fcr:metadata"), client).accept("application/rdf+xml").perform();
+        FcrepoResponse response = new GetBuilder(new URI(repositoryView.getRootUri() + "/fcr:metadata"), client).accept("application/rdf+xml").perform();
         Model model = createRdfModelFromResponse(response);
         Optional<String> root = getLiteralForProperty(model, model.createProperty(FEDORA_ROOT_PREDICATE));
         if (root.isPresent()) {
-            throw new IRVerificationException("URI is not a Fedora root!");
+            throw new RepositoryViewVerificationException("URI is not a Fedora root!");
         }
     }
 
     @Override
-    public IRContext getIRContext(String contextUri) throws Exception {
+    public RepositoryViewContext getRepositoryViewContext(String contextUri) throws Exception {
 
         Optional<Cookie> cookie = Optional.empty();
 
@@ -155,10 +155,10 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
 
             String transactionToken = cookieObject.get("transactionToken").asText();
 
-            String contextPath = contextUri.replace(ir.getRootUri(), "");
+            String contextPath = contextUri.replace(repositoryView.getRootUri(), "");
 
             URI transactionURI = URI.create(transactionToken);
-            URI rootURI = URI.create(ir.getRootUri());
+            URI rootURI = URI.create(repositoryView.getRootUri());
 
             StringBuilder strngBldr = new StringBuilder();
 
@@ -187,7 +187,7 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
         FcrepoResponse response = new GetBuilder(new URI(contextUri + "/fcr:metadata"), client).accept("application/rdf+xml").perform();
 
         Model model = createRdfModelFromResponse(response);
-        return buildIRContext(model, contextUri);
+        return buildRepositoryViewContext(model, contextUri);
     }
 
     private Model createRdfModelFromResponse(FcrepoResponse response) throws Exception {
@@ -202,14 +202,14 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
     }
 
     @Override
-    public void deleteIRContext(String uri) throws Exception {
+    public void deleteRepositoryViewContext(String uri) throws Exception {
         logger.info("Deletion or contianer: {}", uri);
         deleteContainer(uri);
     }
 
     @Override
-    public List<Triple> getTriples(IRService<?> irService, String contextUri) throws Exception {
-        IRContext context = getIRContext(contextUri);
+    public List<Triple> getTriples(RepositoryViewService<?> repositoryViewService, String contextUri) throws Exception {
+        RepositoryViewContext context = getRepositoryViewContext(contextUri);
 
         List<Triple> allTriples = new ArrayList<Triple>();
 
@@ -221,7 +221,7 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
     }
 
     @Override
-    public IRContext createChild(String contextUri, List<Triple> metadata) throws Exception {
+    public RepositoryViewContext createChild(String contextUri, List<Triple> metadata) throws Exception {
         FcrepoClient client = buildClient();
         PostBuilder post = new PostBuilder(new URI(contextUri), client);
 
@@ -237,20 +237,20 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
         FcrepoResponse response = post.perform();
         URI location = response.getLocation();
         logger.debug("Container creation status and location: {}, {}", response.getStatusCode(), location);
-        return getIRContext(contextUri);
+        return getRepositoryViewContext(contextUri);
     }
 
     @Override
     public List<Triple> getChildren(String contextUri) throws Exception {
         List<Triple> childrenTriples = new ArrayList<Triple>();
-        getIRContext(contextUri).getChildren().forEach(childContext->{
+        getRepositoryViewContext(contextUri).getChildren().forEach(childContext->{
             childrenTriples.add(childContext.getTriple());
         });
         return childrenTriples;
     }
 
     @Override
-    public IRContext createMetadata(String contextUri,Triple triple) throws Exception {
+    public RepositoryViewContext createMetadata(String contextUri,Triple triple) throws Exception {
         FcrepoClient client = buildClient();
         PatchBuilder patch = new PatchBuilder(new URI(contextUri + "/fcr:metadata"), client);
         String sparql = "INSERT { " + triple.toString() + " . } WHERE {}";
@@ -263,18 +263,18 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
         FcrepoResponse response = patch.perform();
         URI location = response.getLocation();
         logger.debug("Metadata creation status and location: {}, {}", response.getStatusCode(), location);
-        return getIRContext(contextUri);
+        return getRepositoryViewContext(contextUri);
     }
 
 
     @Override
     public List<Triple> getMetadata(String contextUri) throws Exception {
-        IRContext context = getIRContext(contextUri);
+        RepositoryViewContext context = getRepositoryViewContext(contextUri);
         return context.getMetadata();
     }
 
     @Override
-    public IRContext updateMetadata(String contextUri, Triple originalTriple, String newValue) throws Exception {
+    public RepositoryViewContext updateMetadata(String contextUri, Triple originalTriple, String newValue) throws Exception {
 
         StringBuilder stngBldr = new StringBuilder();
 
@@ -291,11 +291,11 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
         checkFedoraResult(response);
         URI location = response.getLocation();
         logger.debug("Metadata update status and location: {}, {}", response.getStatusCode(), location);
-        return getIRContext(contextUri);
+        return getRepositoryViewContext(contextUri);
     }
 
     @Override
-    public IRContext deleteMetadata(String contextUri, Triple triple) throws Exception {
+    public RepositoryViewContext deleteMetadata(String contextUri, Triple triple) throws Exception {
 
         logger.debug("Attempting to delete");
 
@@ -315,11 +315,11 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
         checkFedoraResult(response);
         URI location = response.getLocation();
         logger.debug("Metadata delete status and location: {}, {}", response.getStatusCode(), location);
-        return getIRContext(contextUri);
+        return getRepositoryViewContext(contextUri);
     }
 
     @Override
-    public IRContext createResource(String contextUri, MultipartFile file) throws Exception {
+    public RepositoryViewContext createResource(String contextUri, MultipartFile file) throws Exception {
         FcrepoClient client = buildClient();
         PostBuilder post = new PostBuilder(new URI(contextUri), client);
         post.body(file.getInputStream(), file.getContentType());
@@ -328,12 +328,12 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
         checkFedoraResult(response);
         URI location = response.getLocation();
         logger.debug("Resource creation status and location: {}, {}", response.getStatusCode(), location);
-        return getIRContext(contextUri);
+        return getRepositoryViewContext(contextUri);
     }
 
     @Override
-    public IRContext getResource(String contextUri) throws Exception {
-        return getIRContext(contextUri);
+    public RepositoryViewContext getResource(String contextUri) throws Exception {
+        return getRepositoryViewContext(contextUri);
     }
 
     @Override
@@ -351,7 +351,7 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
         model.read(response.getBody(), null, "text/turtle");
         model.createResource("").addProperty(DC.title, "Fixity Report");
 
-        FixityReport fixityReportContext = FixityReport.of(buildIRContext(model, contextUri).getProperties());
+        FixityReport fixityReportContext = FixityReport.of(buildRepositoryViewContext(model, contextUri).getProperties());
 
         return fixityReportContext;
     }
@@ -386,7 +386,7 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
     }
 
     @Override
-    public IRContext createVersion(String contextUri, String name) throws Exception {
+    public RepositoryViewContext createVersion(String contextUri, String name) throws Exception {
 
         if (name.isEmpty()) {
             SimpleDateFormat output = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -402,16 +402,16 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
         URI location = response.getLocation();
         logger.info("Version creation status and location: {}, {}", response.getStatusCode(), location);
 
-        return getIRContext(contextUri);
+        return getRepositoryViewContext(contextUri);
     }
 
     @Override
-    public IRContext restoreVersion(String contextUri) throws Exception {
-        IRContext versionContext = getIRContext(contextUri);
+    public RepositoryViewContext restoreVersion(String contextUri) throws Exception {
+        RepositoryViewContext versionContext = getRepositoryViewContext(contextUri);
         String parentUri = versionContext.getParent().getSubject();
         URI uri = URI.create(contextUri);
         new PatchBuilder(uri, buildClient()).perform();
-        return getIRContext(parentUri);
+        return getRepositoryViewContext(parentUri);
     }
 
     @Override
@@ -433,7 +433,7 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
 
         FcrepoClient client = buildClient();
 
-        URI transactionContextURI = new URI(ir.getRootUri()+"fcr:tx");
+        URI transactionContextURI = new URI(repositoryView.getRootUri()+"fcr:tx");
 
         FcrepoResponse response = new PostBuilder(transactionContextURI, client).perform();
 
@@ -500,12 +500,12 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
     }
 
     @Override
-    public void setIr(IR ir) {
-        this.ir = ir;
+    public void setRepositoryView(RepositoryView repositoryView) {
+        this.repositoryView = repositoryView;
     }
 
     @Override
-    public IRContext query(String contextUri, String sparql) throws Exception {
+    public RepositoryViewContext query(String contextUri, String sparql) throws Exception {
         FcrepoClient client = buildClient();
         PatchBuilder patch = new PatchBuilder(new URI(contextUri + "/fcr:metadata"), client);
         patch.body(new ByteArrayInputStream(sparql.getBytes()));
@@ -514,7 +514,7 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
         checkFedoraResult(response);
         URI location = response.getLocation();
         logger.debug("Advanced update query status and location: {}, {}", response.getStatusCode(), location);
-        return getIRContext(contextUri);
+        return getRepositoryViewContext(contextUri);
     }
 
     @Override
@@ -522,7 +522,7 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
 
         StringBuilder strbldr = new StringBuilder();
 
-        ir.getSchemas().forEach(schema->{
+        repositoryView.getSchemas().forEach(schema->{
             strbldr.append("PREFIX ").append(schema.getAbbreviation()).append(": <").append(schema.getNamespace()).append(">\n");
         });
 
@@ -535,9 +535,9 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
     }
 
     @Override
-    public synchronized IRContext buildIRContext(Model model, String contextUri) throws JsonProcessingException, UnsupportedEncodingException, IOException {
+    public synchronized RepositoryViewContext buildRepositoryViewContext(Model model, String contextUri) throws JsonProcessingException, UnsupportedEncodingException, IOException {
 
-        IRContext irContext = new IRContext(Triple.of(contextUri, RDF_TYPE_PREDICATE, FEDORA_CONTAINER_PREDICATE));
+        RepositoryViewContext repositoryViewContext = new RepositoryViewContext(Triple.of(contextUri, RDF_TYPE_PREDICATE, FEDORA_CONTAINER_PREDICATE));
 
         // System.out.println("\n::\n");
         model.listStatements().forEachRemaining(statement -> {
@@ -555,14 +555,14 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
 
                 switch (predicate) {
                 case FEDORA_HAS_PARENT_PREDICATE:
-                    irContext.setParent(triple);
+                    repositoryViewContext.setParent(triple);
                     break;
                 case LDP_CONTAINS_PREDICATE:
-                    irContext.addChild(new IRContext(triple));
+                    repositoryViewContext.addChild(new RepositoryViewContext(triple));
                     break;
                 case FEDORA_HAS_VERSIONS_PREDICATE:
                     try {
-                        irContext.setVersions(getVersions(triple.getSubject()));
+                        repositoryViewContext.setVersions(getVersions(triple.getSubject()));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -571,13 +571,13 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
 
                     for (String prefix : PROPERTY_PREFIXES) {
                         if (predicate.startsWith(prefix)) {
-                            irContext.addProperty(triple);
+                            repositoryViewContext.addProperty(triple);
                         }
                     }
 
-                    for (String prefix : ir.getMetadataPrefixes()) {
+                    for (String prefix : repositoryView.getMetadataPrefixes()) {
                         if (predicate.startsWith(prefix)) {
-                            irContext.addMetadum(triple);
+                            repositoryViewContext.addMetadum(triple);
                         }
                     }
                 }
@@ -588,14 +588,14 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
 
                 switch (object) {
                 case FEDORA_BINRAY_PREDICATE:
-                    irContext.getTriple().setObject(FEDORA_BINRAY_PREDICATE);
+                    repositoryViewContext.getTriple().setObject(FEDORA_BINRAY_PREDICATE);
                     break;
                 case FEDORA_VERSION:
 
                     String verionName = contextUri.substring(contextUri.lastIndexOf("/") + 1, contextUri.length());
-                    irContext.setVersion(verionName);
+                    repositoryViewContext.setVersion(verionName);
 
-                    irContext.setParent(Triple.of(object, FEDORA_HAS_PARENT_PREDICATE, contextUri.replace("/fcr:versions/" + verionName, "")));
+                    repositoryViewContext.setParent(Triple.of(object, FEDORA_HAS_PARENT_PREDICATE, contextUri.replace("/fcr:versions/" + verionName, "")));
 
                     break;
                 default:
@@ -611,16 +611,16 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
             rootFromContext = rootFromContext.replaceAll("tx:.*\\/", "");
         }
 
-        if(rootFromContext.equals(ir.getRootUri())) {
-            irContext.setName("Root");
+        if(rootFromContext.equals(repositoryView.getRootUri())) {
+            repositoryViewContext.setName("Root");
         } else {
-            irContext.setName(contextUri);
+            repositoryViewContext.setName(contextUri);
         }
 
-        if (irContext.isResource()) {
+        if (repositoryViewContext.isResource()) {
             Optional<String> fileName = getLiteralForProperty(model, model.createProperty(EBU_FILENAME_PREDICATE));
             if (fileName.isPresent()) {
-                irContext.setName(fileName.get());
+                repositoryViewContext.setName(fileName.get());
             }
         } else {
             Optional<String> title = getLiteralForProperty(model, RDFS.label);
@@ -629,19 +629,19 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
             }
 
             if (title.isPresent()) {
-                irContext.setName(title.get());
+                repositoryViewContext.setName(title.get());
             }
         }
 
-        if (irContext.getIsVersion()) {
-            irContext.setName(irContext.getName() + " (" + irContext.getVersion() + ")");
+        if (repositoryViewContext.getIsVersion()) {
+            repositoryViewContext.setName(repositoryViewContext.getName() + " (" + repositoryViewContext.getVersion() + ")");
         }
 
-        return featureSupport(irContext);
+        return featureSupport(repositoryViewContext);
     }
 
     private FcrepoClient buildClient() {
-        return (ir.getUsername() == null || ir.getPassword() == null) ? FcrepoClient.client().build() : FcrepoClient.client().credentials(ir.getUsername(), ir.getPassword()).build();
+        return (repositoryView.getUsername() == null || repositoryView.getPassword() == null) ? FcrepoClient.client().build() : FcrepoClient.client().credentials(repositoryView.getUsername(), repositoryView.getPassword()).build();
     }
 
     private Triple craftTriple(Statement statement) {
@@ -676,8 +676,8 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
         return model;
     }
 
-    public IR getIR() {
-        return ir;
+    public RepositoryView getRepositoryView() {
+        return repositoryView;
     }
 
 }
