@@ -1,11 +1,11 @@
-/* 
- * UserRepoImpl.java 
- * 
- * Version: 
- *     $Id$ 
- * 
- * Revisions: 
- *     $Log$ 
+/*
+ * UserRepoImpl.java
+ *
+ * Version:
+ *     $Id$
+ *
+ * Revisions:
+ *     $Log$
  */
 package edu.tamu.cap.model.repo.impl;
 
@@ -20,7 +20,7 @@ import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
 
 /**
  * Implementaiton of the user repository.
- * 
+ *
  * @author
  *
  */
@@ -31,10 +31,10 @@ public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> impleme
 
     /**
      * Creates application user in the user repository
-     * 
+     *
      * @param uin
      *            Long
-     * 
+     *
      * @see edu.tamu.app.model.repo.custom.UserRepoCustom#create(java.lang.Long)
      */
     @Override
@@ -50,6 +50,13 @@ public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> impleme
     public synchronized User create(String uin, String firstName, String lastName, String role) {
         Optional<User> user = userRepo.findByUsername(uin);
         return user.isPresent() ? user.get() : userRepo.save(new User(uin, firstName, lastName, role));
+    }
+
+    @Override
+    public synchronized User create(String email, String firstName, String lastName, String role, String password) {
+        Optional<User> user = userRepo.findByUsername(email);
+        return user.isPresent() ? user.get() : userRepo.save(new User(email, firstName, lastName, role, password));
+//        return userRepo.save(new User(email, firstName, lastName, password, role));
     }
 
     /**
