@@ -49,7 +49,7 @@ public class User extends AbstractWeaverUserDetails {
     private String lastName;
 
     @JsonView(ApiView.Partial.class)
-    @Column(nullable = false, unique = true)
+    @Column(nullable = true, unique = true)
     private String email;
 
     @Column
@@ -173,7 +173,7 @@ public class User extends AbstractWeaverUserDetails {
 	@Override
 	@JsonIgnore
 	public String getPassword() {
-		return null;
+		return password;
 	}
 
     /**
