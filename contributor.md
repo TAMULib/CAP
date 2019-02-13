@@ -65,7 +65,7 @@ Changes:
 
 In addition to a well formated PR we would also appreciate granular commits with descriptive messages. For instance a good commit message may be `Moved /foo endpoint logic into a FooService`, whereas `Everything I did Friday` is less granualr or descriptive.
 
-If your commits do not conform to these recomendation you might consider rebasing your PR. instructions for how this might work can be found here.
+If your commits do not conform to these recomendation you might consider rebasing your PR. Instructions for how this might work can be found [here](https://help.github.com/articles/about-git-rebase/).
 
 Once a PR is made it will be reviewed by one of CAPS contributors. The review will result in the PR being accepted and merged, a descriptive request for changes, or the PR being closed along with a detailed explaination.
 
