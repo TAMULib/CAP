@@ -20,7 +20,7 @@ public class EmailTemplateService {
     private ObjectMapper objectMapper;
 
 	public EmailTemplate getEmailTemplate(String templateName) throws IOException {
-        EmailTemplate emailTemplate = objectMapper.readValue(fileService.getFileFromResource("classpath:/config/emails/" + templateName+".json"), new TypeReference<EmailTemplate>() {});
+        EmailTemplate emailTemplate = objectMapper.readValue(fileService.getFileFromResource("config/emails/" + templateName+".json"), new TypeReference<EmailTemplate>() {});
 		return emailTemplate;
 	}
 

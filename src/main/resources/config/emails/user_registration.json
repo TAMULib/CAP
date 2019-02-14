@@ -1,7 +1,6 @@
 {
   "name": "Registration Email",
   "subject": "Cap Account Registration",
-  "message": "To complete registration of your Cap account, please click the link
-             below:\n\n\{\{REGISTRATION_URL\}\}"
+  "message": "To complete registration of your Cap account, please click the link below:\n\n{REGISTRATION_URL}"
  }
 

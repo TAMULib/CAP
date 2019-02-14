@@ -88,6 +88,7 @@ public class User extends AbstractWeaverUserDetails {
 
     public User(String email, String firstName, String lastName, String role, String password) {
         this(email);
+        setEmail(email);
         setFirstName(firstName);
         setLastName(lastName);
         setRole(role == null ? null : Role.valueOf(role));

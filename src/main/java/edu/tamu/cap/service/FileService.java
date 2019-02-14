@@ -16,8 +16,8 @@ public class FileService {
     @Autowired
     private ResourcePatternResolver resourcePatternResolver;
 
-    public File getFileFromResource(String templateName) throws IOException {
-        Resource resource = resourcePatternResolver.getResource("classpath:/config/emails/" + templateName+".json");
+    public File getFileFromResource(String fileName) throws IOException {
+        Resource resource = resourcePatternResolver.getResource("classpath:"+fileName);
         if (resource.getURI().getScheme().equals("jar")) {
             return createTempFileFromStream(resource.getInputStream());
         }

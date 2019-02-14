@@ -58,6 +58,7 @@ public class AuthController extends WeaverAuthController {
     @Autowired
     private AppUserCredentialsService appUserCredentialsService;
 
+    @Override
     @RequestMapping(value = "/register", method = { POST, GET })
     public ApiResponse registration(@RequestBody(required = false) Map<String, String> data, @RequestParam Map<String, String> parameters) {
 
@@ -141,6 +142,7 @@ public class AuthController extends WeaverAuthController {
         return new ApiResponse(SUCCESS, "Registration was successful. Please login.", user);
     }
 
+    @Override
     @RequestMapping(value = "/login", method = POST)
     public ApiResponse login(@RequestBody Map<String, String> data) {
 

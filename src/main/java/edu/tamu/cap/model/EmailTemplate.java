@@ -8,6 +8,8 @@ public class EmailTemplate {
 
     private String message;
 
+    public EmailTemplate() {}
+
     /**
      * Create a new EmailTemplate
      *
