@@ -24,7 +24,7 @@ Bug Report, and can be 'N/A' for Feature Requests]
 
 Desired Behavior:
 
-[A description the expected/desired behavior of the application]
+[A description of the expected/desired behavior of the application]
 
 
 Relevant Information:
@@ -33,7 +33,7 @@ Relevant Information:
 
 ````
 
-Once an issue has been filed it will be currated by a CAP developer and recieve the appropriate labeling.
+Once an issue has been filed it will be curated by a CAP developer and receive the appropriate labeling.
 
 #### Creating Pull Requests:
 
@@ -66,9 +66,9 @@ Changes:
 
 ```
 
-In addition to a well formated PR we would also appreciate granular commits with descriptive messages. For instance a good commit message may be `Moved /foo endpoint logic into a FooService`, whereas `Everything I did Friday` is less granular or descriptive.
+In addition to a well formatted PR we would also appreciate granular commits with descriptive messages. For instance a good commit message may be `Moved /foo endpoint logic into a FooService`, whereas `Everything I did Friday` is less granular or descriptive.
 
-If your commits do not conform to these recommendation you might consider rebasing your PR. Instructions for how this might work can be found [here](https://help.github.com/articles/about-git-rebase/).
+If your commits do not conform to these recommendations you might consider rebasing your PR. Instructions for how this might work can be found [here](https://help.github.com/articles/about-git-rebase/).
 
 
 #### Good Luck!
