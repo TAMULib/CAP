@@ -5,6 +5,8 @@ var appConfig = {
     'allowAnonymous': true,
     'anonymousRole': 'ROLE_ANONYMOUS',
 
+    'authStrategies': ['emailRegistration'],
+
     'authService': window.location.protocol + '//' + window.location.host + window.location.base+'/auth',
     'webService': window.location.protocol + '//' + window.location.host + window.location.base,
 
