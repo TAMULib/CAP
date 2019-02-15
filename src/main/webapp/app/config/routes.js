@@ -1,4 +1,4 @@
-cap.config(function ($locationProvider, $routeProvider, appConfig) {
+cap.config(function ($locationProvider, $routeProvider) {
 
       $locationProvider.html5Mode(true);
 
