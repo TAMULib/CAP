@@ -1,4 +1,4 @@
-cap.config(function ($locationProvider, $routeProvider, $sceDelegateProvider, appConfig) {
+cap.config(function ($locationProvider, $routeProvider, appConfig) {
 
       $locationProvider.html5Mode(true);
 
@@ -41,12 +41,5 @@ cap.config(function ($locationProvider, $routeProvider, $sceDelegateProvider, ap
       otherwise({
           redirectTo: '/error/404'
       });
-
-      $sceDelegateProvider.resourceUrlWhitelist([
-        // Allow same origin resource loads.
-        'self',
-        // Allow loading from our assets domain.  Notice the difference between * and **.
-        'https://*.library.tamu.edu/**'
-      ]);
 
   });
