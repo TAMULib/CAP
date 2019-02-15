@@ -17,5 +17,4 @@ cap.run(function($route, $rootScope, $location) {
         }
         return original.apply($location, [path]);
     };
-
 });
