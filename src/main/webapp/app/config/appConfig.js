@@ -33,7 +33,11 @@ var appConfig = {
 
     'mockRole': 'admin',
 
-    'contentMap': {"image": ["image/jpeg","image/png","image/gif"],"seadragon": ["image/jp2","image/tiff"], "plaintext": ["text/plain", "text/html", "text/javascript", "text/css", "application/json"]},
+    'contentMap': {
+      "image": ["image/jpeg","image/png","image/gif"],
+      "plaintext": ["text/plain", "text/html", "text/css", "text/javascript", "text/csv", "text/markdown", "text/calendar", "text/xml",  "application/xml", "application/json"],
+      "seadragon": ["image/jp2","image/tiff"], 
+    },
 
     'cantaloupeBaseUrl': 'https://api-dev.library.tamu.edu/iiif/2/',
     'fedoraPath': '/fcrepo/rest/',
