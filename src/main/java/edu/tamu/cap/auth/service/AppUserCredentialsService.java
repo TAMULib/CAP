@@ -96,8 +96,8 @@ public class AppUserCredentialsService extends UserCredentialsService<User, User
 
         String userIdentifier = credentials.getEmail();
 
-        for (String uin : admins) {
-            if (uin.equals(userIdentifier)) {
+        for (String candidateIdentifier : admins) {
+            if (candidateIdentifier.equals(userIdentifier)) {
                 role = Role.ROLE_ADMIN;
                 credentials.setRole(role.toString());
             }
