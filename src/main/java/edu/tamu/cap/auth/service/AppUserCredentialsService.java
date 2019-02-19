@@ -59,7 +59,7 @@ public class AppUserCredentialsService extends UserCredentialsService<User, User
             }
         } else {
             if (isExternalAuthEnabled()) {
-                user = userRepo.create(credentials.getUin(), credentials.getFirstName(), credentials.getLastName(), getDefaultRole(credentials).toString());
+                user = userRepo.create(credentials.getEmail(), credentials.getFirstName(), credentials.getLastName(), getDefaultRole(credentials).toString());
             }
         }
 
@@ -94,10 +94,10 @@ public class AppUserCredentialsService extends UserCredentialsService<User, User
             credentials.setRole(role.toString());
         }
 
-        String shibUin = credentials.getUin();
+        String userIdentifier = credentials.getEmail();
 
         for (String uin : admins) {
-            if (uin.equals(shibUin)) {
+            if (uin.equals(userIdentifier)) {
                 role = Role.ROLE_ADMIN;
                 credentials.setRole(role.toString());
             }
