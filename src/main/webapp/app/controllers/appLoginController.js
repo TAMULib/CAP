@@ -8,8 +8,8 @@ cap.controller('AppLoginController', function ($controller, $location, $scope, U
         return (appConfig.authStrategies.indexOf(strategy) > -1);
     };
 
-    $scope.isShibEnabled = function() {
-        return $scope.checkAuthStrategy('shibboleth');
+    $scope.isExternalEnabled = function() {
+        return $scope.checkAuthStrategy('weaverAuth');
     };
 
     $scope.isEmailEnabled = function() {
