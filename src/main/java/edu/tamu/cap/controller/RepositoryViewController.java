@@ -32,7 +32,7 @@ public class RepositoryViewController {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@RequestMapping(method = RequestMethod.POST)
-    @PreAuthorize("hasRole('CURATOR')")
+    @PreAuthorize("hasRole('ADMIN')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createRepositoryView(@RequestBody @WeaverValidatedModel RepositoryView repositoryView) {
         logger.info("Creating Repository View:  " + repositoryView.getName() + " with schema " + repositoryView.getSchemas());
@@ -54,7 +54,7 @@ public class RepositoryViewController {
 	}
 
 	@RequestMapping(method = RequestMethod.DELETE)
-    @PreAuthorize("hasRole('CURATOR')")
+    @PreAuthorize("hasRole('ADMIN')")
 	@WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
 	public ApiResponse deleteRepositoryView(@RequestBody @WeaverValidatedModel RepositoryView repositoryView) {
 		logger.info("Deleating Repository View:  " + repositoryView.getName());

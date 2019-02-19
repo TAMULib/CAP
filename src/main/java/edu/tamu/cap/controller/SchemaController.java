@@ -33,7 +33,7 @@ public class SchemaController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @RequestMapping(method = RequestMethod.POST)
-    @PreAuthorize("hasRole('CURATOR')")
+    @PreAuthorize("hasRole('ADMIN')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createSchema(@RequestBody @WeaverValidatedModel Schema schema) {
         logger.info("Creating schema:  " + schema.getName());
@@ -47,7 +47,7 @@ public class SchemaController {
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    @PreAuthorize("hasRole('CURATOR')")
+    @PreAuthorize("hasRole('ADMIN')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateSchema(@RequestBody @WeaverValidatedModel Schema schema) {
         logger.info("Updating schema:  " + schema.getName());
@@ -55,7 +55,7 @@ public class SchemaController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
-    @PreAuthorize("hasRole('CURATOR')")
+    @PreAuthorize("hasRole('ADMIN')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
     public ApiResponse deleteSchema(@RequestBody @WeaverValidatedModel Schema schema) {
         logger.info("Deleating schema:  " + schema.getName());

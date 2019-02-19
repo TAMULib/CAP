@@ -121,8 +121,46 @@
         </div>
 
       </uib-tab>
+      <uib-tab index="3" heading="Curators">
 
-      <uib-tab index="3" heading="Verify">
+        <div class="row">
+
+          <div class="col-xs-6">
+
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">This Repository</h3>
+              </div>
+              <ul class="list-group">
+                <li class="list-group-item clickable" ng-repeat="curator in repositoryViewToCreate.curators track by $index" ng-click="repositoryViewToCreate.curators.splice($index,1)">
+                  {{curator.firstName}} {{curator.lastName}}
+                  <span class="glyphicon glyphicon-arrow-right pull-right"></span>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+
+          <div class="col-xs-6">
+
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">All Curators</h3>
+              </div>
+              <ul class="list-group">
+                <li class="list-group-item clickable" ng-repeat="curator in curators | containedIn:repositoryViewToCreate.curators:'username'" ng-click="repositoryViewToCreate.curators.push(curator)">
+                  <span class="glyphicon glyphicon-arrow-left"></span>
+                  {{curator.firstName}} {{curator.lastName}}
+                </li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+      </uib-tab>
+
+      <uib-tab index="4" heading="Verify">
         <repository-view-verification repository-view="repositoryViewToCreate" results="verificationResults"></repository-view-verification>
       </uib-tab>
 
