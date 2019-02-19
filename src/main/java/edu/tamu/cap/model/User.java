@@ -68,19 +68,19 @@ public class User extends AbstractWeaverUserDetails {
      * Constructor for the application user
      *
      */
-    public User(String uin) {
-        setUsername(uin);
+    public User(String email) {
+        setUsername(email);
     }
 
     /**
-     * Constructor for application user with uin passed.
+     * Constructor for application user with external auth.
      *
      * @param uin
      *            Long
      *
      */
-    public User(String uin, String firstName, String lastName, String role) {
-        this(uin);
+    public User(String email, String firstName, String lastName, String role) {
+        this(email);
         setFirstName(firstName);
         setLastName(lastName);
         setRole(role == null ? null : Role.valueOf(role));

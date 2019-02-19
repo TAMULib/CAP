@@ -38,18 +38,18 @@ public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> impleme
      * @see edu.tamu.app.model.repo.custom.UserRepoCustom#create(java.lang.Long)
      */
     @Override
-    public synchronized User create(String uin) {
-    	Optional<User> user = userRepo.findByUsername(uin);
-        return user.isPresent() ? user.get() : userRepo.save(new User(uin));
+    public synchronized User create(String email) {
+        Optional<User> user = userRepo.findByUsername(email);
+        return user.isPresent() ? user.get() : userRepo.save(new User(email));
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public synchronized User create(String uin, String firstName, String lastName, String role) {
-        Optional<User> user = userRepo.findByUsername(uin);
-        return user.isPresent() ? user.get() : userRepo.save(new User(uin, firstName, lastName, role));
+    public synchronized User create(String email, String firstName, String lastName, String role) {
+        Optional<User> user = userRepo.findByUsername(email);
+        return user.isPresent() ? user.get() : userRepo.save(new User(email, firstName, lastName, role));
     }
 
     @Override
