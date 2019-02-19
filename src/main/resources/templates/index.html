@@ -56,7 +56,7 @@
                     <username></username> <span class="caret"></span>
                   </a>
                   <ul class="dropdown-menu" role="menu">
-                    <li ng-if="!isUser()"><a href="users">Manage Users</a></li>
+                    <li ng-if="isAdmin()"><a href="users">Manage Users</a></li>
                     <li ng-if="isAdmin() || isAssuming() == 'true'" role="presentation" class="divider"></li>
                     <li ng-if="isAdmin() || isAssuming() == 'true'" role="presentation" class="dropdown-header">Admin Actions header</li>
                     <li ng-if="isAdmin() || isAssuming() == 'true'">

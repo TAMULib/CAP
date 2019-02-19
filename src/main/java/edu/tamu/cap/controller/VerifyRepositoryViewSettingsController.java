@@ -15,21 +15,21 @@ import edu.tamu.weaver.response.ApiResponse;
 public class VerifyRepositoryViewSettingsController {
 
     @RequestMapping(value = "/ping", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse verifyRVPing(VerifyingRepositoryViewService<?> repositoryViewService) throws Exception {
         repositoryViewService.verifyPing();
         return new ApiResponse(SUCCESS, "Ping was successful!");
     }
 
     @RequestMapping(value = "/auth", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse verifyRepositoryViewAuth(VerifyingRepositoryViewService<?> repositoryViewService) throws Exception {
         repositoryViewService.verifyAuth();
         return new ApiResponse(SUCCESS);
     }
 
     @RequestMapping(value = "/content", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse verifyRepositoryViewContent(VerifyingRepositoryViewService<?> repositoryViewService) throws Exception {
         repositoryViewService.verifyRoot();
         return new ApiResponse(SUCCESS);

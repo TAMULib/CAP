@@ -13,12 +13,12 @@
                 <table class="table table-hover table-condensed">
                     <thead>
                         <tr>
-                            <th>UIN</th>
+                            <th>Username</th>
                             <th>FirstName</th>
                             <th>LastName</th>
                             <th>Role</th>
                             <th>Change Role To</th>
-                            <th ng-if="(isAdmin() || isManager())">Delete</th>
+                            <th ng-if="(isAdmin())">Delete</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -28,12 +28,11 @@
                             <td>{{thisUser.lastName}}</td>
                             <td>{{thisUser.role}}</td>
                             <td>
-                                <select ng-if="(isAdmin() || isManager())" ng-model="thisUser.role" ng-change="updateRole(thisUser)" class="form-control">
+                                <select ng-if="(isAdmin())" ng-model="thisUser.role" ng-change="updateRole(thisUser)" class="form-control">
                                     <option ng-repeat="role in assignableRoles(thisUser.role)">{{role}}</option>
                                 </select>
                             </td>
-                            <td ng-if="!((isAdmin() || isManager()) && (thisUser.role == 'ROLE_MANAGER' || thisUser.role == 'ROLE_ADMIN'))"></td>
-                            <td ng-if="(isAdmin() || isManager()) && canDelete(thisUser)">
+                            <td ng-if="canDelete(thisUser)">
 
                                 <modal modal-id="ConfirmDeleteUserModal{{$index}}"
                                        modal-view="views/modals/confirmDeleteUserModal.html"
@@ -43,7 +42,6 @@
                                 </modal>
 
                             </td>
-                            <td ng-if="!((isAdmin() || isManager()) && canDelete(thisUser))"></td>
                         </tr>
                     </tbody>
                 </table>

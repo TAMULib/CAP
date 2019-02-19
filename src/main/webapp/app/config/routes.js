@@ -12,21 +12,21 @@ cap.config(function ($locationProvider, $routeProvider) {
       when('/admin/repository-view', {
         templateUrl: 'views/admin/repositoryViewManagement.html',
         controller: 'RepositoryViewManagementController',
-        access: ["ROLE_ADMIN", "ROLE_MANAGER"]
+        access: ["ROLE_ADMIN", "ROLE_CURATOR"]
       }).
       when('/admin/schema', {
         templateUrl: 'views/admin/schemaManagement.html',
         controller: 'SchemaManagementController',
-        access: ["ROLE_ADMIN", "ROLE_MANAGER"]
+        access: ["ROLE_ADMIN", "ROLE_CURATOR"]
       }).
       when('/repository-view/:irName', {
         templateUrl: 'views/repositoryViewContext.html',
         controller: 'IrContextController',
-        access: ["ROLE_ADMIN", "ROLE_MANAGER"]
+        access: ["ROLE_ADMIN", "ROLE_CURATOR"]
       }).
       when('/users', {
         templateUrl: 'views/users.html',
-        access: ["ROLE_ADMIN", "ROLE_MANAGER"]
+        access: ["ROLE_ADMIN"]
       }).
       when('/register', {
         templateUrl: 'views/register.html'

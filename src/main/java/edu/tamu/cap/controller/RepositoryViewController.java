@@ -32,7 +32,7 @@ public class RepositoryViewController {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@RequestMapping(method = RequestMethod.POST)
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('CURATOR')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createRepositoryView(@RequestBody @WeaverValidatedModel RepositoryView repositoryView) {
         logger.info("Creating Repository View:  " + repositoryView.getName() + " with schema " + repositoryView.getSchemas());
@@ -40,13 +40,13 @@ public class RepositoryViewController {
     }
 
 	@RequestMapping(method = RequestMethod.GET)
-	@PreAuthorize("hasRole('MANAGER')")
+	@PreAuthorize("hasRole('CURATOR')")
 	public ApiResponse allRepositoryViews() {
 		return new ApiResponse(SUCCESS, repositoryViewRepo.findAll());
 	}
 
 	@RequestMapping(method = RequestMethod.PUT)
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('CURATOR')")
 	@WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
 	public ApiResponse updateRV(@RequestBody @WeaverValidatedModel RepositoryView repositoryView) {
 		logger.info("Updating Repository View:  " + repositoryView.getName());
@@ -54,7 +54,7 @@ public class RepositoryViewController {
 	}
 
 	@RequestMapping(method = RequestMethod.DELETE)
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('CURATOR')")
 	@WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
 	public ApiResponse deleteRepositoryView(@RequestBody @WeaverValidatedModel RepositoryView repositoryView) {
 		logger.info("Deleating Repository View:  " + repositoryView.getName());
@@ -63,13 +63,13 @@ public class RepositoryViewController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('CURATOR')")
     public ApiResponse getRepositoryView(@PathVariable Long id) {
         return new ApiResponse(SUCCESS, repositoryViewRepo.read(id));
     }
 
 	@RequestMapping(value = "/types", method = RequestMethod.GET)
-	@PreAuthorize("hasRole('MANAGER')")
+	@PreAuthorize("hasRole('CURATOR')")
 	public ApiResponse getRepositoryViewTypes() {
 		return new ApiResponse(SUCCESS, RepositoryViewType.getValues());
 	}
