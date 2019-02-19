@@ -58,7 +58,7 @@ public class UserController {
      *
      */
     @RequestMapping("/all")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse allUsers() {
         return new ApiResponse(SUCCESS, userRepo.findAll());
     }
@@ -73,7 +73,7 @@ public class UserController {
      *
      */
     @RequestMapping("/update")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse update(@RequestBody User user) {
         user = userRepo.update(user);
         return new ApiResponse(SUCCESS, user);
@@ -89,7 +89,7 @@ public class UserController {
      *
      */
     @RequestMapping("/delete")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse delete(@RequestBody User user) throws Exception {
         userRepo.delete(user);
         return new ApiResponse(SUCCESS);

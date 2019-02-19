@@ -33,21 +33,21 @@ public class SchemaController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @RequestMapping(method = RequestMethod.POST)
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('MANAGER')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createSchema(@RequestBody @WeaverValidatedModel Schema schema) {
         logger.info("Creating schema:  " + schema.getName());
         return new ApiResponse(SUCCESS, schemaRepo.create(schema));
     }
-    
+
     @RequestMapping(method = RequestMethod.GET)
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse allSchemas() {
         return new ApiResponse(SUCCESS, schemaRepo.findAll());
     }
-    
+
     @RequestMapping(method = RequestMethod.PUT)
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('MANAGER')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateSchema(@RequestBody @WeaverValidatedModel Schema schema) {
         logger.info("Updating schema:  " + schema.getName());
@@ -55,7 +55,7 @@ public class SchemaController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('MANAGER')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
     public ApiResponse deleteSchema(@RequestBody @WeaverValidatedModel Schema schema) {
         logger.info("Deleating schema:  " + schema.getName());
@@ -64,13 +64,13 @@ public class SchemaController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse getSchema(@PathVariable Long id) {
         return new ApiResponse(SUCCESS, schemaRepo.read(id));
     }
-    
+
     @RequestMapping(value = "/properties", method = RequestMethod.GET)
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse propertiesByNamespace(@Param("namespace") String namespace) throws OntModelReadException {
         return new ApiResponse(SUCCESS, schemaRepo.findPropertiesByNamespace(namespace));
     }
