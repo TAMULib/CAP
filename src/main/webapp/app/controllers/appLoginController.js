@@ -16,7 +16,4 @@ cap.controller('AppLoginController', function ($controller, $location, $scope, U
         return $scope.checkAuthStrategy('emailRegistration');
     };
 
-    $scope.getShibUser = function() {
-        UserService.fetchUser();
-    };
 });
