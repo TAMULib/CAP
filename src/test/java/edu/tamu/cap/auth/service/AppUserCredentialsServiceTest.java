@@ -89,7 +89,7 @@ public final class AppUserCredentialsServiceTest extends AuthMockTests {
         when(userRepo.save(any(User.class))).thenReturn(aggiejackUser);
         User userWithDefaultRole = credentialsService.updateUserByCredentials(aggiejackCredentialsWithoutRole);
 
-        assertEquals(Role.ROLE_ADMIN, userWithDefaultRole.getRole(), "User had incorrect default role!");
+        assertEquals(Role.ROLE_USER, userWithDefaultRole.getRole(), "User had incorrect default role!");
     }
 
     @Test
