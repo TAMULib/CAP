@@ -11,9 +11,11 @@ package edu.tamu.cap.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -56,12 +58,17 @@ public class User extends AbstractWeaverUserDetails {
     @JsonIgnore
     private String password = null;
 
+    @ManyToMany(mappedBy="curators")
+    @JsonIgnore
+    private List<RepositoryView> repositoryViews;
+
     /**
      * Constructor for the application user
      *
      */
     public User() {
         super();
+        setRepositoryViews(new ArrayList<RepositoryView>());
     }
 
     /**
@@ -185,6 +192,25 @@ public class User extends AbstractWeaverUserDetails {
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<RepositoryView> getRepositoryViews() {
+        return repositoryViews;
+    }
+
+    public void setRepositoryViews(List<RepositoryView> repositoryViews) {
+        this.repositoryViews = repositoryViews;
+    }
+
+    public boolean hasRepositoryView(Long repositoryViewId) {
+        boolean foundRepositoryView = false;
+        for (RepositoryView repositoryView : repositoryViews) {
+            if (repositoryViewId == repositoryView.getId()) {
+                foundRepositoryView = true;
+                break;
+            }
+        }
+        return foundRepositoryView;
     }
 
 

@@ -135,7 +135,7 @@ cap.controller("RepositoryViewManagementController", function($controller, $scop
       });
     };
 
-    startupQueue = [RepositoryViewRepo.ready(),SchemaRepo.ready(),UserRepo.ready()];
+    startupQueue = [RepositoryViewRepo.ready(),SchemaRepo.ready()];
   } else if ($scope.isCurator()) {
     startupQueue = [RepositoryViewRepo.ready(),SchemaRepo.ready()];
   }
