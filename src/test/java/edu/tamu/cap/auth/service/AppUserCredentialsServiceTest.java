@@ -59,20 +59,20 @@ public final class AppUserCredentialsServiceTest extends AuthMockTests {
         aggiejackCredentialsWithoutRole.setRole(null);
 
         aggiejackCredentialsUpdated = getMockAggieJackCredentials();
-        aggiejackCredentialsUpdated.setRole("ROLE_MANAGER");
+        aggiejackCredentialsUpdated.setRole("ROLE_CURATOR");
         aggiejackCredentialsUpdated.setEmail("jaggie@tamu.edu");
         aggiejackCredentialsUpdated.setFirstName("John");
         aggiejackCredentialsUpdated.setLastName("Agriculture");
         aggiejackCredentialsUpdated.setUin("123456781");
 
-        aggiejackUser = new User(aggiejackCredentials.getUin(), aggiejackCredentials.getFirstName(), aggiejackCredentials.getLastName(), aggiejackCredentials.getRole());
+        aggiejackUser = new User(aggiejackCredentials.getEmail(), aggiejackCredentials.getFirstName(), aggiejackCredentials.getLastName(), aggiejackCredentials.getRole());
     }
 
     @Test
     public void testUpdateUserByCredentials() {
         when(userRepo.findByUsername(any(String.class))).thenReturn(Optional.of(aggiejackUser));
         when(userRepo.create(any(String.class), any(String.class), any(String.class), any(String.class))).thenReturn(aggiejackUser);
-        when(userRepo.save(any(User.class))).thenReturn(new User(aggiejackCredentialsUpdated.getUin(), aggiejackCredentialsUpdated.getFirstName(), aggiejackCredentialsUpdated.getLastName(), aggiejackCredentialsUpdated.getRole()));
+        when(userRepo.save(any(User.class))).thenReturn(new User(aggiejackCredentialsUpdated.getEmail(), aggiejackCredentialsUpdated.getFirstName(), aggiejackCredentialsUpdated.getLastName(), aggiejackCredentialsUpdated.getRole()));
         User user = credentialsService.updateUserByCredentials(aggiejackCredentialsUpdated);
 
         assertEquals(aggiejackUser, user, "Unable to update user with credentials!");
@@ -95,7 +95,7 @@ public final class AppUserCredentialsServiceTest extends AuthMockTests {
     @Test
     public void testChangedUser() {
         when(userRepo.findByUsername(any(String.class))).thenReturn(Optional.of(aggiejackUser));
-        when(userRepo.save(any(User.class))).thenReturn(new User(aggiejackCredentialsUpdated.getUin(), aggiejackCredentialsUpdated.getFirstName(), aggiejackCredentialsUpdated.getLastName(), aggiejackCredentialsUpdated.getRole()));
+        when(userRepo.save(any(User.class))).thenReturn(new User(aggiejackCredentialsUpdated.getEmail(), aggiejackCredentialsUpdated.getFirstName(), aggiejackCredentialsUpdated.getLastName(), aggiejackCredentialsUpdated.getRole()));
         User userUpdate = credentialsService.updateUserByCredentials(aggiejackCredentialsUpdated);
 
         assertEquals(aggiejackCredentialsUpdated.getLastName(), userUpdate.getLastName(), "User had the incorrect last name!");
