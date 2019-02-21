@@ -24,6 +24,9 @@ cap.config(function ($locationProvider, $routeProvider) {
       when('/users', {
           templateUrl: 'views/users.html'
       }).
+      when('/register', {
+        templateUrl: 'views/register.html'
+      }).
       // Error Routes
       when('/error/403', {
           templateUrl: 'views/errors/403.html',
