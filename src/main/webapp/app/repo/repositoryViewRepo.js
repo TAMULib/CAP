@@ -7,7 +7,8 @@ cap.repo("RepositoryViewRepo", function($q, WsApi, api, HttpMethodVerbs) {
     username: "fedoraAdmin",
     password: "secret3",
     type: "",
-    schemas: []
+    schemas: [],
+    curators: []
   };
 
   repositoryViewRepo.getTypes = function(types) {

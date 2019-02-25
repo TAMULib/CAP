@@ -1,11 +1,11 @@
-/* 
- * UserController.java 
- * 
- * Version: 
- *     $Id$ 
- * 
- * Revisions: 
- *     $Log$ 
+/*
+ * UserController.java
+ *
+ * Version:
+ *     $Id$
+ *
+ * Revisions:
+ *     $Log$
  */
 package edu.tamu.cap.controller;
 
@@ -25,7 +25,7 @@ import edu.tamu.weaver.response.ApiResponse;
 
 /**
  * User Controller
- * 
+ *
  * @author
  *
  */
@@ -38,12 +38,12 @@ public class UserController {
 
     /**
      * Websocket endpoint to request credentials.
-     * 
+     *
      * @param credentials
      * @ApiCredentials Credentials
-     * 
+     *
      * @return ApiResponse
-     * 
+     *
      */
     @RequestMapping("/credentials")
     @PreAuthorize("hasRole('USER')")
@@ -53,27 +53,27 @@ public class UserController {
 
     /**
      * Endpoint to return all users.
-     * 
+     *
      * @return ApiResponse
-     * 
+     *
      */
     @RequestMapping("/all")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse allUsers() {
         return new ApiResponse(SUCCESS, userRepo.findAll());
     }
 
     /**
      * Endpoint to update users role.
-     * 
+     *
      * @param user
      * @ApiModel AppUser
-     * 
+     *
      * @return ApiResponse
-     * 
+     *
      */
     @RequestMapping("/update")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse update(@RequestBody User user) {
         user = userRepo.update(user);
         return new ApiResponse(SUCCESS, user);
@@ -81,15 +81,15 @@ public class UserController {
 
     /**
      * Endpoint to delete user.
-     * 
+     *
      * @param user
      * @ApiModel AppUser
-     * 
+     *
      * @return ApiResponse
-     * 
+     *
      */
     @RequestMapping("/delete")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse delete(@RequestBody User user) throws Exception {
         userRepo.delete(user);
         return new ApiResponse(SUCCESS);

@@ -6,7 +6,7 @@
 
   <div class="panel panel-default repository-view-container">
 
-    <div class="panel-heading clearfix">
+    <div ng-if="isAdmin()" class="panel-heading clearfix">
       <button class="btn btn-success pull-right" ng-click="startCreate()">New</button>
       <modal
         modal-id="createRepositoryViewModal"
@@ -32,8 +32,8 @@
             </td>
             <td data-title="'Actions'" class="actions">
                 <a href="repository-view/{{repositoryView.name}}?context={{repositoryView.rootUri}}" title="view" class="glyphicon glyphicon-eye-open action"></a>
-                <span title="edit" ng-click="editRepositoryView(repositoryView)" class="glyphicon glyphicon-pencil action"></span>
-                <span title="delete" ng-click="confirmDeleteRepositoryView(repositoryView)" class="glyphicon glyphicon-trash action"></span>
+                <span ng-if="isAdmin()" title="edit" ng-click="editRepositoryView(repositoryView)" class="glyphicon glyphicon-pencil action"></span>
+                <span ng-if="isAdmin()" title="delete" ng-click="confirmDeleteRepositoryView(repositoryView)" class="glyphicon glyphicon-trash action"></span>
             </td>
           </tr>
         </tbody>
@@ -42,6 +42,7 @@
   </div>
 
   <modal
+    ng-if="isAdmin()"
     modal-id="repositoryViewDeleteModal"
     modal-view="views/modals/repositoryViewDeleteModal.html"
     modal-header-class="modal-header-danger"
@@ -49,6 +50,7 @@
   </modal>
 
   <modal
+    ng-if="isAdmin()"
     modal-id="repositoryViewEditModal"
     modal-view="views/modals/repositoryViewEditModal.html"
     modal-header-class="modal-header-warning"
