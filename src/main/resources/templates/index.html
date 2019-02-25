@@ -56,7 +56,7 @@
                     <username></username> <span class="caret"></span>
                   </a>
                   <ul class="dropdown-menu" role="menu">
-                    <li><a href="users">Manage Users</a></li>
+                    <li ng-if="isAdmin()"><a href="users">Manage Users</a></li>
                     <li ng-if="isAdmin() || isAssuming() == 'true'" role="presentation" class="divider"></li>
                     <li ng-if="isAdmin() || isAssuming() == 'true'" role="presentation" class="dropdown-header">Admin Actions header</li>
                     <li ng-if="isAdmin() || isAssuming() == 'true'">
@@ -236,6 +236,7 @@
   <script src="filters/cantaloupeUrlFilter.js"></script>
 
   <!-- Controllers -->
+  <script src="controllers/abstractAppController.js"></script>
   <script src="controllers/adminController.js"></script>
   <script src="controllers/repositoryViewManagementController.js"></script>
   <script src="controllers/schemaManagementController.js"></script>

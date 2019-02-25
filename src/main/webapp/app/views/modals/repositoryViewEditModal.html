@@ -117,7 +117,47 @@
             </div>
 
         </uib-tab>
-        <uib-tab index="3" heading="Verification">
+
+        <uib-tab index="3" heading="Curators">
+
+            <div class="row">
+
+              <div class="col-xs-6">
+
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h3 class="panel-title">This Repository</h3>
+                  </div>
+                  <ul class="list-group">
+                    <li class="list-group-item clickable" ng-repeat="curator in repositoryViewToEdit.curators track by $index" ng-click="irForms.edit.$setDirty();repositoryViewToEdit.curators.splice($index,1)">
+                      {{curator.firstName}} {{curator.lastName}}
+                      <span class="glyphicon glyphicon-arrow-right pull-right"></span>
+                    </li>
+                  </ul>
+                </div>
+
+              </div>
+
+              <div class="col-xs-6">
+
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h3 class="panel-title">All Curators</h3>
+                  </div>
+                  <ul class="list-group">
+                    <li class="list-group-item clickable" ng-repeat="curator in curators | containedIn:repositoryViewToEdit.curators:'username'" ng-click="irForms.edit.$setDirty();repositoryViewToEdit.curators.push(curator)">
+                      <span class="glyphicon glyphicon-arrow-left"></span>
+                      {{curator.firstName}} {{curator.lastName}}
+                    </li>
+                  </ul>
+                </div>
+
+              </div>
+            </div>
+
+        </uib-tab>
+
+        <uib-tab index="4" heading="Verification">
             <repository-view-verification repository-view="repositoryViewToEdit" results="verificationResults"></repository-view-verification>
         </uib-tab>
     </div>
