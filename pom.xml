@@ -535,7 +535,7 @@
         <executions>
           <execution>
             <id>generate-docs</id>
-            <phase>prepare-package</phase> 
+            <phase>test</phase> 
             <goals>
               <goal>process-asciidoc</goal>
             </goals>
@@ -544,6 +544,7 @@
               <doctype>book</doctype>
               <attributes>
                 <snippets>${project.build.directory}/generated-snippets</snippets>
+                <project-version>${project.version}</project-version>
               </attributes>
             </configuration>
           </execution>
@@ -555,7 +556,7 @@
         <executions>
           <execution>
             <id>copy-resources</id>
-            <phase>prepare-package</phase>
+            <phase>test</phase>
             <goals>
               <goal>copy-resources</goal>
             </goals>

@@ -9,26 +9,6 @@
 :linkattrs:
 :source-highlighter: highlightjs
 
-== Schema API
-A Collection of CRUD API endpoints used for interacting with CAP's Schema resource.
+include::./repositoryViewAPI.adoc[]
 
-=== Create Schema
-
-A `POST` to the `/schema` endpoint which will register the specified schema with CAP.
-
-==== Sample Request
-include::{snippets}/create-schema/http-request.adoc[]
-
-==== Sample Response
-include::{snippets}/create-schema/http-response.adoc[]
-
-
-=== Get All Schemata
-
-A `GET` request to the `/schema` endpoint which will result in a list of all schemata registered with CAP.
-
-==== Sample Request
-include::{snippets}/all-schemas/http-request.adoc[]
-
-==== Sample Response
-include::{snippets}/all-schemas/http-response.adoc[]
+include::./schemaAPI.adoc[]

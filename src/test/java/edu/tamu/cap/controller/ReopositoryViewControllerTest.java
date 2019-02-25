@@ -1,93 +1,155 @@
-// package edu.tamu.cap.controller;
+package edu.tamu.cap.controller;
 
-// import static edu.tamu.cap.service.RepositoryViewType.FEDORA;
-// import static org.junit.jupiter.api.Assertions.assertEquals;
-// import static org.mockito.ArgumentMatchers.any;
-// import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 
-// import java.io.IOException;
-// import java.util.ArrayList;
-// import java.util.Collection;
-// import java.util.List;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-// import org.junit.jupiter.api.BeforeEach;
-// import org.junit.jupiter.api.Test;
-// import org.junit.jupiter.api.extension.ExtendWith;
-// import org.mockito.InjectMocks;
-// import org.mockito.Mock;
-// import org.mockito.MockitoAnnotations;
-// import org.mockito.junit.jupiter.MockitoExtension;
-// import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
+import org.springframework.boot.test.autoconfigure.restdocs.RestDocsMockMvcConfigurationCustomizer;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentationConfigurer;
+import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.http.MediaType;
 
-// import com.fasterxml.jackson.core.JsonParseException;
-// import com.fasterxml.jackson.databind.JsonMappingException;
+import edu.tamu.cap.model.RepositoryView;
+import edu.tamu.cap.model.repo.RepositoryViewRepo;
+import edu.tamu.cap.service.RepositoryViewType;
 
-// import edu.tamu.cap.model.RepositoryView;
-// import edu.tamu.cap.model.Schema;
-// import edu.tamu.cap.model.repo.RepositoryViewRepo;
-// import edu.tamu.weaver.response.ApiResponse;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+
+
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@RunWith(SpringRunner.class)
+@AutoConfigureMockMvc
+@AutoConfigureRestDocs(outputDir = "target/generated-snippets")
+
+public final class ReopositoryViewControllerTest {
+
+  private static final String REPOSITORY_VIEW_URI = "/repository-view";
+
+  private static final String TEST_REPOSITORY_VIEW_NAME = "TEST_REPOSITORY_VIEW_NAME";
+  private static final String TEST_REPOSITORY_VIEW_URI = "http://test-repository-view.org";
+
+
+  @Autowired
+  private RepositoryViewRepo resositoryViewRepo;
+
+  @Autowired
+  private ObjectMapper objectMapper;
+
+  @Autowired
+  private MockMvc mockMvc;
+
+  @Autowired
+  RestDocumentationResultHandler rdh;
+
+  @Before
+  public void setUp() throws JsonProcessingException {
+
+    // We should be mocking responses
+
+  }
+
+  @Test
+  @WithMockUser(roles = "ADMIN")
+  public void createRepositoryView() throws Exception {
+
+    RepositoryView testRV = new RepositoryView(RepositoryViewType.FEDORA, TEST_REPOSITORY_VIEW_NAME, TEST_REPOSITORY_VIEW_URI);
+
+    mockMvc
+      .perform(RestDocumentationRequestBuilders.post(REPOSITORY_VIEW_URI).content(objectMapper.writeValueAsString(testRV))
+          .contentType(MediaType.APPLICATION_JSON))
+      .andExpect(status().isOk())
+      .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
+        requestFields(fieldWithPath("id").description("Schema id").ignored(),
+          fieldWithPath("name").description("The name of this Repository View."),
+          fieldWithPath("rootUri").description("Root URI where to the repository represented by this Repository View."),
+          fieldWithPath("type").description("The Repository Type of this Repository View"),
+          fieldWithPath("username").description("Optional username to use when authenticating with the repository represented by this Repository View"),
+          fieldWithPath("password").description("Optional password to use when authenticating with the repository represented by this Repository View"),
+          fieldWithPath("schemas").description("Optional list of Schema to resister with this Repository View"),
+          fieldWithPath("metadataPrefixes").description("")
+        )));
+
+  }
+
+  @Test
+  @WithMockUser(roles = "ADMIN")
+  public void allRepositoryViews() throws Exception {
+
+    mockMvc
+      .perform(RestDocumentationRequestBuilders.get(REPOSITORY_VIEW_URI)
+          .contentType(MediaType.APPLICATION_JSON))
+      .andExpect(status().isOk())
+      .andDo(rdh);
+
+  }
+
+  @Test
+  @WithMockUser(roles = "ADMIN")
+  public void updateRepositoryView() throws Exception {
+
+    RepositoryView testRV = resositoryViewRepo.create(new RepositoryView(RepositoryViewType.FEDORA, TEST_REPOSITORY_VIEW_NAME, TEST_REPOSITORY_VIEW_URI));
+
+    testRV.setName(TEST_REPOSITORY_VIEW_NAME+"_UPDATE");
+
+    mockMvc
+      .perform(RestDocumentationRequestBuilders.put(REPOSITORY_VIEW_URI)
+          .content(objectMapper.writeValueAsString(testRV))
+          .contentType(MediaType.APPLICATION_JSON))
+      .andExpect(status().isOk())
+      .andDo(rdh);
+
+  }
+
+  @Test
+  @WithMockUser(roles = "ADMIN")
+  public void deleteRepositoryView() throws Exception {
+
+  }
+
+  @Test
+  @WithMockUser(roles = "ADMIN")
+  public void getRepositoryView() throws Exception {
+
+  }
 
 
 
-// @ExtendWith(MockitoExtension.class)
-// @ExtendWith(SpringExtension.class)
-// public final class ReopositoryViewControllerTest {
+  @TestConfiguration
+  static class CustomizationConfiguration implements RestDocsMockMvcConfigurationCustomizer {
+      @Override
+      public void customize(MockMvcRestDocumentationConfigurer configurer) {
+        
+        
+      }
 
-//     @InjectMocks
-//     private RepositoryViewController repositoryViewController;
+      @Bean
+      public RestDocumentationResultHandler restDocumentation() {
+          return MockMvcRestDocumentation.document("{method-name}", 
+            preprocessRequest(prettyPrint()),
+            preprocessResponse(prettyPrint()));
+      }
+  }
 
-//     @Mock
-//     private RepositoryViewRepo repositoryViewRepo;
-
-//     private RepositoryView fedoraRepositoryView;
-
-//     @BeforeEach
-//     public void setup() throws JsonParseException, JsonMappingException, IOException {
-//         MockitoAnnotations.initMocks(this);
-
-//         fedoraRepositoryView = getMockFedoraRepositoryView();
-//     }
-
-//     @Test
-//     public void testCreateRepositoryView() {
-//         RepositoryView responseRV = null;
-
-//         when(repositoryViewRepo.create(any(RepositoryView.class))).thenReturn(fedoraRepositoryView);
-
-//         ApiResponse response = repositoryViewController.createRepositoryView(fedoraRepositoryView);
-//         Collection<Object> payload = response.getPayload().values();
-//         if (payload.size() == 1) {
-//             responseRV = (RepositoryView) payload.toArray()[0];
-//         }
-
-//         assertEquals(fedoraRepositoryView.getId(), responseRV.getId(), "Fedora Repository View has incorrect ID!");
-//         assertEquals(fedoraRepositoryView.getName(), responseRV.getName(), "Fedora Repository View has incorrect Name!");
-//         assertEquals(fedoraRepositoryView.getRootUri(), responseRV.getRootUri(), "Fedora Repository View has incorrect Root URI!");
-//         assertEquals(fedoraRepositoryView.getSchemas(), responseRV.getSchemas(), "Fedora Repository View has incorrect Schemas!");
-//         assertEquals(fedoraRepositoryView.getType(), responseRV.getType(), "Fedora Repository View has incorrect Type!");
-//         assertEquals(fedoraRepositoryView.getUsername(), responseRV.getUsername(), "Fedora Repository View has incorrect Username!");
-//         assertEquals(fedoraRepositoryView.getPassword(), responseRV.getPassword(), "Fedora Repository View has incorrect Password!");
-//     }
-
-//     private RepositoryView getMockFedoraRepositoryView() {
-//         // TODO: convert this into json file to be imported.
-//         List<Schema> schemas = new ArrayList<Schema>();
-//         Schema schema = new Schema();
-//         schema.setId(1L);
-//         schema.setName("Schema Name");
-//         schema.setNamespace("Schema Namespace");
-//         schema.setAbbreviation("Schema Abbreviation");
-//         schemas.add(schema);
-
-//         RepositoryView rv = new RepositoryView();
-//         rv.setId(123456789L);
-//         rv.setName("Repository View Name");
-//         rv.setRootUri("http://localhost/fedora");
-//         rv.setSchemas(schemas);
-//         rv.setType(FEDORA);
-//         rv.setUsername("");
-//         rv.setPassword("");
-//         return rv;
-//     }
-
-// }
+}
