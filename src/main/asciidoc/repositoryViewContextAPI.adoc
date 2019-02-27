@@ -1,0 +1,15 @@
+== Repository View API
+A Collection of CRUD API endpoints used for interacting with CAP's Repository View resource.
+
+=== Get Repository View Context
+
+A `GET` request to the `/repository-view-context/{type}/{repositoryViewId}?contexturi={contextUri}` endpoint, where `contextUri` will equal resource within the designated repository. This will result in the rendering of the specified resource as a Repository View Context.
+
+==== Request Fields
+include::../../../target/generated-snippets/get-repository-view-context/request-fields.adoc[]
+
+==== Sample Request
+include::../../../target/generated-snippets/get-repository-view-context/http-request.adoc[]
+
+==== Sample Response
+include::../../../target/generated-snippets/get-repository-view-context/http-response.adoc[]
