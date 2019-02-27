@@ -19,7 +19,7 @@ cap.config(function ($locationProvider, $routeProvider) {
         controller: 'SchemaManagementController',
         access: ["ROLE_ADMIN", "ROLE_CURATOR"]
       }).
-      when('/repository-view/:irName', {
+      when('/rv/:irName', {
         templateUrl: 'views/repositoryViewContext.html',
         controller: 'IrContextController',
         access: ["ROLE_ADMIN", "ROLE_CURATOR"]
