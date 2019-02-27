@@ -217,22 +217,4 @@ public final class SchemaControllerTest {
 
   }
 
-
-
-  @Primary
-  @TestConfiguration
-  static class CustomizationConfiguration implements RestDocsMockMvcConfigurationCustomizer {
-      @Override
-      public void customize(MockMvcRestDocumentationConfigurer configurer) {
-        
-        
-      }
-      @Bean
-      public RestDocumentationResultHandler restDocumentation() {
-          return MockMvcRestDocumentation.document("{method-name}", 
-            preprocessRequest(prettyPrint()),
-            preprocessResponse(prettyPrint()));
-      }
-  }
-
 }
