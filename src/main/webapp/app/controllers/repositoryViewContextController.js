@@ -1,4 +1,4 @@
-cap.controller("IrContextController", function ($controller, $location, $routeParams, $scope, $timeout, $filter, $q, RepositoryViewRepo, FixityReport) {
+cap.controller("RepositoryViewContextController", function ($controller, $location, $routeParams, $scope, $timeout, $filter, $q, RepositoryViewRepo, FixityReport) {
 
   angular.extend(this, $controller('CoreAdminController', {
     $scope: $scope
