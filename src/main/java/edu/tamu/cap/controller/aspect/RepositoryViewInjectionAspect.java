@@ -1,4 +1,4 @@
-package edu.tamu.cap.controller.aspect;
+  package edu.tamu.cap.controller.aspect;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -32,7 +32,7 @@ public class RepositoryViewInjectionAspect {
 
     @Around("execution(* edu.tamu.cap.controller.repositoryviewcontext..*(..))")
     public ApiResponse repositoryViewContextInjection(ProceedingJoinPoint joinPoint) throws Throwable {
-        logger.debug("Injecting an Repository View Service at joinPoint: {}", joinPoint.toString());
+        logger.info("Injecting an Repository View Service at joinPoint: {}", joinPoint.toString());
         // inject applicable end point arguments from request body
         argumentResolver.injectRequestPayload(joinPoint);
         // inject appropriate Repository View service

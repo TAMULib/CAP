@@ -161,14 +161,16 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- <dependency>
+    <!-- NOTE: The following dependencies are candidates for removal after an upgrade to Spring Boot 2.x --> 
+
+    <dependency>
       <groupId>org.junit.platform</groupId>
       <artifactId>junit-platform-launcher</artifactId>
       <version>1.3.2</version>
       <scope>test</scope>
-    </dependency> -->
+    </dependency>
 
-    <!-- <dependency>
+    <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
       <version>5.3.2</version>
@@ -187,9 +189,9 @@
       <artifactId>junit-jupiter-engine</artifactId>
       <version>5.3.2</version>
       <scope>test</scope>
-    </dependency> -->
+    </dependency>
 
-    <!-- <dependency>
+    <dependency>
       <groupId>org.junit.vintage</groupId>
       <artifactId>junit-vintage-engine</artifactId>
       <version>5.3.2</version>
@@ -208,15 +210,17 @@
       <artifactId>mockito-junit-jupiter</artifactId>
       <version>2.23.4</version>
       <scope>test</scope>
-    </dependency>
+    </dependency> 
 
     <dependency>
       <groupId>com.github.sbrannen</groupId>
       <artifactId>spring-test-junit5</artifactId>
       <version>1.3.2</version>
       <scope>test</scope>
-    </dependency> -->
+    </dependency>
 
+    <!-- End of Not: Spring-Boot Upgrade --> 
+    
     <dependency> 
         <groupId>org.springframework.restdocs</groupId>
         <artifactId>spring-restdocs-mockmvc</artifactId>
