@@ -29,6 +29,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ldap.embedded.EmbeddedLdapProperties.Credential;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -44,12 +45,16 @@ import edu.tamu.cap.config.RestDocumentationConfiguration;
 import edu.tamu.cap.controller.aspect.RepositoryViewInjectionAspect;
 import edu.tamu.cap.exceptions.RepositoryViewInjectionException;
 import edu.tamu.cap.model.RepositoryView;
+import edu.tamu.cap.model.User;
 import edu.tamu.cap.model.repo.RepositoryViewRepo;
 import edu.tamu.cap.model.response.RepositoryViewContext;
 import edu.tamu.cap.service.ArgumentResolver;
 import edu.tamu.cap.service.FedoraService;
 import edu.tamu.cap.service.RepositoryViewService;
 import edu.tamu.cap.service.RepositoryViewType;
+import edu.tamu.cap.utility.ConstraintDescriptionsHelper;
+import edu.tamu.cap.utility.MockUserUtility;
+import edu.tamu.weaver.auth.model.Credentials;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = { RestDocumentationConfiguration.class })
 @RunWith(SpringRunner.class)
@@ -57,6 +62,9 @@ import edu.tamu.cap.service.RepositoryViewType;
 @AutoConfigureRestDocs(outputDir = "target/generated-snippets")
 
 public class RepositoryViewContextControllerTest {
+
+  private static final ConstraintDescriptionsHelper describeRepositoryViewContext = new ConstraintDescriptionsHelper(
+      RepositoryViewContext.class);
 
   // @Autowired
   // private ObjectMapper objectMapper;
@@ -78,8 +86,6 @@ public class RepositoryViewContextControllerTest {
   public void setUp() throws Exception {
 
     RepositoryViewContext mockRepositoryViewContext = new RepositoryViewContext();
-
-
 
     ProceedingJoinPoint mockJoinPoint = mock(ProceedingJoinPoint.class);
 
@@ -103,11 +109,18 @@ public class RepositoryViewContextControllerTest {
         .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
       .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()), 
-        pathParameters(parameterWithName("type").description("The type of the Repository view to be rendered as a Repository View Context.")),
-        pathParameters(parameterWithName("repositoryViewId").description("The id of the Repository view to be rendered as a Repository View Context."))
-      ));
+        pathParameters(
+          describeRepositoryViewContext.withParameter("type", "The type of the Repository view to be rendered as a Repository View Context."),
+          describeRepositoryViewContext.withParameter("repositoryViewId", "The id of the Repository view to be rendered as a Repository View Context.")
+        )
+      )
+    );
   }
 
+
+
+
+  
   // @Test
   // @WithMockUser(roles = "ADMIN")
   // public void deleteRepositoryViewContext() throws Exception {

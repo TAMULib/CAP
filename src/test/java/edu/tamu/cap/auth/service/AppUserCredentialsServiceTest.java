@@ -17,12 +17,13 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-import edu.tamu.cap.auth.AuthMockTests;
+import edu.tamu.cap.utility.MockUserUtility;
 import edu.tamu.cap.model.Role;
 import edu.tamu.cap.model.User;
 import edu.tamu.cap.model.repo.UserRepo;
@@ -31,7 +32,10 @@ import edu.tamu.weaver.auth.model.Credentials;
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(SpringExtension.class)
 @MockitoSettings(strictness = Strictness.WARN)
-public final class AppUserCredentialsServiceTest extends AuthMockTests {
+public final class AppUserCredentialsServiceTest {
+
+    @Autowired
+    private MockUserUtility mockUserUtility;
 
     @Mock
     private UserRepo userRepo;
@@ -53,12 +57,12 @@ public final class AppUserCredentialsServiceTest extends AuthMockTests {
 
         setField(credentialsService, "admins", new String[] { "123456789", "987654321" });
 
-        aggiejackCredentials = getMockAggieJackCredentials();
+        aggiejackCredentials = mockUserUtility.getMockAggieJackCredentials();
 
-        aggiejackCredentialsWithoutRole = getMockAggieJackCredentials();
+        aggiejackCredentialsWithoutRole = mockUserUtility.getMockAggieJackCredentials();
         aggiejackCredentialsWithoutRole.setRole(null);
 
-        aggiejackCredentialsUpdated = getMockAggieJackCredentials();
+        aggiejackCredentialsUpdated = mockUserUtility.getMockAggieJackCredentials();
         aggiejackCredentialsUpdated.setRole("ROLE_CURATOR");
         aggiejackCredentialsUpdated.setEmail("jaggie@tamu.edu");
         aggiejackCredentialsUpdated.setFirstName("John");
