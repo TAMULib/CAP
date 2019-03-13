@@ -1,5 +1,7 @@
 package edu.tamu.cap.controller;
 
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -11,9 +13,14 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.net.URISyntaxException;
+
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.fcrepo.client.FcrepoOperationFailedException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -29,8 +36,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import edu.tamu.cap.exceptions.RepositoryViewVerificationException;
 import edu.tamu.cap.model.RepositoryView;
 import edu.tamu.cap.model.repo.RepositoryViewRepo;
+import edu.tamu.cap.service.FedoraService;
 import edu.tamu.cap.service.RepositoryViewType;
 import edu.tamu.cap.utility.ConstraintDescriptionsHelper;
 
@@ -39,58 +48,70 @@ import edu.tamu.cap.utility.ConstraintDescriptionsHelper;
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs(outputDir = "target/generated-snippets")
 public final class VerifyRepositoryViewSettingsControllerTest {
-    private static final String TEST_REPOSITORY_VIEW_TYPE = "repository-view/{type}/verify";
-    private static final String TEST_REPOSITORY_VIEW_NAME = "TEST_REPOSITORY_VIEW_NAME";
-    private static final String TEST_REPOSITORY_VIEW_URI = "http://test-repository-view.org";
+  private static final String TEST_REPOSITORY_VIEW_TYPE = "/repository-view/{type}/verify";
+  private static final String TEST_REPOSITORY_VIEW_NAME = "TEST_REPOSITORY_VIEW_NAME";
+  private static final String TEST_REPOSITORY_VIEW_URI = "http://test-repository-view.org";
 
-    private static final ConstraintDescriptionsHelper describeRepositoryView = new ConstraintDescriptionsHelper(RepositoryView.class);
+  private static final ConstraintDescriptionsHelper describeRepositoryView = new ConstraintDescriptionsHelper(
+      RepositoryView.class);
 
-    @Autowired
-    private MockMvc mockMvc;
+  @Autowired
+  private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+  @Autowired
+  private ObjectMapper objectMapper;
 
-    @Autowired
-    RestDocumentationResultHandler rdh;
+  @Autowired
+  RestDocumentationResultHandler rdh;
 
-    @MockBean
-    private RepositoryViewRepo resositoryViewRepo;
+  @MockBean
+  private RepositoryViewRepo resositoryViewRepo;
 
-    private RepositoryView mockRV;
+  @MockBean
+  private FedoraService mockFedoraService;
 
-    @Before
-    public void setUp() throws JsonProcessingException {
-        mockRV = new RepositoryView(RepositoryViewType.FEDORA, TEST_REPOSITORY_VIEW_NAME, TEST_REPOSITORY_VIEW_URI);
-        mockRV.setId(1L);
+  private RepositoryView mockRV;
 
-        when(resositoryViewRepo.getOne(1L)).thenReturn(mockRV);
-        when(resositoryViewRepo.findOne(1L)).thenReturn(mockRV);
+  @Before
+  public void setUp() throws JsonProcessingException, FcrepoOperationFailedException, URISyntaxException,
+      RepositoryViewVerificationException {
+      mockRV = new RepositoryView(RepositoryViewType.FEDORA, TEST_REPOSITORY_VIEW_NAME, TEST_REPOSITORY_VIEW_URI);
+      mockRV.setId(1L);
+
+      when(resositoryViewRepo.getOne(1L)).thenReturn(mockRV);
+      when(resositoryViewRepo.findOne(1L)).thenReturn(mockRV);
+
+      ProceedingJoinPoint mockJoinPoint = mock(ProceedingJoinPoint.class);
+
+      Object[] args = new Object[] { mockFedoraService };
+
+      Mockito.doNothing().when(mockFedoraService).verifyPing();
+      when(mockJoinPoint.getArgs()).thenReturn(args);
+
     }
 
     @Test
     @WithMockUser(roles = "ADMIN")
     public void verifyRVPing() throws Exception {
-        //mockMvc.perform(post(TEST_REPOSITORY_VIEW_TYPE + "/ping", mockRV.getType().name()).content(objectMapper.writeValueAsString(mockRV)).contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-        mockMvc.perform(post("/repository-view/FEDORA/verify/ping", mockRV.getType().name()).content(objectMapper.writeValueAsString(mockRV)).contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+        mockMvc.perform(post(TEST_REPOSITORY_VIEW_TYPE + "/ping", RepositoryViewType.FEDORA).content(objectMapper.writeValueAsString(mockRV)).contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 
-            .andExpect(status().isOk())
-//            .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
-//                pathParameters(
-//                    parameterWithName("type").description("The Repository View type name.")
-//                ),
-//                requestFields(
-//                    describeRepositoryView.withField("id", "Repository View id.").optional(),
-//                    describeRepositoryView.withField("name", "The name of this Repository View."),
-//                    describeRepositoryView.withField("rootUri", "Root URI where to the repository represented by this Repository View."),
-//                    describeRepositoryView.withField("type", "The Repository Type of this Repository View."),
-//                    describeRepositoryView.withField("username", "Optional username to use when authenticating with the repository represented by this Repository View."),
-//                    describeRepositoryView.withField("password", "Optional password to use when authenticating with the repository represented by this Repository View."),
-//                    describeRepositoryView.withField("schemas", "Optional list of Schema to resister with this Repository View."),
-//                    describeRepositoryView.withField("curators", "Optional list of Curators with edit permissions to this Repository View."),
-//                    describeRepositoryView.withField("metadataPrefixes", "Short hand references to the registered schemas.")
-//                )
-//            ))
+          .andExpect(status().isOk())
+           .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
+               pathParameters(
+                   parameterWithName("type").description("The Repository View type name.")
+               ),
+               requestFields(
+                   describeRepositoryView.withField("id", "Repository View id.").optional(),
+                   describeRepositoryView.withField("name", "The name of this Repository View."),
+                   describeRepositoryView.withField("rootUri", "Root URI where to the repository represented by this Repository View."),
+                   describeRepositoryView.withField("type", "The Repository Type of this Repository View."),
+                   describeRepositoryView.withField("username", "Optional username to use when authenticating with the repository represented by this Repository View."),
+                   describeRepositoryView.withField("password", "Optional password to use when authenticating with the repository represented by this Repository View."),
+                   describeRepositoryView.withField("schemas", "Optional list of Schema to resister with this Repository View."),
+                   describeRepositoryView.withField("curators", "Optional list of Curators with edit permissions to this Repository View."),
+                   describeRepositoryView.withField("metadataPrefixes", "Short hand references to the registered schemas.")
+               )
+           ))
             ;
     }
 
