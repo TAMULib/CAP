@@ -105,61 +105,22 @@ public final class ReopositoryViewControllerTest {
 
     RepositoryView mockRV = resositoryViewRepo.getOne(1L);
 
-
-
-    MockHttpServletRequestBuilder mockHttpServletRequestBuilder = RestDocumentationRequestBuilders.post(REPOSITORY_VIEW_URI);
-    // mockHttpServletRequestBuilder = mockHttpServletRequestBuilder.content(objectMapper.writeValueAsString(mockRV));
-
-    // String repViewJson = "{"
-    // +  "\"id\" : 1,"
-    // +  "\"type\" : \"FEDORA\","
-    // +  "\"name\" : \"TEST_REPOSITORY_VIEW_NAME\","
-    // +  "\"rootUri\" : \"http://test-repository-view.org\","
-    // +  "\"username\" : \"user\","
-    // +  "\"password\" : \"1234\","
-    // +  "\"schemas\" : [ ],"
-    // +  "\"curators\" : [ ],"
-    // + "\"metadataPrefixes\": [ ]"
-    // + "}";
-
-    
-
-    String repViewJson = "{\"name\":\"Labs Fedora\",\"rootUri\":\"https://api-dev.library.tamu.edu/fcrepo/rest/\",\"username\":\"fedoraAdmin\",\"password\":\"secret3\",\"type\":\"FEDORA\",\"schemas\":[],\"curators\":[]}";
-
-    mockHttpServletRequestBuilder = mockHttpServletRequestBuilder.content(
-      repViewJson
-      );
-
-    mockHttpServletRequestBuilder = mockHttpServletRequestBuilder.contentType(MediaType.APPLICATION_JSON);
-
-
-    System.out.println("\n\n\n");
-    System.out.println(mockHttpServletRequestBuilder);
-    System.out.println(objectMapper.writeValueAsString(mockRV));
-    System.out.println(repViewJson.equals(objectMapper.writeValueAsString(mockRV)));
-    System.out.println("\n\n\n");
-
-    ResultActions resultActions = mockMvc.perform(mockHttpServletRequestBuilder);
-      
-    resultActions =  resultActions.andExpect(status().isOk())
-
-    //   mockMvc
-    //   .perform(RestDocumentationRequestBuilders.post(REPOSITORY_VIEW_URI).content(objectMapper.writeValueAsString(mockRV))
-    //     .contentType(MediaType.APPLICATION_JSON))
-    // .andExpect(status().isOk())
-      // .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
-      //   requestFields(
-      //     describeRepositoryView.withField("id", "Repository View id.").ignored(),
-      //     describeRepositoryView.withField("name", "The name of this Repository View."),
-      //     describeRepositoryView.withField("rootUri", "Root URI where to the repository represented by this Repository View."),
-      //     describeRepositoryView.withField("type", "The Repository Type of this Repository View."),
-      //     describeRepositoryView.withField("username", "Optional username to use when authenticating with the repository represented by this Repository View."),
-      //     describeRepositoryView.withField("password", "Optional password to use when authenticating with the repository represented by this Repository View."),
-      //     describeRepositoryView.withField("schemas", "Optional list of Schema to resister with this Repository View."),
-      //     describeRepositoryView.withField("curators", "Optional list of Curators with edit permissions to this Repository View."),
-      //     describeRepositoryView.withField("metadataPrefixes", "Short hand references to the registered schemas.")
-      //   )))
-      ;
+      mockMvc
+      .perform(RestDocumentationRequestBuilders.post(REPOSITORY_VIEW_URI).content(objectMapper.writeValueAsString(mockRV))
+        .contentType(MediaType.APPLICATION_JSON))
+      .andExpect(status().isOk())
+      .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
+        requestFields(
+          describeRepositoryView.withField("id", "Repository View id.").ignored(),
+          describeRepositoryView.withField("name", "The name of this Repository View."),
+          describeRepositoryView.withField("rootUri", "Root URI where to the repository represented by this Repository View."),
+          describeRepositoryView.withField("type", "The Repository Type of this Repository View."),
+          describeRepositoryView.withField("username", "Optional username to use when authenticating with the repository represented by this Repository View."),
+          describeRepositoryView.withField("password", "Optional password to use when authenticating with the repository represented by this Repository View."),
+          describeRepositoryView.withField("schemas", "Optional list of Schema to resister with this Repository View."),
+          describeRepositoryView.withField("curators", "Optional list of Curators with edit permissions to this Repository View."),
+          describeRepositoryView.withField("metadataPrefixes", "Short hand references to the registered schemas.")
+        )));
 
   }
 
