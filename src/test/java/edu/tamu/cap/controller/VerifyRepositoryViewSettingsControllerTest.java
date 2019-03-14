@@ -96,6 +96,8 @@ public final class VerifyRepositoryViewSettingsControllerTest {
   public void setUp() throws Exception {
       mockRepositoryView = new RepositoryView(RepositoryViewType.FEDORA, TEST_REPOSITORY_VIEW_NAME, TEST_REPOSITORY_VIEW_URI);
       mockRepositoryView.setId(1L);
+      mockRepositoryView.setUsername("");
+      mockRepositoryView.setPassword("");
 
       when(repositoryViewRepo.getOne(1L)).thenReturn(mockRepositoryView);
       when(repositoryViewRepo.findOne(1L)).thenReturn(mockRepositoryView);
