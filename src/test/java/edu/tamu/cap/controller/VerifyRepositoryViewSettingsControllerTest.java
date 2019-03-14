@@ -47,7 +47,7 @@ import edu.tamu.cap.utility.ConstraintDescriptionsHelper;
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs(outputDir = "target/generated-snippets")
 public final class VerifyRepositoryViewSettingsControllerTest {
-  private static final String TEST_REPOSITORY_VIEW_TYPE = "/repository-view/{type}/verify";
+  private static final String CONTROLLER_PATH = "/repository-view/{type}/verify";
   private static final String TEST_REPOSITORY_VIEW_NAME = "TEST_REPOSITORY_VIEW_NAME";
   private static final String TEST_REPOSITORY_VIEW_URI = "http://test-repository-view.org";
 
@@ -93,7 +93,7 @@ public final class VerifyRepositoryViewSettingsControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     public void verifyRVPing() throws Exception {
-        mockMvc.perform(post(TEST_REPOSITORY_VIEW_TYPE + "/ping", RepositoryViewType.FEDORA).content(objectMapper.writeValueAsString(mockRepositoryView)).contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+        mockMvc.perform(post(CONTROLLER_PATH + "/ping", RepositoryViewType.FEDORA).content(objectMapper.writeValueAsString(mockRepositoryView)).contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
              .andExpect(status().isOk())
              .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
                  createPathParametersSnippet(),
@@ -105,7 +105,7 @@ public final class VerifyRepositoryViewSettingsControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     public void verifyRepositoryViewAuth() throws Exception {
-        mockMvc.perform(post(TEST_REPOSITORY_VIEW_TYPE + "/auth", RepositoryViewType.FEDORA).content(objectMapper.writeValueAsString(mockRepositoryView)).contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+        mockMvc.perform(post(CONTROLLER_PATH + "/auth", RepositoryViewType.FEDORA).content(objectMapper.writeValueAsString(mockRepositoryView)).contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(status().isOk())
             .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
                 createPathParametersSnippet(),
@@ -117,7 +117,7 @@ public final class VerifyRepositoryViewSettingsControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     public void verifyRepositoryViewContent() throws Exception {
-        mockMvc.perform(post(TEST_REPOSITORY_VIEW_TYPE + "/content", RepositoryViewType.FEDORA).content(objectMapper.writeValueAsString(mockRepositoryView)).contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+        mockMvc.perform(post(CONTROLLER_PATH + "/content", RepositoryViewType.FEDORA).content(objectMapper.writeValueAsString(mockRepositoryView)).contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(status().isOk())
             .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
                 createPathParametersSnippet(),
