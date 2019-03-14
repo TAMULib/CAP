@@ -26,8 +26,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.RequestFieldsSnippet;
 import org.springframework.restdocs.payload.ResponseFieldsSnippet;
+import org.springframework.restdocs.request.ParameterDescriptor;
 import org.springframework.restdocs.request.PathParametersSnippet;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -50,8 +52,31 @@ public final class VerifyRepositoryViewSettingsControllerTest {
   private static final String TEST_REPOSITORY_VIEW_NAME = "TEST_REPOSITORY_VIEW_NAME";
   private static final String TEST_REPOSITORY_VIEW_URI = "http://test-repository-view.org";
 
-  private static final ConstraintDescriptionsHelper describeRepositoryView = new ConstraintDescriptionsHelper(
-      RepositoryView.class);
+  private static final ConstraintDescriptionsHelper describeRepositoryView = new ConstraintDescriptionsHelper(RepositoryView.class);
+
+  private static FieldDescriptor[] repositoryViewDescriptor = new FieldDescriptor[] {
+      describeRepositoryView.withField("id", "Repository View id.").optional(),
+      describeRepositoryView.withField("name", "The name of this Repository View."),
+      describeRepositoryView.withField("rootUri", "Root URI where to the repository represented by this Repository View."),
+      describeRepositoryView.withField("type", "The Repository Type of this Repository View."),
+      describeRepositoryView.withField("username", "Optional username to use when authenticating with the repository represented by this Repository View."),
+      describeRepositoryView.withField("password", "Optional password to use when authenticating with the repository represented by this Repository View."),
+      describeRepositoryView.withField("schemas", "Optional list of Schema to resister with this Repository View."),
+      describeRepositoryView.withField("curators", "Optional list of Curators with edit permissions to this Repository View."),
+      describeRepositoryView.withField("metadataPrefixes", "Short hand references to the registered schemas.")
+  };
+
+  private static ParameterDescriptor[] typePathDescriptor = new ParameterDescriptor[] {
+      parameterWithName("type").description("The Repository View type name.")
+  };
+
+  private static FieldDescriptor[] responseDescriptor = new FieldDescriptor[] {
+      fieldWithPath("meta.status").description("An enumerated string designating the success/failure of the request."),
+      fieldWithPath("meta.action").description("The action associated with the status and message."),
+      fieldWithPath("meta.message").description("A message associated with the response, often describing what was successful or what has failed."),
+      fieldWithPath("meta.id").description("An ID associated with the meta action."),
+      fieldWithPath("payload").description("The expected data, if applicable.")
+  };
 
   @Autowired
   private MockMvc mockMvc;
@@ -92,9 +117,9 @@ public final class VerifyRepositoryViewSettingsControllerTest {
         mockMvc.perform(post(CONTROLLER_PATH + "/ping", RepositoryViewType.FEDORA).content(objectMapper.writeValueAsString(mockRepositoryView)).contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
              .andExpect(status().isOk())
              .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
-                 createPathParametersSnippet(),
-                 createRequestFieldsSnippet(),
-                 createResponseFieldsSnippet()
+                 pathParameters(typePathDescriptor),
+                 requestFields(repositoryViewDescriptor),
+                 responseFields(responseDescriptor)
              ));
     }
 
@@ -104,9 +129,9 @@ public final class VerifyRepositoryViewSettingsControllerTest {
         mockMvc.perform(post(CONTROLLER_PATH + "/auth", RepositoryViewType.FEDORA).content(objectMapper.writeValueAsString(mockRepositoryView)).contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(status().isOk())
             .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
-                createPathParametersSnippet(),
-                createRequestFieldsSnippet(),
-                createResponseFieldsSnippet()
+                pathParameters(typePathDescriptor),
+                requestFields(repositoryViewDescriptor),
+                responseFields(responseDescriptor)
             ));
     }
 
@@ -116,40 +141,10 @@ public final class VerifyRepositoryViewSettingsControllerTest {
         mockMvc.perform(post(CONTROLLER_PATH + "/content", RepositoryViewType.FEDORA).content(objectMapper.writeValueAsString(mockRepositoryView)).contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(status().isOk())
             .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
-                createPathParametersSnippet(),
-                createRequestFieldsSnippet(),
-                createResponseFieldsSnippet()
+                pathParameters(typePathDescriptor),
+                requestFields(repositoryViewDescriptor),
+                responseFields(responseDescriptor)
             ));
-    }
-
-    private PathParametersSnippet createPathParametersSnippet() {
-        return pathParameters(
-            parameterWithName("type").description("The Repository View type name.")
-        );
-    }
-
-    private RequestFieldsSnippet createRequestFieldsSnippet() {
-        return requestFields(
-            describeRepositoryView.withField("id", "Repository View id.").optional(),
-            describeRepositoryView.withField("name", "The name of this Repository View."),
-            describeRepositoryView.withField("rootUri", "Root URI where to the repository represented by this Repository View."),
-            describeRepositoryView.withField("type", "The Repository Type of this Repository View."),
-            describeRepositoryView.withField("username", "Optional username to use when authenticating with the repository represented by this Repository View."),
-            describeRepositoryView.withField("password", "Optional password to use when authenticating with the repository represented by this Repository View."),
-            describeRepositoryView.withField("schemas", "Optional list of Schema to resister with this Repository View."),
-            describeRepositoryView.withField("curators", "Optional list of Curators with edit permissions to this Repository View."),
-            describeRepositoryView.withField("metadataPrefixes", "Short hand references to the registered schemas.")
-        );
-    }
-
-    private ResponseFieldsSnippet createResponseFieldsSnippet() {
-        return responseFields(
-            fieldWithPath("meta.status").description("An enumerated string designating the success/failure of the request."),
-            fieldWithPath("meta.action").description("The action associated with the status and message."),
-            fieldWithPath("meta.message").description("A message associated with the response, often describing what was successful or what has failed."),
-            fieldWithPath("meta.id").description("An ID associated with the meta action."),
-            fieldWithPath("payload").description("The expected data, if applicable.")
-        );
     }
 
 }
