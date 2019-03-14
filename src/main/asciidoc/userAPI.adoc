@@ -10,36 +10,36 @@ A `GET` request to the `/user/credentials` endpoint.
 A `GET` request to the `/user/all` endpoint. This will result in returning a list of all users in the repository.
 
 ==== Sample Request
-include::../../../target/generated-snippets/user/all-users/http-request.adoc[]
+include::../../../target/generated-snippets/all-users/http-request.adoc[]
 
 ==== Sample Response
-include::../../../target/generated-snippets/user/all-users/http-response.adoc[]
+include::../../../target/generated-snippets/all-users/http-response.adoc[]
 
 ==== Example Curl Request
-include::../../../target/generated-snippets/user/all-users/curl-request.adoc[]
+include::../../../target/generated-snippets/all-users/curl-request.adoc[]
 
 === Update
 
 A `GET` request to the `/user/update` endpoint. This will result updating the specified user.
 
 ==== Sample Request
-include::../../../target/generated-snippets/user/update/http-request.adoc[]
+include::../../../target/generated-snippets/update/http-request.adoc[]
 
 ==== Sample Response
-include::../../../target/generated-snippets/user/update/http-response.adoc[]
+include::../../../target/generated-snippets/update/http-response.adoc[]
 
 ==== Example Curl Request
-include::../../../target/generated-snippets/user/update/curl-request.adoc[]
+include::../../../target/generated-snippets/update/curl-request.adoc[]
 
 === Delete
 
 A `GET` request to the `/user/delete` endpoint. This will result deleting the specified user.
 
 ==== Sample Request
-include::../../../target/generated-snippets/user/delete/http-request.adoc[]
+include::../../../target/generated-snippets/delete/http-request.adoc[]
 
 ==== Sample Response
-include::../../../target/generated-snippets/user/delete/http-response.adoc[]
+include::../../../target/generated-snippets/delete/http-response.adoc[]
 
 ==== Example Curl Request
-include::../../../target/generated-snippets/user/delete/curl-request.adoc[]
+include::../../../target/generated-snippets/delete/curl-request.adoc[]

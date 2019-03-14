@@ -43,7 +43,7 @@ import edu.tamu.weaver.auth.model.Credentials;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-@AutoConfigureRestDocs(outputDir = "target/generated-snippets/user")
+@AutoConfigureRestDocs(outputDir = "target/generated-snippets")
 public final class UserControllerTest {
   private static final String CONTROLLER_PATH = "/user";
 
