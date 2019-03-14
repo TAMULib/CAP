@@ -20,7 +20,7 @@ include::../../../target/generated-snippets/all-users/curl-request.adoc[]
 
 === Update
 
-A `GET` request to the `/user/update` endpoint. This will result updating the specified user.
+A `POST` request to the `/user/update` endpoint. This will result updating the specified user.
 
 ==== Sample Request
 include::../../../target/generated-snippets/update/http-request.adoc[]
@@ -33,7 +33,7 @@ include::../../../target/generated-snippets/update/curl-request.adoc[]
 
 === Delete
 
-A `GET` request to the `/user/delete` endpoint. This will result deleting the specified user.
+A `POST` request to the `/user/delete` endpoint. This will result deleting the specified user.
 
 ==== Sample Request
 include::../../../target/generated-snippets/delete/http-request.adoc[]
