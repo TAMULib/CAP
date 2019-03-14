@@ -26,7 +26,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.payload.RequestFieldsSnippet;
 import org.springframework.restdocs.payload.ResponseFieldsSnippet;
 import org.springframework.restdocs.request.PathParametersSnippet;
@@ -59,9 +58,6 @@ public final class VerifyRepositoryViewSettingsControllerTest {
 
   @Autowired
   private ObjectMapper objectMapper;
-
-  @Autowired
-  RestDocumentationResultHandler rdh;
 
   @MockBean
   private RepositoryViewRepo repositoryViewRepo;
