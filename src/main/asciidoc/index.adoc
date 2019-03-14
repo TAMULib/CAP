@@ -14,3 +14,5 @@ include::./repositoryViewAPI.adoc[]
 include::./verifyRepositoryViewAPI.adoc[]
 
 include::./schemaAPI.adoc[]
+
+include::./userAPI.adoc[]
