@@ -3,7 +3,7 @@ A Collection of endpoints used for performing User actions.
 
 === Credentials
 
-A `GET` request to the `/user/credentials` endpoint.
+A `GET` request to the `/user/credentials` endpoint. This will result in returning the credentials for the current user. Credentials are a specific subset of User data.
 
 === All Users
 
