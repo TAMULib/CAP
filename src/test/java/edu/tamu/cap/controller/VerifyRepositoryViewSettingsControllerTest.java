@@ -43,7 +43,7 @@ import edu.tamu.cap.utility.ConstraintDescriptionsHelper;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-@AutoConfigureRestDocs(outputDir = "target/generated-snippets/repository-view")
+@AutoConfigureRestDocs(outputDir = "target/generated-snippets")
 public final class VerifyRepositoryViewSettingsControllerTest {
   private static final String CONTROLLER_PATH = "/repository-view/{type}/verify";
   private static final String TEST_REPOSITORY_VIEW_NAME = "TEST_REPOSITORY_VIEW_NAME";

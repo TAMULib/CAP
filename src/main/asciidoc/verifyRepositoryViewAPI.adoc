@@ -1,59 +1,59 @@
 == Verify Repository View API
-A Collection of endpoints used for verifying CAP's Repository View resource.
+A Collection of CRUD API endpoints used for verifying CAP's Repository View resource.
 
 === Ping Repository View
 
 A `POST` request to the `/repository-view/{type}/ping` endpoint. This will result in the asserting the ability to connect to the repository.
 
 ==== Path Parameters
-include::../../../target/generated-snippets/repository-view/verify-r-v-ping/path-parameters.adoc[]
+include::../../../target/generated-snippets/verify-r-v-ping/path-parameters.adoc[]
 
 ==== Request Fields
-include::../../../target/generated-snippets/repository-view/verify-r-v-ping/request-fields.adoc[]
+include::../../../target/generated-snippets/verify-r-v-ping/request-fields.adoc[]
 
 ==== Sample Request
-include::../../../target/generated-snippets/repository-view/verify-r-v-ping/http-request.adoc[]
+include::../../../target/generated-snippets/verify-r-v-ping/http-request.adoc[]
 
 ==== Sample Response
-include::../../../target/generated-snippets/repository-view/verify-r-v-ping/http-response.adoc[]
+include::../../../target/generated-snippets/verify-r-v-ping/http-response.adoc[]
 
 ==== Example Curl Request
-include::../../../target/generated-snippets/repository-view/verify-r-v-ping/curl-request.adoc[]
+include::../../../target/generated-snippets/verify-r-v-ping/curl-request.adoc[]
 
 === Verify Repository View Authentication
 
 A `POST` request to the `/repository-view/{type}/auth` endpoint. This will result in the asserting the ability to access to the repository using the configured credentials.
 
 ==== Path Parameters
-include::../../../target/generated-snippets/repository-view/verify-repository-view-auth/path-parameters.adoc[]
+include::../../../target/generated-snippets/verify-repository-view-auth/path-parameters.adoc[]
 
 ==== Request Fields
-include::../../../target/generated-snippets/repository-view/verify-repository-view-auth/request-fields.adoc[]
+include::../../../target/generated-snippets/verify-repository-view-auth/request-fields.adoc[]
 
 ==== Sample Request
-include::../../../target/generated-snippets/repository-view/verify-repository-view-auth/http-request.adoc[]
+include::../../../target/generated-snippets/verify-repository-view-auth/http-request.adoc[]
 
 ==== Sample Response
-include::../../../target/generated-snippets/repository-view/verify-repository-view-auth/http-response.adoc[]
+include::../../../target/generated-snippets/verify-repository-view-auth/http-response.adoc[]
 
 ==== Example Curl Request
-include::../../../target/generated-snippets/repository-view/verify-repository-view-auth/curl-request.adoc[]
+include::../../../target/generated-snippets/verify-repository-view-auth/curl-request.adoc[]
 
 === Verify Repository View Content
 
 A `POST` request to the `/repository-view/{type}/content` endpoint. This will result in the asserting the validity of the response as a valid repository view data source.
 
 ==== Path Parameters
-include::../../../target/generated-snippets/repository-view/verify-repository-view-content/path-parameters.adoc[]
+include::../../../target/generated-snippets/verify-repository-view-content/path-parameters.adoc[]
 
 ==== Request Fields
-include::../../../target/generated-snippets/repository-view/verify-repository-view-content/request-fields.adoc[]
+include::../../../target/generated-snippets/verify-repository-view-content/request-fields.adoc[]
 
 ==== Sample Request
-include::../../../target/generated-snippets/repository-view/verify-repository-view-content/http-request.adoc[]
+include::../../../target/generated-snippets/verify-repository-view-content/http-request.adoc[]
 
 ==== Sample Response
-include::../../../target/generated-snippets/repository-view/verify-repository-view-content/http-response.adoc[]
+include::../../../target/generated-snippets/verify-repository-view-content/http-response.adoc[]
 
 ==== Example Curl Request
-include::../../../target/generated-snippets/repository-view/verify-repository-view-content/curl-request.adoc[]
+include::../../../target/generated-snippets/verify-repository-view-content/curl-request.adoc[]
