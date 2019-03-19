@@ -4,21 +4,12 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,27 +29,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.tamu.cap.model.RepositoryView;
 import edu.tamu.cap.model.repo.RepositoryViewRepo;
 import edu.tamu.cap.model.response.RepositoryViewContext;
-import edu.tamu.cap.model.response.Triple;
 import edu.tamu.cap.service.FedoraService;
 import edu.tamu.cap.service.RepositoryViewType;
-import edu.tamu.cap.utility.ConstraintDescriptionsHelper;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs(outputDir = "target/generated-snippets")
-
-public class RepositoryViewContextControllerTest {
-    private static final String CONTROLLER_PATH = "/repository-view-context/{type}/{repositoryViewId}";
-
-    private static final ConstraintDescriptionsHelper describeRepositoryViewContext = new ConstraintDescriptionsHelper(RepositoryViewContext.class);
+public class RepositoryViewContextVersionControllerTest {
+    private static final String CONTROLLER_PATH = "/repository-view-context/{type}/{repositoryViewId}/version";
 
     private static final RepositoryViewType TEST_REPOSITORY_VIEW_TYPE = RepositoryViewType.FEDORA;
     private static final String TEST_REPOSITORY_VIEW_NAME = "TEST_REPOSITORY_VIEW_NAME";
     private static final String TEST_REPOSITORY_VIEW_URI = "http://test-repository-view.org";
 
     private static final String TEST_CONTEXT_ORG_URI = "http://example.com";
-    private static final Triple TEST_TRIPLE = new Triple("TestSubject", "TestPredicate", "TestObject");
 
     @Autowired
     private MockMvc mockMvc;
@@ -94,36 +79,29 @@ public class RepositoryViewContextControllerTest {
         when(mockFedoraService.getRepositoryViewContext(any(String.class))).thenReturn(mockRepositoryViewContext);
     }
 
-    @After
-    public void tearDown() {
-        // resositoryViewRepo.deleteAll();
-    }
+// TODO: @PayloadArgName ?
+//    @Test
+//    @WithMockUser(roles = "USER")
+//    public void createVersion() throws Exception {
+//        when(mockFedoraService.createVersion(any(String.class), any(String.class))).thenReturn(mockRepositoryViewContext);
+//
+//        mockMvc.perform(
+//            post(CONTROLLER_PATH, TEST_REPOSITORY_VIEW_TYPE, mockRepositoryView.getId())
+//                .param("contextUri", TEST_CONTEXT_ORG_URI)
+//                .content(objectMapper.writeValueAsString(mockRepositoryView))
+//                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE
+//            )
+//        )
+//        .andExpect(status().isOk());
+//    }
 
     @Test
     @WithMockUser(roles = "USER")
-    public void getRepositoryViewContext() throws Exception {
-        mockMvc.perform(
-            get(CONTROLLER_PATH, TEST_REPOSITORY_VIEW_TYPE, mockRepositoryView.getId())
-                .param("contextUri", TEST_CONTEXT_ORG_URI)
-            )
-            .andExpect(status().isOk())
-            .andDo(
-                document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
-                    pathParameters(
-                        describeRepositoryViewContext.withParameter("type", "The type of the Repository view to be rendered as a Repository View Context."),
-                        describeRepositoryViewContext.withParameter("repositoryViewId", "The id of the Repository view to be rendered as a Repository View Context.")
-                    )
-                )
-            );
-    }
-
-    @Test
-    @WithMockUser(roles = "USER")
-    public void deleteRepositoryViewContext() throws Exception {
-        doNothing().when(mockFedoraService).deleteRepositoryViewContext(any(String.class));
+    public void restoreVersion() throws Exception {
+        when(mockFedoraService.restoreVersion(any(String.class))).thenReturn(mockRepositoryViewContext);
 
         mockMvc.perform(
-            delete(CONTROLLER_PATH, TEST_REPOSITORY_VIEW_TYPE, mockRepositoryView.getId())
+            patch(CONTROLLER_PATH, TEST_REPOSITORY_VIEW_TYPE, mockRepositoryView.getId())
                 .param("contextUri", TEST_CONTEXT_ORG_URI)
                 .content(objectMapper.writeValueAsString(mockRepositoryView))
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE
@@ -134,23 +112,16 @@ public class RepositoryViewContextControllerTest {
 
     @Test
     @WithMockUser(roles = "USER")
-    public void getTriples() throws Exception {
-        List<Triple> mockTriples = new ArrayList<Triple>();
-        mockTriples.add(TEST_TRIPLE);
-        when(mockFedoraService.getTriples(any(FedoraService.class), any(String.class))).thenReturn(mockTriples);
+    public void deleteVersion() throws Exception {
+        doNothing().when(mockFedoraService).deleteVersion(any(String.class));
 
         mockMvc.perform(
-            get(CONTROLLER_PATH + "/triples", TEST_REPOSITORY_VIEW_TYPE, mockRepositoryView.getId())
+            delete(CONTROLLER_PATH, TEST_REPOSITORY_VIEW_TYPE, mockRepositoryView.getId())
                 .param("contextUri", TEST_CONTEXT_ORG_URI)
+                .content(objectMapper.writeValueAsString(mockRepositoryView))
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE
             )
-            .andExpect(status().isOk())
-            .andDo(
-                document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
-                    pathParameters(
-                        describeRepositoryViewContext.withParameter("type", "The type of the Repository view to be rendered as a Repository View Context."),
-                        describeRepositoryViewContext.withParameter("repositoryViewId", "The id of the Repository view to be rendered as a Repository View Context.")
-                    )
-                )
-            );
+        )
+        .andExpect(status().isOk());
     }
 }

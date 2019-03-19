@@ -46,12 +46,14 @@ import edu.tamu.cap.utility.ConstraintDescriptionsHelper;
 @AutoConfigureRestDocs(outputDir = "target/generated-snippets")
 public final class VerifyRepositoryViewSettingsControllerTest {
   private static final String CONTROLLER_PATH = "/repository-view/{type}/verify";
+
+  private static final RepositoryViewType TEST_REPOSITORY_VIEW_TYPE = RepositoryViewType.FEDORA;
   private static final String TEST_REPOSITORY_VIEW_NAME = "TEST_REPOSITORY_VIEW_NAME";
   private static final String TEST_REPOSITORY_VIEW_URI = "http://test-repository-view.org";
 
   private static final ConstraintDescriptionsHelper describeRepositoryView = new ConstraintDescriptionsHelper(RepositoryView.class);
 
-  private static FieldDescriptor[] repositoryViewDescriptor = new FieldDescriptor[] {
+  private static final FieldDescriptor[] repositoryViewDescriptor = new FieldDescriptor[] {
       describeRepositoryView.withField("id", "Repository View id.").optional(),
       describeRepositoryView.withField("name", "The name of this Repository View."),
       describeRepositoryView.withField("rootUri", "Root URI where to the repository represented by this Repository View."),
@@ -63,11 +65,11 @@ public final class VerifyRepositoryViewSettingsControllerTest {
       describeRepositoryView.withField("metadataPrefixes", "Short hand references to the registered schemas.")
   };
 
-  private static ParameterDescriptor[] typePathDescriptor = new ParameterDescriptor[] {
+  private static final ParameterDescriptor[] typePathDescriptor = new ParameterDescriptor[] {
       parameterWithName("type").description("The Repository View type name.")
   };
 
-  private static FieldDescriptor[] responseDescriptor = new FieldDescriptor[] {
+  private static final FieldDescriptor[] responseDescriptor = new FieldDescriptor[] {
       fieldWithPath("meta.status").description("An enumerated string designating the success/failure of the request."),
       fieldWithPath("meta.action").description("The action associated with the status and message."),
       fieldWithPath("meta.message").description("A message associated with the response, often describing what was successful or what has failed."),
@@ -91,59 +93,74 @@ public final class VerifyRepositoryViewSettingsControllerTest {
 
   @Before
   public void setUp() throws Exception {
-      mockRepositoryView = new RepositoryView(RepositoryViewType.FEDORA, TEST_REPOSITORY_VIEW_NAME, TEST_REPOSITORY_VIEW_URI);
+      mockRepositoryView = new RepositoryView(TEST_REPOSITORY_VIEW_TYPE, TEST_REPOSITORY_VIEW_NAME, TEST_REPOSITORY_VIEW_URI);
       mockRepositoryView.setId(1L);
       mockRepositoryView.setUsername("");
       mockRepositoryView.setPassword("");
 
-      when(repositoryViewRepo.getOne(1L)).thenReturn(mockRepositoryView);
-      when(repositoryViewRepo.findOne(1L)).thenReturn(mockRepositoryView);
+      when(repositoryViewRepo.getOne(mockRepositoryView.getId())).thenReturn(mockRepositoryView);
+      when(repositoryViewRepo.findOne(mockRepositoryView.getId())).thenReturn(mockRepositoryView);
 
       ProceedingJoinPoint mockJoinPoint = mock(ProceedingJoinPoint.class);
 
       Object[] args = new Object[] { mockFedoraService };
 
+      when(mockJoinPoint.getArgs()).thenReturn(args);
+
       doNothing().when(mockFedoraService).verifyPing();
       doNothing().when(mockFedoraService).verifyAuth();
       doNothing().when(mockFedoraService).verifyRoot();
-
-      when(mockJoinPoint.getArgs()).thenReturn(args);
     }
 
     @Test
     @WithMockUser(roles = "ADMIN")
     public void verifyRVPing() throws Exception {
-        mockMvc.perform(post(CONTROLLER_PATH + "/ping", RepositoryViewType.FEDORA).content(objectMapper.writeValueAsString(mockRepositoryView)).contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-             .andExpect(status().isOk())
-             .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
-                 pathParameters(typePathDescriptor),
-                 requestFields(repositoryViewDescriptor),
-                 responseFields(responseDescriptor)
-             ));
+        mockMvc.perform(
+                post(CONTROLLER_PATH + "/ping", TEST_REPOSITORY_VIEW_TYPE)
+                    .content(objectMapper.writeValueAsString(mockRepositoryView))
+                    .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+            )
+            .andExpect(status().isOk())
+            .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
+                pathParameters(typePathDescriptor),
+                requestFields(repositoryViewDescriptor),
+                responseFields(responseDescriptor)
+            )
+        );
     }
 
     @Test
     @WithMockUser(roles = "ADMIN")
     public void verifyRepositoryViewAuth() throws Exception {
-        mockMvc.perform(post(CONTROLLER_PATH + "/auth", RepositoryViewType.FEDORA).content(objectMapper.writeValueAsString(mockRepositoryView)).contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+        mockMvc.perform(
+                post(CONTROLLER_PATH + "/auth", TEST_REPOSITORY_VIEW_TYPE)
+                    .content(objectMapper.writeValueAsString(mockRepositoryView))
+                    .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+            )
             .andExpect(status().isOk())
             .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
                 pathParameters(typePathDescriptor),
                 requestFields(repositoryViewDescriptor),
                 responseFields(responseDescriptor)
-            ));
+            )
+        );
     }
 
     @Test
     @WithMockUser(roles = "ADMIN")
     public void verifyRepositoryViewContent() throws Exception {
-        mockMvc.perform(post(CONTROLLER_PATH + "/content", RepositoryViewType.FEDORA).content(objectMapper.writeValueAsString(mockRepositoryView)).contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+        mockMvc.perform(
+                post(CONTROLLER_PATH + "/content", TEST_REPOSITORY_VIEW_TYPE)
+                    .content(objectMapper.writeValueAsString(mockRepositoryView))
+                    .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                )
             .andExpect(status().isOk())
             .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
                 pathParameters(typePathDescriptor),
                 requestFields(repositoryViewDescriptor),
                 responseFields(responseDescriptor)
-            ));
+            )
+        );
     }
 
 }
