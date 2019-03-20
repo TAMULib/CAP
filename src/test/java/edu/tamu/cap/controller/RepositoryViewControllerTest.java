@@ -44,7 +44,7 @@ import edu.tamu.weaver.auth.model.Credentials;
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs(outputDir = "target/generated-snippets")
 
-public final class ReopositoryViewControllerTest {
+public final class RepositoryViewControllerTest {
 
   private static final ConstraintDescriptionsHelper describeRepositoryView = new ConstraintDescriptionsHelper(RepositoryView.class);
 
@@ -87,30 +87,30 @@ public final class ReopositoryViewControllerTest {
   }
 
 // FIXME: test not working as expected.
-//  @Test
-//  @WithMockUser(roles = "ADMIN")
-//  public void createRepositoryView() throws Exception {
-//
-//    RepositoryView mockRV = resositoryViewRepo.getOne(1L);
-//
-//      mockMvc
-//      .perform(RestDocumentationRequestBuilders.post(REPOSITORY_VIEW_URI).content(objectMapper.writeValueAsString(mockRV))
-//        .contentType(MediaType.APPLICATION_JSON))
-//      .andExpect(status().isOk())
-//      .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
-//        requestFields(
-//          describeRepositoryView.withField("id", "Repository View id.").ignored(),
-//          describeRepositoryView.withField("name", "The name of this Repository View."),
-//          describeRepositoryView.withField("rootUri", "Root URI where to the repository represented by this Repository View."),
-//          describeRepositoryView.withField("type", "The Repository Type of this Repository View."),
-//          describeRepositoryView.withField("username", "Optional username to use when authenticating with the repository represented by this Repository View."),
-//          describeRepositoryView.withField("password", "Optional password to use when authenticating with the repository represented by this Repository View."),
-//          describeRepositoryView.withField("schemas", "Optional list of Schema to resister with this Repository View."),
-//          describeRepositoryView.withField("curators", "Optional list of Curators with edit permissions to this Repository View."),
-//          describeRepositoryView.withField("metadataPrefixes", "Short hand references to the registered schemas.")
-//        )));
-//
-//  }
+  @Test
+  @WithMockUser(roles = "ADMIN")
+  public void createRepositoryView() throws Exception {
+
+    RepositoryView mockRV = resositoryViewRepo.getOne(1L);
+
+      mockMvc
+      .perform(RestDocumentationRequestBuilders.post(REPOSITORY_VIEW_URI).content(objectMapper.writeValueAsString(mockRV))
+        .contentType(MediaType.APPLICATION_JSON))
+      .andExpect(status().isOk())
+      .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
+        requestFields(
+          describeRepositoryView.withField("id", "Repository View id.").ignored(),
+          describeRepositoryView.withField("name", "The name of this Repository View."),
+          describeRepositoryView.withField("rootUri", "Root URI where to the repository represented by this Repository View."),
+          describeRepositoryView.withField("type", "The Repository Type of this Repository View."),
+          describeRepositoryView.withField("username", "Optional username to use when authenticating with the repository represented by this Repository View."),
+          describeRepositoryView.withField("password", "Optional password to use when authenticating with the repository represented by this Repository View."),
+          describeRepositoryView.withField("schemas", "Optional list of Schema to resister with this Repository View."),
+          describeRepositoryView.withField("curators", "Optional list of Curators with edit permissions to this Repository View."),
+          describeRepositoryView.withField("metadataPrefixes", "Short hand references to the registered schemas.")
+        )));
+
+  }
 
   @Test
   @WithMockUser(roles = "CURATOR")
