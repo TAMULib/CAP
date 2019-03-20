@@ -14,7 +14,6 @@ include::../../../target/generated-snippets/create-schema/http-request.adoc[]
 ==== Sample Response
 include::../../../target/generated-snippets/create-schema/http-response.adoc[]
 
-
 === Get All Schemas
 
 A `GET` request to the `/schema` endpoint which will result in a list of all schemas registered with CAP.

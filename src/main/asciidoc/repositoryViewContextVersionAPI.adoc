@@ -1,0 +1,32 @@
+== Repository View Context Version API
+A Collection of CRUD API endpoints used for interacting with CAP's Repository View Version resource.
+
+=== Create Version
+
+A `POST` request to the `/repository-view-context/{type}/{repositoryViewId}/version?contexturi={contextUri}` endpoint, where `contextUri` will equal resource within the designated repository. This will result in creating a specified version of a Repository View Context.
+
+=== Restore Version
+
+A `PATCH` request to the `/repository-view-context/{type}/{repositoryViewId}/version?contexturi={contextUri}` endpoint, where `contextUri` will equal resource within the designated repository. This will result in restoring a specified version of a Repository View Context.
+
+==== Sample Request
+include::../../../target/generated-snippets/restore-version/http-request.adoc[]
+
+==== Sample Response
+include::../../../target/generated-snippets/restore-version/http-response.adoc[]
+
+==== Example Curl Request
+include::../../../target/generated-snippets/restore-version/curl-request.adoc[]
+
+=== Delete Version
+
+A `DELETE` request to the `/repository-view-context/{type}/{repositoryViewId}/version?contexturi={contextUri}` endpoint, where `contextUri` will equal resource within the designated repository. This will resultin deleting a specified version of a Repository View Context.
+
+==== Sample Request
+include::../../../target/generated-snippets/delete-version/http-request.adoc[]
+
+==== Sample Response
+include::../../../target/generated-snippets/delete-version/http-response.adoc[]
+
+==== Example Curl Request
+include::../../../target/generated-snippets/delete-version/curl-request.adoc[]
