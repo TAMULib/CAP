@@ -3,10 +3,16 @@ package edu.tamu.cap.controller.repositoryviewcontext;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
@@ -23,6 +29,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.request.ParameterDescriptor;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -50,6 +57,11 @@ public class RepositoryViewContextMetadataControllerTest {
 
     private static final String TEST_CONTEXT_ORG_URI = "http://example.com";
     private static final Triple TEST_TRIPLE = new Triple("TestSubject", "TestPredicate", "TestObject");
+
+    private static final ParameterDescriptor[] urlPathDescriptor = new ParameterDescriptor[] {
+        parameterWithName("type").description("The type of the Repository view to be rendered as a Repository View Context."),
+        parameterWithName("repositoryViewId").description("The id of the Repository view to be rendered as a Repository View Context.")
+    };
 
     @Autowired
     private MockMvc mockMvc;
@@ -98,7 +110,10 @@ public class RepositoryViewContextMetadataControllerTest {
                 .content(objectMapper.writeValueAsString(TEST_TRIPLE))
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
         )
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
+            pathParameters(urlPathDescriptor)
+        ));
     }
 
     @Test
@@ -112,7 +127,10 @@ public class RepositoryViewContextMetadataControllerTest {
             get(CONTROLLER_PATH, TEST_REPOSITORY_VIEW_TYPE, mockRepositoryView.getId())
                 .param("contextUri", TEST_CONTEXT_ORG_URI)
         )
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
+            pathParameters(urlPathDescriptor)
+        ));
     }
 
     @Test
@@ -129,7 +147,10 @@ public class RepositoryViewContextMetadataControllerTest {
                 .content(objectMapper.writeValueAsString(TEST_TRIPLE))
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
         )
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
+            pathParameters(urlPathDescriptor)
+        ));
     }
 
     @Test
@@ -143,6 +164,9 @@ public class RepositoryViewContextMetadataControllerTest {
                 .content(objectMapper.writeValueAsString(TEST_TRIPLE))
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
         )
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
+            pathParameters(urlPathDescriptor)
+        ));
     }
 }

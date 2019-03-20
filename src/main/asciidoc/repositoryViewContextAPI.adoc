@@ -21,6 +21,9 @@ include::../../../target/generated-snippets/get-repository-view-context/curl-req
 
 A `DELETE` request to the `/repository-view-context/{type}/{repositoryViewId}?contexturi={contextUri}` endpoint, where `contextUri` will equal resource within the designated repository. This will result in the deletion of the specified resource as a Repository View Context.
 
+==== Path Parameters
+include::../../../target/generated-snippets/delete-repository-view-context/path-parameters.adoc[]
+
 ==== Sample Request
 include::../../../target/generated-snippets/delete-repository-view-context/http-request.adoc[]
 

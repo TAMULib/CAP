@@ -4,9 +4,15 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.ZonedDateTime;
@@ -22,6 +28,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.restdocs.request.ParameterDescriptor;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -48,6 +55,11 @@ public class RepositoryViewContextTransactionControllerTest {
 
     private static final String TEST_TOKEN = "testToken";
     private static final String TEST_CONTEXT_ORG_URI = "http://example.com?token=tx:" + TEST_TOKEN;
+
+    private static final ParameterDescriptor[] urlPathDescriptor = new ParameterDescriptor[] {
+        parameterWithName("type").description("The Repository View type name."),
+        parameterWithName("repositoryViewId").description("The Repository View identifier.")
+    };
 
     @Autowired
     private MockMvc mockMvc;
@@ -95,7 +107,10 @@ public class RepositoryViewContextTransactionControllerTest {
         mockMvc.perform(
             get(CONTROLLER_PATH, TEST_REPOSITORY_VIEW_TYPE, mockRepositoryView.getId())
         )
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
+            pathParameters(urlPathDescriptor)
+        ));
     }
 
     @Test
@@ -107,7 +122,10 @@ public class RepositoryViewContextTransactionControllerTest {
             delete(CONTROLLER_PATH, TEST_REPOSITORY_VIEW_TYPE, mockRepositoryView.getId())
                 .param("contextUri", TEST_CONTEXT_ORG_URI)
         )
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
+            pathParameters(urlPathDescriptor)
+        ));
     }
 
     @Test
@@ -117,6 +135,9 @@ public class RepositoryViewContextTransactionControllerTest {
             put(CONTROLLER_PATH, TEST_REPOSITORY_VIEW_TYPE, mockRepositoryView.getId())
                 .param("contextUri", TEST_CONTEXT_ORG_URI)
         )
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
+            pathParameters(urlPathDescriptor)
+        ));
     }
 }

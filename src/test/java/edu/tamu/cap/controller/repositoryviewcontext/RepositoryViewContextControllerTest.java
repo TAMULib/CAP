@@ -9,6 +9,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -27,6 +28,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.request.ParameterDescriptor;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -49,14 +51,17 @@ public class RepositoryViewContextControllerTest {
 
     private static final String CONTROLLER_PATH = "/repository-view-context/{type}/{repositoryViewId}";
 
-    private static final ConstraintDescriptionsHelper describeRepositoryViewContext = new ConstraintDescriptionsHelper(RepositoryViewContext.class);
-
     private static final RepositoryViewType TEST_REPOSITORY_VIEW_TYPE = RepositoryViewType.FEDORA;
     private static final String TEST_REPOSITORY_VIEW_NAME = "TEST_REPOSITORY_VIEW_NAME";
     private static final String TEST_REPOSITORY_VIEW_URI = "http://test-repository-view.org";
 
     private static final String TEST_CONTEXT_ORG_URI = "http://example.com";
     private static final Triple TEST_TRIPLE = new Triple("TestSubject", "TestPredicate", "TestObject");
+
+    private static final ParameterDescriptor[] urlPathDescriptor = new ParameterDescriptor[] {
+        parameterWithName("type").description("The type of the Repository view to be rendered as a Repository View Context."),
+        parameterWithName("repositoryViewId").description("The id of the Repository view to be rendered as a Repository View Context.")
+    };
 
     @Autowired
     private MockMvc mockMvc;
@@ -107,14 +112,9 @@ public class RepositoryViewContextControllerTest {
                 .param("contextUri", TEST_CONTEXT_ORG_URI)
             )
             .andExpect(status().isOk())
-            .andDo(
-                document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
-                    pathParameters(
-                        describeRepositoryViewContext.withParameter("type", "The type of the Repository view to be rendered as a Repository View Context."),
-                        describeRepositoryViewContext.withParameter("repositoryViewId", "The id of the Repository view to be rendered as a Repository View Context.")
-                    )
-                )
-            );
+            .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
+                pathParameters(urlPathDescriptor)
+            ));
     }
 
     @Test
@@ -129,7 +129,10 @@ public class RepositoryViewContextControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE
             )
         )
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
+            pathParameters(urlPathDescriptor)
+        ));
     }
 
     @Test
@@ -144,13 +147,8 @@ public class RepositoryViewContextControllerTest {
                 .param("contextUri", TEST_CONTEXT_ORG_URI)
             )
             .andExpect(status().isOk())
-            .andDo(
-                document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
-                    pathParameters(
-                        describeRepositoryViewContext.withParameter("type", "The type of the Repository view to be rendered as a Repository View Context."),
-                        describeRepositoryViewContext.withParameter("repositoryViewId", "The id of the Repository view to be rendered as a Repository View Context.")
-                    )
-                )
-            );
+            .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
+                pathParameters(urlPathDescriptor)
+            ));
     }
 }

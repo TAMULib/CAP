@@ -5,6 +5,9 @@ A Collection of CRUD API endpoints used for interacting with CAP's Schema resour
 
 A `POST` to the `/schema` endpoint which will register the specified schema with CAP.
 
+==== Path Parameters
+include::../../../target/generated-snippets/create-schema/path-parameters.adoc[]
+
 ==== Request Fields
 include::../../../target/generated-snippets/create-schema/request-fields.adoc[]
 
@@ -13,6 +16,9 @@ include::../../../target/generated-snippets/create-schema/http-request.adoc[]
 
 ==== Sample Response
 include::../../../target/generated-snippets/create-schema/http-response.adoc[]
+
+==== Example Curl Request
+include::../../../target/generated-snippets/create-schema/curl-request.adoc[]
 
 === Get All Schemas
 
@@ -24,11 +30,14 @@ include::../../../target/generated-snippets/all-schemas/http-request.adoc[]
 ==== Sample Response
 include::../../../target/generated-snippets/all-schemas/http-response.adoc[]
 
+==== Example Curl Request
+include::../../../target/generated-snippets/all-schemas/curl-request.adoc[]
+
 === Get Schema
 
 A `GET` request to the `/schema/{id}` endpoint which will result in the retrieval of the specified schema registered with CAP.
 
-==== Request Path Parameters
+==== Path Parameters
 include::../../../target/generated-snippets/get-schema/path-parameters.adoc[]
 
 ==== Sample Request
@@ -36,6 +45,9 @@ include::../../../target/generated-snippets/get-schema/http-request.adoc[]
 
 ==== Sample Response
 include::../../../target/generated-snippets/get-schema/http-response.adoc[]
+
+==== Example Curl Request
+include::../../../target/generated-snippets/get-schema/curl-request.adoc[]
 
 === Update Schema
 
@@ -47,6 +59,9 @@ include::../../../target/generated-snippets/update-schema/http-request.adoc[]
 ==== Sample Response
 include::../../../target/generated-snippets/update-schema/http-response.adoc[]
 
+==== Example Curl Request
+include::../../../target/generated-snippets/update-schema/curl-request.adoc[]
+
 === Delete Schema
 
 A `DELETE` request to the `/schema` endpoint which will result in the retrieval of the specified schema registered with CAP.
@@ -57,9 +72,15 @@ include::../../../target/generated-snippets/delete-schema/http-request.adoc[]
 ==== Sample Response
 include::../../../target/generated-snippets/delete-schema/http-response.adoc[]
 
+==== Example Curl Request
+include::../../../target/generated-snippets/delete-schema/curl-request.adoc[]
+
 === Properties By Namespace
 
 A `GET` request to the `/schema/properties` endpoint which will result in the retrieval of the specified properties registered with a CAP Schema.
+
+==== Path Parameters
+include::../../../target/generated-snippets/properties-by-namespace/path-parameters.adoc[]
 
 ==== Request Parameters
 include::../../../target/generated-snippets/properties-by-namespace/request-parameters.adoc[]
@@ -69,3 +90,6 @@ include::../../../target/generated-snippets/properties-by-namespace/http-request
 
 ==== Sample Response
 include::../../../target/generated-snippets/properties-by-namespace/http-response.adoc[]
+
+==== Example Curl Request
+include::../../../target/generated-snippets/properties-by-namespace/curl-request.adoc[]

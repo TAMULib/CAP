@@ -18,6 +18,9 @@ include::../../../target/generated-snippets/create-resource/curl-request.adoc[]
 
 A `GET` request to the `/repository-view-context/{type}/{repositoryViewId}/resource?contexturi={contextUri}` endpoint, where `contextUri` will equal resource within the designated repository. This will result in the rendering of the specified resource as a Repository View Context Resource.
 
+==== Path Parameters
+include::../../../target/generated-snippets/get-resources/path-parameters.adoc[]
+
 ==== Sample Request
 include::../../../target/generated-snippets/get-resources/http-request.adoc[]
 
@@ -31,6 +34,9 @@ include::../../../target/generated-snippets/get-resources/curl-request.adoc[]
 
 A `DELETE` request to the `/repository-view-context/{type}/{repositoryViewId}/resource?contexturi={contextUri}` endpoint, where `contextUri` will equal resource within the designated repository. This will result in the deletion of the specified resource as a Repository View Context Resource.
 
+==== Path Parameters
+include::../../../target/generated-snippets/delete-resources/path-parameters.adoc[]
+
 ==== Sample Request
 include::../../../target/generated-snippets/delete-resources/http-request.adoc[]
 
@@ -43,6 +49,9 @@ include::../../../target/generated-snippets/delete-resources/curl-request.adoc[]
 === Check Fixity
 
 A `GET` request to the `/repository-view-context/{type}/{repositoryViewId}/resource/fixity?contexturi={contextUri}` endpoint, where `contextUri` will equal resource within the designated repository. This will result in the execution of fixity for the specified resource as a Repository View Context Resource.
+
+==== Path Parameters
+include::../../../target/generated-snippets/check-fixity/path-parameters.adoc[]
 
 ==== Sample Request
 include::../../../target/generated-snippets/check-fixity/http-request.adoc[]

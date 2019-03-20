@@ -5,6 +5,9 @@ A Collection of CRUD API endpoints used for interacting with CAP's Repository Vi
 
 A `POST` request to the `/repository-view-context/{type}/{repositoryViewId}/children?contexturi={contextUri}` endpoint, where `contextUri` will equal resource within the designated repository. This will result in adding a Triple as a Child to the Repository View Context.
 
+==== Path Parameters
+include::../../../target/generated-snippets/create/path-parameters.adoc[]
+
 ==== Sample Request
 include::../../../target/generated-snippets/create/http-request.adoc[]
 
@@ -17,6 +20,9 @@ include::../../../target/generated-snippets/create/curl-request.adoc[]
 === Get Container
 
 A `GET` request to the `/repository-view-context/{type}/{repositoryViewId}/children?contexturi={contextUri}` endpoint, where `contextUri` will equal resource within the designated repository. This will result in rendering Repository View Context Children Triples.
+
+==== Path Parameters
+include::../../../target/generated-snippets/get-container/path-parameters.adoc[]
 
 ==== Sample Request
 include::../../../target/generated-snippets/get-container/http-request.adoc[]

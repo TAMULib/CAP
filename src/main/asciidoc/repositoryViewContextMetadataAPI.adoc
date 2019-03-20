@@ -5,6 +5,9 @@ A Collection of CRUD API endpoints used for interacting with CAP's Repository Vi
 
 A `POST` request to the `/repository-view-context/{type}/{repositoryViewId}/metadata?contexturi={contextUri}` endpoint, where `contextUri` will equal resource within the designated repository. This will result in the creation of the specified resource as a Repository View Context Metadata.
 
+==== Path Parameters
+include::../../../target/generated-snippets/create-metadata/path-parameters.adoc[]
+
 ==== Sample Request
 include::../../../target/generated-snippets/create-metadata/http-request.adoc[]
 
@@ -17,6 +20,9 @@ include::../../../target/generated-snippets/create-metadata/curl-request.adoc[]
 === Get Metadata
 
 A `GET` request to the `/repository-view-context/{type}/{repositoryViewId}/metadata?contexturi={contextUri}` endpoint, where `contextUri` will equal resource within the designated repository. This will result in the rendering of the specified resource as a Repository View Context Metadata.
+
+==== Path Parameters
+include::../../../target/generated-snippets/get-metadata/path-parameters.adoc[]
 
 ==== Sample Request
 include::../../../target/generated-snippets/get-metadata/http-request.adoc[]
@@ -31,6 +37,9 @@ include::../../../target/generated-snippets/get-metadata/curl-request.adoc[]
 
 A `PUT` request to the `/repository-view-context/{type}/{repositoryViewId}/metadata?contexturi={contextUri}` endpoint, where `contextUri` will equal resource within the designated repository. This will result in updating the specified resource as a Repository View Context Metadata.
 
+==== Path Parameters
+include::../../../target/generated-snippets/update-metadata/path-parameters.adoc[]
+
 ==== Sample Request
 include::../../../target/generated-snippets/update-metadata/http-request.adoc[]
 
@@ -44,6 +53,9 @@ include::../../../target/generated-snippets/update-metadata/curl-request.adoc[]
 
 A `DELETE` request to the `/repository-view-context/{type}/{repositoryViewId}/metadata?contexturi={contextUri}` endpoint, where `contextUri` will equal resource within the designated repository. This will result in the deletion of the specified resource as a Repository View Context Metadata.
 
+==== Path Parameters
+include::../../../target/generated-snippets/delete-metadata/path-parameters.adoc[]
+
 ==== Sample Request
 include::../../../target/generated-snippets/delete-metadata/http-request.adoc[]
 
@@ -51,4 +63,4 @@ include::../../../target/generated-snippets/delete-metadata/http-request.adoc[]
 include::../../../target/generated-snippets/delete-metadata/http-response.adoc[]
 
 ==== Example Curl Request
-include::../../../target/generated-snippets/delet-metadata/curl-request.adoc[]
+include::../../../target/generated-snippets/delete-metadata/curl-request.adoc[]

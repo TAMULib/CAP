@@ -9,6 +9,9 @@ A `POST` request to the `/repository-view-context/{type}/{repositoryViewId}/vers
 
 A `PATCH` request to the `/repository-view-context/{type}/{repositoryViewId}/version?contexturi={contextUri}` endpoint, where `contextUri` will equal resource within the designated repository. This will result in restoring a specified version of a Repository View Context.
 
+==== Path Parameters
+include::../../../target/generated-snippets/restore-version/path-parameters.adoc[]
+
 ==== Sample Request
 include::../../../target/generated-snippets/restore-version/http-request.adoc[]
 
@@ -21,6 +24,9 @@ include::../../../target/generated-snippets/restore-version/curl-request.adoc[]
 === Delete Version
 
 A `DELETE` request to the `/repository-view-context/{type}/{repositoryViewId}/version?contexturi={contextUri}` endpoint, where `contextUri` will equal resource within the designated repository. This will resultin deleting a specified version of a Repository View Context.
+
+==== Path Parameters
+include::../../../target/generated-snippets/delete-version/path-parameters.adoc[]
 
 ==== Sample Request
 include::../../../target/generated-snippets/delete-version/http-request.adoc[]

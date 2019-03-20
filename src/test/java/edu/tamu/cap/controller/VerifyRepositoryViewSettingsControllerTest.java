@@ -65,7 +65,7 @@ public final class VerifyRepositoryViewSettingsControllerTest {
       describeRepositoryView.withField("metadataPrefixes", "Short hand references to the registered schemas.")
   };
 
-  private static final ParameterDescriptor[] typePathDescriptor = new ParameterDescriptor[] {
+  private static final ParameterDescriptor[] urlPathDescriptor = new ParameterDescriptor[] {
       parameterWithName("type").description("The Repository View type name.")
   };
 
@@ -116,51 +116,48 @@ public final class VerifyRepositoryViewSettingsControllerTest {
     @WithMockUser(roles = "ADMIN")
     public void verifyRVPing() throws Exception {
         mockMvc.perform(
-                post(CONTROLLER_PATH + "/ping", TEST_REPOSITORY_VIEW_TYPE)
-                    .content(objectMapper.writeValueAsString(mockRepositoryView))
-                    .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-            )
-            .andExpect(status().isOk())
-            .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
-                pathParameters(typePathDescriptor),
-                requestFields(repositoryViewDescriptor),
-                responseFields(responseDescriptor)
-            )
-        );
+            post(CONTROLLER_PATH + "/ping", TEST_REPOSITORY_VIEW_TYPE)
+                .content(objectMapper.writeValueAsString(mockRepositoryView))
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+        )
+        .andExpect(status().isOk())
+        .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
+            pathParameters(urlPathDescriptor),
+            requestFields(repositoryViewDescriptor),
+            responseFields(responseDescriptor)
+        ));
     }
 
     @Test
     @WithMockUser(roles = "ADMIN")
     public void verifyRepositoryViewAuth() throws Exception {
         mockMvc.perform(
-                post(CONTROLLER_PATH + "/auth", TEST_REPOSITORY_VIEW_TYPE)
-                    .content(objectMapper.writeValueAsString(mockRepositoryView))
-                    .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-            )
-            .andExpect(status().isOk())
-            .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
-                pathParameters(typePathDescriptor),
-                requestFields(repositoryViewDescriptor),
-                responseFields(responseDescriptor)
-            )
-        );
+            post(CONTROLLER_PATH + "/auth", TEST_REPOSITORY_VIEW_TYPE)
+                .content(objectMapper.writeValueAsString(mockRepositoryView))
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+        )
+        .andExpect(status().isOk())
+        .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
+            pathParameters(urlPathDescriptor),
+            requestFields(repositoryViewDescriptor),
+            responseFields(responseDescriptor)
+        ));
     }
 
     @Test
     @WithMockUser(roles = "ADMIN")
     public void verifyRepositoryViewContent() throws Exception {
         mockMvc.perform(
-                post(CONTROLLER_PATH + "/content", TEST_REPOSITORY_VIEW_TYPE)
-                    .content(objectMapper.writeValueAsString(mockRepositoryView))
-                    .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                )
-            .andExpect(status().isOk())
-            .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
-                pathParameters(typePathDescriptor),
-                requestFields(repositoryViewDescriptor),
-                responseFields(responseDescriptor)
-            )
-        );
+            post(CONTROLLER_PATH + "/content", TEST_REPOSITORY_VIEW_TYPE)
+                .content(objectMapper.writeValueAsString(mockRepositoryView))
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+        )
+        .andExpect(status().isOk())
+        .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
+            pathParameters(urlPathDescriptor),
+            requestFields(repositoryViewDescriptor),
+            responseFields(responseDescriptor)
+        ));
     }
 
 }

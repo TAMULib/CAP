@@ -5,6 +5,9 @@ A Collection of CRUD API endpoints used for interacting with CAP's Repository Vi
 
 A `GET` request to the `/repository-view-context/{type}/{repositoryViewId}/transaction` endpoint. This will result in the creation of a Repository View Context Transaction.
 
+==== Path Parameters
+include::../../../target/generated-snippets/start-transaction/path-parameters.adoc[]
+
 ==== Sample Request
 include::../../../target/generated-snippets/start-transaction/http-request.adoc[]
 
@@ -18,6 +21,9 @@ include::../../../target/generated-snippets/start-transaction/curl-request.adoc[
 
 A `DELETE` request to the `/repository-view-context/{type}/{repositoryViewId}/transaction?contexturi={contextUri}` endpoint, where `contextUri` will equal resource within the designated repository. This will result in rolling back all changes in a Repository View Context Transaction.
 
+==== Path Parameters
+include::../../../target/generated-snippets/rollback-transaction/path-parameters.adoc[]
+
 ==== Sample Request
 include::../../../target/generated-snippets/rollback-transaction/http-request.adoc[]
 
@@ -30,6 +36,9 @@ include::../../../target/generated-snippets/rollback-transaction/curl-request.ad
 === Refresh Transaction
 
 A `PUT` request to the `/repository-view-context/{type}/{repositoryViewId}/transaction?contexturi={contextUri}` endpoint, where `contextUri` will equal resource within the designated repository. This will update the Repository View Context Transaction status.
+
+==== Path Parameters
+include::../../../target/generated-snippets/refresh-transaction/path-parameters.adoc[]
 
 ==== Sample Request
 include::../../../target/generated-snippets/refresh-transaction/http-request.adoc[]

@@ -5,6 +5,9 @@ A Collection of CRUD API endpoints used for interacting with CAP's Repository Vi
 
 A `POST` request to the `/repository-view-context/{type}/{repositoryViewId}/query?contexturi={contextUri}` endpoint, where `contextUri` will equal resource within the designated repository. This will result in the execution of the provided query.
 
+==== Path Parameters
+include::../../../target/generated-snippets/make-query/path-parameters.adoc[]
+
 ==== Sample Request
 include::../../../target/generated-snippets/make-query/http-request.adoc[]
 
@@ -17,6 +20,9 @@ include::../../../target/generated-snippets/make-query/curl-request.adoc[]
 === Get Query Help
 
 A `GET` request to the `/repository-view-context/{type}/{repositoryViewId}/query?contexturi={contextUri}` endpoint, where `contextUri` will equal resource within the designated repository. This will provide help on executing a query.
+
+==== Path Parameters
+include::../../../target/generated-snippets/get-query-help/path-parameters.adoc[]
 
 ==== Sample Request
 include::../../../target/generated-snippets/get-query-help/http-request.adoc[]
