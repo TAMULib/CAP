@@ -13,9 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,7 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,10 +37,11 @@ import edu.tamu.cap.service.FedoraService;
 import edu.tamu.cap.service.RepositoryViewType;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs(outputDir = "target/generated-snippets")
 public class RepositoryViewContextMetadataControllerTest {
+
     private static final String CONTROLLER_PATH = "/repository-view-context/{type}/{repositoryViewId}/metadata";
 
     private static final RepositoryViewType TEST_REPOSITORY_VIEW_TYPE = RepositoryViewType.FEDORA;
@@ -62,11 +63,14 @@ public class RepositoryViewContextMetadataControllerTest {
     @MockBean
     private FedoraService mockFedoraService;
 
+    @MockBean
+    private ProceedingJoinPoint mockProceedingJoinPoint;
+
     private RepositoryView mockRepositoryView;
 
     private RepositoryViewContext mockRepositoryViewContext;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         mockRepositoryView = new RepositoryView(TEST_REPOSITORY_VIEW_TYPE, TEST_REPOSITORY_VIEW_NAME, TEST_REPOSITORY_VIEW_URI);
         mockRepositoryView.setId(1L);
@@ -76,9 +80,8 @@ public class RepositoryViewContextMetadataControllerTest {
         when(repositoryViewRepo.getOne(mockRepositoryView.getId())).thenReturn(mockRepositoryView);
         when(repositoryViewRepo.findOne(mockRepositoryView.getId())).thenReturn(mockRepositoryView);
 
-        ProceedingJoinPoint mockJoinPoint = mock(ProceedingJoinPoint.class);
         Object[] args = new Object[] { mockFedoraService, TEST_CONTEXT_ORG_URI };
-        when(mockJoinPoint.getArgs()).thenReturn(args);
+        when(mockProceedingJoinPoint.getArgs()).thenReturn(args);
 
         mockRepositoryViewContext = new RepositoryViewContext();
         when(mockFedoraService.getRepositoryViewContext(any(String.class))).thenReturn(mockRepositoryViewContext);
