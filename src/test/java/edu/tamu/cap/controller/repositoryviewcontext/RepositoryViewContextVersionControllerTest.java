@@ -2,7 +2,6 @@ package edu.tamu.cap.controller.repositoryviewcontext;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
@@ -92,8 +91,7 @@ public class RepositoryViewContextVersionControllerTest {
 //            post(CONTROLLER_PATH, TEST_REPOSITORY_VIEW_TYPE, mockRepositoryView.getId())
 //                .param("contextUri", TEST_CONTEXT_ORG_URI)
 //                .content(objectMapper.writeValueAsString(mockRepositoryView))
-//                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE
-//            )
+//                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
 //        )
 //        .andExpect(status().isOk());
 //    }
@@ -107,8 +105,7 @@ public class RepositoryViewContextVersionControllerTest {
             patch(CONTROLLER_PATH, TEST_REPOSITORY_VIEW_TYPE, mockRepositoryView.getId())
                 .param("contextUri", TEST_CONTEXT_ORG_URI)
                 .content(objectMapper.writeValueAsString(mockRepositoryView))
-                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE
-            )
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
         )
         .andExpect(status().isOk());
     }
@@ -122,8 +119,7 @@ public class RepositoryViewContextVersionControllerTest {
             delete(CONTROLLER_PATH, TEST_REPOSITORY_VIEW_TYPE, mockRepositoryView.getId())
                 .param("contextUri", TEST_CONTEXT_ORG_URI)
                 .content(objectMapper.writeValueAsString(mockRepositoryView))
-                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE
-            )
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
         )
         .andExpect(status().isOk());
     }
