@@ -10,6 +10,9 @@
 package edu.tamu.cap.controller;
 
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
+import static edu.tamu.weaver.response.ApiStatus.ERROR;
+
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -75,8 +78,14 @@ public class UserController {
     @RequestMapping("/update")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse update(@RequestBody User user) {
-        user = userRepo.update(user);
-        return new ApiResponse(SUCCESS, user);
+        Optional<User> currentUser = userRepo.findByUsername(user.getUsername());
+        if (currentUser.isPresent()) {
+            user.setPassword(currentUser.get().getPassword());
+            user = userRepo.update(user);
+            return new ApiResponse(SUCCESS, user);
+        } else {
+            return new ApiResponse(ERROR,"User not found");
+        }
     }
 
     /**
