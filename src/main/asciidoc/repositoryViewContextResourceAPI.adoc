@@ -3,7 +3,10 @@ A Collection of CRUD API endpoints used for interacting with CAP's Repository Vi
 
 === Create Resource
 
-A `POST` request to the `/repository-view-context/{type}/{repositoryViewId}/resource?contexturi={contextUri}` endpoint, where `contextUri` will equal resource within the designated repository. This will result in thesaving the uploaded Resource.
+A multipart `POST` request to the `/repository-view-context/{type}/{repositoryViewId}/resource?contexturi={contextUri}` endpoint, where `contextUri` will equal resource within the designated repository. This will result in saving the uploaded Resource.
+
+==== Path Parameters
+include::../../../target/generated-snippets/create-resource/path-parameters.adoc[]
 
 ==== Sample Request
 include::../../../target/generated-snippets/create-resource/http-request.adoc[]
