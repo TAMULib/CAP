@@ -24,6 +24,9 @@ A `DELETE` request to the `/repository-view-context/{type}/{repositoryViewId}/tr
 ==== Path Parameters
 include::../../../target/generated-snippets/rollback-transaction/path-parameters.adoc[]
 
+==== Request Parameters
+include::../../../target/generated-snippets/rollback-transaction/request-parameters.adoc[]
+
 ==== Sample Request
 include::../../../target/generated-snippets/rollback-transaction/http-request.adoc[]
 

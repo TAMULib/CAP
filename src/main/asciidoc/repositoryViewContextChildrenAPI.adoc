@@ -8,6 +8,9 @@ A `POST` request to the `/repository-view-context/{type}/{repositoryViewId}/chil
 ==== Path Parameters
 include::../../../target/generated-snippets/create/path-parameters.adoc[]
 
+==== Request Parameters
+include::../../../target/generated-snippets/create/request-parameters.adoc[]
+
 ==== Sample Request
 include::../../../target/generated-snippets/create/http-request.adoc[]
 
@@ -23,6 +26,9 @@ A `GET` request to the `/repository-view-context/{type}/{repositoryViewId}/child
 
 ==== Path Parameters
 include::../../../target/generated-snippets/get-container/path-parameters.adoc[]
+
+==== Request Parameters
+include::../../../target/generated-snippets/get-container/request-parameters.adoc[]
 
 ==== Sample Request
 include::../../../target/generated-snippets/get-container/http-request.adoc[]

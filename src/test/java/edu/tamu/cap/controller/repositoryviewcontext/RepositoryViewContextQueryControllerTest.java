@@ -11,6 +11,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -56,6 +57,10 @@ public class RepositoryViewContextQueryControllerTest {
     private static final ParameterDescriptor[] urlPathDescriptor = new ParameterDescriptor[] {
         parameterWithName("type").description("The type of the Repository view to be rendered as a Repository View Context."),
         parameterWithName("repositoryViewId").description("The id of the Repository view to be rendered as a Repository View Context.")
+    };
+
+    private static final ParameterDescriptor[] contextUriDescriptor = new ParameterDescriptor[] {
+        parameterWithName("contextUri").description("The URI resource within the designated repository.")
     };
 
     @Autowired
@@ -109,7 +114,8 @@ public class RepositoryViewContextQueryControllerTest {
         )
         .andExpect(status().isOk())
         .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
-            pathParameters(urlPathDescriptor)
+            pathParameters(urlPathDescriptor),
+            requestParameters(contextUriDescriptor)
         ));
     }
 
@@ -124,7 +130,8 @@ public class RepositoryViewContextQueryControllerTest {
         )
         .andExpect(status().isOk())
         .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
-            pathParameters(urlPathDescriptor)
+            pathParameters(urlPathDescriptor),
+            requestParameters(contextUriDescriptor)
         ));
     }
 }

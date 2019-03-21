@@ -8,6 +8,9 @@ A `GET` request to the `/repository-view-context/{type}/{repositoryViewId}?conte
 ==== Path Parameters
 include::../../../target/generated-snippets/get-repository-view-context/path-parameters.adoc[]
 
+==== Request Parameters
+include::../../../target/generated-snippets/get-repository-view-context/request-parameters.adoc[]
+
 ==== Sample Request
 include::../../../target/generated-snippets/get-repository-view-context/http-request.adoc[]
 
@@ -24,6 +27,9 @@ A `DELETE` request to the `/repository-view-context/{type}/{repositoryViewId}?co
 ==== Path Parameters
 include::../../../target/generated-snippets/delete-repository-view-context/path-parameters.adoc[]
 
+==== Request Parameters
+include::../../../target/generated-snippets/delete-repository-view-context/request-parameters.adoc[]
+
 ==== Sample Request
 include::../../../target/generated-snippets/delete-repository-view-context/http-request.adoc[]
 
@@ -39,6 +45,9 @@ A `GET` request to the `/repository-view-context/{type}/{repositoryViewId}/tripl
 
 ==== Path Parameters
 include::../../../target/generated-snippets/get-triples/path-parameters.adoc[]
+
+==== Request Parameters
+include::../../../target/generated-snippets/get-triples/request-parameters.adoc[]
 
 ==== Sample Request
 include::../../../target/generated-snippets/get-triples/http-request.adoc[]

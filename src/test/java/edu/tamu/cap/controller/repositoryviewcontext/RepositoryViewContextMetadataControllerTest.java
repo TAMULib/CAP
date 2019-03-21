@@ -1,7 +1,6 @@
 package edu.tamu.cap.controller.repositoryviewcontext;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
@@ -13,6 +12,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
@@ -61,6 +61,10 @@ public class RepositoryViewContextMetadataControllerTest {
     private static final ParameterDescriptor[] urlPathDescriptor = new ParameterDescriptor[] {
         parameterWithName("type").description("The type of the Repository view to be rendered as a Repository View Context."),
         parameterWithName("repositoryViewId").description("The id of the Repository view to be rendered as a Repository View Context.")
+    };
+
+    private static final ParameterDescriptor[] contextUriDescriptor = new ParameterDescriptor[] {
+        parameterWithName("contextUri").description("The URI resource within the designated repository.")
     };
 
     @Autowired
@@ -112,7 +116,8 @@ public class RepositoryViewContextMetadataControllerTest {
         )
         .andExpect(status().isOk())
         .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
-            pathParameters(urlPathDescriptor)
+            pathParameters(urlPathDescriptor),
+            requestParameters(contextUriDescriptor)
         ));
     }
 
@@ -129,7 +134,8 @@ public class RepositoryViewContextMetadataControllerTest {
         )
         .andExpect(status().isOk())
         .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
-            pathParameters(urlPathDescriptor)
+            pathParameters(urlPathDescriptor),
+            requestParameters(contextUriDescriptor)
         ));
     }
 
@@ -149,7 +155,11 @@ public class RepositoryViewContextMetadataControllerTest {
         )
         .andExpect(status().isOk())
         .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
-            pathParameters(urlPathDescriptor)
+            pathParameters(urlPathDescriptor),
+            requestParameters(
+                contextUriDescriptor[0],
+                parameterWithName("newValue").description("The new value to assign.")
+            )
         ));
     }
 
@@ -166,7 +176,8 @@ public class RepositoryViewContextMetadataControllerTest {
         )
         .andExpect(status().isOk())
         .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
-            pathParameters(urlPathDescriptor)
+            pathParameters(urlPathDescriptor),
+            requestParameters(contextUriDescriptor)
         ));
     }
 }

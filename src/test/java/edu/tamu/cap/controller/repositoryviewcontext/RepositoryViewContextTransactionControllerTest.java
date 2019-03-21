@@ -1,7 +1,6 @@
 package edu.tamu.cap.controller.repositoryviewcontext;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -13,6 +12,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.ZonedDateTime;
@@ -36,7 +36,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import edu.tamu.cap.model.RepositoryView;
 import edu.tamu.cap.model.repo.RepositoryViewRepo;
 import edu.tamu.cap.model.repositoryviewcontext.FedoraTransactionDetails;
-import edu.tamu.cap.model.repositoryviewcontext.TransactionDetails;
 import edu.tamu.cap.model.response.RepositoryViewContext;
 import edu.tamu.cap.service.FedoraService;
 import edu.tamu.cap.service.RepositoryViewType;
@@ -59,6 +58,10 @@ public class RepositoryViewContextTransactionControllerTest {
     private static final ParameterDescriptor[] urlPathDescriptor = new ParameterDescriptor[] {
         parameterWithName("type").description("The Repository View type name."),
         parameterWithName("repositoryViewId").description("The Repository View identifier.")
+    };
+
+    private static final ParameterDescriptor[] contextUriDescriptor = new ParameterDescriptor[] {
+        parameterWithName("contextUri").description("The URI resource within the designated repository.")
     };
 
     @Autowired
@@ -124,7 +127,8 @@ public class RepositoryViewContextTransactionControllerTest {
         )
         .andExpect(status().isOk())
         .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
-            pathParameters(urlPathDescriptor)
+            pathParameters(urlPathDescriptor),
+            requestParameters(contextUriDescriptor)
         ));
     }
 
@@ -137,7 +141,8 @@ public class RepositoryViewContextTransactionControllerTest {
         )
         .andExpect(status().isOk())
         .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
-            pathParameters(urlPathDescriptor)
+            pathParameters(urlPathDescriptor),
+            requestParameters(contextUriDescriptor)
         ));
     }
 }

@@ -8,6 +8,9 @@ A `POST` request to the `/repository-view-context/{type}/{repositoryViewId}/quer
 ==== Path Parameters
 include::../../../target/generated-snippets/make-query/path-parameters.adoc[]
 
+==== Request Parameters
+include::../../../target/generated-snippets/make-query/request-parameters.adoc[]
+
 ==== Sample Request
 include::../../../target/generated-snippets/make-query/http-request.adoc[]
 
@@ -23,6 +26,9 @@ A `GET` request to the `/repository-view-context/{type}/{repositoryViewId}/query
 
 ==== Path Parameters
 include::../../../target/generated-snippets/get-query-help/path-parameters.adoc[]
+
+==== Request Parameters
+include::../../../target/generated-snippets/get-query-help/request-parameters.adoc[]
 
 ==== Sample Request
 include::../../../target/generated-snippets/get-query-help/http-request.adoc[]

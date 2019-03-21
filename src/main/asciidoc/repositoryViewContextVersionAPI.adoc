@@ -12,6 +12,9 @@ A `PATCH` request to the `/repository-view-context/{type}/{repositoryViewId}/ver
 ==== Path Parameters
 include::../../../target/generated-snippets/restore-version/path-parameters.adoc[]
 
+==== Request Parameters
+include::../../../target/generated-snippets/restore-version/request-parameters.adoc[]
+
 ==== Sample Request
 include::../../../target/generated-snippets/restore-version/http-request.adoc[]
 
@@ -27,6 +30,9 @@ A `DELETE` request to the `/repository-view-context/{type}/{repositoryViewId}/ve
 
 ==== Path Parameters
 include::../../../target/generated-snippets/delete-version/path-parameters.adoc[]
+
+==== Request Parameters
+include::../../../target/generated-snippets/delete-version/request-parameters.adoc[]
 
 ==== Sample Request
 include::../../../target/generated-snippets/delete-version/http-request.adoc[]

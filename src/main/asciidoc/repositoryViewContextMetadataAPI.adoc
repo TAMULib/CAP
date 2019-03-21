@@ -8,6 +8,9 @@ A `POST` request to the `/repository-view-context/{type}/{repositoryViewId}/meta
 ==== Path Parameters
 include::../../../target/generated-snippets/create-metadata/path-parameters.adoc[]
 
+==== Request Parameters
+include::../../../target/generated-snippets/create-metadata/request-parameters.adoc[]
+
 ==== Sample Request
 include::../../../target/generated-snippets/create-metadata/http-request.adoc[]
 
@@ -23,6 +26,9 @@ A `GET` request to the `/repository-view-context/{type}/{repositoryViewId}/metad
 
 ==== Path Parameters
 include::../../../target/generated-snippets/get-metadata/path-parameters.adoc[]
+
+==== Request Parameters
+include::../../../target/generated-snippets/get-metadata/request-parameters.adoc[]
 
 ==== Sample Request
 include::../../../target/generated-snippets/get-metadata/http-request.adoc[]
@@ -40,6 +46,9 @@ A `PUT` request to the `/repository-view-context/{type}/{repositoryViewId}/metad
 ==== Path Parameters
 include::../../../target/generated-snippets/update-metadata/path-parameters.adoc[]
 
+==== Request Parameters
+include::../../../target/generated-snippets/update-metadata/request-parameters.adoc[]
+
 ==== Sample Request
 include::../../../target/generated-snippets/update-metadata/http-request.adoc[]
 
@@ -55,6 +64,9 @@ A `DELETE` request to the `/repository-view-context/{type}/{repositoryViewId}/me
 
 ==== Path Parameters
 include::../../../target/generated-snippets/delete-metadata/path-parameters.adoc[]
+
+==== Request Parameters
+include::../../../target/generated-snippets/delete-metadata/request-parameters.adoc[]
 
 ==== Sample Request
 include::../../../target/generated-snippets/delete-metadata/http-request.adoc[]
