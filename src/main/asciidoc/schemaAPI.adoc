@@ -5,9 +5,6 @@ A Collection of CRUD API endpoints used for interacting with CAP's Schema resour
 
 A `POST` to the `/schema` endpoint which will register the specified schema with CAP.
 
-==== Path Parameters
-include::../../../target/generated-snippets/create-schema/path-parameters.adoc[]
-
 ==== Request Fields
 include::../../../target/generated-snippets/create-schema/request-fields.adoc[]
 
@@ -78,9 +75,6 @@ include::../../../target/generated-snippets/delete-schema/curl-request.adoc[]
 === Properties By Namespace
 
 A `GET` request to the `/schema/properties` endpoint which will result in the retrieval of the specified properties registered with a CAP Schema.
-
-==== Path Parameters
-include::../../../target/generated-snippets/properties-by-namespace/path-parameters.adoc[]
 
 ==== Request Parameters
 include::../../../target/generated-snippets/properties-by-namespace/request-parameters.adoc[]
