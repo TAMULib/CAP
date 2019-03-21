@@ -63,6 +63,7 @@
                       <a href ng-if="isAssuming() == 'false'" data-toggle="modal" ng-click="openModal('#assumeUserModal')">{{assumedControl.button}}</a>
                       <a href ng-if="isAssuming() == 'true'" ng-click="assumeUser(assume)">{{assumedControl.button}}</a>
                     </li>
+                    <li ng-if="isEmailEnabled()"><a href ng-click="logout()">Logout</a></li>
                   </ul>
                 </div>
               </nav>

@@ -7,7 +7,7 @@ cap.directive("repositoryViewVerification", function(RepositoryViewRepo, $q) {
         results: "="
     },
     link: function($scope, attr, elem) {
-      $scope.$watch('ir',function() {
+      $scope.$watch('repositoryView',function() {
         $scope.repositoryViewVerifications = [];
       },true);
 
