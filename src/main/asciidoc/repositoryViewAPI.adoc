@@ -5,15 +5,6 @@ A Collection of CRUD API endpoints used for interacting with CAP's Repository Vi
 
 A `POST` to the `/repository-view` endpoint which will result in the creation of a new Repository View in CAP.
 
-==== Request Fields
-include::../../../target/generated-snippets/create-repository-view/request-fields.adoc[]
-
-==== Sample Request
-include::../../../target/generated-snippets/create-repository-view/http-request.adoc[]
-
-==== Sample Response
-include::../../../target/generated-snippets/create-repository-view/http-response.adoc[]
-
 === Get All Repository Views
 
 A `GET` to the `/repository-view` endpoint which will return a list all Repository Views in CAP.
@@ -24,9 +15,21 @@ include::../../../target/generated-snippets/all-repository-views/http-request.ad
 ==== Sample Response
 include::../../../target/generated-snippets/all-repository-views/http-response.adoc[]
 
+==== Example Curl Request
+include::../../../target/generated-snippets/all-repository-views/curl-request.adoc[]
+
 === Update Repository View
 
 A `PUT` request to the `/repository-view` endpoint which will result in the updating of the specified Repository View resource in CAP.
+
+==== Sample Request
+include::../../../target/generated-snippets/update-repository-view/http-request.adoc[]
+
+==== Sample Response
+include::../../../target/generated-snippets/update-repository-view/http-response.adoc[]
+
+==== Example Curl Request
+include::../../../target/generated-snippets/update-repository-view/curl-request.adoc[]
 
 === Delete Repository View
 
@@ -35,7 +38,6 @@ A `DELETE` request to the `/repository-view` endpoint which will result in the d
 === Get Repository View
 
 A `GET` request to the `/repository-view/{id}` endpoint which will result in the retrieval of the specified Repository View resource in CAP.
-
 
 === Get Repository View Types
 

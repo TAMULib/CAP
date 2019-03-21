@@ -1,7 +1,6 @@
 package edu.tamu.cap.auth.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-// import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
@@ -15,9 +14,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-// import org.mockito.junit.jupiter.MockitoExtension;
-// import org.mockito.junit.jupiter.MockitoSettings;
-// import org.mockito.quality.Strictness;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,9 +28,7 @@ import edu.tamu.cap.model.User;
 import edu.tamu.cap.model.repo.UserRepo;
 import edu.tamu.weaver.auth.model.Credentials;
 
-// @ExtendWith(MockitoExtension.class)
 @ExtendWith(SpringExtension.class)
-// @MockitoSettings(strictness = Strictness.WARN)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public final class AppUserCredentialsServiceTest {
 

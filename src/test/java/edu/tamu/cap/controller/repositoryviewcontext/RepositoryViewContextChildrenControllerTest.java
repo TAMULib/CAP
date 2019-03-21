@@ -1,11 +1,11 @@
 package edu.tamu.cap.controller.repositoryviewcontext;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
@@ -15,10 +15,11 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,9 +48,9 @@ import edu.tamu.cap.service.RepositoryViewType;
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs(outputDir = "target/generated-snippets")
-public class RepositoryViewContextControllerTest {
+public class RepositoryViewContextChildrenControllerTest {
 
-    private static final String CONTROLLER_PATH = "/repository-view-context/{type}/{repositoryViewId}";
+    private static final String CONTROLLER_PATH = "/repository-view-context/{type}/{repositoryViewId}/children";
 
     private static final RepositoryViewType TEST_REPOSITORY_VIEW_TYPE = RepositoryViewType.FEDORA;
     private static final String TEST_REPOSITORY_VIEW_NAME = "TEST_REPOSITORY_VIEW_NAME";
@@ -103,36 +104,28 @@ public class RepositoryViewContextControllerTest {
         when(mockFedoraService.getRepositoryViewContext(any(String.class))).thenReturn(mockRepositoryViewContext);
     }
 
-    @AfterEach
-    public void tearDown() {
-        // resositoryViewRepo.deleteAll();
-    }
-
     @Test
     @WithMockUser(roles = "USER")
-    public void getRepositoryViewContext() throws Exception {
-        mockMvc.perform(
-            get(CONTROLLER_PATH, TEST_REPOSITORY_VIEW_TYPE, mockRepositoryView.getId())
-                .param("contextUri", TEST_CONTEXT_ORG_URI)
-            )
-            .andExpect(status().isOk())
-            .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
-                pathParameters(urlPathDescriptor),
-                requestParameters(contextUriDescriptor)
-            ));
-    }
+    public void create() throws Exception {
+        List<Triple> mockTriples = new ArrayList<Triple>();
+        mockTriples.add(TEST_TRIPLE);
 
-    @Test
-    @WithMockUser(roles = "USER")
-    public void deleteRepositoryViewContext() throws Exception {
-        doNothing().when(mockFedoraService).deleteRepositoryViewContext(any(String.class));
+        HashMap<String, String> mockHashMap = new HashMap<String, String>();
+        mockHashMap.put("subject", TEST_TRIPLE.getSubject());
+        mockHashMap.put("predicate", TEST_TRIPLE.getPredicate());
+        mockHashMap.put("object", TEST_TRIPLE.getObject());
+
+        ArrayList<HashMap<String, String>> mockTripleMap = new ArrayList<HashMap<String, String>>(
+            Arrays.asList(mockHashMap)
+        );
+
+        when(mockFedoraService.createChild(any(String.class), anyListOf(Triple.class))).thenReturn(mockRepositoryViewContext);
 
         mockMvc.perform(
-            delete(CONTROLLER_PATH, TEST_REPOSITORY_VIEW_TYPE, mockRepositoryView.getId())
+            post(CONTROLLER_PATH, TEST_REPOSITORY_VIEW_TYPE, mockRepositoryView.getId())
                 .param("contextUri", TEST_CONTEXT_ORG_URI)
-                .content(objectMapper.writeValueAsString(mockRepositoryView))
-                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE
-            )
+                .content(objectMapper.writeValueAsString(mockTripleMap))
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
         )
         .andExpect(status().isOk())
         .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
@@ -143,19 +136,19 @@ public class RepositoryViewContextControllerTest {
 
     @Test
     @WithMockUser(roles = "USER")
-    public void getTriples() throws Exception {
+    public void getContainer() throws Exception {
         List<Triple> mockTriples = new ArrayList<Triple>();
         mockTriples.add(TEST_TRIPLE);
-        when(mockFedoraService.getTriples(any(FedoraService.class), any(String.class))).thenReturn(mockTriples);
+        when(mockFedoraService.getChildren(any(String.class))).thenReturn(mockTriples);
 
         mockMvc.perform(
-            get(CONTROLLER_PATH + "/triples", TEST_REPOSITORY_VIEW_TYPE, mockRepositoryView.getId())
+            get(CONTROLLER_PATH, TEST_REPOSITORY_VIEW_TYPE, mockRepositoryView.getId())
                 .param("contextUri", TEST_CONTEXT_ORG_URI)
-            )
-            .andExpect(status().isOk())
-            .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
-                pathParameters(urlPathDescriptor),
-                requestParameters(contextUriDescriptor)
-            ));
+        )
+        .andExpect(status().isOk())
+        .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
+            pathParameters(urlPathDescriptor),
+            requestParameters(contextUriDescriptor)
+        ));
     }
 }
