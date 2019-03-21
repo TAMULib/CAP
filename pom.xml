@@ -566,7 +566,7 @@
             </goals>
             <configuration> 
               <outputDirectory>
-                ${project.build.outputDirectory}/static/docs
+                ./generated-docs
               </outputDirectory>
               <resources>
                 <resource>
