@@ -1,0 +1,44 @@
+== Repository View API
+A Collection of CRUD API endpoints used for interacting with CAP's Repository View resource.
+
+=== Create Repository View
+
+A `POST` to the `/repository-view` endpoint which will result in the creation of a new Repository View in CAP.
+
+=== Get All Repository Views
+
+A `GET` to the `/repository-view` endpoint which will return a list all Repository Views in CAP.
+
+==== Sample Request
+include::../../../target/generated-snippets/all-repository-views/http-request.adoc[]
+
+==== Sample Response
+include::../../../target/generated-snippets/all-repository-views/http-response.adoc[]
+
+==== Example Curl Request
+include::../../../target/generated-snippets/all-repository-views/curl-request.adoc[]
+
+=== Update Repository View
+
+A `PUT` request to the `/repository-view` endpoint which will result in the updating of the specified Repository View resource in CAP.
+
+==== Sample Request
+include::../../../target/generated-snippets/update-repository-view/http-request.adoc[]
+
+==== Sample Response
+include::../../../target/generated-snippets/update-repository-view/http-response.adoc[]
+
+==== Example Curl Request
+include::../../../target/generated-snippets/update-repository-view/curl-request.adoc[]
+
+=== Delete Repository View
+
+A `DELETE` request to the `/repository-view` endpoint which will result in the deletion of the specified Repository View resource in CAP.
+
+=== Get Repository View
+
+A `GET` request to the `/repository-view/{id}` endpoint which will result in the retrieval of the specified Repository View resource in CAP.
+
+=== Get Repository View Types
+
+A `GET` request to the `/repository-view/types` endpoint which will result in the retrieval of a list of all Repository View Types supported by CAP.
