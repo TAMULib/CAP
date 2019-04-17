@@ -125,7 +125,9 @@
             <dl class="dl-horizontal" ng-repeat="(predicate, property) in context.properties">
               <dt><a href="{{predicate}}">{{predicate | metadataLabel}}</a></dt>
               <dd ng-repeat="triple in property">
-                  {{triple.object | propertyValue}}
+                <span ng-show="!triplePropertiesCollapsed[predicate]" >{{triple.object | propertyValue}}</span>
+                <span title="expand {{predicate | metadataLabel}}" ng-if="$first && property.length > 1" class="glyphicon glyphicon-plus clickable" ng-click="triplePropertiesCollapsed[predicate]=false" ng-show="triplePropertiesCollapsed[predicate]"></span>
+                <span title="collapse {{predicate | metadataLabel}}" ng-if="$first && property.length > 1" class="glyphicon glyphicon-minus clickable" ng-click="triplePropertiesCollapsed[predicate]=true" ng-show="!triplePropertiesCollapsed[predicate]"></span>
               </dd>
             </dl>
           </div>
@@ -154,10 +156,12 @@
           <dd ng-mouseenter="showEditBtn=true" ng-mouseleave="showEditBtn=false" ng-repeat="triple in metadata">
             <input ng-show="removeListElements" type="checkbox" ng-checked="selectedListElements.indexOf(triple)!==-1" ng-click="selectedListElements.indexOf(triple)===-1?selectedListElements.push(triple):selectedListElements.splice(selectedListElements.indexOf(triple),1)">
             <span ng-show="!editValue&&selectedListElements.indexOf(triple)===-1">
-              {{triple.object | removeQuotes}}
-              <span ng-show="showEditBtn&&!context.isVersion" class="glyphicon glyphicon-pencil clickable" ng-click="editValue=triple.object"></span>
+              <span ng-show="!context.tripleMetadataCollapsed[predicate]">{{triple.object | removeQuotes}}</span>
+              <span title="collapse {{predicate | metadataLabel}}" ng-if="$first && metadata.length > 1" class="glyphicon glyphicon-minus clickable" ng-click="context.tripleMetadataCollapsed[predicate]=true" ng-show="!context.tripleMetadataCollapsed[predicate]"></span>
+              <span title="expand {{predicate | metadataLabel}}" ng-if="$first && metadata.length > 1" class="glyphicon glyphicon-plus clickable" ng-click="context.tripleMetadataCollapsed[predicate]=false" ng-show="context.tripleMetadataCollapsed[predicate]"></span>
+              <span class="glyphicon glyphicon-pencil clickable" ng-click="editValue=triple.object" ng-show="showEditBtn && !context.isVersion && !context.tripleMetadataCollapsed[predicate]" ></span>
             </span>
-            <div ng-show="editValue" class="row">
+            <div ng-show="editValue && !context.tripleMetadataCollapsed[predicate]" class="row">
               <div class="col-md-6">
                   <div class="input-group">
                     <input type="text" class="form-control" ng-model="editValue" remove-quotes>

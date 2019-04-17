@@ -49,7 +49,7 @@ cap.model("RepositoryViewContext", function ($q, $filter, $interval, $location, 
         });
       });
       return reloadPromise;
-    }; 
+    };
 
     repositoryViewContext.getChildContext = function (triple) {
       if (!children[triple.object]) {
@@ -163,7 +163,7 @@ cap.model("RepositoryViewContext", function ($q, $filter, $interval, $location, 
 
       var formData = new FormData();
       formData.append("file", file, file.name);
-      
+
       var createPromise = repositoryViewContext.repositoryView.performRequest(repositoryViewContext.getMapping().resource, {
         method: HttpMethodVerbs.POST,
         headers: {
@@ -237,7 +237,7 @@ cap.model("RepositoryViewContext", function ($q, $filter, $interval, $location, 
     };
 
     repositoryViewContext.updateMetadatum = function (metadataTriple, newValue) {
-      
+
       var updatePromise = repositoryViewContext.repositoryView.performRequest(repositoryViewContext.getMapping().metadata, {
         method: HttpMethodVerbs.PUT,
         query: {
@@ -246,7 +246,7 @@ cap.model("RepositoryViewContext", function ($q, $filter, $interval, $location, 
         },
         data: metadataTriple
       });
-      
+
       return updatePromise;
 
     };
@@ -318,14 +318,14 @@ cap.model("RepositoryViewContext", function ($q, $filter, $interval, $location, 
     repositoryViewContext.getQueryHelp = function () {
 
       if(!queryHelp.message) {
-        
+
         var updatePromise = repositoryViewContext.repositoryView.performRequest(repositoryViewContext.getMapping().advancedQuery, {
           method: HttpMethodVerbs.GET,
           query: {
             contextUri: repositoryViewContext.uri
           }
         });
-  
+
         updatePromise.then(function (res) {
           queryHelp.query = angular.fromJson(res.body).payload.String;
         });

@@ -6,6 +6,10 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
 
   $scope.repositoryViewForm = {};
 
+  $scope.triplePropertiesCollapsed = {};
+
+  $scope.tripleMetadataCollapsed = {};
+
   $scope.submitClicked = false;
 
   $scope.theaterMode = false;
