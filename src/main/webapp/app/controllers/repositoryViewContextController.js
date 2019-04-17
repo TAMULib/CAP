@@ -234,18 +234,21 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
       var typeMap = {"jpg":"image/jpeg","png":"image/png","pdf":"application/pdf"};
 
       for (var i in $scope.context.properties) {
-        var triple = $scope.context.properties[i];
-        if (triple.predicate.indexOf("#hasMimeType") !== -1) {
-          contentType = $filter("removeQuotes")(triple.object);
-          break;
-        }
+        var properties = $scope.context.properties[i];
+        for (var j in properties) {
+          var triple = properties[i];
+          if (triple.predicate.indexOf("#hasMimeType") !== -1) {
+            contentType = $filter("removeQuotes")(triple.object);
+            break;
+          }
 
-        if (triple.predicate.indexOf("#filename") !== -1) {
-          var temp = triple.object.split(".");
-          temp = temp[temp.length-1];
-          backupContentType = temp.substring(0,temp.length-1);
-          if (typeMap[backupContentType] !== undefined) {
-            backupContentType = typeMap[backupContentType];
+          if (triple.predicate.indexOf("#filename") !== -1) {
+            var temp = triple.object.split(".");
+            temp = temp[temp.length-1];
+            backupContentType = temp.substring(0,temp.length-1);
+            if (typeMap[backupContentType] !== undefined) {
+              backupContentType = typeMap[backupContentType];
+            }
           }
         }
       }
@@ -283,22 +286,26 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
           var hasFile = false;
           var isPCDM = false;
           for (var i in contextProperties) {
-            var triple = contextProperties[i];
-            if (!hasFile) {
-              if (triple.predicate.indexOf("#hasFile") !== -1) {
-                hasFile = true;
+            var properties = contextProperties[i];
+
+            for (var j in properties) {
+              var triple = properties[j];
+              if (!hasFile) {
+                if (triple.predicate.indexOf("#hasFile") !== -1) {
+                  hasFile = true;
+                }
               }
-            }
-            if (!isPCDM) {
-              if (triple.predicate.indexOf("#type") !== -1) {
-                  if (triple.object === "http://pcdm.org/models#Object") {
-                    isPCDM = true;
-                  }
+              if (!isPCDM) {
+                if (triple.predicate.indexOf("#type") !== -1) {
+                    if (triple.object === "http://pcdm.org/models#Object") {
+                      isPCDM = true;
+                    }
+                }
               }
-            }
-            if (isPCDM && hasFile) {
-              hasManifest = true;
-              break;
+              if (isPCDM && hasFile) {
+                hasManifest = true;
+                break;
+              }
             }
           }
           if (hasManifest) {

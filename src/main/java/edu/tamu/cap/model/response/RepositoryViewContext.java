@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 
 import edu.tamu.cap.model.repositoryviewcontext.TransactionDetails;
@@ -20,9 +21,9 @@ public class RepositoryViewContext implements Serializable {
 
     private Triple parent;
 
-    private List<Triple> properties;
+    private Map<String, List<Triple>> properties;
 
-    private List<Triple> metadata;
+    private Map<String, List<Triple>> metadata;
 
     private List<RepositoryViewContext> children;
 
@@ -36,8 +37,8 @@ public class RepositoryViewContext implements Serializable {
 
 	public RepositoryViewContext() {
         super();
-        properties = new ArrayList<Triple>();
-        metadata = new ArrayList<Triple>();
+        properties = new HashMap<String, List<Triple>>();
+        metadata = new HashMap<String, List<Triple>>();
         versions = new ArrayList<Version>();
         children = new ArrayList<RepositoryViewContext>();
         features = new HashMap<String, Boolean>();
@@ -80,28 +81,68 @@ public class RepositoryViewContext implements Serializable {
         return triple != null ? triple.getObject().equals(FedoraService.FEDORA_BINRAY_PREDICATE) : false;
     }
 
-    public List<Triple> getProperties() {
+    public Map<String, List<Triple>> getProperties() {
         return properties;
     }
 
-    public void setProperties(List<Triple> properties) {
+    public List<Triple> getPropertiesAll() {
+        List<Triple> triples = new ArrayList<Triple>();
+
+        for(Entry<String, List<Triple>> set: properties.entrySet()){
+            List<Triple> values = set.getValue();
+            for (int i = 0; i < values.size(); i++) {
+                triples.add(values.get(i));
+            }
+        }
+
+        return triples;
+    }
+
+    public void setProperties(Map<String, List<Triple>> properties) {
         this.properties = properties;
     }
 
     public void addProperty(Triple property) {
-        properties.add(property);
+        String key = property.getPredicate();
+        if (properties.containsKey(key)) {
+            properties.get(key).add(property);
+        } else {
+            List<Triple> list = new ArrayList<Triple>();
+            list.add(property);
+            properties.put(key, list);
+        }
     }
 
-    public List<Triple> getMetadata() {
+    public Map<String, List<Triple>> getMetadata() {
         return metadata;
     }
 
-    public void setMetadata(List<Triple> metadata) {
+    public List<Triple> getMetadataAll() {
+        List<Triple> triples = new ArrayList<Triple>();
+
+        for(Entry<String, List<Triple>> set: metadata.entrySet()){
+            List<Triple> values = set.getValue();
+            for (int i = 0; i < values.size(); i++) {
+                triples.add(values.get(i));
+            }
+        }
+
+        return triples;
+    }
+
+    public void setMetadata(Map<String, List<Triple>> metadata) {
         this.metadata = metadata;
     }
 
     public void addMetadum(Triple metadatum) {
-        metadata.add(metadatum);
+        String key = metadatum.getPredicate();
+        if (metadata.containsKey(key)) {
+            metadata.get(key).add(metadatum);
+        } else {
+            List<Triple> list = new ArrayList<Triple>();
+            list.add(metadatum);
+            metadata.put(key, list);
+        }
     }
 
     public List<RepositoryViewContext> getChildren() {
