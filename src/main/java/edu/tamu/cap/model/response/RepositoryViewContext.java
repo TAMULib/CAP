@@ -85,7 +85,7 @@ public class RepositoryViewContext implements Serializable {
         return properties;
     }
 
-    public List<Triple> getPropertiesAll() {
+    public List<Triple> getPropertiesList() {
         List<Triple> triples = new ArrayList<Triple>();
 
         for(Entry<String, List<Triple>> set: properties.entrySet()){
@@ -117,7 +117,7 @@ public class RepositoryViewContext implements Serializable {
         return metadata;
     }
 
-    public List<Triple> getMetadataAll() {
+    public List<Triple> getMetadataList() {
         List<Triple> triples = new ArrayList<Triple>();
 
         for(Entry<String, List<Triple>> set: metadata.entrySet()){
