@@ -134,7 +134,7 @@ public class RepositoryViewContext implements Serializable {
         this.metadata = metadata;
     }
 
-    public void addMetadum(Triple metadatum) {
+    public void addMetadatum(Triple metadatum) {
         String key = metadatum.getPredicate();
         if (metadata.containsKey(key)) {
             metadata.get(key).add(metadatum);
