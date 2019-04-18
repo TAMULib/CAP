@@ -240,7 +240,7 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
       for (var i in $scope.context.properties) {
         var properties = $scope.context.properties[i];
         for (var j in properties) {
-          var triple = properties[i];
+          var triple = properties[j];
           if (triple.predicate.indexOf("#hasMimeType") !== -1) {
             contentType = $filter("removeQuotes")(triple.object);
             break;
