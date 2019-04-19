@@ -113,7 +113,7 @@ public final class FedoraServiceTest {
         context.addMetadatum(mockTriple1);
         context.addMetadatum(mockTriple2);
 
-        List<Triple> metadata = context.getMetadataList();
+        List<Triple> metadata = context.getMetadata();
 
         assertEquals(2, metadata.size(), "Context had incorrect metadata list size!");
     }
@@ -124,7 +124,7 @@ public final class FedoraServiceTest {
 
         context.addProperty(mockTriple1);
 
-        List<Triple> properties = context.getPropertiesList();
+        List<Triple> properties = context.getProperties();
 
         assertEquals(10, properties.size(), "Context had incorrect properties list size!");
     }

@@ -21,9 +21,9 @@ public class RepositoryViewContext implements Serializable {
 
     private Triple parent;
 
-    private Map<String, List<Triple>> properties;
+    private List<Triple> properties;
 
-    private Map<String, List<Triple>> metadata;
+    private List<Triple> metadata;
 
     private List<RepositoryViewContext> children;
 
@@ -37,8 +37,8 @@ public class RepositoryViewContext implements Serializable {
 
 	public RepositoryViewContext() {
         super();
-        properties = new HashMap<String, List<Triple>>();
-        metadata = new HashMap<String, List<Triple>>();
+        properties = new ArrayList<Triple>();
+        metadata = new ArrayList<Triple>();
         versions = new ArrayList<Version>();
         children = new ArrayList<RepositoryViewContext>();
         features = new HashMap<String, Boolean>();
@@ -81,68 +81,28 @@ public class RepositoryViewContext implements Serializable {
         return triple != null ? triple.getObject().equals(FedoraService.FEDORA_BINRAY_PREDICATE) : false;
     }
 
-    public Map<String, List<Triple>> getProperties() {
+    public List<Triple> getProperties() {
         return properties;
     }
 
-    public List<Triple> getPropertiesList() {
-        List<Triple> triples = new ArrayList<Triple>();
-
-        for(Entry<String, List<Triple>> set: properties.entrySet()){
-            List<Triple> values = set.getValue();
-            for (int i = 0; i < values.size(); i++) {
-                triples.add(values.get(i));
-            }
-        }
-
-        return triples;
-    }
-
-    public void setProperties(Map<String, List<Triple>> properties) {
+    public void setProperties(List<Triple> properties) {
         this.properties = properties;
     }
 
     public void addProperty(Triple property) {
-        String key = property.getPredicate();
-        if (properties.containsKey(key)) {
-            properties.get(key).add(property);
-        } else {
-            List<Triple> list = new ArrayList<Triple>();
-            list.add(property);
-            properties.put(key, list);
-        }
+        properties.add(property);
     }
 
-    public Map<String, List<Triple>> getMetadata() {
+    public List<Triple> getMetadata() {
         return metadata;
     }
 
-    public List<Triple> getMetadataList() {
-        List<Triple> triples = new ArrayList<Triple>();
-
-        for(Entry<String, List<Triple>> set: metadata.entrySet()){
-            List<Triple> values = set.getValue();
-            for (int i = 0; i < values.size(); i++) {
-                triples.add(values.get(i));
-            }
-        }
-
-        return triples;
-    }
-
-    public void setMetadata(Map<String, List<Triple>> metadata) {
+    public void setMetadata(List<Triple> metadata) {
         this.metadata = metadata;
     }
 
     public void addMetadatum(Triple metadatum) {
-        String key = metadatum.getPredicate();
-        if (metadata.containsKey(key)) {
-            metadata.get(key).add(metadatum);
-        } else {
-            List<Triple> list = new ArrayList<Triple>();
-            list.add(metadatum);
-            metadata.put(key, list);
-        }
+        metadata.add(metadatum);
     }
 
     public List<RepositoryViewContext> getChildren() {

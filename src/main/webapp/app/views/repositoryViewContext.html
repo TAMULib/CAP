@@ -121,13 +121,13 @@
             <span class="glyphicon glyphicon-plus clickable" ng-click="propertiesCollapsed=false" ng-show="(!context.resource||theaterMode)&&propertiesCollapsed"></span>
             <span class="glyphicon glyphicon-minus clickable" ng-click="propertiesCollapsed=true" ng-show="(!context.resource||theaterMode)&&!propertiesCollapsed"></span>
           </h4>
-          <div class="context-property" ng-show="!propertiesCollapsed||(context.resource&&!theaterMode)">
-            <dl class="dl-horizontal" ng-repeat="(predicate, property) in context.properties">
+          <div class="context-property" ng-show="!propertiesCollapsed||(context.resource&&!theaterMode)" ng-if="context.properties" ng-init="map = mapTriplesByPredicate(context.properties)">
+            <dl class="dl-horizontal" ng-repeat="(predicate, property) in map">
               <dt class="property-term">
                 <a href="{{predicate}}">{{predicate | metadataLabel}}</a>
               </dt>
               <span title="expand {{predicate | metadataLabel}}" class="glyphicon glyphicon-plus clickable property-collapsable" ng-if="property.length > 1" ng-click="triplePropertiesCollapsed[predicate]=false" ng-show="triplePropertiesCollapsed[predicate]"></span>
-              <span title="collapse {{predicate | metadataLabel}}" class="glyphicon glyphicon-plus clickable property-collapsable" ng-if="property.length > 1" ng-click="triplePropertiesCollapsed[predicate]=true" ng-show="!triplePropertiesCollapsed[predicate]"></span>
+              <span title="collapse {{predicate | metadataLabel}}" class="glyphicon glyphicon-minus clickable property-collapsable" ng-if="property.length > 1" ng-click="triplePropertiesCollapsed[predicate]=true" ng-show="!triplePropertiesCollapsed[predicate]"></span>
               <dd ng-repeat="triple in property">
                 <span ng-show="!triplePropertiesCollapsed[predicate]" >{{triple.object | propertyValue}}</span>
               </dd>
@@ -139,12 +139,12 @@
 
     </div>
 
-    <div class="row metadata-section">
+    <div class="row metadata-section" ng-if="context.metadata" ng-init="map = mapTriplesByPredicate(context.metadata)">
       <repository-view-section
         context="context"
         title="'Metadata'"
         type="'metadatum'"
-        list="context.metadata"
+        list="map"
         list-element-action="repositoryView.loadContext(le)"
         add-action="openModal('#addMetadata')"
         edit-action="updateMetadatum(triple,newObject)"

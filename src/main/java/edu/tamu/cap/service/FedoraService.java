@@ -213,8 +213,8 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
         List<Triple> allTriples = new ArrayList<Triple>();
 
-        allTriples.addAll(context.getPropertiesList());
-        allTriples.addAll(context.getMetadataList());
+        allTriples.addAll(context.getProperties());
+        allTriples.addAll(context.getMetadata());
         //TODO add all resource triples
 
         return allTriples;
@@ -270,7 +270,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
     @Override
     public List<Triple> getMetadata(String contextUri) throws Exception {
         RepositoryViewContext context = getRepositoryViewContext(contextUri);
-        return context.getMetadataList();
+        return context.getMetadata();
     }
 
     @Override
@@ -351,7 +351,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
         model.read(response.getBody(), null, "text/turtle");
         model.createResource("").addProperty(DC.title, "Fixity Report");
 
-        FixityReport fixityReportContext = FixityReport.of(buildRepositoryViewContext(model, contextUri).getPropertiesList());
+        FixityReport fixityReportContext = FixityReport.of(buildRepositoryViewContext(model, contextUri).getProperties());
 
         return fixityReportContext;
     }
