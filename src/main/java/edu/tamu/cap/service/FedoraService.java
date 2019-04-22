@@ -61,6 +61,7 @@ import edu.tamu.cap.exceptions.IRVerificationException;
 import edu.tamu.cap.model.IR;
 import edu.tamu.cap.model.ircontext.FedoraTransactionDetails;
 import edu.tamu.cap.model.ircontext.TransactionDetails;
+import edu.tamu.cap.model.messaging.ContextActions;
 import edu.tamu.cap.model.response.FixityReport;
 import edu.tamu.cap.model.response.IRContext;
 import edu.tamu.cap.model.response.Triple;
@@ -280,15 +281,16 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
         FcrepoResponse response = patch.perform();
         URI location = response.getLocation();
         logger.debug("Metadata creation status and location: {}, {}", response.getStatusCode(), location);
-        messagingService.sendMessage(MESSAGING_CHANNEL, extractContextPath(contextUri), METADATA_CREATE);
+        messagingService.sendMessage(MESSAGING_CHANNEL, extractContextPath(contextUri, METADATA_CREATE));
         return getIRContext(contextUri);
     }
 
-    private Map<String, String> extractContextPath(String contextUri) throws Exception {
+    private Map<String, String> extractContextPath(String contextUri, ContextActions action) throws Exception {
         URL url = new URL(contextUri);
         Map<String, String> payload = new HashMap<String, String>();
         payload.put("contextPath", url.getPath());
         payload.put("repositoryType", "fedora");
+        payload.put("action", action.toString());
         return payload;
     }
 
@@ -315,7 +317,7 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
         checkFedoraResult(response);
         URI location = response.getLocation();
         logger.debug("Metadata update status and location: {}, {}", response.getStatusCode(), location);
-        messagingService.sendMessage(MESSAGING_CHANNEL, extractContextPath(contextUri), METADATA_UPDATE);
+        messagingService.sendMessage(MESSAGING_CHANNEL, extractContextPath(contextUri, METADATA_UPDATE));
         return getIRContext(contextUri);
     }
 
@@ -340,7 +342,7 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
         checkFedoraResult(response);
         URI location = response.getLocation();
         logger.debug("Metadata delete status and location: {}, {}", response.getStatusCode(), location);
-        messagingService.sendMessage(MESSAGING_CHANNEL, extractContextPath(contextUri), METADATA_DELETE);
+        messagingService.sendMessage(MESSAGING_CHANNEL, extractContextPath(contextUri, METADATA_DELETE));
         return getIRContext(contextUri);
     }
 
@@ -354,7 +356,7 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
         checkFedoraResult(response);
         URI location = response.getLocation();
         logger.debug("Resource creation status and location: {}, {}", response.getStatusCode(), location);
-        messagingService.sendMessage(MESSAGING_CHANNEL, extractContextPath(contextUri), RESOURCE_CREATE);
+        messagingService.sendMessage(MESSAGING_CHANNEL, extractContextPath(contextUri, RESOURCE_CREATE));
         return getIRContext(contextUri);
     }
 
@@ -367,7 +369,7 @@ public class FedoraService implements IRService<Model>, VersioningIRService<Mode
     public void deleteResource(String contextUri) throws Exception {
         logger.info("Deleting resource: {}", contextUri);
         deleteContainer(contextUri);
-        messagingService.sendMessage(MESSAGING_CHANNEL, extractContextPath(contextUri), RESOURCE_DELETE);
+        messagingService.sendMessage(MESSAGING_CHANNEL, extractContextPath(contextUri, RESOURCE_DELETE));
     }
 
     @Override
