@@ -6,10 +6,6 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
 
   $scope.repositoryViewForm = {};
 
-  $scope.triplePropertiesCollapsed = {};
-
-  $scope.tripleMetadataCollapsed = {};
-
   $scope.submitClicked = false;
 
   $scope.theaterMode = false;
@@ -18,17 +14,22 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     $scope.theaterMode = mode ? mode : !$scope.theaterMode;
   };
 
-  $scope.mapTriplesByPredicate = function(triples) {
-    var map = {};
+  $scope.countPredicates = function(triples, predicates) {
+    if (predicates) {
+      angular.forEach(predicates, function (value, key) {
+        delete predicates[key];
+      });
+    } else {
+      predicates = {};
+    }
+
     angular.forEach(triples, function (triple) {
-        if (!map.hasOwnProperty(triple.predicate)) {
-          map[triple.predicate] = [];
+        if (!predicates.hasOwnProperty(triple.predicate)) {
+          predicates[triple.predicate] = 0;
         }
 
-        map[triple.predicate].push(triple);
+        predicates[triple.predicate]++;
     });
-
-    return map;
   };
 
   RepositoryViewRepo.ready().then(function () {
@@ -44,6 +45,14 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     }
 
     $scope.context = $scope.repositoryView.loadContext($scope.repositoryView.contextUri);
+
+    $scope.context.propertiesCollapsed = {};
+
+    $scope.context.metadataCollapsed = {};
+
+    $scope.context.propertiesPredicateTotals = {};
+
+    $scope.context.metadataPredicateTotals = {};
 
     $scope.createContainer = function (form) {
       $scope.submitClicked = true;
