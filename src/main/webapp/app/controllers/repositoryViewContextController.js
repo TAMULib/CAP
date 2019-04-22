@@ -1,4 +1,4 @@
-cap.controller("IrContextController", function ($controller, $location, $routeParams, $scope, $timeout, $filter, $q, RepositoryViewRepo, FixityReport) {
+cap.controller("IrContextController", function ($controller, $location, $routeParams, $scope, $timeout, $filter, $q, RepositoryViewRepo, SchemaRepo, FixityReport) {
 
   angular.extend(this, $controller('CoreAdminController', {
     $scope: $scope
@@ -31,6 +31,22 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     return map;
   };
 
+  $scope.mapTriplesBySchema = function(triples) {
+    var map = {};
+    angular.forEach($scope.mapTriplesByPredicate(triples), function (predicateSet, predicate) {
+        var index = predicate.lastIndexOf("#") !== -1 ? predicate.lastIndexOf("#") : predicate.lastIndexOf("/");
+        var schema = predicate.substring(0, index + 1);
+
+        if (!map.hasOwnProperty(schema)) {
+          map[schema] = {};
+        }
+
+        map[schema][predicate] = predicateSet;
+    });
+
+    return map;
+  };
+
   RepositoryViewRepo.ready().then(function () {
 
     $scope.repositoryView = RepositoryViewRepo.findByName(decodeURI($routeParams.irName));
@@ -44,6 +60,10 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     }
 
     $scope.context = $scope.repositoryView.loadContext($scope.repositoryView.contextUri);
+
+    $scope.context.schemas = SchemaRepo.getAll();
+
+    $scope.context.tripleNamespacesCollapsed = {};
 
     $scope.createContainer = function (form) {
       $scope.submitClicked = true;

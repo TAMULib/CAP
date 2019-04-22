@@ -15,4 +15,16 @@
       }
     }
   }
+
+  @media (max-width: 767px) {
+    .context-schemas {
+      margin-left: 15px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .context-namespace {
+      margin-left: 15px;
+    }
+  }
 }

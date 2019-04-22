@@ -139,7 +139,7 @@
 
     </div>
 
-    <div class="row metadata-section" ng-if="context.metadata" ng-init="map = mapTriplesByPredicate(context.metadata)">
+    <div class="row metadata-section" ng-if="context.metadata" ng-init="map = mapTriplesBySchema(context.metadata)">
       <repository-view-section
         context="context"
         title="'Metadata'"
@@ -150,40 +150,47 @@
         edit-action="updateMetadatum(triple,newObject)"
         remove-action="context.removeMetadata(items)">
         <br ng-show="contentExpanded">
-        <dl class="dl-horizontal context-metadata" ng-show="contentExpanded" ng-repeat="(predicate, metadata) in list">
-          <dt class="metadata-term">
-            <input ng-show="removeListElements&&filteredList.length>1" type="checkbox" ng-checked="checkAll" ng-click="checkAll=!checkAll;checkAll?selectAll(filteredList):selectedListElements.length=0">
-            <a href="{{predicate}}">{{predicate | metadataLabel}}</a>
-          </dt>
-          <span title="collapse {{predicate | metadataLabel}}" class="glyphicon glyphicon-minus clickable metadata-collapsable" ng-if="metadata.length > 1" ng-click="context.tripleMetadataCollapsed[predicate]=true" ng-show="!context.tripleMetadataCollapsed[predicate]"></span>
-          <span title="expand {{predicate | metadataLabel}}"  class="glyphicon glyphicon-plus clickable metadata-collapsable" ng-if="metadata.length > 1" ng-click="context.tripleMetadataCollapsed[predicate]=false" ng-show="context.tripleMetadataCollapsed[predicate]"></span>
-          <dd ng-mouseenter="showEditBtn=true" ng-mouseleave="showEditBtn=false" ng-repeat="triple in metadata">
-            <input ng-show="removeListElements" type="checkbox" ng-checked="selectedListElements.indexOf(triple)!==-1" ng-click="selectedListElements.indexOf(triple)===-1?selectedListElements.push(triple):selectedListElements.splice(selectedListElements.indexOf(triple),1)">
-            <span ng-show="!editValue&&selectedListElements.indexOf(triple)===-1">
-              <span ng-show="!context.tripleMetadataCollapsed[predicate]">{{triple.object | removeQuotes}}</span>
-              <span class="glyphicon glyphicon-pencil clickable" ng-click="editValue=triple.object" ng-show="showEditBtn && !context.isVersion && !context.tripleMetadataCollapsed[predicate]" ></span>
-            </span>
-            <div ng-show="editValue && !context.tripleMetadataCollapsed[predicate]" class="row">
-              <div class="col-md-6">
-                  <div class="input-group">
-                    <input type="text" class="form-control" ng-model="editValue" remove-quotes>
-                    <div class="input-group-btn">
-                      <button ng-show="!editWorking" class="btn btn-default" ng-click="editItem({triple, newObject:editValue});editValue=null;" ng-disabled="triple.object===editValue">
-                        <span class="glyphicon glyphicon-ok"></span>
-                      </button>
-                      <button ng-show="!editWorking" class="btn btn-default" ng-click="editValue=null">
-                        <span class="glyphicon glyphicon-remove"></span>
-                      </button>
-                      <button ng-show="editWorking" class="btn btn-default" ng-click="editValue=null">
-                        <span class="glyphicon glyphicon-refresh spinning"></span>
-                      </button>
+        <div class="context-schemas" ng-show="contentExpanded" ng-repeat="(namespace, metadataMap) in list">
+          <h4 class="context-namespace">
+            <span class="context-namespace-label">{{namespace | schemaNamespace: context.schemas}}</span>
+            <span class="glyphicon glyphicon-plus clickable" ng-click="context.tripleNamespacesCollapsed[namespace]=false" ng-show="context.tripleNamespacesCollapsed[namespace]"></span>
+            <span class="glyphicon glyphicon-minus clickable" ng-click="context.tripleNamespacesCollapsed[namespace]=true" ng-show="!context.tripleNamespacesCollapsed[namespace]"></span>
+          </h4>
+          <dl class="dl-horizontal context-metadata" ng-show="!context.tripleNamespacesCollapsed[namespace]" ng-repeat="(predicate, metadata) in metadataMap">
+            <dt class="metadata-term">
+              <input ng-show="removeListElements&&filteredList.length>1" type="checkbox" ng-checked="checkAll" ng-click="checkAll=!checkAll;checkAll?selectAll(filteredList):selectedListElements.length=0">
+              <a href="{{predicate}}">{{predicate | metadataLabel}}</a>
+            </dt>
+            <span title="collapse {{predicate | metadataLabel}}" class="glyphicon glyphicon-minus clickable metadata-collapsable" ng-if="metadata.length > 1" ng-click="context.tripleMetadataCollapsed[predicate]=true" ng-show="!context.tripleMetadataCollapsed[predicate]"></span>
+            <span title="expand {{predicate | metadataLabel}}" class="glyphicon glyphicon-plus clickable metadata-collapsable" ng-if="metadata.length > 1" ng-click="context.tripleMetadataCollapsed[predicate]=false" ng-show="context.tripleMetadataCollapsed[predicate]"></span>
+            <dd ng-mouseenter="showEditBtn=true" ng-mouseleave="showEditBtn=false" ng-repeat="triple in metadata">
+              <input ng-show="removeListElements" type="checkbox" ng-checked="selectedListElements.indexOf(triple)!==-1" ng-click="selectedListElements.indexOf(triple)===-1?selectedListElements.push(triple):selectedListElements.splice(selectedListElements.indexOf(triple),1)">
+              <span ng-show="!editValue&&selectedListElements.indexOf(triple)===-1">
+                <span ng-show="!context.tripleMetadataCollapsed[predicate]">{{triple.object | removeQuotes}}</span>
+                <span class="glyphicon glyphicon-pencil clickable" ng-click="editValue=triple.object" ng-show="showEditBtn && !context.isVersion && !context.tripleMetadataCollapsed[predicate]" ></span>
+              </span>
+              <div ng-show="editValue && !context.tripleMetadataCollapsed[predicate]" class="row">
+                <div class="col-md-6">
+                    <div class="input-group">
+                      <input type="text" class="form-control" ng-model="editValue" remove-quotes>
+                      <div class="input-group-btn">
+                        <button ng-show="!editWorking" class="btn btn-default" ng-click="editItem({triple, newObject:editValue});editValue=null;" ng-disabled="triple.object===editValue">
+                          <span class="glyphicon glyphicon-ok"></span>
+                        </button>
+                        <button ng-show="!editWorking" class="btn btn-default" ng-click="editValue=null">
+                          <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                        <button ng-show="editWorking" class="btn btn-default" ng-click="editValue=null">
+                          <span class="glyphicon glyphicon-refresh spinning"></span>
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-            </div>
-            <del ng-if="removeListElements && selectedListElements.indexOf(triple)!==-1">{{triple.object | removeQuotes}}</del>
-          </dd>
-        </dl>
+              </div>
+              <del ng-if="removeListElements && selectedListElements.indexOf(triple)!==-1">{{triple.object | removeQuotes}}</del>
+            </dd>
+          </dl>
+        </div>
       </repository-viewsection>
     </div>
 
