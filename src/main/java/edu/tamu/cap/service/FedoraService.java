@@ -1,5 +1,11 @@
 package edu.tamu.cap.service;
 
+import static edu.tamu.cap.model.messaging.ContextActions.METADATA_CREATE;
+import static edu.tamu.cap.model.messaging.ContextActions.METADATA_DELETE;
+import static edu.tamu.cap.model.messaging.ContextActions.METADATA_UPDATE;
+import static edu.tamu.cap.model.messaging.ContextActions.RESOURCE_CREATE;
+import static edu.tamu.cap.model.messaging.ContextActions.RESOURCE_DELETE;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -7,12 +13,15 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.Cookie;
@@ -40,6 +49,7 @@ import org.fcrepo.client.PostBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -56,6 +66,7 @@ import edu.tamu.cap.model.response.RepositoryViewContext;
 import edu.tamu.cap.model.response.Triple;
 import edu.tamu.cap.model.response.Version;
 import edu.tamu.cap.util.StringUtil;
+import edu.tamu.weaver.messaging.service.MessagingService;
 
 @Service("Fedora")
 public class FedoraService implements RepositoryViewService<Model>, VersioningRepositoryViewService<Model>, VerifyingRepositoryViewService<Model>, TransactingRepositoryViewService<Model>, QueryableRepositoryViewService<Model>, FixityRepositoryViewService<Model> {
@@ -83,6 +94,9 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
     public final static String FEDORA_CREATED = "http://fedora.info/definitions/v4/repository#created";
 
     public final static String FEDORA_VERSION = "http://fedora.info/definitions/v4/repository#Version";
+    
+    @Value("${app.messaging.channel}")
+    private String MESSAGING_CHANNEL;
 
     // @formatter:off
     private final static String[] PROPERTY_PREFIXES = new String[] {
@@ -100,6 +114,9 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private MessagingService messagingService;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -263,9 +280,17 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
         FcrepoResponse response = patch.perform();
         URI location = response.getLocation();
         logger.debug("Metadata creation status and location: {}, {}", response.getStatusCode(), location);
+        messagingService.sendMessage(MESSAGING_CHANNEL, extractContextPath(contextUri), METADATA_CREATE);
         return getRepositoryViewContext(contextUri);
     }
 
+    private Map<String, String> extractContextPath(String contextUri) throws Exception {
+        URL url = new URL(contextUri);
+        Map<String, String> payload = new HashMap<String, String>();
+        payload.put("contextPath", url.getPath());
+        payload.put("repositoryType", "fedora");
+        return payload;
+    }
 
     @Override
     public List<Triple> getMetadata(String contextUri) throws Exception {
@@ -291,6 +316,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
         checkFedoraResult(response);
         URI location = response.getLocation();
         logger.debug("Metadata update status and location: {}, {}", response.getStatusCode(), location);
+        messagingService.sendMessage(MESSAGING_CHANNEL, extractContextPath(contextUri), METADATA_UPDATE);
         return getRepositoryViewContext(contextUri);
     }
 
@@ -315,6 +341,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
         checkFedoraResult(response);
         URI location = response.getLocation();
         logger.debug("Metadata delete status and location: {}, {}", response.getStatusCode(), location);
+        messagingService.sendMessage(MESSAGING_CHANNEL, extractContextPath(contextUri), METADATA_DELETE);
         return getRepositoryViewContext(contextUri);
     }
 
@@ -328,6 +355,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
         checkFedoraResult(response);
         URI location = response.getLocation();
         logger.debug("Resource creation status and location: {}, {}", response.getStatusCode(), location);
+        messagingService.sendMessage(MESSAGING_CHANNEL, extractContextPath(contextUri), RESOURCE_CREATE);
         return getRepositoryViewContext(contextUri);
     }
 
@@ -340,6 +368,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
     public void deleteResource(String contextUri) throws Exception {
         logger.info("Deleting resource: {}", contextUri);
         deleteContainer(contextUri);
+        messagingService.sendMessage(MESSAGING_CHANNEL, extractContextPath(contextUri), RESOURCE_DELETE);
     }
 
     @Override
