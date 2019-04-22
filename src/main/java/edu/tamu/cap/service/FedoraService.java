@@ -27,6 +27,10 @@ import java.util.Optional;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.NodeIterator;
@@ -53,12 +57,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import edu.tamu.cap.exceptions.RepositoryViewVerificationException;
 import edu.tamu.cap.model.RepositoryView;
+import edu.tamu.cap.model.messaging.ContextActions;
 import edu.tamu.cap.model.repositoryviewcontext.FedoraTransactionDetails;
 import edu.tamu.cap.model.repositoryviewcontext.TransactionDetails;
 import edu.tamu.cap.model.response.FixityReport;
@@ -284,11 +285,12 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
         return getRepositoryViewContext(contextUri);
     }
 
-    private Map<String, String> extractContextPath(String contextUri) throws Exception {
+    private Map<String, String> extractContextPath(String contextUri, ContextActions action) throws Exception {
         URL url = new URL(contextUri);
         Map<String, String> payload = new HashMap<String, String>();
         payload.put("contextPath", url.getPath());
         payload.put("repositoryType", "fedora");
+        payload.put("action", action.toString());
         return payload;
     }
 
@@ -368,7 +370,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
     public void deleteResource(String contextUri) throws Exception {
         logger.info("Deleting resource: {}", contextUri);
         deleteContainer(contextUri);
-        messagingService.sendMessage(MESSAGING_CHANNEL, extractContextPath(contextUri), RESOURCE_DELETE);
+        messagingService.sendMessage(MESSAGING_CHANNEL, extractContextPath(contextUri, RESOURCE_DELETE));
     }
 
     @Override
