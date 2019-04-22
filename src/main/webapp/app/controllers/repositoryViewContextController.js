@@ -17,7 +17,7 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
   $scope.countPredicates = function(triples, predicates) {
     if (predicates) {
       angular.forEach(predicates, function (value, key) {
-        delete predicate[key];
+        delete predicates[key];
       });
     } else {
       predicates = {};
