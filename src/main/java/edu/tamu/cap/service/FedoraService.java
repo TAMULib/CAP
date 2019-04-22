@@ -577,7 +577,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
                     for (String prefix : repositoryView.getMetadataPrefixes()) {
                         if (predicate.startsWith(prefix)) {
-                            repositoryViewContext.addMetadum(triple);
+                            repositoryViewContext.addMetadatum(triple);
                         }
                     }
                 }
@@ -675,6 +675,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
         return model;
     }
 
+    @Override
     public RepositoryView getRepositoryView() {
         return repositoryView;
     }

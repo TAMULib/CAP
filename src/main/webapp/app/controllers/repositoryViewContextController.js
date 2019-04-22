@@ -6,12 +6,29 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
 
   $scope.repositoryViewForm = {};
 
+  $scope.triplePropertiesCollapsed = {};
+
+  $scope.tripleMetadataCollapsed = {};
+
   $scope.submitClicked = false;
 
   $scope.theaterMode = false;
 
   $scope.setOrToggleTheaterMode = function (mode) {
     $scope.theaterMode = mode ? mode : !$scope.theaterMode;
+  };
+
+  $scope.mapTriplesByPredicate = function(triples) {
+    var map = {};
+    angular.forEach(triples, function (triple) {
+        if (!map.hasOwnProperty(triple.predicate)) {
+          map[triple.predicate] = [];
+        }
+
+        map[triple.predicate].push(triple);
+    });
+
+    return map;
   };
 
   RepositoryViewRepo.ready().then(function () {
