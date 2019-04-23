@@ -281,7 +281,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
         FcrepoResponse response = patch.perform();
         URI location = response.getLocation();
         logger.debug("Metadata creation status and location: {}, {}", response.getStatusCode(), location);
-        messagingService.sendMessage(MESSAGING_CHANNEL, extractContextPath(contextUri), METADATA_CREATE);
+        messagingService.sendMessage(MESSAGING_CHANNEL, extractContextPath(contextUri, METADATA_CREATE));
         return getRepositoryViewContext(contextUri);
     }
 
@@ -318,7 +318,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
         checkFedoraResult(response);
         URI location = response.getLocation();
         logger.debug("Metadata update status and location: {}, {}", response.getStatusCode(), location);
-        messagingService.sendMessage(MESSAGING_CHANNEL, extractContextPath(contextUri), METADATA_UPDATE);
+        messagingService.sendMessage(MESSAGING_CHANNEL, extractContextPath(contextUri, METADATA_UPDATE));
         return getRepositoryViewContext(contextUri);
     }
 
@@ -343,7 +343,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
         checkFedoraResult(response);
         URI location = response.getLocation();
         logger.debug("Metadata delete status and location: {}, {}", response.getStatusCode(), location);
-        messagingService.sendMessage(MESSAGING_CHANNEL, extractContextPath(contextUri), METADATA_DELETE);
+        messagingService.sendMessage(MESSAGING_CHANNEL, extractContextPath(contextUri, METADATA_DELETE));
         return getRepositoryViewContext(contextUri);
     }
 
@@ -357,7 +357,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
         checkFedoraResult(response);
         URI location = response.getLocation();
         logger.debug("Resource creation status and location: {}, {}", response.getStatusCode(), location);
-        messagingService.sendMessage(MESSAGING_CHANNEL, extractContextPath(contextUri), RESOURCE_CREATE);
+        messagingService.sendMessage(MESSAGING_CHANNEL, extractContextPath(contextUri, RESOURCE_CREATE));
         return getRepositoryViewContext(contextUri);
     }
 
