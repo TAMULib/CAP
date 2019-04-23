@@ -1,4 +1,4 @@
-cap.controller("IrContextController", function ($controller, $location, $routeParams, $scope, $timeout, $filter, $q, RepositoryViewRepo, FixityReport) {
+cap.controller("IrContextController", function ($controller, $location, $routeParams, $scope, $timeout, $filter, $q, RepositoryViewRepo, SchemaRepo, FixityReport) {
 
   angular.extend(this, $controller('CoreAdminController', {
     $scope: $scope
@@ -32,6 +32,29 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     });
   };
 
+  $scope.groupPredicatesByNamespace = function(predicates, namespaces) {
+    if (namespaces) {
+      angular.forEach(namespaces, function (value, key) {
+        delete namespaces[key];
+      });
+    } else {
+      namespaces = {};
+    }
+
+    angular.forEach(predicates, function (total, predicate) {
+        var index = predicate.lastIndexOf("#") !== -1 ? predicate.lastIndexOf("#") : predicate.lastIndexOf("/");
+        var namespace = predicate.substring(0, index + 1);
+
+        if (!namespaces.hasOwnProperty(namespace)) {
+          namespaces[namespace] = {};
+        }
+
+        if (!namespaces[namespace].hasOwnProperty(predicate)) {
+          namespaces[namespace][predicate] = total;
+        }
+    });
+  };
+
   RepositoryViewRepo.ready().then(function () {
 
     $scope.repositoryView = RepositoryViewRepo.findByName(decodeURI($routeParams.irName));
@@ -46,6 +69,8 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
 
     $scope.context = $scope.repositoryView.loadContext($scope.repositoryView.contextUri);
 
+    $scope.context.schemas = SchemaRepo.getAll();
+
     $scope.context.propertiesCollapsed = {};
 
     $scope.context.metadataCollapsed = {};
@@ -53,6 +78,10 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     $scope.context.propertiesPredicateTotals = {};
 
     $scope.context.metadataPredicateTotals = {};
+
+    $scope.context.metadataPredicatesByNamespace = {};
+
+    $scope.context.metadataCollapsedByNamespace = {};
 
     $scope.createContainer = function (form) {
       $scope.submitClicked = true;
