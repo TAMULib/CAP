@@ -31,7 +31,7 @@
               <span class="badge clickable" ng-click="showSchemas(repositoryView.schemas)">{{repositoryView.schemas.length || 0}}</span>
             </td>
             <td data-title="'Actions'" class="actions">
-                <a href="rv/{{repositoryView.name}}?context={{repositoryView.rootUri}}" title="view" class="glyphicon glyphicon-eye-open action"></a>
+                <a href="rv/{{repositoryView.name}}?context=" title="view" class="glyphicon glyphicon-eye-open action"></a>
                 <span ng-if="isAdmin()" title="edit" ng-click="editRepositoryView(repositoryView)" class="glyphicon glyphicon-pencil action"></span>
                 <span ng-if="isAdmin()" title="delete" ng-click="confirmDeleteRepositoryView(repositoryView)" class="glyphicon glyphicon-trash action"></span>
             </td>

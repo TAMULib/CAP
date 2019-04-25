@@ -1,25 +1,29 @@
-cap.model("RepositoryView", function($location, $timeout, $cookies, $interval, $q, HttpMethodVerbs, RepositoryViewContext, WsApi, StorageService, UserService) {
+cap.model("RepositoryView", function($location, $timeout, $cookies, $filter, $interval, $q, HttpMethodVerbs, RepositoryViewContext, WsApi, StorageService, UserService) {
   return function RepositoryView() {
     var repositoryView = this;
 
     var cache = {};
 
+    var lengthenContextUri = function (contextUri) {
+      return repositoryView.rootUri ? $filter('lengthenUri')(contextUri, repositoryView.rootUri) : contextUri;
+    };
+
     repositoryView.currentContext = {};
 
     repositoryView.cacheContext = function(context) {
-      cache[context.uri] = context;
+      cache[lengthenContextUri(context.uri)] = context;
     };
 
     repositoryView.getCachedContext = function(contextUri) {
-      return cache[contextUri];
+      return cache[lengthenContextUri(contextUri)];
     };
 
     repositoryView.removeCachedContext = function(contextUri) {
-      delete cache[contextUri];
+      delete cache[lengthenContextUri(contextUri)];
     };
 
     repositoryView.clearCache = function() {
-      angular.forEach(cache, function(v,uri){
+      angular.forEach(cache, function(v, uri){
         repositoryView.removeCachedContext(uri);
       });
     };
@@ -35,8 +39,9 @@ cap.model("RepositoryView", function($location, $timeout, $cookies, $interval, $
         console.log(context.repositoryView);
         repositoryView.cacheContext(context);
       } else if(reload) {
-       context.reloadContext();
+        context.reloadContext();
       }
+
       return context;
     };
 
@@ -58,7 +63,7 @@ cap.model("RepositoryView", function($location, $timeout, $cookies, $interval, $
       } else {
         options.pathValues = defaultPathValues;
       }
-      
+
       return WsApi.fetch(endpoint, options);
 
     };
@@ -160,7 +165,7 @@ cap.model("RepositoryView", function($location, $timeout, $cookies, $interval, $
     };
 
     repositoryView.getTransaction = function() {
-      var transactionCookie = $cookies.getObject("transaction"); 
+      var transactionCookie = $cookies.getObject("transaction");
       if(transactionCookie)  {
         transactionObject.active = true;
       } else {
@@ -187,7 +192,7 @@ cap.model("RepositoryView", function($location, $timeout, $cookies, $interval, $
           var secondsremaining = transaction.secondsRemaining-1;
 
           repositoryView.createTransactionCookie(transaction.transactionToken, secondsremaining);
-          
+
           if(repositoryView.getTransaction().secondsRemaining<1) {
            repositoryView.stopTransactionTimer();
           }

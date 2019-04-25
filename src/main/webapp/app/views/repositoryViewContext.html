@@ -48,7 +48,7 @@
 
       </ul>
     </div>
-    <h1>{{repositoryView.name}} <small class="clickable" ng-click="repositoryView.loadContext(repositoryView.rootUri)">(<span class="glyphicon glyphicon-home"></span> {{repositoryView.rootUri}})</small></h1>
+    <h1>{{repositoryView.name}} <small class="clickable" ng-click="repositoryView.loadContext('')">(<span class="glyphicon glyphicon-home"></span> {{repositoryView.rootUri}})</small></h1>
   </div>
 
   <breadcrumbs ng-if="context.hasParent !== undefined" context="context"></breadcrumbs>
@@ -80,7 +80,7 @@
       <div class="row">
         <div class="preview" ng-class="{'col-md-6 col-md-push-6': !theaterMode, 'col-md-12': theaterMode}" ng-if="context.resource">
           <div class="thumbnail" ng-mouseover="showImageControls=true" ng-mouseleave="showImageControls=false" >
-            <contentviewer content-type="getContentType()" resource="context.uri" ng-if="context.resource"></contentviewer>
+            <contentviewer content-type="getContentType()" resource="lengthenContextUri(context.uri)" ng-if="context.resource"></contentviewer>
             <div class="image-controls" ng-show="showImageControls">
               <div class="image-control">
                   <span class="glyphicon glyphicon-resize-horizontal" ng-click="setOrToggleTheaterMode()"></span>
@@ -101,13 +101,13 @@
                     <li role="menuitem" class="disabled"><a href="#">Send to Magpie</a></li>
                     <li role="menuitem" class="disabled"><a href="#">Create thumbnail</a></li>
                     <li role="menuitem" class="disabled"><a href="#">View in Mirador</a></li>
-                    <li role="menuitem"><a href="" ng-click="copyToClipboard(context.uri, 'contextUri')">Copy Resource URL</a></li>
+                    <li role="menuitem"><a href="" ng-click="copyToClipboard(lengthenContextUri(context.uri), 'contextUri')">Copy Resource URL</a></li>
                     <li ng-if="getIIIFUrl()" role="menuitem"><a href="" ng-click="copyToClipboard(getIIIFUrl(), 'contextUri')">Copy IIIF Manifest URL</a></li>
                   </ul>
                 </div>
               </div>
               <div class="pull-right">
-                <a href="{{context.uri}}" download class="btn btn-primary" role="button"><span class="glyphicon glyphicon-download-alt"></span> Download</a>
+                <a href="{{lengthenContextUri(context.uri)}}" download class="btn btn-primary" role="button"><span class="glyphicon glyphicon-download-alt"></span> Download</a>
                 <a ng-if="context.features.fixity" href="" ng-click="openFixity(context.triple.subject)" class="btn btn-default" role="button"><span class="glyphicon glyphicon-ok"></span> Fixity</a>
               </div>
             </div>
@@ -192,7 +192,7 @@
         remove-action="context.removeContainers(items)">
         <ol class="list-group" ng-show="contentExpanded">
           <li  class="list-group-item" ng-repeat="le in filteredList = (list | filterContainers:context | orderBy: 'name')" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le.triple)!==-1}">
-            <a href="" ng-click="listElementAction({'le':le.triple.subject})">{{(le.name || le.triple.object) | removeQuotes}}</a>
+            <a href="" ng-click="listElementAction({'le': (le.triple.subject | shortenUri: context.repositoryView.rootUri)})">{{(le.name || le.triple.object) | removeQuotes}}</a>
             <input ng-show="removeListElements" type="checkbox" class="pull-right" ng-checked="selectedListElements.indexOf(le.triple)!==-1" ng-click="selectedListElements.indexOf(le.triple)===-1?selectedListElements.push(le.triple):selectedListElements.splice(selectedListElements.indexOf(le.triple),1)">
           </li>
         </ol>
@@ -210,7 +210,7 @@
         remove-action="context.removeResources(items)">
         <ol class="list-group" ng-show="contentExpanded">
           <li  class="list-group-item" ng-repeat="le in filteredList = (list | filterResources:context | orderBy: 'name') track by $index" ng-class="{'list-group-item-danger': selectedListElements.indexOf(le.triple)!==-1}">
-            <a href="" ng-click="listElementAction({'le':le.triple.subject})">{{(le.name || le.triple.object) | removeQuotes}}</a>
+            <a href="" ng-click="listElementAction({'le': (le.triple.subject | shortenUri: context.repositoryView.rootUri)})">{{(le.name || le.triple.object) | removeQuotes}}</a>
             <!--<a href="" ng-show="!removeListElements" ng-click="resourceToUpdate=le;openModal('#updateResourceModalModal'+$index)"><span title="swap" class="glyphicon glyphicon-transfer pull-right clickable"></span></a>-->
             <a href="" ng-show="!removeListElements" ng-click="contextScope.openFixity(le.triple.subject)"><span title="fixity" class="glyphicon glyphicon-check pull-right clickable"></span></a>
             <a href="{{le.triple.subject}}" download><span ng-show="!removeListElements" title="download" class="glyphicon glyphicon-download-alt pull-right"></span></a>
