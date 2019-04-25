@@ -18,9 +18,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerMapping;
 
 import edu.tamu.cap.model.RepositoryView;
-import edu.tamu.cap.model.messaging.ContextAction;
 import edu.tamu.cap.model.repo.RepositoryViewRepo;
 import edu.tamu.cap.model.response.RepositoryViewContext;
+import edu.tamu.weaver.messaging.model.MessageAction;
 import edu.tamu.weaver.messaging.service.MessagingService;
 
 @Aspect
@@ -45,41 +45,58 @@ public class MessagingAspect {
     @AfterReturning(pointcut = "execution(* edu.tamu.cap.service.RepositoryViewService.createMetadata(..))", returning = "context")
     public void createMetadataMessage(RepositoryViewContext context) throws Throwable {
         logger.info(String.format("Messaging create metadata action"));
-        messagingService.sendMessage(MESSAGING_CHANNEL, buildMessage(context, ContextAction.METADATA_CREATE));
+        messagingService.sendMessage(MESSAGING_CHANNEL, buildMessage(getContextPath(context), MessageAction.CREATE));
     }
 
     @AfterReturning(pointcut = "execution(* edu.tamu.cap.service.RepositoryViewService.updateMetadata(..))", returning = "context")
     public void updateMetadataMessage(RepositoryViewContext context) throws Throwable {
         logger.info(String.format("Messaging update metadata action"));
-        messagingService.sendMessage(MESSAGING_CHANNEL, buildMessage(context, ContextAction.METADATA_UPDATE));
+        messagingService.sendMessage(MESSAGING_CHANNEL, buildMessage(getContextPath(context), MessageAction.UPDATE));
     }
 
     @AfterReturning(pointcut = "execution(* edu.tamu.cap.service.RepositoryViewService.deleteMetadata(..))", returning = "context")
     public void deleteMetadataMessage(RepositoryViewContext context) throws Throwable {
         logger.info(String.format("Messaging delete metadata action"));
-        messagingService.sendMessage(MESSAGING_CHANNEL, buildMessage(context, ContextAction.METADATA_DELETE));
+        messagingService.sendMessage(MESSAGING_CHANNEL, buildMessage(getContextPath(context), MessageAction.DELETE));
     }
 
     @AfterReturning(pointcut = "execution(* edu.tamu.cap.service.RepositoryViewService.createResource(..))", returning = "context")
     public void createResourceMessage(RepositoryViewContext context) throws Throwable {
         logger.info(String.format("Messaging create resource action"));
-        messagingService.sendMessage(MESSAGING_CHANNEL, buildMessage(context, ContextAction.RESOURCE_CREATE));
+        messagingService.sendMessage(MESSAGING_CHANNEL, buildMessage(getParentContextPath(context), MessageAction.CREATE));
     }
 
     @AfterReturning(pointcut = "execution(* edu.tamu.cap.service.RepositoryViewService.deleteResource(..))", returning = "context")
     public void deleteResourceMessage(RepositoryViewContext context) throws Throwable {
         logger.info(String.format("Messaging delete resource action"));
-        messagingService.sendMessage(MESSAGING_CHANNEL, buildMessage(context, ContextAction.RESOURCE_DELETE));
+        messagingService.sendMessage(MESSAGING_CHANNEL, buildMessage(getParentContextPath(context), MessageAction.DELETE));
     }
 
-    private Map<String, String> buildMessage(RepositoryViewContext context, ContextAction action) throws Exception {
+    @AfterReturning(pointcut = "execution(* edu.tamu.cap.service.RepositoryViewService.createChild(..))", returning = "context")
+    public void createChild(RepositoryViewContext context) throws Throwable {
+        logger.info(String.format("Messaging create child action"));
+        messagingService.sendMessage(MESSAGING_CHANNEL, buildMessage(getParentContextPath(context), MessageAction.CREATE));
+    }
+
+    @AfterReturning(pointcut = "execution(* edu.tamu.cap.service.RepositoryViewService.deleteRepositoryViewContext(..))", returning = "context")
+    public void deleteChild(RepositoryViewContext context) throws Throwable {
+        logger.info(String.format("Messaging delete child action"));
+        messagingService.sendMessage(MESSAGING_CHANNEL, buildMessage(getParentContextPath(context), MessageAction.DELETE));
+    }
+
+    private String getContextPath(RepositoryViewContext context) {
         RepositoryView repositoryView = getRepositoryViewService();
+        return context.getTriple().getSubject().replace(repositoryView.getRootUri(), "");
+    }
+
+    private String getParentContextPath(RepositoryViewContext context) {
+        RepositoryView repositoryView = getRepositoryViewService();
+        return context.getParent().getSubject().replace(repositoryView.getRootUri(), "");
+    }
+
+    private Map<String, String> buildMessage(String contextPath, MessageAction action) throws Exception {
         Map<String, String> payload = new HashMap<String, String>();
-        payload.put("contextPath", context.getTriple().getSubject().replace(repositoryView.getRootUri(), ""));
-        if (context.getHasParent()) {
-            payload.put("parentContextPath", context.getParent().getSubject().replace(repositoryView.getRootUri(), ""));
-        }
-        payload.put("repositoryType", repositoryView.getType().toString().toLowerCase());
+        payload.put("id", contextPath);
         payload.put("action", action.toString());
         return payload;
     }
