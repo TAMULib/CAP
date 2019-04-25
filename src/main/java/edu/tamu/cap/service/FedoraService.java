@@ -40,7 +40,6 @@ import org.fcrepo.client.PostBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -84,9 +83,6 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
     public final static String FEDORA_CREATED = "http://fedora.info/definitions/v4/repository#created";
 
     public final static String FEDORA_VERSION = "http://fedora.info/definitions/v4/repository#Version";
-    
-    @Value("${app.messaging.channel}")
-    private String MESSAGING_CHANNEL;
 
     // @formatter:off
     private final static String[] PROPERTY_PREFIXES = new String[] {
