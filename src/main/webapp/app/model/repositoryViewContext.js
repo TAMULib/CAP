@@ -5,11 +5,15 @@ cap.model("RepositoryViewContext", function ($q, $filter, $interval, $location, 
 
     var children = {};
 
+    var shortenContextUri = function (contextUri) {
+      return repositoryViewContext.repositoryView.rootUri ? $filter('shortenUri')(contextUri, repositoryViewContext.repositoryView.rootUri) : contextUri;
+    };
+
     var fetchContext = function (contextUri) {
       return repositoryViewContext.repositoryView.performRequest(repositoryViewContext.getMapping().load, {
         method: HttpMethodVerbs.GET,
         query: {
-          contextUri: contextUri
+          contextUri: shortenContextUri(contextUri)
         }
       });
     };
@@ -81,7 +85,7 @@ cap.model("RepositoryViewContext", function ($q, $filter, $interval, $location, 
       var createPromise = repositoryViewContext.repositoryView.performRequest(repositoryViewContext.getMapping().children, {
         method: HttpMethodVerbs.POST,
         query: {
-          contextUri: repositoryViewContext.uri
+          contextUri: shortenContextUri(repositoryViewContext.uri)
         },
         data: metadata
       });
@@ -101,7 +105,7 @@ cap.model("RepositoryViewContext", function ($q, $filter, $interval, $location, 
         var removePromise = repositoryViewContext.repositoryView.performRequest(repositoryViewContext.getMapping().load, {
           method: HttpMethodVerbs.DELETE,
           query: {
-            contextUri: containerTriple.subject
+            contextUri: shortenContextUri(containerTriple.subject)
           }
         });
 
@@ -134,7 +138,7 @@ cap.model("RepositoryViewContext", function ($q, $filter, $interval, $location, 
         var removePromise = repositoryViewContext.repositoryView.performRequest(repositoryViewContext.getMapping().resource, {
           method: HttpMethodVerbs.DELETE,
           query: {
-            contextUri: resourceTriple.subject
+            contextUri: shortenContextUri(resourceTriple.subject)
           }
         });
 
@@ -170,7 +174,7 @@ cap.model("RepositoryViewContext", function ($q, $filter, $interval, $location, 
           "Content-Type": undefined
         },
         query: {
-          contextUri: repositoryViewContext.uri
+          contextUri: shortenContextUri(repositoryViewContext.uri)
         },
         data: formData
       });
@@ -201,7 +205,7 @@ cap.model("RepositoryViewContext", function ($q, $filter, $interval, $location, 
         var createPromise = repositoryViewContext.repositoryView.performRequest(repositoryViewContext.getMapping().metadata, {
           method: HttpMethodVerbs.POST,
           query: {
-            contextUri: repositoryViewContext.uri
+            contextUri: shortenContextUri(repositoryViewContext.uri)
           },
           data: metadataTriple
         });
@@ -227,7 +231,7 @@ cap.model("RepositoryViewContext", function ($q, $filter, $interval, $location, 
         var removePromise = repositoryViewContext.repositoryView.performRequest(repositoryViewContext.getMapping().metadata, {
           method: HttpMethodVerbs.DELETE,
           query: {
-            contextUri: repositoryViewContext.uri
+            contextUri: shortenContextUri(repositoryViewContext.uri)
           },
           data: metadataTriple
         });
@@ -252,7 +256,7 @@ cap.model("RepositoryViewContext", function ($q, $filter, $interval, $location, 
       var updatePromise = repositoryViewContext.repositoryView.performRequest(repositoryViewContext.getMapping().metadata, {
         method: HttpMethodVerbs.PUT,
         query: {
-          contextUri: repositoryViewContext.uri,
+          contextUri: shortenContextUri(repositoryViewContext.uri),
           newValue: newValue
         },
         data: metadataTriple
@@ -267,7 +271,7 @@ cap.model("RepositoryViewContext", function ($q, $filter, $interval, $location, 
       var versionPromise = repositoryViewContext.repositoryView.performRequest(repositoryViewContext.getMapping().version, {
         method: HttpMethodVerbs.POST,
         query: {
-          contextUri: repositoryViewContext.uri
+          contextUri: shortenContextUri(repositoryViewContext.uri)
         },
         data: {
           name: form.name
@@ -293,7 +297,7 @@ cap.model("RepositoryViewContext", function ($q, $filter, $interval, $location, 
       return repositoryViewContext.repositoryView.performRequest(repositoryViewContext.getMapping().version, {
         method: HttpMethodVerbs.DELETE,
         query: {
-          contextUri: versionContext.uri
+          contextUri: shortenContextUri(versionContext.uri)
         }
       });
     };
@@ -302,7 +306,7 @@ cap.model("RepositoryViewContext", function ($q, $filter, $interval, $location, 
       var revertVersionPromise = repositoryViewContext.repositoryView.performRequest(repositoryViewContext.getMapping().version, {
         method: HttpMethodVerbs.PATCH,
         query: {
-          contextUri: context.uri
+          contextUri: shortenContextUri(context.uri)
         }
       });
       return revertVersionPromise;
@@ -312,7 +316,7 @@ cap.model("RepositoryViewContext", function ($q, $filter, $interval, $location, 
       var updatePromise = repositoryViewContext.repositoryView.performRequest(repositoryViewContext.getMapping().advancedQuery, {
         method: HttpMethodVerbs.POST,
         query: {
-          contextUri: repositoryViewContext.uri
+          contextUri: shortenContextUri(repositoryViewContext.uri)
         },
         data: query
       });
@@ -333,7 +337,7 @@ cap.model("RepositoryViewContext", function ($q, $filter, $interval, $location, 
         var updatePromise = repositoryViewContext.repositoryView.performRequest(repositoryViewContext.getMapping().advancedQuery, {
           method: HttpMethodVerbs.GET,
           query: {
-            contextUri: repositoryViewContext.uri
+            contextUri: shortenContextUri(repositoryViewContext.uri)
           }
         });
 
@@ -346,6 +350,5 @@ cap.model("RepositoryViewContext", function ($q, $filter, $interval, $location, 
     };
 
     return this;
-
   };
 });

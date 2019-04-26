@@ -42,7 +42,8 @@ public final class FedoraServiceTest {
 
     private final static String TEST_VERSION2_NAME = "TestVersion2";
 
-    private final static String TEST_CONTEXT_URI = ROOT_CONTEXT_URI + "/path/to/container";
+    private final static String TEST_CONTEXT_URI_SHORT = "path/to/container";
+    private final static String TEST_CONTEXT_URI = ROOT_CONTEXT_URI + "/" + TEST_CONTEXT_URI_SHORT;
 
     private final static Resource TEST_SUBJECT = OWL.Class;
 
@@ -101,6 +102,12 @@ public final class FedoraServiceTest {
     }
 
     @Test
+    public void createVersionShortUri() throws Exception {
+        RepositoryViewContext context = fedoraService.createVersion(TEST_CONTEXT_URI_SHORT, TEST_VERSION1_NAME);
+        assertVersions(context.getVersions());
+    }
+
+    @Test
     public void getVersions() throws Exception {
         List<Version> versions = fedoraService.getVersions(TEST_CONTEXT_URI);
         assertVersions(versions);
@@ -137,13 +144,13 @@ public final class FedoraServiceTest {
 
         assertEquals(TEST_VERSION1_NAME, versions.get(0).getName(), "Version 1 had the incorrect name!");
         assertEquals("2018-03-21T19:43:34.573Z^^http://www.w3.org/2001/XMLSchema#dateTime", versions.get(0).getTime(), "Version 1 had the incorrect time!");
-        assertEquals("http://localhost:9100/mock/fcrepo/rest/path/to/container/fcr:versions", versions.get(0).getTriple().getSubject(), "Version 1 had the incorrect subject!");
+        assertEquals(TEST_CONTEXT_URI + "/fcr:versions", versions.get(0).getTriple().getSubject(), "Version 1 had the incorrect subject!");
         assertEquals("http://fedora.info/definitions/v4/repository#hasVersion", versions.get(0).getTriple().getPredicate(), "Version 1 had the incorrect object!");
         assertEquals("http://localhost:9100/mock/fcrepo/rest/path/to/container/fcr:versions/TestVersion1", versions.get(0).getTriple().getObject(), "Version 1 had the incorrect predicate!");
 
         assertEquals(TEST_VERSION2_NAME, versions.get(1).getName(), "Version 2 had the incorrect name!");
         assertEquals("2018-03-21T19:44:48.852Z^^http://www.w3.org/2001/XMLSchema#dateTime", versions.get(1).getTime(), "Version 2 had the incorrect time!");
-        assertEquals("http://localhost:9100/mock/fcrepo/rest/path/to/container/fcr:versions", versions.get(1).getTriple().getSubject(), "Version 2 had the incorrect subject!");
+        assertEquals(TEST_CONTEXT_URI + "/fcr:versions", versions.get(1).getTriple().getSubject(), "Version 2 had the incorrect subject!");
         assertEquals("http://fedora.info/definitions/v4/repository#hasVersion", versions.get(1).getTriple().getPredicate(), "Version 2 had the incorrect object!");
         assertEquals("http://localhost:9100/mock/fcrepo/rest/path/to/container/fcr:versions/TestVersion2", versions.get(1).getTriple().getObject(), "Version 2 had the incorrect predicate!");
     }

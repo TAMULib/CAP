@@ -1,4 +1,4 @@
-cap.directive("breadcrumbs", function() {
+cap.directive("breadcrumbs", function($filter) {
     return {
         templateUrl: "views/directives/breadcrumbs.html",
         restrict: "E",
@@ -15,7 +15,7 @@ cap.directive("breadcrumbs", function() {
               }
               if(index) {
                 var prev = $scope.breadcrumbs.length > 0 ? $scope.breadcrumbs[index - 1] : undefined;
-                
+
                 if(prev && !context.isVersion) {
                   var prevName = prev.name.replace(context.repositoryView.rootUri, '...');
                   name = name.replace(prevName, '...');
@@ -30,6 +30,10 @@ cap.directive("breadcrumbs", function() {
                 }
               }
               return name;
+            };
+
+            $scope.shortenBreadcrumbUri = function (breadcrumb) {
+              return breadcrumb.repositoryView.rootUri ? $filter('shortenUri')(breadcrumb.uri, breadcrumb.repositoryView.rootUri) : breadcrumb.uri;
             };
 
             var getParent = function(context) {

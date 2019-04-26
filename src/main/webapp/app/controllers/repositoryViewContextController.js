@@ -56,7 +56,6 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
   };
 
   RepositoryViewRepo.ready().then(function () {
-
     $scope.repositoryView = RepositoryViewRepo.findByName(decodeURI($routeParams.irName));
 
     if(!$scope.repositoryView) $location.path("/error/404");
@@ -372,5 +371,9 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
     $scope.resetUploadResource();
 
   });
+
+  $scope.lengthenContextUri = function (contextUri) {
+    return $scope.context.repositoryView.rootUri ? $filter('lengthenUri')(contextUri, $scope.context.repositoryView.rootUri) : contextUri;
+  };
 
 });
