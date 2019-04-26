@@ -20,6 +20,11 @@
 
 }
 
-.openseadragon-container {
+.openseadragon-container, .pdf-container {
     min-height: 550px;
+}
+
+.pdf-container {
+    display:block;
+    width:100%;
 }
