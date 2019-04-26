@@ -109,24 +109,27 @@ public final class FedoraServiceTest {
     @Test
     public void metadataListSize() throws Exception {
         RepositoryViewContext context = fedoraService.createMetadata(TEST_CONTEXT_URI, mockTriple1);
+        int initialSize = context.getMetadata().size();
 
         context.addMetadatum(mockTriple1);
         context.addMetadatum(mockTriple2);
 
         List<Triple> metadata = context.getMetadata();
 
-        assertEquals(2, metadata.size(), "Context had incorrect metadata list size!");
+        assertEquals(initialSize + 2, metadata.size(), "Context had incorrect metadata list size!");
     }
 
     @Test
     public void propertyListSize() throws Exception {
         RepositoryViewContext context = fedoraService.createMetadata(TEST_CONTEXT_URI, mockTriple1);
+        int initialSize = context.getProperties().size();
 
         context.addProperty(mockTriple1);
+        context.addProperty(mockTriple2);
 
         List<Triple> properties = context.getProperties();
 
-        assertEquals(10, properties.size(), "Context had incorrect properties list size!");
+        assertEquals(initialSize + 2, properties.size(), "Context had incorrect properties list size!");
     }
 
     private void assertVersions(List<Version> versions) {

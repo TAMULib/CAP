@@ -568,17 +568,26 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
                     }
                     break;
                 default:
+                    boolean unassociatedPredicate = true;
 
                     for (String prefix : PROPERTY_PREFIXES) {
                         if (predicate.startsWith(prefix)) {
                             repositoryViewContext.addProperty(triple);
+                            unassociatedPredicate = false;
+                            break;
                         }
                     }
 
                     for (String prefix : repositoryView.getMetadataPrefixes()) {
                         if (predicate.startsWith(prefix)) {
                             repositoryViewContext.addMetadatum(triple);
+                            unassociatedPredicate = false;
+                            break;
                         }
+                    }
+
+                    if (unassociatedPredicate) {
+                        repositoryViewContext.addProperty(triple);
                     }
                 }
             }
