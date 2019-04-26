@@ -1,0 +1,5 @@
+{
+  "name": "Curator Added Email",
+  "subject": "Cap Curator Added",
+  "message": "Your account is now a Curator to the '{REPOSITORY_VIEW}' Repository View in Cap."
+ }
