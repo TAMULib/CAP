@@ -1,4 +1,4 @@
 <ul class="nav nav-tabs">
-  <li role="presentation" ng-class="{'active': activeTab==='/admin/ir'}"><a href="admin/ir">Ir Management</a></li>
-  <li role="presentation" ng-class="{'active': activeTab==='/admin/schema'}"><a href="admin/schema">Schema Management</a></li>
+  <li role="presentation" ng-class="{'active': activeTab==='/admin/repository-view'}"><a href="admin/repository-view">Ir Management</a></li>
+  <li ng-if="isAdmin()" role="presentation" ng-class="{'active': activeTab==='/admin/schema'}"><a href="admin/schema">Schema Management</a></li>
 </ul>

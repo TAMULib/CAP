@@ -1,6 +1,6 @@
 <ol class="breadcrumb">
     <li ng-repeat="breadcrumb in breadcrumbs track by $index">
-        <a href="" ng-click="breadcrumb.ir.loadContext(breadcrumb.uri)">{{trimName(breadcrumb, $index)}}</a>
+        <a href="" ng-click="breadcrumb.repositoryView.loadContext(breadcrumb.uri)">{{trimName(breadcrumb, $index)}}</a>
     </li>
     <br ng-if="breadcrumbs.length" />
     <li class="active">

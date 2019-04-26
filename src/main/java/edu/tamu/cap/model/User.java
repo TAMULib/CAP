@@ -11,20 +11,24 @@ package edu.tamu.cap.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import edu.tamu.weaver.user.model.IRole;
 
 import edu.tamu.weaver.auth.model.AbstractWeaverUserDetails;
+import edu.tamu.weaver.response.ApiView;
 
 /**
  * Application User entity.
@@ -46,34 +50,56 @@ public class User extends AbstractWeaverUserDetails {
     @Column(name = "last_name")
     private String lastName;
 
+    @JsonView(ApiView.Partial.class)
+    @Column(nullable = true, unique = true)
+    private String email;
+
+    @Column
+    @JsonIgnore
+    private String password = null;
+
+    @ManyToMany(mappedBy="curators")
+    @JsonIgnore
+    private List<RepositoryView> repositoryViews;
+
     /**
      * Constructor for the application user
      *
      */
     public User() {
         super();
+        setRepositoryViews(new ArrayList<RepositoryView>());
     }
 
     /**
      * Constructor for the application user
      *
      */
-    public User(String uin) {
-        setUsername(uin);
+    public User(String email) {
+        setUsername(email);
     }
 
     /**
-     * Constructor for application user with uin passed.
+     * Constructor for application user with external auth.
      *
      * @param uin
      *            Long
      *
      */
-    public User(String uin, String firstName, String lastName, String role) {
-        this(uin);
+    public User(String email, String firstName, String lastName, String role) {
+        this(email);
         setFirstName(firstName);
         setLastName(lastName);
         setRole(role == null ? null : Role.valueOf(role));
+    }
+
+    public User(String email, String firstName, String lastName, String role, String password) {
+        this(email);
+        setEmail(email);
+        setFirstName(firstName);
+        setLastName(lastName);
+        setRole(role == null ? null : Role.valueOf(role));
+        setPassword(password);
     }
 
     public User(User user) {
@@ -137,6 +163,57 @@ public class User extends AbstractWeaverUserDetails {
         this.lastName = lastName;
     }
 
+    /**
+     * @return the email
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * @param email
+     *            the email to set
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+	@Override
+	@JsonIgnore
+	public String getPassword() {
+		return password;
+	}
+
+    /**
+     * Stores an encoded password
+     *
+     * @param password
+     *            the password to set
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public List<RepositoryView> getRepositoryViews() {
+        return repositoryViews;
+    }
+
+    public void setRepositoryViews(List<RepositoryView> repositoryViews) {
+        this.repositoryViews = repositoryViews;
+    }
+
+    public boolean hasRepositoryView(Long repositoryViewId) {
+        boolean foundRepositoryView = false;
+        for (RepositoryView repositoryView : repositoryViews) {
+            if (repositoryViewId == repositoryView.getId()) {
+                foundRepositoryView = true;
+                break;
+            }
+        }
+        return foundRepositoryView;
+    }
+
+
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -145,11 +222,5 @@ public class User extends AbstractWeaverUserDetails {
         authorities.add(authority);
         return authorities;
     }
-
-	@Override
-	@JsonIgnore
-	public String getPassword() {
-		return null;
-	}
 
 }

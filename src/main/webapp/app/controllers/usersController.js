@@ -8,13 +8,13 @@ cap.controller('UsersController', function ($controller, $location, $injector, $
 
         $scope.assignableRoles = function(userRole) {
             if($scope.isAdmin()) {
-                return ['ROLE_ADMIN','ROLE_MANAGER','ROLE_USER'];
+                return ['ROLE_ADMIN','ROLE_CURATOR','ROLE_USER'];
             }
             else if($scope.isManager()) {
                 if(userRole == 'ROLE_ADMIN') {
                     return ['ROLE_ADMIN'];
                 }
-                return ['ROLE_MANAGER','ROLE_USER'];
+                return ['ROLE_CURATOR','ROLE_USER'];
             }
             else {
                 return [userRole];
@@ -22,28 +22,14 @@ cap.controller('UsersController', function ($controller, $location, $injector, $
         };
 
         $scope.canDelete = function(user) {
-            var canDelete;
-            if($scope.isAdmin()) {
+            var canDelete = false;
+            if((user.uin != $scope.user.uin) && $scope.isAdmin()) {
                 canDelete = true;
-            }
-            else if($scope.isManager()) {
-                if(user.role == "ROLE_ADMIN") {
-                    canDelete = false;
-                }
-                else {
-                    canDelete = true;
-                }
-            }
-            else {
-                canDelete = false;
-            }
-            if(user.uin == $scope.user.uin) {
-                canDelete = false;
             }
             return canDelete;
         };
 
-        if($scope.isAdmin() || $scope.isManager()) {
+        if($scope.isAdmin()) {
 
             var UserRepo = $injector.get("UserRepo");
 

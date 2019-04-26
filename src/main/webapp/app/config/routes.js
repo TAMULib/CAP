@@ -9,20 +9,27 @@ cap.config(function ($locationProvider, $routeProvider) {
       when('/home', {
         redirectTo: '/',
       }).
-      when('/admin/ir', {
-        templateUrl: 'views/admin/irManagement.html',
-        controller: 'IrManagementController'
+      when('/admin/repository-view', {
+        templateUrl: 'views/admin/repositoryViewManagement.html',
+        controller: 'RepositoryViewManagementController',
+        access: ["ROLE_ADMIN", "ROLE_CURATOR"]
       }).
       when('/admin/schema', {
         templateUrl: 'views/admin/schemaManagement.html',
-        controller: 'SchemaManagementController'
+        controller: 'SchemaManagementController',
+        access: ["ROLE_ADMIN", "ROLE_CURATOR"]
       }).
-      when('/ir/:irName', {
-        templateUrl: 'views/irContext.html',
-        controller: 'IrContextController'
+      when('/rv/:irName', {
+        templateUrl: 'views/repositoryViewContext.html',
+        controller: 'IrContextController',
+        access: ["ROLE_ADMIN", "ROLE_CURATOR"]
       }).
       when('/users', {
-          templateUrl: 'views/users.html'
+        templateUrl: 'views/users.html',
+        access: ["ROLE_ADMIN"]
+      }).
+      when('/register', {
+        templateUrl: 'views/register.html'
       }).
       // Error Routes
       when('/error/403', {

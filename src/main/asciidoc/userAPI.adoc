@@ -1,0 +1,45 @@
+== User API
+A Collection of endpoints used for performing User actions.
+
+=== Credentials
+
+A `GET` request to the `/user/credentials` endpoint. This will result in returning the credentials for the current user. Credentials are a specific subset of User data.
+
+=== All Users
+
+A `GET` request to the `/user/all` endpoint. This will result in returning a list of all users in the repository.
+
+==== Sample Request
+include::../../../target/generated-snippets/all-users/http-request.adoc[]
+
+==== Sample Response
+include::../../../target/generated-snippets/all-users/http-response.adoc[]
+
+==== Example Curl Request
+include::../../../target/generated-snippets/all-users/curl-request.adoc[]
+
+=== Update
+
+A `POST` request to the `/user/update` endpoint. This will result updating the specified user.
+
+==== Sample Request
+include::../../../target/generated-snippets/update/http-request.adoc[]
+
+==== Sample Response
+include::../../../target/generated-snippets/update/http-response.adoc[]
+
+==== Example Curl Request
+include::../../../target/generated-snippets/update/curl-request.adoc[]
+
+=== Delete
+
+A `POST` request to the `/user/delete` endpoint. This will result deleting the specified user.
+
+==== Sample Request
+include::../../../target/generated-snippets/delete/http-request.adoc[]
+
+==== Sample Response
+include::../../../target/generated-snippets/delete/http-response.adoc[]
+
+==== Example Curl Request
+include::../../../target/generated-snippets/delete/curl-request.adoc[]

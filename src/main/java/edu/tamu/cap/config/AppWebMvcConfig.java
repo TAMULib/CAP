@@ -74,6 +74,7 @@ public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
         }
         registry.addResourceHandler("/**").addResourceLocations(path + "/");
         registry.addResourceHandler("/public/**").addResourceLocations("file:public/");
+        registry.addResourceHandler("/docs/**").addResourceLocations("classpath:static/docs/");
         registry.setOrder(Integer.MAX_VALUE - 2);
     }
 

@@ -1,7 +1,6 @@
 package edu.tamu.cap.auth.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
@@ -13,25 +12,28 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-import edu.tamu.cap.auth.AuthMockTests;
+import edu.tamu.cap.utility.MockUserUtility;
 import edu.tamu.cap.model.Role;
 import edu.tamu.cap.model.User;
 import edu.tamu.cap.model.repo.UserRepo;
 import edu.tamu.weaver.auth.model.Credentials;
 
-@ExtendWith(MockitoExtension.class)
 @ExtendWith(SpringExtension.class)
-@MockitoSettings(strictness = Strictness.WARN)
-public final class AppUserCredentialsServiceTest extends AuthMockTests {
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+public final class AppUserCredentialsServiceTest {
+
+    @Autowired
+    private MockUserUtility mockUserUtility;
 
     @Mock
     private UserRepo userRepo;
@@ -53,26 +55,26 @@ public final class AppUserCredentialsServiceTest extends AuthMockTests {
 
         setField(credentialsService, "admins", new String[] { "123456789", "987654321" });
 
-        aggiejackCredentials = getMockAggieJackCredentials();
+        aggiejackCredentials = mockUserUtility.getMockAggieJackCredentials();
 
-        aggiejackCredentialsWithoutRole = getMockAggieJackCredentials();
+        aggiejackCredentialsWithoutRole = mockUserUtility.getMockAggieJackCredentials();
         aggiejackCredentialsWithoutRole.setRole(null);
 
-        aggiejackCredentialsUpdated = getMockAggieJackCredentials();
-        aggiejackCredentialsUpdated.setRole("ROLE_MANAGER");
+        aggiejackCredentialsUpdated = mockUserUtility.getMockAggieJackCredentials();
+        aggiejackCredentialsUpdated.setRole("ROLE_CURATOR");
         aggiejackCredentialsUpdated.setEmail("jaggie@tamu.edu");
         aggiejackCredentialsUpdated.setFirstName("John");
         aggiejackCredentialsUpdated.setLastName("Agriculture");
         aggiejackCredentialsUpdated.setUin("123456781");
 
-        aggiejackUser = new User(aggiejackCredentials.getUin(), aggiejackCredentials.getFirstName(), aggiejackCredentials.getLastName(), aggiejackCredentials.getRole());
+        aggiejackUser = new User(aggiejackCredentials.getEmail(), aggiejackCredentials.getFirstName(), aggiejackCredentials.getLastName(), aggiejackCredentials.getRole());
     }
 
     @Test
     public void testUpdateUserByCredentials() {
-        when(userRepo.findByUsername(any(String.class))).thenReturn(Optional.of(aggiejackUser));
-        when(userRepo.create(any(String.class), any(String.class), any(String.class), any(String.class))).thenReturn(aggiejackUser);
-        when(userRepo.save(any(User.class))).thenReturn(new User(aggiejackCredentialsUpdated.getUin(), aggiejackCredentialsUpdated.getFirstName(), aggiejackCredentialsUpdated.getLastName(), aggiejackCredentialsUpdated.getRole()));
+        when(userRepo.findByUsername(Mockito.any(String.class))).thenReturn(Optional.of(aggiejackUser));
+        when(userRepo.create(Mockito.any(String.class), Mockito.any(String.class), Mockito.any(String.class), Mockito.any(String.class))).thenReturn(aggiejackUser);
+        when(userRepo.save(Mockito.any(User.class))).thenReturn(new User(aggiejackCredentialsUpdated.getEmail(), aggiejackCredentialsUpdated.getFirstName(), aggiejackCredentialsUpdated.getLastName(), aggiejackCredentialsUpdated.getRole()));
         User user = credentialsService.updateUserByCredentials(aggiejackCredentialsUpdated);
 
         assertEquals(aggiejackUser, user, "Unable to update user with credentials!");
@@ -85,17 +87,17 @@ public final class AppUserCredentialsServiceTest extends AuthMockTests {
 
     @Test
     public void testUpdateUserByCredentialsWithoutRole() {
-        when(userRepo.findByUsername(any(String.class))).thenReturn(Optional.of(aggiejackUser));
-        when(userRepo.save(any(User.class))).thenReturn(aggiejackUser);
+        when(userRepo.findByUsername(Mockito.any(String.class))).thenReturn(Optional.of(aggiejackUser));
+        when(userRepo.save(Mockito.any(User.class))).thenReturn(aggiejackUser);
         User userWithDefaultRole = credentialsService.updateUserByCredentials(aggiejackCredentialsWithoutRole);
 
-        assertEquals(Role.ROLE_ADMIN, userWithDefaultRole.getRole(), "User had incorrect default role!");
+        assertEquals(Role.ROLE_USER, userWithDefaultRole.getRole(), "User had incorrect default role!");
     }
 
     @Test
     public void testChangedUser() {
-        when(userRepo.findByUsername(any(String.class))).thenReturn(Optional.of(aggiejackUser));
-        when(userRepo.save(any(User.class))).thenReturn(new User(aggiejackCredentialsUpdated.getUin(), aggiejackCredentialsUpdated.getFirstName(), aggiejackCredentialsUpdated.getLastName(), aggiejackCredentialsUpdated.getRole()));
+        when(userRepo.findByUsername(Mockito.any(String.class))).thenReturn(Optional.of(aggiejackUser));
+        when(userRepo.save(Mockito.any(User.class))).thenReturn(new User(aggiejackCredentialsUpdated.getEmail(), aggiejackCredentialsUpdated.getFirstName(), aggiejackCredentialsUpdated.getLastName(), aggiejackCredentialsUpdated.getRole()));
         User userUpdate = credentialsService.updateUserByCredentials(aggiejackCredentialsUpdated);
 
         assertEquals(aggiejackCredentialsUpdated.getLastName(), userUpdate.getLastName(), "User had the incorrect last name!");

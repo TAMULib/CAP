@@ -1,15 +1,18 @@
-/* 
- * UserController.java 
- * 
- * Version: 
- *     $Id$ 
- * 
- * Revisions: 
- *     $Log$ 
+/*
+ * UserController.java
+ *
+ * Version:
+ *     $Id$
+ *
+ * Revisions:
+ *     $Log$
  */
 package edu.tamu.cap.controller;
 
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
+import static edu.tamu.weaver.response.ApiStatus.ERROR;
+
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,7 +28,7 @@ import edu.tamu.weaver.response.ApiResponse;
 
 /**
  * User Controller
- * 
+ *
  * @author
  *
  */
@@ -38,12 +41,12 @@ public class UserController {
 
     /**
      * Websocket endpoint to request credentials.
-     * 
+     *
      * @param credentials
      * @ApiCredentials Credentials
-     * 
+     *
      * @return ApiResponse
-     * 
+     *
      */
     @RequestMapping("/credentials")
     @PreAuthorize("hasRole('USER')")
@@ -53,43 +56,49 @@ public class UserController {
 
     /**
      * Endpoint to return all users.
-     * 
+     *
      * @return ApiResponse
-     * 
+     *
      */
     @RequestMapping("/all")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse allUsers() {
         return new ApiResponse(SUCCESS, userRepo.findAll());
     }
 
     /**
      * Endpoint to update users role.
-     * 
+     *
      * @param user
      * @ApiModel AppUser
-     * 
+     *
      * @return ApiResponse
-     * 
+     *
      */
     @RequestMapping("/update")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse update(@RequestBody User user) {
-        user = userRepo.update(user);
-        return new ApiResponse(SUCCESS, user);
+        Optional<User> currentUser = userRepo.findByUsername(user.getUsername());
+        if (currentUser.isPresent()) {
+            user.setPassword(currentUser.get().getPassword());
+            user = userRepo.update(user);
+            return new ApiResponse(SUCCESS, user);
+        } else {
+            return new ApiResponse(ERROR,"User not found");
+        }
     }
 
     /**
      * Endpoint to delete user.
-     * 
+     *
      * @param user
      * @ApiModel AppUser
-     * 
+     *
      * @return ApiResponse
-     * 
+     *
      */
     @RequestMapping("/delete")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse delete(@RequestBody User user) throws Exception {
         userRepo.delete(user);
         return new ApiResponse(SUCCESS);

@@ -1,0 +1,174 @@
+<form name="repositoryViewForms.create" ng-submit="createRepositoryView()" novalidate class="rv-forms-create">
+  <div class="modal-header {{attr.modalHeaderClass}}">
+    <button type="button" class="close modal-close" aria-label="Close" ng-click="cancelCreateRepositoryView()"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title">Create Repository View</h4>
+  </div>
+  <div class="modal-body">
+
+    <validationmessage results="repositoryViewForms.getResults()"></validationmessage>
+    <uib-tabset active="activeJustified" justified="true">
+      <uib-tab index="0" heading="General">
+        <div class="row">
+          <div class="col-sm-10 col-sm-offset-1">
+
+            <validatedselect
+              model="repositoryViewToCreate"
+              property="type"
+              options="repositoryViewTypes"
+              optionproperty="gloss"
+              optionvalue="value"
+              label="Type"
+              placeholder="Type of the new Repository View"
+              form="repositoryViewForms.create"
+              validations="repositoryViewForms.validations"
+              results="repositoryViewForms.getResults()"
+              no-id="true">
+            </validatedselect>
+
+            <validatedinput
+              model="repositoryViewToCreate"
+              property="name"
+              label="Name"
+              placeholder="Name of the new Repository View"
+              form="repositoryViewForms.create"
+              validations="repositoryViewForms.validations"
+              results="repositoryViewForms.getResults()"
+              autocomplete="off"
+              no-id="true">
+            </validatedinput>
+
+            <validatedinput
+              model="repositoryViewToCreate"
+              property="rootUri"
+              label="Root URI"
+              placeholder="Root URI of the new Repository View"
+              form="repositoryViewForms.create"
+              validations="repositoryViewForms.validations"
+              results="repositoryViewForms.getResults()"
+              autocomplete="off"
+              no-id="true">
+            </validatedinput>
+          </div>
+        </div>
+      </uib-tab>
+
+      <uib-tab index="1" heading="Authentication">
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-1">
+              <validatedinput
+                model="repositoryViewToCreate"
+                property="username"
+                label="Username"
+                placeholder="Username of the new Repository View"
+                form="repositoryViewForms.create"
+                validations="repositoryViewForms.validations"
+                results="repositoryViewForms.getResults()"
+                autocomplete="off"
+                no-id="true">
+              </validatedinput>
+
+              <validatedinput
+                model="repositoryViewToCreate"
+                property="password"
+                label="Password"
+                placeholder="Password of the new Repository View"
+                form="repositoryViewForms.create"
+                validations="repositoryViewForms.validations"
+                results="repositoryViewForms.getResults()"
+                autocomplete="off"
+                type="password"
+                no-id="true">
+              </validatedinput>
+          </div>
+        </div>
+      </uib-tab>
+
+      <uib-tab index="2" heading="Schemas">
+
+        <div class="row">
+
+          <div class="col-xs-6">
+
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">This Repository</h3>
+              </div>
+              <ul class="list-group">
+                <li class="list-group-item clickable" ng-repeat="s in repositoryViewToCreate.schemas track by $index" ng-click="repositoryViewToCreate.schemas.splice($index,1)">
+                  {{s.name}}
+                  <span class="glyphicon glyphicon-arrow-right pull-right"></span>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+
+          <div class="col-xs-6">
+
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">All Schemas</h3>
+              </div>
+              <ul class="list-group">
+                <li class="list-group-item clickable" ng-repeat="s in schemas | containedIn:repositoryViewToCreate.schemas:'namespace'" ng-click="repositoryViewToCreate.schemas.push(s)">
+                  <span class="glyphicon glyphicon-arrow-left"></span>
+                  {{s.name}}
+                </li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+      </uib-tab>
+      <uib-tab index="3" heading="Curators">
+
+        <div class="row">
+
+          <div class="col-xs-6">
+
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">This Repository</h3>
+              </div>
+              <ul class="list-group">
+                <li class="list-group-item clickable" ng-repeat="curator in repositoryViewToCreate.curators track by $index" ng-click="repositoryViewToCreate.curators.splice($index,1)">
+                  {{curator.firstName}} {{curator.lastName}}
+                  <span class="glyphicon glyphicon-arrow-right pull-right"></span>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+
+          <div class="col-xs-6">
+
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">All Curators</h3>
+              </div>
+              <ul class="list-group">
+                <li class="list-group-item clickable" ng-repeat="curator in curators | containedIn:repositoryViewToCreate.curators:'username'" ng-click="repositoryViewToCreate.curators.push(curator)">
+                  <span class="glyphicon glyphicon-arrow-left"></span>
+                  {{curator.firstName}} {{curator.lastName}}
+                </li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+      </uib-tab>
+
+      <uib-tab index="4" heading="Verify">
+        <repository-view-verification repository-view="repositoryViewToCreate" results="verificationResults"></repository-view-verification>
+      </uib-tab>
+
+    </uib-tabset>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn" ng-class="{'btn-default': repositoryViewForms.create.$pristine, 'btn-warning': !repositoryViewForms.create.$pristine}" ng-click="cancelCreateRepositoryView()">Cancel</button>
+    <button type="submit" class="btn btn-success" ng-disabled="!disableVerify(repositoryViewToCreate) && (repositoryViewForms.create.$invalid || verificationResults.status !== 'SUCCESS') || submitClicked">Create</button>
+  </div>
+</form>

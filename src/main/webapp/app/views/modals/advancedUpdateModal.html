@@ -1,4 +1,4 @@
-<form name="irForm.advancedUpdate" ng-submit="advancedUpdate(irForm.advancedUpdate.query)" novalidate>
+<form name="repositoryViewForm.advancedUpdate" ng-submit="advancedUpdate(repositoryViewForm.advancedUpdate.query)" novalidate>
   <div class="modal-header {{attr.modalHeaderClass}}">
     <button type="button" class="close modal-close" aria-label="Close" ng-click="resetAdvancedUpdate()">
       <span aria-hidden="true">&times;</span>
@@ -8,11 +8,11 @@
   <div class="modal-body" ng-init="resetAdvancedUpdate()">
     <div class="form-group">
       <label for="properties.update">Query</label>
-      <textarea name="properties.update" ng-model="irForm.advancedUpdate.query" class="form-control fixed-vertical" cols="10" rows="20"></textarea>
+      <textarea name="properties.update" ng-model="repositoryViewForm.advancedUpdate.query" class="form-control fixed-vertical" cols="10" rows="20"></textarea>
     </div>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-default" ng-click="resetAdvancedUpdate()">Cancel</button>
-    <button type="submit" class="btn btn-success" ng-disabled="irForm.advancedUpdate.query.length === 0 || submitClicked">Update</button>
+    <button type="submit" class="btn btn-success" ng-disabled="repositoryViewForm.advancedUpdate.query.length === 0 || submitClicked">Update</button>
   </div>
 </form>
