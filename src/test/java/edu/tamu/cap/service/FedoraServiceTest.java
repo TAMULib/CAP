@@ -1,7 +1,6 @@
 package edu.tamu.cap.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -18,9 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
+
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,9 +28,7 @@ import edu.tamu.cap.model.RepositoryView;
 import edu.tamu.cap.model.response.RepositoryViewContext;
 import edu.tamu.cap.model.response.Version;
 
-@ExtendWith(MockitoExtension.class)
 @ExtendWith(SpringExtension.class)
-@MockitoSettings(strictness = Strictness.WARN)
 @SpringBootTest(classes = { CapApplication.class }, webEnvironment = WebEnvironment.DEFINED_PORT)
 public final class FedoraServiceTest {
 
@@ -55,10 +50,10 @@ public final class FedoraServiceTest {
 
         request = mock(HttpServletRequest.class);
 
-        Mockito.lenient().when(request.getCookies()).thenReturn(new Cookie[0]);
+        Mockito.when(request.getCookies()).thenReturn(new Cookie[0]);
         when(request.getMethod()).thenReturn("POST");
         when(request.getUserPrincipal()).thenReturn(new UsernamePasswordAuthenticationToken("aggieJack", ""));
-        when(request.getAttribute(any(String.class))).thenReturn(new HashMap<String, String>() {
+        when(request.getAttribute(Mockito.any(String.class))).thenReturn(new HashMap<String, String>() {
             private static final long serialVersionUID = 3185237776585513150L;
             {
                 put("type", "fedora");

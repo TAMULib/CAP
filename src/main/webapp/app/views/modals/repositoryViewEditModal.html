@@ -1,11 +1,11 @@
-<form name="irForms.edit" ng-submit="updateRepositoryView()" novalidate>
+<form name="repositoryViewForms.edit" ng-submit="updateRepositoryView()" novalidate>
     <div class="modal-header {{attr.modalHeaderClass}}">
         <button type="button" class="close modal-close" aria-label="Close" ng-click="cancelEditRepositoryView()"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title">Edit Repository View</h4>
     </div>
     <div class="modal-body">
 
-        <validationmessage results="irForms.getResults()"></validationmessage>
+        <validationmessage results="repositoryViewForms.getResults()"></validationmessage>
 
         <uib-tabset active="activeJustified" justified="true">
             <uib-tab index="0" heading="General">
@@ -19,9 +19,9 @@
                     optionvalue="value"
                     label="Type"
                     placeholder="Type of the new Repository View"
-                    form="irForms.edit"
-                    validations="irForms.validations"
-                    results="irForms.getResults()"
+                    form="repositoryViewForms.edit"
+                    validations="repositoryViewForms.validations"
+                    results="repositoryViewForms.getResults()"
                     no-id="true">
                   </validatedselect>
                   <validatedinput
@@ -29,9 +29,9 @@
                     property="name"
                     label="Name"
                     placeholder="Name of the Repository View"
-                    form="irForms.edit"
-                    validations="irForms.validations"
-                    results="irForms.getResults()"
+                    form="repositoryViewForms.edit"
+                    validations="repositoryViewForms.validations"
+                    results="repositoryViewForms.getResults()"
                     autocomplete="off"
                     no-id="true">
                   </validatedinput>
@@ -40,9 +40,9 @@
                     property="rootUri"
                     label="Root URI"
                     placeholder="Root URI of the Repository View"
-                    form="irForms.edit"
-                    validations="irForms.validations"
-                    results="irForms.getResults()"
+                    form="repositoryViewForms.edit"
+                    validations="repositoryViewForms.validations"
+                    results="repositoryViewForms.getResults()"
                     autocomplete="off"
                     no-id="true">
                   </validatedinput>
@@ -57,9 +57,9 @@
                         property="username"
                         label="Username"
                         placeholder="Username of the Repository View"
-                        form="irForms.create"
-                        validations="irForms.validations"
-                        results="irForms.getResults()"
+                        form="repositoryViewForms.create"
+                        validations="repositoryViewForms.validations"
+                        results="repositoryViewForms.getResults()"
                         autocomplete="off"
                         no-id="true">
                     </validatedinput>
@@ -69,9 +69,9 @@
                         property="password"
                         label="Password"
                         placeholder="Password of the Repository View"
-                        form="irForms.create"
-                        validations="irForms.validations"
-                        results="irForms.getResults()"
+                        form="repositoryViewForms.create"
+                        validations="repositoryViewForms.validations"
+                        results="repositoryViewForms.getResults()"
                         autocomplete="off"
                         type="password"
                         no-id="true">
@@ -90,7 +90,7 @@
                     <h3 class="panel-title">This Repository</h3>
                     </div>
                     <ul class="list-group">
-                    <li class="list-group-item clickable" ng-repeat="s in repositoryViewToEdit.schemas track by $index" ng-click="irForms.edit.$setDirty();repositoryViewToEdit.schemas.splice($index,1);">
+                    <li class="list-group-item clickable" ng-repeat="s in repositoryViewToEdit.schemas track by $index" ng-click="repositoryViewForms.edit.$setDirty();repositoryViewToEdit.schemas.splice($index,1);">
                         {{s.name}}
                         <span class="glyphicon glyphicon-arrow-right pull-right"></span>
                     </li>
@@ -106,7 +106,7 @@
                     <h3 class="panel-title">All Schemas</h3>
                     </div>
                     <ul class="list-group">
-                    <li class="list-group-item clickable" ng-repeat="s in schemas | containedIn:repositoryViewToEdit.schemas:'namespace'" ng-click="irForms.edit.$setDirty();repositoryViewToEdit.schemas.push(s);">
+                    <li class="list-group-item clickable" ng-repeat="s in schemas | containedIn:repositoryViewToEdit.schemas:'namespace'" ng-click="repositoryViewForms.edit.$setDirty();repositoryViewToEdit.schemas.push(s);">
                         <span class="glyphicon glyphicon-arrow-left"></span>
                         {{s.name}}
                     </li>
@@ -129,7 +129,7 @@
                     <h3 class="panel-title">This Repository</h3>
                   </div>
                   <ul class="list-group">
-                    <li class="list-group-item clickable" ng-repeat="curator in repositoryViewToEdit.curators track by $index" ng-click="irForms.edit.$setDirty();repositoryViewToEdit.curators.splice($index,1)">
+                    <li class="list-group-item clickable" ng-repeat="curator in repositoryViewToEdit.curators track by $index" ng-click="repositoryViewForms.edit.$setDirty();repositoryViewToEdit.curators.splice($index,1)">
                       {{curator.firstName}} {{curator.lastName}}
                       <span class="glyphicon glyphicon-arrow-right pull-right"></span>
                     </li>
@@ -145,7 +145,7 @@
                     <h3 class="panel-title">All Curators</h3>
                   </div>
                   <ul class="list-group">
-                    <li class="list-group-item clickable" ng-repeat="curator in curators | containedIn:repositoryViewToEdit.curators:'username'" ng-click="irForms.edit.$setDirty();repositoryViewToEdit.curators.push(curator)">
+                    <li class="list-group-item clickable" ng-repeat="curator in curators | containedIn:repositoryViewToEdit.curators:'username'" ng-click="repositoryViewForms.edit.$setDirty();repositoryViewToEdit.curators.push(curator)">
                       <span class="glyphicon glyphicon-arrow-left"></span>
                       {{curator.firstName}} {{curator.lastName}}
                     </li>
@@ -162,8 +162,8 @@
         </uib-tab>
     </div>
     <div class="modal-footer">
-        <small class="text-warning pull-left" ng-if="!disableVerify(repositoryViewToEdit) && irForms.edit.$dirty&&verificationResults.status!=='SUCCESS'">VR settings must be verified before edits can be saved</small>
-        <button type="button" class="btn btn-default" ng-class="{'btn-default': irForms.edit.$pristine, 'btn-warning': !irForms.edit.$pristine}" ng-click="cancelEditRepositoryView()">Cancel</button>
-        <button type="submit" class="btn btn-success" ng-disabled="!irForms.edit.$dirty || irForms.edit.$invalid || submitClicked || (!disableVerify(repositoryViewToEdit) && irForms.edit.$dirty && verificationResults.status !== 'SUCCESS')">Edit</button>
+        <small class="text-warning pull-left" ng-if="!disableVerify(repositoryViewToEdit) && repositoryViewForms.edit.$dirty&&verificationResults.status!=='SUCCESS'">VR settings must be verified before edits can be saved</small>
+        <button type="button" class="btn btn-default" ng-class="{'btn-default': repositoryViewForms.edit.$pristine, 'btn-warning': !repositoryViewForms.edit.$pristine}" ng-click="cancelEditRepositoryView()">Cancel</button>
+        <button type="submit" class="btn btn-success" ng-disabled="!repositoryViewForms.edit.$dirty || repositoryViewForms.edit.$invalid || submitClicked || (!disableVerify(repositoryViewToEdit) && repositoryViewForms.edit.$dirty && verificationResults.status !== 'SUCCESS')">Edit</button>
     </div>
 </form>

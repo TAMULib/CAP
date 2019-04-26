@@ -39,12 +39,12 @@ public class RepositoryViewController {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@RequestMapping(method = RequestMethod.POST)
-    @PreAuthorize("hasRole('ADMIN')")
-    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
-    public ApiResponse createRepositoryView(@RequestBody @WeaverValidatedModel RepositoryView repositoryView) {
-        logger.info("Creating Repository View:  " + repositoryView.getName() + " with schema " + repositoryView.getSchemas());
-        return new ApiResponse(SUCCESS, repositoryViewRepo.create(repositoryView));
-    }
+  @PreAuthorize("hasRole('ADMIN')")
+  @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
+  public ApiResponse createRepositoryView(@RequestBody @WeaverValidatedModel RepositoryView repositoryView) {
+      logger.info("Creating Repository View:  " + repositoryView.getName() + " with schema " + repositoryView.getSchemas());
+      return new ApiResponse(SUCCESS, repositoryViewRepo.create(repositoryView));
+  }
 
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasRole('CURATOR')")

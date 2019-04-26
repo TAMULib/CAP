@@ -1,0 +1,32 @@
+
+= CAP APIs
+{project-version}
+:doctype: book
+:toc: left
+:toclevels: 2
+:sectanchors:
+:sectlinks:
+:linkattrs:
+:source-highlighter: highlightjs
+
+include::./repositoryViewAPI.adoc[]
+
+include::./repositoryViewContextAPI.adoc[]
+
+include::./repositoryViewContextChildrenAPI.adoc[]
+
+include::./repositoryViewContextMetadataAPI.adoc[]
+
+include::./repositoryViewContextQueryAPI.adoc[]
+
+include::./repositoryViewContextResourceAPI.adoc[]
+
+include::./repositoryViewContextTransactionAPI.adoc[]
+
+include::./repositoryViewContextVersionAPI.adoc[]
+
+include::./schemaAPI.adoc[]
+
+include::./userAPI.adoc[]
+
+include::./verifyRepositoryViewAPI.adoc[]
