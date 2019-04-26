@@ -30,7 +30,7 @@ public class MessagingAspect {
 
     private final static Logger logger = LoggerFactory.getLogger(MessagingAspect.class);
 
-    @Value("${app.messaging.channel}")
+    @Value("${app.messaging.channel:cap}")
     private String MESSAGING_CHANNEL;
 
     @Autowired
