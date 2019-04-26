@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 
 import edu.tamu.cap.model.repositoryviewcontext.TransactionDetails;
@@ -100,7 +101,7 @@ public class RepositoryViewContext implements Serializable {
         this.metadata = metadata;
     }
 
-    public void addMetadum(Triple metadatum) {
+    public void addMetadatum(Triple metadatum) {
         metadata.add(metadatum);
     }
 
