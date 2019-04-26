@@ -1,5 +1,6 @@
 package edu.tamu.cap.controller;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -21,11 +22,19 @@ public class ResourceProxyController {
     @Autowired
     RepositoryViewRepo repositoryViewRepo;
 
+    /**
+     * Streaming proxy for resources contained in RepositoryViews associated with a Cap instance
+     * Serves PDFs inline instead of as an attachment, acts as a pass-through for other types
+     *
+     * @param String uri
+     *
+     */
     @RequestMapping(method = RequestMethod.GET)
     public void proxyResource(HttpServletResponse response, @RequestParam String uri) {
         URL sourceURL;
         try {
             sourceURL = new URL(uri);
+
             //only proxy for domains associated with existing RepositoryViews
             if (repositoryViewRepo.findByRootUriContainingIgnoreCase(sourceURL.getHost()).size() > 0) {
                 byte[] sourceBytes = new byte[1024];
@@ -58,9 +67,20 @@ public class ResourceProxyController {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            } else {
+                try {
+                    response.sendError(HttpServletResponse.SC_FORBIDDEN,"Unknown Repository");
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
             }
         } catch (MalformedURLException e2) {
-            e2.printStackTrace();
+            try {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST,"Bad URI");
+                e2.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
