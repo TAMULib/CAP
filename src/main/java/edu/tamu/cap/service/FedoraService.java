@@ -266,7 +266,6 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
         return getRepositoryViewContext(contextUri);
     }
 
-
     @Override
     public List<Triple> getMetadata(String contextUri) throws Exception {
         RepositoryViewContext context = getRepositoryViewContext(contextUri);
@@ -290,7 +289,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
         FcrepoResponse response = patch.perform();
         checkFedoraResult(response);
         URI location = response.getLocation();
-        logger.debug("Metadata update status and location: {}, {}", response.getStatusCode(), location);
+        logger.info("Metadata update status and location: {}, {}", response.getStatusCode(), location);
         return getRepositoryViewContext(contextUri);
     }
 
