@@ -1,0 +1,5 @@
+{
+  "name": "Registration Confirmed Email",
+  "subject": "Cap Account Registration Confirmed",
+  "message": "The registration of your Cap account has been successfully completed."
+ }

@@ -1,0 +1,5 @@
+{
+  "name": "Role Changed Email",
+  "subject": "Cap Account Role Changed",
+  "message": "The role assigned to your Cap account has been changed from '{USER_ROLE_FROM}' to '{USER_ROLE_TO}'."
+ }
