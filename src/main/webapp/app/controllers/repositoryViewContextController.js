@@ -199,6 +199,10 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
       });
     };
 
+    $scope.refreshContext = function() {
+      $scope.context.refreshContext();
+    };
+
     $scope.openFixity = function(uriOfContextToCheck) {
       $scope.fixityReport = new FixityReport({
         repositoryView: $scope.context.repositoryView,

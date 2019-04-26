@@ -182,6 +182,17 @@ cap.model("RepositoryViewContext", function ($q, $filter, $interval, $location, 
       return createPromise;
     };
 
+    repositoryViewContext.refreshContext = function() {
+      var refreshPromise = repositoryViewContext.repositoryView.performRequest(repositoryViewContext.getMapping().refreshContext, {
+        method: HttpMethodVerbs.POST,
+        query: {
+          contextUri: repositoryViewContext.uri
+        }
+      });
+
+      return refreshPromise;
+    };
+
     repositoryViewContext.createMetadata = function (metadataTriples) {
 
       var promises = [];
