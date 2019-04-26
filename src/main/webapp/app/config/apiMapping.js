@@ -67,6 +67,12 @@ var apiMapping = {
       'endpoint': '/private/queue',
       'controller': 'repository-view-context',
       'method': ':type/:repositoryViewId/resource/fixity'
+    },
+    refreshContext: {
+      'endpoint': '/private/queue',
+      'httpMethod': 'POST',
+      'controller': 'repository-view-context',
+      'method': ':type/:repositoryViewId/message/refresh'
     }
   },
   FixityReport: {

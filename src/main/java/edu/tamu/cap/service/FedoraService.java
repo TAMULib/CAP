@@ -289,7 +289,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
         FcrepoResponse response = patch.perform();
         checkFedoraResult(response);
         URI location = response.getLocation();
-        logger.info("Metadata update status and location: {}, {}", response.getStatusCode(), location);
+        logger.debug("Metadata update status and location: {}, {}", response.getStatusCode(), location);
         return getRepositoryViewContext(contextUri);
     }
 
