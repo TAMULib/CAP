@@ -11,13 +11,16 @@ import java.util.List;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.vocabulary.OWL;
+import org.apache.jena.vocabulary.RDF;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,6 +29,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import edu.tamu.cap.CapApplication;
 import edu.tamu.cap.model.RepositoryView;
 import edu.tamu.cap.model.response.RepositoryViewContext;
+import edu.tamu.cap.model.response.Triple;
 import edu.tamu.cap.model.response.Version;
 
 @ExtendWith(SpringExtension.class)
@@ -41,10 +45,22 @@ public final class FedoraServiceTest {
     private final static String TEST_CONTEXT_URI_SHORT = "path/to/container";
     private final static String TEST_CONTEXT_URI = ROOT_CONTEXT_URI + "/" + TEST_CONTEXT_URI_SHORT;
 
+    private final static Resource TEST_SUBJECT = OWL.Class;
+
+    private final static Property TEST_PREDICATE = RDF.type;
+
+    private final static String TEST_OBJECT_1 = "TestObject1";
+
+    private final static String TEST_OBJECT_2 = "TestObject2";
+
     private HttpServletRequest request;
 
     @InjectMocks
     private FedoraService fedoraService;
+
+    private Triple mockTriple1;
+
+    private Triple mockTriple2;
 
     @BeforeEach
     public void setup() throws IOException {
@@ -67,6 +83,16 @@ public final class FedoraServiceTest {
         MockitoAnnotations.initMocks(this);
 
         fedoraService.setRepositoryView(new RepositoryView(RepositoryViewType.FEDORA, "Mock Fedora", "http://localhost:9100/mock/fcrepo/rest"));
+
+        mockTriple1 = new Triple();
+        mockTriple1.setSubject(TEST_SUBJECT.toString());
+        mockTriple1.setPredicate(TEST_PREDICATE.toString());
+        mockTriple1.setObject(TEST_OBJECT_1);
+
+        mockTriple2 = new Triple();
+        mockTriple2.setSubject(TEST_SUBJECT.toString());
+        mockTriple2.setPredicate(TEST_PREDICATE.toString());
+        mockTriple2.setObject(TEST_OBJECT_2);
     }
 
     @Test
@@ -88,9 +114,26 @@ public final class FedoraServiceTest {
     }
 
     @Test
-    public void getVersionsShortUri() throws Exception {
-        List<Version> versions = fedoraService.getVersions(TEST_CONTEXT_URI_SHORT);
-        assertVersions(versions);
+    public void metadataListSize() throws Exception {
+        RepositoryViewContext context = fedoraService.createMetadata(TEST_CONTEXT_URI, mockTriple1);
+
+        context.addMetadatum(mockTriple1);
+        context.addMetadatum(mockTriple2);
+
+        List<Triple> metadata = context.getMetadata();
+
+        assertEquals(2, metadata.size(), "Context had incorrect metadata list size!");
+    }
+
+    @Test
+    public void propertyListSize() throws Exception {
+        RepositoryViewContext context = fedoraService.createMetadata(TEST_CONTEXT_URI, mockTriple1);
+
+        context.addProperty(mockTriple1);
+
+        List<Triple> properties = context.getProperties();
+
+        assertEquals(10, properties.size(), "Context had incorrect properties list size!");
     }
 
     private void assertVersions(List<Version> versions) {

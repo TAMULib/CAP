@@ -9,6 +9,10 @@
         @import "./propertiesSection";
     }
 
+    .metadata-section {
+        @import "./metadataSection";
+    }
+
     .preview {
         @import "./preview";
     }

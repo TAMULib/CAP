@@ -591,7 +591,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
                     for (String prefix : repositoryView.getMetadataPrefixes()) {
                         if (predicate.startsWith(prefix)) {
-                            repositoryViewContext.addMetadum(triple);
+                            repositoryViewContext.addMetadatum(triple);
                         }
                     }
                 }
@@ -631,20 +631,19 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
             repositoryViewContext.setName(contextUri);
         }
 
-        if (repositoryViewContext.isResource()) {
-            Optional<String> fileName = getLiteralForProperty(model, model.createProperty(EBU_FILENAME_PREDICATE));
-            if (fileName.isPresent()) {
-                repositoryViewContext.setName(fileName.get());
-            }
-        } else {
-            Optional<String> title = getLiteralForProperty(model, RDFS.label);
-            if (!title.isPresent()) {
-                title = getLiteralForProperty(model, DC.title);
-            }
+        Optional<String> title = getLiteralForProperty(model, RDFS.label);
+        if (!title.isPresent()) {
+            title = getLiteralForProperty(model, DC.title);
 
-            if (title.isPresent()) {
-                repositoryViewContext.setName(title.get());
+            if (!title.isPresent()) {
+                if (repositoryViewContext.isResource()) {
+                    title = getLiteralForProperty(model, model.createProperty(EBU_FILENAME_PREDICATE));
+                }
             }
+        }
+
+        if (title.isPresent()) {
+            repositoryViewContext.setName(title.get());
         }
 
         if (repositoryViewContext.getIsVersion()) {

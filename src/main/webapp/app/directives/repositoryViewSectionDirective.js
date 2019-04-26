@@ -14,7 +14,7 @@ cap.directive("repositoryViewSection", function($controller, $timeout, Repositor
           editAction: "&"
         },
         link: function($scope, elem, attr, ctrl, transclude) {
-          
+
           angular.extend(this, $controller('CoreAdminController', {
               $scope: $scope
           }));
@@ -24,7 +24,7 @@ cap.directive("repositoryViewSection", function($controller, $timeout, Repositor
           transclude($scope, function(clone, $scope) {
             elem.find('.transclude').replaceWith(clone);
           });
-            
+
           $scope.selectedListElements = [];
 
           $scope.manuallyCollapse = function() {
@@ -32,7 +32,7 @@ cap.directive("repositoryViewSection", function($controller, $timeout, Repositor
             RepositoryViewSectionService.setManuallyCollapsed($scope.title, true);
           };
 
-          $scope.manuallyExpande = function() {
+          $scope.manuallyExpand = function() {
             $scope.contentExpanded = true;
             RepositoryViewSectionService.setManuallyCollapsed($scope.title, false);
           };
@@ -44,7 +44,7 @@ cap.directive("repositoryViewSection", function($controller, $timeout, Repositor
           $scope.confirmDelete = function() {
             $scope.removeAction({"items": $scope.selectedListElements}).then(function() {
               $scope.removeListElements=false;
-              $scope.selectedListElements.length=0;          
+              $scope.selectedListElements.length=0;
             });
           };
 
