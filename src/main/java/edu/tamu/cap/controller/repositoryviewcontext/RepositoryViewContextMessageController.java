@@ -33,7 +33,6 @@ public class RepositoryViewContextMessageController {
     @PreAuthorize("hasRole('USER')")
     public ApiResponse refresh(RepositoryViewService<?> repositoryViewService, @Param("contextUri") String contextUri) {
         Map<String, String> payload = new HashMap<String, String>();
-        System.out.println("\n\n\ncontextUri: " + contextUri + "\n\n\n");
         RepositoryView repositoryView = repositoryViewService.getRepositoryView();
         payload.put("id", contextUri.replace(repositoryView.getRootUri(), ""));
         payload.put("action", MessageAction.REFRESH.toString());
