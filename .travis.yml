@@ -12,8 +12,10 @@ after_success:
 deploy:
   provider: pages
   skip_cleanup: true
-  github_token: $GITHUB_TOKEN
-  local_dir: target/generated-docs
-  all_branches: true
+  keep-history: false
+  target-branch: gh-pages
+  github_token: "$GITHUB_TOKEN"
+  local_dir: "./target/generated-docs"
+  #all_branches: true
   #on:
   #  branch: master
