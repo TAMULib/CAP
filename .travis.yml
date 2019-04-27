@@ -16,6 +16,5 @@ deploy:
   target-branch: gh-pages
   github_token: "$GITHUB_TOKEN"
   local_dir: "./target/generated-docs"
-  #all_branches: true
   on:
-    branch: sprint-tcdl-deploy-docs
+    branch: sprint-tcdl-staging
