@@ -1,11 +1,14 @@
 package edu.tamu.cap.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 
 import edu.tamu.cap.model.validation.SchemaValidator;
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
@@ -25,9 +28,13 @@ public class Schema extends ValidatingBaseEntity {
     @ElementCollection
     private List<Property> properties;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<String> namespaces;
+
     public Schema() {
         setModelValidator(new SchemaValidator());
         setProperties(new ArrayList<Property>());
+        this.namespaces = new HashSet<String>();
     }
 
     public Schema(String name, String namespace, String abbreviation, List<Property> properties) {
@@ -44,6 +51,15 @@ public class Schema extends ValidatingBaseEntity {
         setNamespace(namespace);
         setAbbreviation(abbreviation);
         setProperties(new ArrayList<Property>());
+    }
+
+    private void addNamespace(String namespace) {
+        namespaces.add(namespace);
+    }
+
+    private String getNamespaceFromProperty(Property property) {
+        String uri = property.getUri();
+        return uri.split("#")[0];
     }
 
     public String getName() {
@@ -69,16 +85,24 @@ public class Schema extends ValidatingBaseEntity {
     public void setNamespace(String prefix) {
         this.namespace = prefix;
     }
+    
+    public Set<String> getNamespaces() {
+        return namespaces;
+    }
 
     public List<Property> getProperties() {
         return properties;
     }
 
     public void setProperties(List<Property> properties) {
+        properties.stream().forEach(property -> {
+            addNamespace(getNamespaceFromProperty(property));
+        });
         this.properties = properties;
     }
 
     public void addProperty(Property property) {
+        addNamespace(getNamespaceFromProperty(property));
         this.properties.add(property);
     }
 

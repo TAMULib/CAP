@@ -126,7 +126,7 @@ public class RepositoryView extends ValidatingBaseEntity {
     public List<String> getMetadataPrefixes() {
         List<String> metadataPrefixes = new ArrayList<String>();
         schemas.forEach(schema -> {
-            metadataPrefixes.add(schema.getNamespace());
+            metadataPrefixes.addAll(schema.getNamespaces());
         });
         return metadataPrefixes;
     }
