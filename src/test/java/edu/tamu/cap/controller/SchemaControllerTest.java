@@ -109,7 +109,6 @@ public final class SchemaControllerTest {
     properties.add(property2);
 
     Schema testSchema = new Schema(TEST_SCHEMA_NAME, TEST_SCHEMA_NAMESPACE, TEST_SCHEMA_ABBREVIATION, properties);
-    
 
     ApiResponse expectedResponse = new ApiResponse(ApiStatus.SUCCESS, testSchema);
 
