@@ -188,7 +188,7 @@
                     </div>
                   </div>
               </div>
-              <del ng-if="removeListElements && selectedListElements.indexOf(triple)!==-1">{{triple.object | removeQuotes}}</del>
+              <del ng-if="removeListElements && selectedListElements.indexOf(triple)!==-1 && !context.metadataCollapsed[predicate]">{{triple.object | removeQuotes}}</del>
             </dd>
           </dl>
         </div>
