@@ -110,6 +110,7 @@ cap.directive("repositoryViewSection", function($controller, $timeout, Repositor
             return l;
           };
 
+          // TODO: provide a better solution than using a watch or remove entirely if adding manual refresh buttons.
           $scope.$watch("list", function(newList, oldList) {
             if (oldList !== undefined) {
               if (newList.length == oldList.length) {
