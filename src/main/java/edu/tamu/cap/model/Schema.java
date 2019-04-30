@@ -33,7 +33,7 @@ public class Schema extends ValidatingBaseEntity {
 
     public Schema() {
         setModelValidator(new SchemaValidator());
-        setProperties(new ArrayList<Property>());
+        addProperties(new ArrayList<Property>());
         this.namespaces = new HashSet<String>();
     }
 
@@ -42,7 +42,7 @@ public class Schema extends ValidatingBaseEntity {
         setName(name);
         setNamespace(namespace);
         setAbbreviation(abbreviation);
-        setProperties(properties);
+        addProperties(properties);
     }
 
     public Schema(String name, String namespace, String abbreviation) {
@@ -50,7 +50,7 @@ public class Schema extends ValidatingBaseEntity {
         setName(name);
         setNamespace(namespace);
         setAbbreviation(abbreviation);
-        setProperties(new ArrayList<Property>());
+        addProperties(new ArrayList<Property>());
     }
 
     private void addNamespace(String namespace) {
@@ -59,11 +59,10 @@ public class Schema extends ValidatingBaseEntity {
 
     private String getNamespaceFromProperty(Property property) {
         String uri = property.getUri();
-        String namespace;
-        if (uri != null && uri.contains("#")) {
-            namespace = uri.split("#")[0];
-        } else {
-            namespace = uri;
+        String namespace = null;
+        if (uri != null) {
+            // matches # if there, otherwise matches last non-trailing /
+            namespace = uri.split("#|(/)(?:[^/#]+)/?$")[0];
         }
         return namespace;
     }
@@ -99,12 +98,16 @@ public class Schema extends ValidatingBaseEntity {
     public List<Property> getProperties() {
         return properties;
     }
+    
+    private void setProperties(List<Property> properties) {
+        this.properties = properties;
+    }
 
-    public void setProperties(List<Property> properties) {
+    public void addProperties(List<Property> properties) {
         properties.stream().forEach(property -> {
             addNamespace(getNamespaceFromProperty(property));
         });
-        this.properties = properties;
+        setProperties(properties);
     }
 
     public void addProperty(Property property) {
