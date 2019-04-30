@@ -107,8 +107,9 @@ public final class SchemaControllerTest {
     property.setLabel(TEST_PROPERTY_2_LABEL);
     property.setUri(TEST_PROPERTY_2_URI);
     properties.add(property2);
-
+    System.out.println("\n\n\nproperty" + property2.getUri() + "\n\n\n");
     Schema testSchema = new Schema(TEST_SCHEMA_NAME, TEST_SCHEMA_NAMESPACE, TEST_SCHEMA_ABBREVIATION, properties);
+    
 
     ApiResponse expectedResponse = new ApiResponse(ApiStatus.SUCCESS, testSchema);
 
@@ -121,7 +122,8 @@ public final class SchemaControllerTest {
                 fieldWithPath("name").description("Schema name"),
                 fieldWithPath("abbreviation").description("Schema abbreviation"),
                 fieldWithPath("namespace").description("Schema namespace"),
-                fieldWithPath("properties").description("Schema properties"))));
+                fieldWithPath("properties").description("Schema properties"),
+                fieldWithPath("namespaces").description("Included namespaces"))));
   }
 
   @Test
@@ -192,12 +194,12 @@ public final class SchemaControllerTest {
 
     Property property = new Property();
     property.setLabel(TEST_PROPERTY_LABEL);
-    property.setLabel(TEST_PROPERTY_URI);
+    property.setUri(TEST_PROPERTY_URI);
     properties.add(property);
 
     Property property2 = new Property();
     property.setLabel(TEST_PROPERTY_2_LABEL);
-    property.setLabel(TEST_PROPERTY_2_URI);
+    property.setUri(TEST_PROPERTY_2_URI);
     properties.add(property2);
 
     Schema testSchema = new Schema(TEST_SCHEMA_NAME, TEST_SCHEMA_NAMESPACE, TEST_SCHEMA_ABBREVIATION, properties);
