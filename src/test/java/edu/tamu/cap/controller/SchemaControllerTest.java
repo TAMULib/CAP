@@ -107,7 +107,7 @@ public final class SchemaControllerTest {
     property.setLabel(TEST_PROPERTY_2_LABEL);
     property.setUri(TEST_PROPERTY_2_URI);
     properties.add(property2);
-    System.out.println("\n\n\nproperty" + property2.getUri() + "\n\n\n");
+
     Schema testSchema = new Schema(TEST_SCHEMA_NAME, TEST_SCHEMA_NAMESPACE, TEST_SCHEMA_ABBREVIATION, properties);
     
 
