@@ -15,29 +15,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.restdocs.RestDocsMockMvcConfigurationCustomizer;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
-import org.springframework.restdocs.mockmvc.MockMvcRestDocumentationConfigurer;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.cap.model.Property;
 import edu.tamu.cap.model.Schema;
@@ -82,6 +77,8 @@ public final class SchemaControllerTest {
   private static final String TEST_PROPERTY_2_URI = "http://test-property-2-uri.org/ns/property2";
 
   private static final String PROPERTIES_URI = SCHEMA_URI + "/properties?namespace=";
+  
+  private static long currentId = 0L;
 
   @Before
   public void setUp() throws JsonProcessingException {
@@ -104,18 +101,23 @@ public final class SchemaControllerTest {
     properties.add(property);
 
     Property property2 = new Property();
-    property.setLabel(TEST_PROPERTY_2_LABEL);
-    property.setUri(TEST_PROPERTY_2_URI);
+    property2.setLabel(TEST_PROPERTY_2_LABEL);
+    property2.setUri(TEST_PROPERTY_2_URI);
     properties.add(property2);
 
     Schema testSchema = new Schema(TEST_SCHEMA_NAME, TEST_SCHEMA_NAMESPACE, TEST_SCHEMA_ABBREVIATION, properties);
 
+    String body = objectMapper.writeValueAsString(testSchema);
+    
+    testSchema.setId(++currentId);
+
     ApiResponse expectedResponse = new ApiResponse(ApiStatus.SUCCESS, testSchema);
 
     mockMvc
-        .perform(RestDocumentationRequestBuilders.post(SCHEMA_URI).content(objectMapper.writeValueAsString(testSchema))
+        .perform(RestDocumentationRequestBuilders.post(SCHEMA_URI).content(body)
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
+        .andExpect(content().json(objectMapper.writeValueAsString(expectedResponse)))
         .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
             requestFields(fieldWithPath("id").description("Schema id").ignored(),
                 fieldWithPath("name").description("Schema name"),
@@ -130,7 +132,9 @@ public final class SchemaControllerTest {
   public void allSchemas() throws Exception {
 
     schemaRepo.create(new Schema(TEST_SCHEMA_NAME, TEST_SCHEMA_NAMESPACE, TEST_SCHEMA_ABBREVIATION));
+    currentId++;
     schemaRepo.create(new Schema(TEST_SCHEMA_NAME_2, TEST_SCHEMA_NAMESPACE_2, TEST_SCHEMA_ABBREVIATION_2));
+    currentId++;
 
     mockMvc.perform(RestDocumentationRequestBuilders.get(SCHEMA_URI).contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk()).andDo(rdh);
@@ -142,6 +146,7 @@ public final class SchemaControllerTest {
 
     Schema testSchema = schemaRepo
         .create(new Schema(TEST_SCHEMA_NAME, TEST_SCHEMA_NAMESPACE, TEST_SCHEMA_ABBREVIATION));
+    currentId++;
     ApiResponse expectedResponse = new ApiResponse(ApiStatus.SUCCESS, testSchema);
 
     mockMvc
@@ -159,9 +164,9 @@ public final class SchemaControllerTest {
 
     Schema testSchema = schemaRepo
         .create(new Schema(TEST_SCHEMA_NAME, TEST_SCHEMA_NAMESPACE, TEST_SCHEMA_ABBREVIATION));
+    currentId++;
 
     testSchema.setName(TEST_SCHEMA_NAME + "_UPDATED");
-    schemaRepo.update(testSchema);
     ApiResponse expectedResponse = new ApiResponse(ApiStatus.SUCCESS, testSchema);
 
     mockMvc
@@ -177,6 +182,7 @@ public final class SchemaControllerTest {
 
     Schema testSchema = schemaRepo
         .create(new Schema(TEST_SCHEMA_NAME, TEST_SCHEMA_NAMESPACE, TEST_SCHEMA_ABBREVIATION));
+    currentId++;
 
     testSchema.setName(TEST_SCHEMA_NAME + "_DELETE");
 
@@ -198,8 +204,8 @@ public final class SchemaControllerTest {
     properties.add(property);
 
     Property property2 = new Property();
-    property.setLabel(TEST_PROPERTY_2_LABEL);
-    property.setUri(TEST_PROPERTY_2_URI);
+    property2.setLabel(TEST_PROPERTY_2_LABEL);
+    property2.setUri(TEST_PROPERTY_2_URI);
     properties.add(property2);
 
     Schema testSchema = new Schema(TEST_SCHEMA_NAME, TEST_SCHEMA_NAMESPACE, TEST_SCHEMA_ABBREVIATION, properties);
@@ -217,6 +223,11 @@ public final class SchemaControllerTest {
             parameterWithName("namespace").description("The namespace URI of the desired Property.")
         )));
 
+  }
+  
+  @After
+  public void cleanUp() {
+      schemaRepo.deleteAll();
   }
 
 }
