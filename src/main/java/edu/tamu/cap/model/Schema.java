@@ -10,13 +10,10 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import edu.tamu.cap.model.validation.SchemaValidator;
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
-//@JsonIgnoreProperties(value={ "namespaces" }, allowGetters=true)
 public class Schema extends ValidatingBaseEntity {
 
     @Column
@@ -36,28 +33,16 @@ public class Schema extends ValidatingBaseEntity {
         setProperties(new ArrayList<Property>());
     }
 
-    public Schema(String name, String namespace, String abbreviation, List<Property> properties) {
-        this();
-        setName(name);
-        setAbbreviation(abbreviation);
-        setProperties(properties);
-    }
-
     public Schema(String name, String namespace, String abbreviation) {
         this();
         setName(name);
+        setNamespace(namespace);
         setAbbreviation(abbreviation);
-        setProperties(new ArrayList<Property>());
     }
 
-    private String getNamespaceFromProperty(Property property) {
-        String uri = property.getUri();
-        String namespace = null;
-        if (uri != null) {
-            // matches # if there, otherwise matches last /
-            namespace = uri.split("#|(/)(?:[^/#]+)$")[0];
-        }
-        return namespace;
+    public Schema(String name, String namespace, String abbreviation, List<Property> properties) {
+        this(name, namespace, abbreviation);
+        setProperties(properties);
     }
 
     public String getName() {
@@ -80,12 +65,8 @@ public class Schema extends ValidatingBaseEntity {
         return namespace;
     }
 
-    public Set<String> getNamespaces() {
-        Set<String> namespaces = new HashSet<String>();
-        properties.stream().forEach(property -> {
-            namespaces.add(getNamespaceFromProperty(property));
-        });
-        return namespaces;
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
     }
 
     public List<Property> getProperties() {
@@ -96,12 +77,23 @@ public class Schema extends ValidatingBaseEntity {
         this.properties = properties;
     }
 
-    public void addProperty(Property property) {
-        this.properties.add(property);
+    public Set<String> getNamespaces() {
+        Set<String> namespaces = new HashSet<String>();
+        properties.stream().forEach(property -> {
+            namespaces.add(getNamespaceFromProperty(property));
+        });
+        return namespaces;
     }
 
-    public void removeProperty(Property property) {
-        this.properties.remove(property);
+    private String getNamespaceFromProperty(Property property) {
+        String uri = property.getUri();
+        String namespace = null;
+        System.out.println("\n\n\nuri: " + uri + "\n\n\n");
+//        if (uri != null) {
+            // matches # if there, otherwise matches last /
+            namespace = uri.split("#|(/)(?:[^/#]+)$")[0];
+//        }
+        return namespace;
     }
 
 }
