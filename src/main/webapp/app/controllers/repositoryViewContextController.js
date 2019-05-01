@@ -10,6 +10,8 @@ cap.controller("IrContextController", function ($controller, $location, $routePa
 
   $scope.theaterMode = false;
 
+  $scope.messagingEnabled = appConfig.messagingEnabled;
+
   $scope.setOrToggleTheaterMode = function (mode) {
     $scope.theaterMode = mode ? mode : !$scope.theaterMode;
   };
