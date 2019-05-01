@@ -76,10 +76,10 @@ public final class SchemaControllerTest {
   private static final String TEST_SCHEMA_ABBREVIATION_2 = "TS2";
 
   private static final String TEST_PROPERTY_LABEL = "TEST_PROPERTY_LABEL";
-  private static final String TEST_PROPERTY_URI = "http://test-property-uri.org";
+  private static final String TEST_PROPERTY_URI = "http://test-property-uri.org/ns/property1";
 
   private static final String TEST_PROPERTY_2_LABEL = "TEST_PROPERTY_LABEL_2";
-  private static final String TEST_PROPERTY_2_URI = "http://test-property-2-uri.org";
+  private static final String TEST_PROPERTY_2_URI = "http://test-property-2-uri.org/ns/property2";
 
   private static final String PROPERTIES_URI = SCHEMA_URI + "/properties?namespace=";
 
@@ -161,6 +161,7 @@ public final class SchemaControllerTest {
         .create(new Schema(TEST_SCHEMA_NAME, TEST_SCHEMA_NAMESPACE, TEST_SCHEMA_ABBREVIATION));
 
     testSchema.setName(TEST_SCHEMA_NAME + "_UPDATED");
+    schemaRepo.update(testSchema);
     ApiResponse expectedResponse = new ApiResponse(ApiStatus.SUCCESS, testSchema);
 
     mockMvc

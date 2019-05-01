@@ -10,10 +10,13 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import edu.tamu.cap.model.validation.SchemaValidator;
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
+//@JsonIgnoreProperties(value={ "namespaces" }, allowGetters=true)
 public class Schema extends ValidatingBaseEntity {
 
     @Column
@@ -25,44 +28,34 @@ public class Schema extends ValidatingBaseEntity {
     @Column
     private String namespace;
 
-    @ElementCollection
-    private List<Property> properties;
-
     @ElementCollection(fetch = FetchType.EAGER)
-    private Set<String> namespaces;
+    private List<Property> properties;
 
     public Schema() {
         setModelValidator(new SchemaValidator());
-        addProperties(new ArrayList<Property>());
-        this.namespaces = new HashSet<String>();
+        setProperties(new ArrayList<Property>());
     }
 
     public Schema(String name, String namespace, String abbreviation, List<Property> properties) {
         this();
         setName(name);
-        setNamespace(namespace);
         setAbbreviation(abbreviation);
-        addProperties(properties);
+        setProperties(properties);
     }
 
     public Schema(String name, String namespace, String abbreviation) {
         this();
         setName(name);
-        setNamespace(namespace);
         setAbbreviation(abbreviation);
-        addProperties(new ArrayList<Property>());
-    }
-
-    private void addNamespace(String namespace) {
-        namespaces.add(namespace);
+        setProperties(new ArrayList<Property>());
     }
 
     private String getNamespaceFromProperty(Property property) {
         String uri = property.getUri();
         String namespace = null;
         if (uri != null) {
-            // matches # if there, otherwise matches last non-trailing /
-            namespace = uri.split("#|(/)(?:[^/#]+)/?$")[0];
+            // matches # if there, otherwise matches last /
+            namespace = uri.split("#|(/)(?:[^/#]+)$")[0];
         }
         return namespace;
     }
@@ -87,31 +80,23 @@ public class Schema extends ValidatingBaseEntity {
         return namespace;
     }
 
-    public void setNamespace(String prefix) {
-        this.namespace = prefix;
-    }
-    
     public Set<String> getNamespaces() {
+        Set<String> namespaces = new HashSet<String>();
+        properties.stream().forEach(property -> {
+            namespaces.add(getNamespaceFromProperty(property));
+        });
         return namespaces;
     }
 
     public List<Property> getProperties() {
         return properties;
     }
-    
-    private void setProperties(List<Property> properties) {
+
+    public void setProperties(List<Property> properties) {
         this.properties = properties;
     }
 
-    public void addProperties(List<Property> properties) {
-        properties.stream().forEach(property -> {
-            addNamespace(getNamespaceFromProperty(property));
-        });
-        setProperties(properties);
-    }
-
     public void addProperty(Property property) {
-        addNamespace(getNamespaceFromProperty(property));
         this.properties.add(property);
     }
 
