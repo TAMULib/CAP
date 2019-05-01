@@ -35,6 +35,8 @@ var appConfig = {
 
     'mockRole': null,
 
+    'messagingEnabled': false,
+
     'contentMap': {
       "image": ["image/jpeg","image/png","image/gif"],
       "plaintext": ["text/plain", "text/html", "text/css", "text/javascript", "text/csv", "text/markdown", "text/calendar", "text/xml",  "application/xml", "application/json"],
