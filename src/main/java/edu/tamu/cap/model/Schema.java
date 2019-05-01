@@ -87,13 +87,8 @@ public class Schema extends ValidatingBaseEntity {
 
     private String getNamespaceFromProperty(Property property) {
         String uri = property.getUri();
-        String namespace = null;
-        System.out.println("\n\n\nuri: " + uri + "\n\n\n");
-//        if (uri != null) {
-            // matches # if there, otherwise matches last /
-            namespace = uri.split("#|(/)(?:[^/#]+)$")[0];
-//        }
-        return namespace;
+        // matches # if there, otherwise matches last /
+        return uri.split("#|(/)(?:[^/#]+)$")[0];
     }
 
 }
