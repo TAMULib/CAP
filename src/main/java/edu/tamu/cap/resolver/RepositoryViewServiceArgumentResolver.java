@@ -1,7 +1,5 @@
 package edu.tamu.cap.resolver;
 
-import java.io.IOException;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 
@@ -16,19 +14,15 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.servlet.HandlerMapping;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import edu.tamu.cap.controller.aspect.annotation.PayloadArgName;
-import edu.tamu.cap.exceptions.RepositoryViewInjectionException;
-import edu.tamu.cap.model.RepositoryView;
 import edu.tamu.cap.model.repo.RepositoryViewRepo;
+import edu.tamu.cap.service.RepositoryViewResolver;
 import edu.tamu.cap.service.RepositoryViewService;
 import edu.tamu.cap.service.RepositoryViewType;
 import edu.tamu.weaver.context.SpringContext;
 
-public final class RepositoryViewServiceArgumentResolver implements HandlerMethodArgumentResolver {
+public final class RepositoryViewServiceArgumentResolver extends RepositoryViewResolver implements HandlerMethodArgumentResolver {
 
     private final static Logger logger = LoggerFactory.getLogger(RepositoryViewServiceArgumentResolver.class);
 
@@ -73,48 +67,9 @@ public final class RepositoryViewServiceArgumentResolver implements HandlerMetho
         return repositoryViewService;
     }
 
-    private RepositoryView getRepositoryViewFromRequest(HttpServletRequest request) throws JsonProcessingException, IOException, RepositoryViewInjectionException {
-        JsonNode payloadNode = objectMapper.readTree(request.getInputStream());
-        return (RepositoryView) getArgumentFromBody(RepositoryView.class, Optional.empty(), payloadNode);
-    }
-
-    private Object getArgumentFromBody(Class<?> argClass, Optional<PayloadArgName> payloadArgName, JsonNode payloadNode) throws RepositoryViewInjectionException {
-        Optional<Object> argValue = mapObjectFromNode(argClass, payloadNode);
-        if (!argValue.isPresent()) {
-            Iterator<Map.Entry<String, JsonNode>> iterator = payloadNode.fields();
-            while (iterator.hasNext()) {
-                Map.Entry<String, JsonNode> jsonNodeEntry = iterator.next();
-                if (!payloadArgName.isPresent() || (payloadArgName.isPresent() && jsonNodeEntry.getKey().equals(payloadArgName.get().value()))) {
-                    argValue = mapObjectFromNode(argClass, jsonNodeEntry.getValue());
-                }
-            }
-        }
-        if (!argValue.isPresent()) {
-            if (argClass.equals(String.class)) {
-                argValue = Optional.of("");
-            } else {
-                throw new RepositoryViewInjectionException("No " + argClass.getSimpleName() + " argument!");
-            }
-        }
-        return argValue.get();
-    }
-
-    private Optional<Object> mapObjectFromNode(Class<?> argClass, JsonNode node) {
-        Optional<Object> argValue = Optional.empty();
-        try {
-            if (!RepositoryViewService.class.isAssignableFrom(argClass)) {
-                if (argClass.equals(String.class)) {
-                    if (node.isTextual()) {
-                        argValue = Optional.of(node.asText());
-                    }
-                } else {
-                    argValue = Optional.of(objectMapper.convertValue(node, argClass));
-                }
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return argValue;
+    @Override
+    protected ObjectMapper getObjectMapper() {
+        return objectMapper;
     }
 
 }
