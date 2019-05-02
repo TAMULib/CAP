@@ -10,8 +10,8 @@ import edu.tamu.weaver.data.model.repo.WeaverRepo;
 
 public interface RepositoryViewRepo extends WeaverRepo<RepositoryView>, RepositoryViewRepoCustom, JpaSpecificationExecutor<RepositoryView> {
 
-	RepositoryView findByName(String name);
+    public RepositoryView findByName(String name);
 
-	List<RepositoryView> findByRootUriContainingIgnoreCase(String rootUri);
+    public List<RepositoryView> findByRootUriContainingIgnoreCase(String rootUri);
 
 }

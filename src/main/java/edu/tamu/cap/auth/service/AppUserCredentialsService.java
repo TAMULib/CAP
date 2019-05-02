@@ -16,6 +16,7 @@ import edu.tamu.weaver.auth.service.UserCredentialsService;
 
 @Service
 public class AppUserCredentialsService extends UserCredentialsService<User, UserRepo> {
+
     private final static String EXTERNAL_AUTH_KEY = "weaverAuth";
 
     @Value("#{'${authenticationStrategies}'.split(',')}")
@@ -23,8 +24,18 @@ public class AppUserCredentialsService extends UserCredentialsService<User, User
 
     private boolean externalAuthEnabled = false;
 
-	@Override
-	public synchronized User updateUserByCredentials(Credentials credentials) {
+    @PostConstruct
+    protected void setExternalAuthEnabled() {
+        for (String strategy : authenticationStrategies) {
+            if (strategy.equals(EXTERNAL_AUTH_KEY)) {
+                externalAuthEnabled = true;
+                break;
+            }
+        }
+    }
+
+    @Override
+    public synchronized User updateUserByCredentials(Credentials credentials) {
         Optional<User> optionalUser = userRepo.findByUsername(credentials.getEmail());
 
         User user = null;
@@ -68,8 +79,7 @@ public class AppUserCredentialsService extends UserCredentialsService<User, User
 
         return user;
 
-	}
-
+    }
 
     public User createUserFromRegistration(String email, String firstName, String lastName, String password) {
         Role role = Role.ROLE_USER;
@@ -82,10 +92,14 @@ public class AppUserCredentialsService extends UserCredentialsService<User, User
         return userRepo.create(email, firstName, lastName, role.toString(), password);
     }
 
-	@Override
-	public String getAnonymousRole() {
-		return Role.ROLE_ANONYMOUS.toString();
-	}
+    @Override
+    public String getAnonymousRole() {
+        return Role.ROLE_ANONYMOUS.toString();
+    }
+
+    protected boolean isExternalAuthEnabled() {
+        return externalAuthEnabled;
+    }
 
     private synchronized Role getDefaultRole(Credentials credentials) {
         Role role = Role.ROLE_USER;
@@ -104,20 +118,6 @@ public class AppUserCredentialsService extends UserCredentialsService<User, User
         }
 
         return role;
-    }
-
-    protected boolean isExternalAuthEnabled() {
-        return externalAuthEnabled;
-    }
-
-    @PostConstruct
-    protected void setExternalAuthEnabled() {
-        for (String strategy:authenticationStrategies) {
-            if (strategy.equals(EXTERNAL_AUTH_KEY)) {
-                externalAuthEnabled = true;
-                break;
-            }
-        }
     }
 
 }

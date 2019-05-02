@@ -9,8 +9,8 @@
  */
 package edu.tamu.cap.controller;
 
-import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static edu.tamu.weaver.response.ApiStatus.ERROR;
+import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 
 import java.util.HashMap;
 import java.util.Optional;
@@ -102,9 +102,9 @@ public class UserController {
             IRole updatedRole = userRepo.getOne(user.getId()).getRole();
 
             if (originalRole != updatedRole) {
-                HashMap<String,String> emailData = new HashMap<String,String>();
-                emailData.put("USER_ROLE_FROM", originalRole.toString().replaceFirst("ROLE_",  ""));
-                emailData.put("USER_ROLE_TO", updatedRole.toString().replaceFirst("ROLE_",  ""));
+                HashMap<String, String> emailData = new HashMap<String, String>();
+                emailData.put("USER_ROLE_FROM", originalRole.toString().replaceFirst("ROLE_", ""));
+                emailData.put("USER_ROLE_TO", updatedRole.toString().replaceFirst("ROLE_", ""));
 
                 EmailTemplate template = emailTemplateService.buildEmail("user_role_changed", emailData);
 
@@ -117,7 +117,7 @@ public class UserController {
 
             return new ApiResponse(SUCCESS, user);
         } else {
-            return new ApiResponse(ERROR,"User not found");
+            return new ApiResponse(ERROR, "User not found");
         }
     }
 

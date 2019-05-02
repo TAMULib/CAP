@@ -26,7 +26,7 @@ public class ContextBroadcastAspect {
     @AfterReturning(pointcut = "execution(edu.tamu.cap.model.response.RepositoryViewContext edu.tamu.cap.service.RepositoryViewService.*(..)) && !execution(edu.tamu.cap.model.response.RepositoryViewContext edu.tamu.cap.service.RepositoryViewService.featureSupport(..)) && !execution(edu.tamu.cap.model.response.RepositoryViewContext edu.tamu.cap.service.RepositoryViewService.getContainer(..)) && !execution(edu.tamu.cap.model.response.RepositoryViewContext edu.tamu.cap.service.RepositoryViewService.buildRepositoryViewContext(..))", returning = "context")
     public void broadcastContext(RepositoryViewContext context) throws Throwable {
         logger.info("Broadcasting " + context.getTriple().getSubject());
-        simpMessagingTemplate.convertAndSend("/queue/context", new ApiResponse(SUCCESS, BROADCAST, context));    
+        simpMessagingTemplate.convertAndSend("/queue/context", new ApiResponse(SUCCESS, BROADCAST, context));
     }
 
 }

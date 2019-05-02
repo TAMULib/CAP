@@ -21,19 +21,19 @@ import edu.tamu.weaver.response.ApiResponse;
 @RestController
 @RequestMapping("repository-view-context/{type}/{repositoryViewId}/children")
 public class RepositoryViewContextChildrenController {
-    
+
     @RequestMapping(method = POST)
     @PreAuthorize("hasRole('USER')")
     public ApiResponse create(RepositoryViewService<?> repositoryViewService, @Param("contextUri") String contextUri, @RequestBody ArrayList<HashMap<String, String>> tripleMaps) throws Exception {
-        
+
         List<Triple> metadata = new ArrayList<Triple>();
-        tripleMaps.forEach(tripleMap->{
+        tripleMaps.forEach(tripleMap -> {
             metadata.add(Triple.of(tripleMap));
         });
-        
+
         return new ApiResponse(SUCCESS, repositoryViewService.createChild(contextUri, metadata));
     }
-    
+
     @RequestMapping(method = GET)
     @PreAuthorize("hasRole('USER')")
     public ApiResponse getContainer(RepositoryViewService<?> repositoryViewService, @Param("contextUri") String contextUri) throws Exception {

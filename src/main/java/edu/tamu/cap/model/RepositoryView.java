@@ -16,12 +16,6 @@ import edu.tamu.cap.model.validation.RepositoryViewValidator;
 import edu.tamu.cap.service.RepositoryViewType;
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
-/**
- *
- *
- * @author
- *
- */
 @Entity
 public class RepositoryView extends ValidatingBaseEntity {
 

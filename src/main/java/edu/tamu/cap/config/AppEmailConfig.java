@@ -12,8 +12,9 @@ import edu.tamu.weaver.email.service.WeaverEmailService;
 @Configuration
 @Profile("!test")
 public class AppEmailConfig extends WeaverEmailConfig {
+
     @Value("${app.email.host}")
-    String emailHost;
+    private String emailHost;
 
     @Bean
     @Override

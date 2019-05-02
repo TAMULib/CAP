@@ -1,12 +1,3 @@
-/* 
- * WebSocketConfig.java 
- * 
- * Version: 
- *     $Id$ 
- * 
- * Revisions: 
- *     $Log$ 
- */
 package edu.tamu.cap.config;
 
 import org.springframework.context.annotation.Configuration;
@@ -27,17 +18,17 @@ import org.springframework.web.socket.config.annotation.WebSocketTransportRegist
 @EnableWebSocketMessageBroker
 public class AppWebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
-	/**
-    * {@inheritDoc}
-    */
-   @Override
-   public void configureMessageBroker(MessageBrokerRegistry registry) {
-       registry.enableSimpleBroker("/queue", "/channel");
-       registry.setApplicationDestinationPrefixes("/ws");
-       registry.setUserDestinationPrefix("/private");
-   }
-	
-	/**
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void configureMessageBroker(MessageBrokerRegistry registry) {
+        registry.enableSimpleBroker("/queue", "/channel");
+        registry.setApplicationDestinationPrefixes("/ws");
+        registry.setUserDestinationPrefix("/private");
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override

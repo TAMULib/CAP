@@ -1,17 +1,9 @@
 package edu.tamu.cap.controller;
 
-import static org.mockito.Mockito.any;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
@@ -27,7 +19,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -36,9 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.cap.model.User;
 import edu.tamu.cap.model.repo.UserRepo;
-import edu.tamu.cap.utility.ConstraintDescriptionsHelper;
 import edu.tamu.cap.utility.MockUserUtility;
-import edu.tamu.weaver.auth.model.Credentials;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
@@ -47,35 +36,35 @@ import edu.tamu.weaver.auth.model.Credentials;
 public final class UserControllerTest {
   private static final String CONTROLLER_PATH = "/user";
 
-  private static final ConstraintDescriptionsHelper describeUser = new ConstraintDescriptionsHelper(User.class);
-  private static final ConstraintDescriptionsHelper describeCredentials = new ConstraintDescriptionsHelper(Credentials.class);
+//  private static final ConstraintDescriptionsHelper describeUser = new ConstraintDescriptionsHelper(User.class);
+//  private static final ConstraintDescriptionsHelper describeCredentials = new ConstraintDescriptionsHelper(Credentials.class);
 
-  private static FieldDescriptor[] metaDescriptor = new FieldDescriptor[] {
-      fieldWithPath("meta.status").description("An enumerated string designating the success/failure of the request."),
-      fieldWithPath("meta.action").description("The action associated with the status and message."),
-      fieldWithPath("meta.message").description("A message associated with the response, often describing what was successful or what has failed."),
-      fieldWithPath("meta.id").description("An ID associated with the meta action.")
- };
-
-  private static FieldDescriptor[] userDescriptor = new FieldDescriptor[] {
-      describeUser.withField("id", "An ID."),
-      describeUser.withField("username", "The username."),
-      describeUser.withField("role", "The role."),
-      describeUser.withField("firstName", "The first name."),
-      describeUser.withField("lastName", "The last name."),
-      describeUser.withField("email", "The e-mail address.")
- };
-
-  private static FieldDescriptor[] credentialsDescriptor = new FieldDescriptor[] {
-      describeUser.withField("firstName", "The first name."),
-      describeUser.withField("lastName", "The last name."),
-      describeUser.withField("netId", "The Net-ID."),
-      describeUser.withField("exp", ""),
-      describeUser.withField("email", "The e-mail address."),
-      describeUser.withField("role", "The access role."),
-      describeUser.withField("affiliation", "An affiliation name."),
-      describeUser.withField("allCredentials", "All related credentials.")
-  };
+//  private static FieldDescriptor[] metaDescriptor = new FieldDescriptor[] {
+//      fieldWithPath("meta.status").description("An enumerated string designating the success/failure of the request."),
+//      fieldWithPath("meta.action").description("The action associated with the status and message."),
+//      fieldWithPath("meta.message").description("A message associated with the response, often describing what was successful or what has failed."),
+//      fieldWithPath("meta.id").description("An ID associated with the meta action.")
+// };
+//
+//  private static FieldDescriptor[] userDescriptor = new FieldDescriptor[] {
+//      describeUser.withField("id", "An ID."),
+//      describeUser.withField("username", "The username."),
+//      describeUser.withField("role", "The role."),
+//      describeUser.withField("firstName", "The first name."),
+//      describeUser.withField("lastName", "The last name."),
+//      describeUser.withField("email", "The e-mail address.")
+// };
+//
+//  private static FieldDescriptor[] credentialsDescriptor = new FieldDescriptor[] {
+//      describeUser.withField("firstName", "The first name."),
+//      describeUser.withField("lastName", "The last name."),
+//      describeUser.withField("netId", "The Net-ID."),
+//      describeUser.withField("exp", ""),
+//      describeUser.withField("email", "The e-mail address."),
+//      describeUser.withField("role", "The access role."),
+//      describeUser.withField("affiliation", "An affiliation name."),
+//      describeUser.withField("allCredentials", "All related credentials.")
+//  };
 
   @Autowired
   private MockMvc mockMvc;
@@ -89,7 +78,7 @@ public final class UserControllerTest {
   @MockBean
   private UserRepo userRepo;
 
-  private Credentials mockAggieJackCredentials;
+//  private Credentials mockAggieJackCredentials;
 
   private User mockAggieJack;
 
@@ -99,7 +88,7 @@ public final class UserControllerTest {
 
   @Before
   public void setUp() throws Exception {
-      mockAggieJackCredentials = mockUserUtility.getMockAggieJackCredentials();
+//      mockAggieJackCredentials = mockUserUtility.getMockAggieJackCredentials();
       mockAggieJack = mockUserUtility.getMockAggieJackUser();
       mockAggieJack.setId(1L);
 
