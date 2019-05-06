@@ -122,7 +122,7 @@
             <span class="glyphicon glyphicon-plus clickable" ng-click="propertiesCollapsed=false" ng-show="(!context.resource||theaterMode)&&propertiesCollapsed"></span>
             <span class="glyphicon glyphicon-minus clickable" ng-click="propertiesCollapsed=true" ng-show="(!context.resource||theaterMode)&&!propertiesCollapsed"></span>
           </h4>
-          <div class="context-property" ng-show="!propertiesCollapsed||(context.resource&&!theaterMode)" ng-if="context.properties" ng-init="countPredicates(context.properties, context.propertiesPredicateTotals)">
+          <div class="context-property" ng-show="!propertiesCollapsed||(context.resource&&!theaterMode)" ng-if="context.properties"">
             <dl class="dl-horizontal" ng-repeat="(predicate, totalTriples) in context.propertiesPredicateTotals">
               <dt class="property-term">
                 <a href="{{predicate}}">{{predicate | metadataLabel}}</a>
@@ -140,7 +140,7 @@
 
     </div>
 
-    <div class="row metadata-section" ng-if="context.metadata" ng-init="countPredicates(context.metadata, context.metadataPredicateTotals); groupPredicatesByNamespace(context.metadataPredicateTotals, context.metadataPredicatesByNamespace)">
+    <div class="row metadata-section" ng-if="context.metadata" ng-init="context.refreshMetadata()">
       <repository-view-section
         context="context"
         title="'Metadata'"
@@ -149,15 +149,16 @@
         list-element-action="repositoryView.loadContext(le)"
         add-action="openModal('#addMetadata')"
         edit-action="updateMetadatum(triple,newObject)"
-        remove-action="context.removeMetadata(items)">
+        remove-action="context.removeMetadata(items)"
+        refresh-action="context.refreshMetadata()">
         <br ng-show="contentExpanded">
-        <div class="context-schemas" ng-show="contentExpanded" ng-repeat="(namespace, predicates) in context.metadataPredicatesByNamespace">
+        <div class="context-schemas" ng-show="contentExpanded && context.metadataPredicatesByNamespace.lengths[namespace] > 0" ng-repeat="(namespace, predicates) in context.metadataPredicatesByNamespace.values">
           <h4 class="context-namespace">
             <span class="context-namespace-label">{{namespace | schemaNamespace: context.schemas}}</span>
             <span class="glyphicon glyphicon-plus clickable" ng-click="context.metadataCollapsedByNamespace[namespace]=false" ng-show="context.metadataCollapsedByNamespace[namespace]"></span>
             <span class="glyphicon glyphicon-minus clickable" ng-click="context.metadataCollapsedByNamespace[namespace]=true" ng-show="!context.metadataCollapsedByNamespace[namespace]"></span>
           </h4>
-          <dl class="dl-horizontal context-metadata" ng-show="!context.metadataCollapsedByNamespace[namespace]" ng-repeat="(predicate, totalTriples) in predicates">
+          <dl class="dl-horizontal context-metadata" ng-show="!context.metadataCollapsedByNamespace[namespace] && totalTriples > 0" ng-repeat="(predicate, totalTriples) in context.metadataPredicatesByNamespace.values[namespace]">
             <dt class="metadata-term">
               <input ng-show="removeListElements && totalTriples > 1" type="checkbox" ng-checked="isPredicateChecked(predicate)" ng-click="checkPredicate(predicate)">
               <a href="{{predicate}}">{{predicate | metadataLabel}}</a>

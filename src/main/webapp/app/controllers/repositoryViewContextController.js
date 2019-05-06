@@ -19,7 +19,7 @@ cap.controller("RepositoryViewContextController", function ($controller, $locati
   $scope.countPredicates = function(triples, predicates) {
     if (predicates) {
       angular.forEach(predicates, function (value, key) {
-        delete predicates[key];
+        predicates[key] = 0;
       });
     } else {
       predicates = {};
@@ -34,26 +34,32 @@ cap.controller("RepositoryViewContextController", function ($controller, $locati
     });
   };
 
-  $scope.groupPredicatesByNamespace = function(predicates, namespaces) {
-    if (namespaces) {
-      angular.forEach(namespaces, function (value, key) {
-        delete namespaces[key];
+  $scope.groupPredicatesByNamespace = function() {
+    if ($scope.context.metadataPredicatesByNamespace && $scope.context.metadataPredicatesByNamespace.lengths) {
+      angular.forEach($scope.context.metadataPredicatesByNamespace.values, function (value, key) {
+        angular.forEach(value, function (predicateValue, predicateKey) {
+          $scope.context.metadataPredicatesByNamespace.lengths[key] = 0;
+          $scope.context.metadataPredicatesByNamespace.values[key][predicateKey] = 0;
+        });
       });
     } else {
-      namespaces = {};
+      $scope.context.metadataPredicatesByNamespace = {
+        lengths: {},
+        values: {}
+      };
     }
 
-    angular.forEach(predicates, function (total, predicate) {
-        var index = predicate.lastIndexOf("#") !== -1 ? predicate.lastIndexOf("#") : predicate.lastIndexOf("/");
-        var namespace = predicate.substring(0, index + 1);
+    angular.forEach($scope.context.metadataPredicateTotals, function (total, predicate) {
+      var index = predicate.lastIndexOf("#") !== -1 ? predicate.lastIndexOf("#") : predicate.lastIndexOf("/");
+      var namespace = predicate.substring(0, index + 1);
 
-        if (!namespaces.hasOwnProperty(namespace)) {
-          namespaces[namespace] = {};
-        }
+      if (!$scope.context.metadataPredicatesByNamespace.values.hasOwnProperty(namespace)) {
+        $scope.context.metadataPredicatesByNamespace.lengths[namespace] = 0;
+        $scope.context.metadataPredicatesByNamespace.values[namespace] = {};
+      }
 
-        if (!namespaces[namespace].hasOwnProperty(predicate)) {
-          namespaces[namespace][predicate] = total;
-        }
+      $scope.context.metadataPredicatesByNamespace.lengths[namespace] += total;
+      $scope.context.metadataPredicatesByNamespace.values[namespace][predicate] = total;
     });
   };
 
@@ -171,9 +177,16 @@ cap.controller("RepositoryViewContextController", function ($controller, $locati
 
       $scope.context.createMetadata(triples).then(function () {
         $scope.resetAddMetadataModal();
+        $scope.context.refreshMetadata();
         $scope.submitClicked = false;
       });
 
+    };
+
+    $scope.context.refreshMetadata = function() {
+      $scope.countPredicates($scope.context.metadata, $scope.context.metadataPredicateTotals);
+      $scope.countPredicates($scope.context.properties, $scope.context.propertiesPredicateTotals);
+      $scope.groupPredicatesByNamespace();
     };
 
     $scope.cancelDeleteRepositoryViewContext = function (repositoryViewContext) {
@@ -194,6 +207,7 @@ cap.controller("RepositoryViewContextController", function ($controller, $locati
 
       deleteContext([currentTriple]).then(function () {
         $scope.context = repositoryView.loadContext($scope.context.uri, true);
+        $scope.context.refreshMetadata();
         $scope.submitClicked = false;
       });
 
@@ -231,6 +245,7 @@ cap.controller("RepositoryViewContextController", function ($controller, $locati
 
     $scope.refreshContext = function() {
       $scope.context.refreshContext();
+      $scope.context.refreshMetadata();
     };
 
     $scope.openFixity = function(uriOfContextToCheck) {

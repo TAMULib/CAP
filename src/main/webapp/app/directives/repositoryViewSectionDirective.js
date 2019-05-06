@@ -11,7 +11,8 @@ cap.directive("repositoryViewSection", function($controller, $timeout, Repositor
           listElementAction: "&",
           addAction: "&",
           removeAction: "&",
-          editAction: "&"
+          editAction: "&",
+          refreshAction: "&"
         },
         link: function($scope, elem, attr, ctrl, transclude) {
 
@@ -89,6 +90,10 @@ cap.directive("repositoryViewSection", function($controller, $timeout, Repositor
             $scope.removeAction({"items": $scope.selectedListElements}).then(function() {
               $scope.removeListElements=false;
               $scope.selectedListElements.length=0;
+
+              if ($scope.refreshAction) {
+                $scope.refreshAction();
+              }
             });
           };
 
@@ -111,16 +116,25 @@ cap.directive("repositoryViewSection", function($controller, $timeout, Repositor
           };
 
           // TODO: provide a better solution than using a watch or remove entirely if adding manual refresh buttons.
+          // TODO: remove the manual refreshAction() calls once the broadcast on update is properly handled.
           $scope.$watch("list", function(newList, oldList) {
             if (oldList !== undefined) {
               if (newList.length == oldList.length) {
                 angular.forEach(oldList, function (value, key) {
                   if (value != newList[key]) {
                     $scope.unselectList();
+
+                    if ($scope.refreshAction) {
+                      $scope.refreshAction();
+                    }
                   }
                 });
               } else {
                 $scope.unselectList();
+
+                if ($scope.refreshAction) {
+                  $scope.refreshAction();
+                }
               }
             }
           }, true);
