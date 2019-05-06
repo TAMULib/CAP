@@ -21,7 +21,7 @@ cap.config(function ($locationProvider, $routeProvider) {
       }).
       when('/rv/:irName', {
         templateUrl: 'views/repositoryViewContext.html',
-        controller: 'IrContextController',
+        controller: 'RepositoryViewContextController',
         access: ["ROLE_ADMIN", "ROLE_CURATOR"]
       }).
       when('/users', {
