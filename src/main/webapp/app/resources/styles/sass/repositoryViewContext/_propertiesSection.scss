@@ -7,6 +7,22 @@
   word-wrap: break-word;
   hyphens: auto;
 
+  .context-property {
+    .property-term {
+      display: inline;
+      padding-right: 5px;
+    }
+
+    .property-collapsable {
+      line-height: 1.42857;
+    }
+
+    @media (min-width: 768px) {
+      .property-collapsable  {
+        float: left;
+      }
+    }
+  }
 }
 
 .preview {

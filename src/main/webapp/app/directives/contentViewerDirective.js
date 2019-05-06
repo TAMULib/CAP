@@ -1,4 +1,4 @@
-cap.directive("contentviewer", function($filter) {
+cap.directive("contentviewer", function($filter, $sce) {
     var viewerMap = appConfig.contentMap;
 
     return {
@@ -27,6 +27,10 @@ cap.directive("contentviewer", function($filter) {
                   $scope.options.tileSources = [$filter("cantaloupeUrl")($scope.resource)];
                 }
                 $scope.includeTemplateUrl = "views/directives/viewers/"+viewerTemplate+"Viewer.html";
+
+                $scope.getTrustedResource = function(src) {
+                    return $sce.trustAsResourceUrl("./resource-proxy/?uri="+src);
+                };
             },
         restrict: "E",
         transclude: true

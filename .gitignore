@@ -25,3 +25,5 @@ node_modules/
 .DS_Store
 
 src/main/webapp/app/resources/scripts/
+
+package-lock.json

@@ -53,7 +53,7 @@ public class AuthController extends WeaverAuthController {
     private UserRepo userRepo;
 
     @Autowired
-    EmailTemplateService emailTemplateService;
+    private EmailTemplateService emailTemplateService;
 
     @Autowired
     private AppUserCredentialsService appUserCredentialsService;
@@ -86,8 +86,8 @@ public class AuthController extends WeaverAuthController {
             try {
                 emailSender.sendEmail(email, finalEmail.getSubject(), finalEmail.getMessage());
             } catch (javax.mail.MessagingException e) {
-                logger.debug("Unable to send email! " + email);
-                return new ApiResponse(ERROR, "Unable to send email! " + email);
+                logger.debug("Unable to send registration email! " + email);
+                return new ApiResponse(ERROR, "Unable to send registration email! " + email);
             }
 
             return new ApiResponse(SUCCESS, "An email has been sent to " + email + ". Please confirm email to continue registration.", parameters);
@@ -138,6 +138,15 @@ public class AuthController extends WeaverAuthController {
         }
 
         User user = appUserCredentialsService.createUserFromRegistration(email, firstName, lastName, cryptoService.encodePassword(password));
+
+        HashMap<String,String> confirmationEmailData = new HashMap<String,String>();
+        EmailTemplate confirmationEmail = emailTemplateService.buildEmail("user_registration_confirmed", confirmationEmailData);
+
+        try {
+            emailSender.sendEmail(email, confirmationEmail.getSubject(), confirmationEmail.getMessage());
+        } catch (javax.mail.MessagingException e) {
+            logger.debug("Unable to send registration confirmation email! " + email);
+        }
 
         return new ApiResponse(SUCCESS, "Registration was successful. Please login.", user);
     }

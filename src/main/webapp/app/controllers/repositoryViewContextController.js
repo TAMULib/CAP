@@ -1,4 +1,4 @@
-cap.controller("RepositoryViewContextController", function ($controller, $location, $routeParams, $scope, $timeout, $filter, $q, RepositoryViewRepo, FixityReport) {
+cap.controller("RepositoryViewContextController", function ($controller, $location, $routeParams, $scope, $timeout, $filter, $q, RepositoryViewRepo, SchemaRepo, FixityReport) {
 
   angular.extend(this, $controller('CoreAdminController', {
     $scope: $scope
@@ -10,12 +10,54 @@ cap.controller("RepositoryViewContextController", function ($controller, $locati
 
   $scope.theaterMode = false;
 
+  $scope.messagingEnabled = appConfig.messagingEnabled;
+
   $scope.setOrToggleTheaterMode = function (mode) {
     $scope.theaterMode = mode ? mode : !$scope.theaterMode;
   };
 
-  RepositoryViewRepo.ready().then(function () {
+  $scope.countPredicates = function(triples, predicates) {
+    if (predicates) {
+      angular.forEach(predicates, function (value, key) {
+        delete predicates[key];
+      });
+    } else {
+      predicates = {};
+    }
 
+    angular.forEach(triples, function (triple) {
+        if (!predicates.hasOwnProperty(triple.predicate)) {
+          predicates[triple.predicate] = 0;
+        }
+
+        predicates[triple.predicate]++;
+    });
+  };
+
+  $scope.groupPredicatesByNamespace = function(predicates, namespaces) {
+    if (namespaces) {
+      angular.forEach(namespaces, function (value, key) {
+        delete namespaces[key];
+      });
+    } else {
+      namespaces = {};
+    }
+
+    angular.forEach(predicates, function (total, predicate) {
+        var index = predicate.lastIndexOf("#") !== -1 ? predicate.lastIndexOf("#") : predicate.lastIndexOf("/");
+        var namespace = predicate.substring(0, index + 1);
+
+        if (!namespaces.hasOwnProperty(namespace)) {
+          namespaces[namespace] = {};
+        }
+
+        if (!namespaces[namespace].hasOwnProperty(predicate)) {
+          namespaces[namespace][predicate] = total;
+        }
+    });
+  };
+
+  RepositoryViewRepo.ready().then(function () {
     $scope.repositoryView = RepositoryViewRepo.findByName(decodeURI($routeParams.irName));
 
     if(!$scope.repositoryView) $location.path("/error/404");
@@ -27,6 +69,20 @@ cap.controller("RepositoryViewContextController", function ($controller, $locati
     }
 
     $scope.context = $scope.repositoryView.loadContext($scope.repositoryView.contextUri);
+
+    $scope.context.schemas = SchemaRepo.getAll();
+
+    $scope.context.propertiesCollapsed = {};
+
+    $scope.context.metadataCollapsed = {};
+
+    $scope.context.propertiesPredicateTotals = {};
+
+    $scope.context.metadataPredicateTotals = {};
+
+    $scope.context.metadataPredicatesByNamespace = {};
+
+    $scope.context.metadataCollapsedByNamespace = {};
 
     $scope.createContainer = function (form) {
       $scope.submitClicked = true;
@@ -173,6 +229,10 @@ cap.controller("RepositoryViewContextController", function ($controller, $locati
       });
     };
 
+    $scope.refreshContext = function() {
+      $scope.context.refreshContext();
+    };
+
     $scope.openFixity = function(uriOfContextToCheck) {
       $scope.fixityReport = new FixityReport({
         repositoryView: $scope.context.repositoryView,
@@ -313,5 +373,9 @@ cap.controller("RepositoryViewContextController", function ($controller, $locati
     $scope.resetUploadResource();
 
   });
+
+  $scope.lengthenContextUri = function (contextUri) {
+    return $scope.context.repositoryView.rootUri ? $filter('lengthenUri')(contextUri, $scope.context.repositoryView.rootUri) : contextUri;
+  };
 
 });

@@ -1,0 +1,30 @@
+.ir-section {
+  .context-metadata {
+    .metadata-term {
+      display: inline;
+      padding-right: 5px;
+    }
+
+    .metadata-collapsable {
+      line-height: 1.42857;
+    }
+
+    @media (min-width: 768px) {
+      .metadata-collapsable  {
+        float: left;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .context-schemas {
+      margin-left: 15px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .context-namespace {
+      margin-left: 15px;
+    }
+  }
+}

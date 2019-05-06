@@ -1,0 +1,5 @@
+{
+  "name": "Curator Removed Email",
+  "subject": "Cap Curator Removed",
+  "message": "Your account is no longer a Curator to the '{REPOSITORY_VIEW}' Repository View in Cap."
+ }

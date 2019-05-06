@@ -15,7 +15,7 @@
   <parent>
     <groupId>edu.tamu.weaver</groupId>
     <artifactId>webservice-parent</artifactId>
-    <version>2.0.0</version>
+    <version>2.x-MESSAGING-MODULE-SNAPSHOT</version>
   </parent>
 
   <properties>
@@ -31,31 +31,37 @@
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>auth</artifactId>
-      <version>2.0.0</version>
+      <version>2.x-MESSAGING-MODULE-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>token-provider</artifactId>
-      <version>2.0.0</version>
+      <version>2.x-MESSAGING-MODULE-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>validation</artifactId>
-      <version>2.0.0</version>
+      <version>2.x-MESSAGING-MODULE-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>wro</artifactId>
-      <version>2.0.0</version>
+      <version>2.x-MESSAGING-MODULE-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>reporting</artifactId>
-      <version>2.0.0</version>
+      <version>2.x-MESSAGING-MODULE-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>edu.tamu.weaver</groupId>
+      <artifactId>messaging</artifactId>
+      <version>2.x-MESSAGING-MODULE-SNAPSHOT</version>
     </dependency>
 
     <dependency>
@@ -567,25 +573,6 @@
             <configuration> 
               <outputDirectory>
                 ${project.build.outputDirectory}/static/docs
-              </outputDirectory>
-              <resources>
-                <resource>
-                  <directory>
-                    ${project.build.directory}/generated-docs
-                  </directory>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-          <execution>
-            <id>copy-docs</id>
-            <phase>test</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration> 
-              <outputDirectory>
-                ./generated-docs
               </outputDirectory>
               <resources>
                 <resource>
