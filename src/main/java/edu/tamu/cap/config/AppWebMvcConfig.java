@@ -30,8 +30,8 @@ import edu.tamu.weaver.validation.resolver.WeaverValidatedModelMethodProcessor;
 
 @EnableWebMvc
 @Configuration
-@EntityScan(basePackages = { "edu.tamu.cap.model", "edu.tamu.weaver.wro.model" })
-@EnableJpaRepositories(basePackages = { "edu.tamu.cap.model.repo", "edu.tamu.weaver.wro.model.repo" })
+@EntityScan(basePackages = { "edu.tamu.cap.model" })
+@EnableJpaRepositories(basePackages = { "edu.tamu.cap.model.repo" })
 public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
 
     @Value("${app.ui.path}")
@@ -58,7 +58,7 @@ public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
 
     /**
      * Executor Service configuration.
-     * 
+     *
      * @return ExecutorSevice
      */
     @Bean(name = "executorService")
