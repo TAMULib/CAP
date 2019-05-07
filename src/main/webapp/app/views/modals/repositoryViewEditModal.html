@@ -162,7 +162,7 @@
         </uib-tab>
     </div>
     <div class="modal-footer">
-        <small class="text-warning pull-left" ng-if="!disableVerify(repositoryViewToEdit) && repositoryViewForms.edit.$dirty&&verificationResults.status!=='SUCCESS'">VR settings must be verified before edits can be saved</small>
+        <small class="text-warning pull-left" ng-if="!disableVerify(repositoryViewToEdit) && repositoryViewForms.edit.$dirty&&verificationResults.status!=='SUCCESS'">Repository View settings must be verified before edits can be saved.</small>
         <button type="button" class="btn btn-default" ng-class="{'btn-default': repositoryViewForms.edit.$pristine, 'btn-warning': !repositoryViewForms.edit.$pristine}" ng-click="cancelEditRepositoryView()">Cancel</button>
         <button type="submit" class="btn btn-success" ng-disabled="!repositoryViewForms.edit.$dirty || repositoryViewForms.edit.$invalid || submitClicked || (!disableVerify(repositoryViewToEdit) && repositoryViewForms.edit.$dirty && verificationResults.status !== 'SUCCESS')">Edit</button>
     </div>
