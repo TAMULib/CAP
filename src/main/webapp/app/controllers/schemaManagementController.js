@@ -62,9 +62,9 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
     });
   };
 
-  $scope.cancelEditSchema = function(schema) {
+  $scope.cancelEditSchema = function() {
     $scope.schemaToEdit.refresh();
-    $scope.schemaToEdit = SchemaRepo.getScaffold();
+    delete $scope.schemaToEdit;
     $scope.resetSchemaForms();
     $scope.resetSchemaPropertyList = false;
     $timeout(function(){
@@ -77,7 +77,7 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
     $scope.openModal('#schemaDeleteModal');
   };
 
-  $scope.cancelDeleteSchema = function(schema) {
+  $scope.cancelDeleteSchema = function() {
     $scope.schemaToDelete = {};
     $scope.closeModal();
   };
