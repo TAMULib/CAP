@@ -35,8 +35,6 @@ cap.controller("RepositoryViewContextController", function ($controller, $locati
 
     $scope.context = $scope.repositoryView.loadContext($scope.repositoryView.contextUri);
 
-    console.log($scope.context);
-
     $scope.context.schemas = SchemaRepo.getAll();
 
     $scope.context.propertiesCollapsed = {};
