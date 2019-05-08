@@ -19,13 +19,13 @@ import edu.tamu.weaver.response.ApiResponse;
 @RestController
 @RequestMapping("repository-view-context/{type}/{repositoryViewId}/metadata")
 public class RepositoryViewContextMetadataController {
-    
+
     @RequestMapping(method = POST)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse createMetadata(RepositoryViewService<?> repositoryViewService, @Param("contextUri") String contextUri, Triple triple) throws Exception {
+    public ApiResponse createMetadata(RepositoryViewService<?> repositoryViewService, @Param("contextUri") String contextUri, @RequestBody Triple triple) throws Exception {
         return new ApiResponse(SUCCESS, repositoryViewService.createMetadata(contextUri, triple));
     }
-    
+
     @RequestMapping(method = GET)
     @PreAuthorize("hasRole('USER')")
     public ApiResponse getMetadata(RepositoryViewService<?> repositoryViewService, @Param("contextUri") String contextUri) throws Exception {
@@ -34,10 +34,10 @@ public class RepositoryViewContextMetadataController {
 
     @RequestMapping(method = PUT)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse updateMetadata(RepositoryViewService<?> repositoryViewService, @Param("contextUri") String contextUri, Triple triple, @Param("newValue") String newValue) throws Exception {
+    public ApiResponse updateMetadata(RepositoryViewService<?> repositoryViewService, @Param("contextUri") String contextUri, @Param("newValue") String newValue, @RequestBody Triple triple) throws Exception {
         return new ApiResponse(SUCCESS, repositoryViewService.updateMetadata(contextUri, triple, newValue));
     }
-    
+
     @RequestMapping(method = DELETE)
     @PreAuthorize("hasRole('USER')")
     public ApiResponse deleteMetadata(RepositoryViewService<?> repositoryViewService, @Param("contextUri") String contextUri, @RequestBody Triple triple) throws Exception {
