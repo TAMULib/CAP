@@ -9,6 +9,8 @@ import edu.tamu.cap.model.response.RepositoryViewContext;
 import edu.tamu.cap.model.response.Triple;
 
 public interface RepositoryViewService<M> {
+    
+    // NOTE: if additional interface method is introduced and needs to broadcast, update pointcut in ContextBroadcastAspect
 
     public void setRepositoryView(RepositoryView rv);
 
