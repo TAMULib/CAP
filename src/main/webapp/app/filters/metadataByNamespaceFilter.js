@@ -4,8 +4,6 @@ cap.filter("metadataByNamespace", function() {
       var uniqueByNamespace = [];
       var namespaces = [];
       angular.forEach(metadata, function (metadatum) {
-        var isDuplicate = false;
-
         var namespace = metadatum.predicate;
         for (var i = 0; i < schemas.length; i++) {
           if (metadatum.predicate.indexOf(schemas[i].namespace) >= 0) {
@@ -13,18 +11,10 @@ cap.filter("metadataByNamespace", function() {
             break;
           }
         }
-
-        for (var j = 0; j < namespaces.length; j++) {
-          if (namespaces.indexOf(namespace) >= 0) {
-            isDuplicate = true;
-            break;
-          }
-        }
-        if (!isDuplicate) {
+        if (namespaces.indexOf(namespace) < 0) {
           uniqueByNamespace.push(metadatum);
           namespaces.push(namespace);
         }
-
       });
       metadata = uniqueByNamespace;
     }
