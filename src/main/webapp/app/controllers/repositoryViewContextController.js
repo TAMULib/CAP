@@ -41,12 +41,6 @@ cap.controller("RepositoryViewContextController", function ($controller, $locati
 
     $scope.context.metadataCollapsed = {};
 
-    $scope.context.propertiesPredicateTotals = {};
-
-    $scope.context.metadataPredicateTotals = {};
-
-    $scope.context.metadataPredicatesByNamespace = {};
-
     $scope.context.metadataCollapsedByNamespace = {};
 
     $scope.createContainer = function (form) {
