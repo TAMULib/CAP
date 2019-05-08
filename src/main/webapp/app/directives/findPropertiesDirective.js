@@ -16,9 +16,10 @@ cap.directive("findproperties", function(SchemaRepo) {
                 
                 getPropertiesPromise.then(function(res) {
 
-                    var un =  $scope.$watch("schema.namespace", function(current, next) {
-                        if(current!==next) {
-                            $scope.properties.length=0;
+                    var un = $scope.$watch("schema.namespace", function(current, next) {
+                        if(current !== next) {
+                            $scope.properties.length = 0;
+                            $scope.schema.properties.length = 0;
                             un();
                         }
                     });

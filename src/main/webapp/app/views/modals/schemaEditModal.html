@@ -1,9 +1,9 @@
 <form name="schemaForms.edit" ng-submit="updateSchema()" novalidate class="schema-forms-edit">
   <div class="modal-header {{attr.modalHeaderClass}}">
     <button type="button" class="close modal-close" aria-label="Close" ng-click="cancelEditSchema()"><span aria-hidden="true">&times;</span></button>
-    <h4 class="modal-title">edit Schema</h4>
+    <h4 class="modal-title">Edit Schema</h4>
   </div>
-  <div class="modal-body">
+  <div class="modal-body" ng-if="schemaToEdit">
 
     <validationmessage results="schemaForms.getResults()"></validationmessage>
 
@@ -45,7 +45,7 @@
 
       </div>
       <div class="col-sm-5">
-        <findproperties  ng-if="resetSchemaPropertyList" schema="schemaToEdit" mode="'edit'"></findproperties>
+        <findproperties ng-if="resetSchemaPropertyList" schema="schemaToEdit" mode="'edit'"></findproperties>
       </div>
     </div>
 

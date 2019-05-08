@@ -7,7 +7,7 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
   $scope.schemas = SchemaRepo.getAll();
 
   $scope.schemaToCreate = SchemaRepo.getScaffold();
-  $scope.schemaToEdit = SchemaRepo.getScaffold();
+  $scope.schemaToEdit;
   $scope.schemaToDelete = {};
 
   $scope.schemaForms = {
