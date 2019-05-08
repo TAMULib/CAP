@@ -1,4 +1,4 @@
-cap.controller("RepositoryViewManagementController", function($controller, $scope, $q, $location, $timeout, NgTableParams, ApiResponseActions, RepositoryViewRepo, SchemaRepo, UserRepo) {
+cap.controller("RepositoryViewManagementController", function($controller, $scope, $q, NgTableParams, ApiResponseActions, RepositoryViewRepo, SchemaRepo, UserRepo) {
 
   angular.extend(this, $controller('CoreAdminController', {
       $scope: $scope
@@ -23,6 +23,10 @@ cap.controller("RepositoryViewManagementController", function($controller, $scop
     RepositoryViewRepo.getTypes($scope.repositoryViewTypes).then(function() {
       $scope.repositoryViewToCreate = RepositoryViewRepo.getScaffold({
         type: $scope.repositoryViewTypes[0].value
+      });
+
+      angular.forEach($scope.repositoryViews, function (repositoryView) {
+        repositoryView.clearCache();
       });
 
       $scope.$watch('repositoryViewToCreate',function() {
