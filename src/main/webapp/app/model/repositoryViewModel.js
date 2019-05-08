@@ -36,7 +36,6 @@ cap.model("RepositoryView", function($location, $timeout, $cookies, $filter, $in
           uri: contextUri,
           fetch: true
         });
-        console.log(context.repositoryView);
         repositoryView.cacheContext(context);
       } else if(reload) {
         context.reloadContext();
