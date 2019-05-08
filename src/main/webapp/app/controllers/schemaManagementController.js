@@ -17,7 +17,7 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
 
   $scope.submitClicked = false;
 
-  $scope.resetCreateSchemaPropertyList = true;
+  $scope.resetSchemaPropertyList = true;
 
   $scope.resetSchemaForms = function() {
     SchemaRepo.clearValidationResults();
@@ -44,9 +44,9 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
   $scope.cancelCreateSchema = function() {
     angular.extend($scope.schemaToCreate, SchemaRepo.getScaffold());
     $scope.resetSchemaForms();
-    $scope.resetCreateSchemaPropertyList = false;
+    $scope.resetSchemaPropertyList = false;
     $timeout(function(){
-      $scope.resetCreateSchemaPropertyList = true;
+      $scope.resetSchemaPropertyList = true;
     });
   };
 
@@ -67,6 +67,10 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
     $scope.schemaToEdit.refresh();
     $scope.schemaToEdit = SchemaRepo.getScaffold();
     $scope.resetSchemaForms();
+    $scope.resetSchemaPropertyList = false;
+    $timeout(function(){
+      $scope.resetSchemaPropertyList = true;
+    });
   };
 
   $scope.confirmDeleteSchema = function(schema) {
