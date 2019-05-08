@@ -23,7 +23,17 @@ public class ContextBroadcastAspect {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
-    @AfterReturning(pointcut = "execution(edu.tamu.cap.model.response.RepositoryViewContext edu.tamu.cap.service.RepositoryViewService.*(..)) && !execution(edu.tamu.cap.model.response.RepositoryViewContext edu.tamu.cap.service.RepositoryViewService.featureSupport(..)) && !execution(edu.tamu.cap.model.response.RepositoryViewContext edu.tamu.cap.service.RepositoryViewService.getContainer(..)) && !execution(edu.tamu.cap.model.response.RepositoryViewContext edu.tamu.cap.service.RepositoryViewService.buildRepositoryViewContext(..))", returning = "context")
+    // @formatter:off
+    @AfterReturning(
+        pointcut = "execution(edu.tamu.cap.model.response.RepositoryViewContext edu.tamu.cap.service.RepositoryViewService.createChild(..)) || " + 
+                   "execution(edu.tamu.cap.model.response.RepositoryViewContext edu.tamu.cap.service.RepositoryViewService.deleteRepositoryViewContext(..)) || " +
+                   "execution(edu.tamu.cap.model.response.RepositoryViewContext edu.tamu.cap.service.RepositoryViewService.createResource(..)) || " +
+                   "execution(edu.tamu.cap.model.response.RepositoryViewContext edu.tamu.cap.service.RepositoryViewService.deleteResource(..)) || " +
+                   "execution(edu.tamu.cap.model.response.RepositoryViewContext edu.tamu.cap.service.RepositoryViewService.createMetadata(..)) || " +
+                   "execution(edu.tamu.cap.model.response.RepositoryViewContext edu.tamu.cap.service.RepositoryViewService.updateMetadata(..)) || " +
+                   "execution(edu.tamu.cap.model.response.RepositoryViewContext edu.tamu.cap.service.RepositoryViewService.deleteMetadata(..))",
+        returning = "context")
+    // @formatter:on
     public void broadcastContext(RepositoryViewContext context) throws Throwable {
         logger.info("Broadcasting " + context.getTriple().getSubject());
         simpMessagingTemplate.convertAndSend("/queue/context", new ApiResponse(SUCCESS, BROADCAST, context));
