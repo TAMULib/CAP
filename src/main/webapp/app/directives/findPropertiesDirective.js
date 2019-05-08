@@ -5,6 +5,7 @@ cap.directive("findproperties", function(SchemaRepo) {
         scope: {
             schema: "=",
             mode: "=",
+            found: "=",
         },
         link: function($scope) {
 
@@ -13,7 +14,7 @@ cap.directive("findproperties", function(SchemaRepo) {
             $scope.getProperties = function() {
                 $scope.gettingProperties = true;
                 var getPropertiesPromise = SchemaRepo.findProperties($scope.schema);
-                
+
                 getPropertiesPromise.then(function(res) {
 
                     var un =  $scope.$watch("schema.namespace", function(current, next) {
@@ -26,6 +27,10 @@ cap.directive("findproperties", function(SchemaRepo) {
                     var properties = angular.fromJson(res.body).payload['ArrayList<Property>'];
                     angular.extend($scope.properties, properties);
                     $scope.gettingProperties = false;
+
+                    if ($scope.found) {
+                      $scope.found(properties);
+                    }
                 });
 
                 return getPropertiesPromise;

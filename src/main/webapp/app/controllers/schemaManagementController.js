@@ -10,6 +10,8 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
   $scope.schemaToEdit = SchemaRepo.getScaffold();
   $scope.schemaToDelete = {};
 
+  $scope.checkNamespaceOnEdit = undefined;
+
   $scope.schemaForms = {
     validations: SchemaRepo.getValidations(),
     getResults: SchemaRepo.getValidationResults
@@ -27,6 +29,7 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
       }
     }
     $scope.closeModal();
+    $scope.checkNamespaceOnEdit = undefined;
   };
 
   $scope.resetSchemaForms();
@@ -52,6 +55,7 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
 
   $scope.editSchema = function(schema) {
     $scope.schemaToEdit = schema;
+    $scope.checkNamespaceOnEdit = schema.namespace;
     $scope.openModal('#schemaEditModal');
   };
 
@@ -61,6 +65,16 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
       $scope.cancelEditSchema();
       $scope.submitClicked = false;
     });
+  };
+
+  $scope.propertiesNeedsLoading = function(schema) {
+    return !($scope.checkNamespaceOnEdit === undefined || $scope.checkNamespaceOnEdit === schema.namespace);
+  }
+
+  $scope.propertiesFound = function(properties) {
+    if (Array.isArray(properties) && properties.length > 0) {
+      $scope.checkNamespaceOnEdit = undefined;
+    }
   };
 
   $scope.cancelEditSchema = function(schema) {
