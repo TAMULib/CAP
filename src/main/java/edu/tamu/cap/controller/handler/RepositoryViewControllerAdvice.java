@@ -16,16 +16,16 @@ import edu.tamu.weaver.response.ApiResponse;
 @ControllerAdvice
 public class RepositoryViewControllerAdvice {
 
-	@ResponseStatus(value = HttpStatus.OK)
-	@ExceptionHandler(FcrepoOperationFailedException.class)
-	public ApiResponse handleFcrepoOperationFailedException(FcrepoOperationFailedException e) {
-		return new ApiResponse(ERROR, e.getMessage());
-	}
+    @ResponseStatus(value = HttpStatus.OK)
+    @ExceptionHandler(FcrepoOperationFailedException.class)
+    public ApiResponse handleFcrepoOperationFailedException(FcrepoOperationFailedException e) {
+        return new ApiResponse(ERROR, e.getMessage());
+    }
 
-	@ResponseStatus(value = HttpStatus.OK)
-	@ExceptionHandler(RepositoryViewVerificationException.class)
-	public ApiResponse handleRepositoryViewVerificationException(RepositoryViewVerificationException e) {
-		return new ApiResponse(ERROR, e.getMessage());
-	}
+    @ResponseStatus(value = HttpStatus.OK)
+    @ExceptionHandler(RepositoryViewVerificationException.class)
+    public ApiResponse handleRepositoryViewVerificationException(RepositoryViewVerificationException e) {
+        return new ApiResponse(ERROR, e.getMessage());
+    }
 
 }

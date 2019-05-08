@@ -17,19 +17,19 @@ import edu.tamu.weaver.response.ApiResponse;
 @RestController
 @RequestMapping("repository-view-context/{type}/{repositoryViewId}/version")
 public class RepositoryViewContextVersionController {
-    
+
     @RequestMapping(method = POST)
     @PreAuthorize("hasRole('USER')")
     public ApiResponse createVersion(VersioningRepositoryViewService<?> repositoryViewService, @Param("contextUri") String contextUri, @PayloadArgName("name") String name) throws Exception {
         return new ApiResponse(SUCCESS, repositoryViewService.createVersion(contextUri, name));
     }
-    
+
     @RequestMapping(method = PATCH)
     @PreAuthorize("hasRole('USER')")
     public ApiResponse restoreVersion(VersioningRepositoryViewService<?> repositoryViewService, @Param("contextUri") String contextUri) throws Exception {
         return new ApiResponse(SUCCESS, repositoryViewService.restoreVersion(contextUri));
     }
-    
+
     @RequestMapping(method = DELETE)
     @PreAuthorize("hasRole('USER')")
     public ApiResponse deleteVersion(VersioningRepositoryViewService<?> repositoryViewService, @Param("contextUri") String contextUri) throws Exception {

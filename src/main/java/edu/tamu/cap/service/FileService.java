@@ -13,11 +13,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class FileService {
+
     @Autowired
     private ResourcePatternResolver resourcePatternResolver;
 
     public File getFileFromResource(String fileName) throws IOException {
-        Resource resource = resourcePatternResolver.getResource("classpath:"+fileName);
+        Resource resource = resourcePatternResolver.getResource("classpath:" + fileName);
         if (resource.getURI().getScheme().equals("jar")) {
             return createTempFileFromStream(resource.getInputStream());
         }
@@ -30,4 +31,5 @@ public class FileService {
         IOUtils.copy(stream, new FileOutputStream(tempFile));
         return tempFile;
     }
+
 }

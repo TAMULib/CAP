@@ -12,16 +12,15 @@ import edu.tamu.cap.model.response.Triple;
 
 @Service("DSpace")
 public class DSpaceService implements RepositoryViewService<Model> {
-    
+
     @Override
     public RepositoryViewContext getRepositoryViewContext(String contextUri) throws Exception {
 
         return null;
     }
-    
+
     @Override
     public List<Triple> getTriples(RepositoryViewService<?> repositoryViewService, String contextUri) throws Exception {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -47,7 +46,7 @@ public class DSpaceService implements RepositoryViewService<Model> {
 
         return null;
     }
-    
+
     @Override
     public void setRepositoryView(RepositoryView repositoryView) {
 
@@ -67,34 +66,29 @@ public class DSpaceService implements RepositoryViewService<Model> {
 
     @Override
     public List<Triple> getMetadata(String contextUri) throws Exception {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public List<Triple> getChildren(String contextUri) throws Exception {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public RepositoryViewContext getResource(String contextUri) throws Exception {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public void deleteResource(String contextUri) throws Exception{
-        // TODO Auto-generated method stub
-        
+    public void deleteResource(String contextUri) throws Exception {
+
     }
 
     @Override
     public void deleteRepositoryViewContext(String targetUri) throws Exception {
-        // TODO Auto-generated method stub
-        
+
     }
-    
+
     public RepositoryView getRepositoryView() {
         return null;
     }

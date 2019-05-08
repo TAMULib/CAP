@@ -8,27 +8,27 @@ import edu.tamu.weaver.validation.validators.InputValidator;
 public class RepositoryViewValidator extends BaseModelValidator {
 
     public RepositoryViewValidator() {
-    	String typeProperty = "type";
+        String typeProperty = "type";
         this.addInputValidator(new InputValidator(InputValidationType.required, "A repository view requires a type", typeProperty, true));
-    	
-    	String nameProperty = "name";
+
+        String nameProperty = "name";
         this.addInputValidator(new InputValidator(InputValidationType.required, "A repository view requires a name", nameProperty, true));
 
         String rootUriProperty = "rootUri";
         this.addInputValidator(new InputValidator(InputValidationType.required, "A repository view requires a URI", rootUriProperty, true));
         this.addInputValidator(new InputValidator(InputValidationType.pattern, "A repository view requires a valid URI", rootUriProperty, ValidationUtility.URL_REGEX));
-        
+
         String usernameProperty = "username";
         int usernameMin = 2;
         this.addInputValidator(new InputValidator(InputValidationType.minlength, "A repository view's username must be at least " + usernameMin + " long", usernameProperty, usernameMin));
         int usernameMax = 255;
         this.addInputValidator(new InputValidator(InputValidationType.maxlength, "A repository view's username must be at most " + usernameMax + " long", usernameProperty, usernameMax));
-        
+
         String passwordProperty = "password";
         int passwordMin = 2;
         this.addInputValidator(new InputValidator(InputValidationType.minlength, "A repository view's password must be at least " + passwordMin + " long", passwordProperty, passwordMin));
         int passwordMax = 255;
         this.addInputValidator(new InputValidator(InputValidationType.maxlength, "A repository view's password must be at most " + passwordMax + " long", passwordProperty, passwordMax));
-        
+
     }
 }

@@ -1,12 +1,3 @@
-/*
- * AppUser.java
- *
- * Version:
- *     $Id$
- *
- * Revisions:
- *     $Log$
- */
 package edu.tamu.cap.model;
 
 import java.util.ArrayList;
@@ -25,10 +16,9 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import edu.tamu.weaver.user.model.IRole;
-
 import edu.tamu.weaver.auth.model.AbstractWeaverUserDetails;
 import edu.tamu.weaver.response.ApiView;
+import edu.tamu.weaver.user.model.IRole;
 
 /**
  * Application User entity.
@@ -58,7 +48,7 @@ public class User extends AbstractWeaverUserDetails {
     @JsonIgnore
     private String password = null;
 
-    @ManyToMany(mappedBy="curators")
+    @ManyToMany(mappedBy = "curators")
     @JsonIgnore
     private List<RepositoryView> repositoryViews;
 
@@ -82,8 +72,7 @@ public class User extends AbstractWeaverUserDetails {
     /**
      * Constructor for application user with external auth.
      *
-     * @param uin
-     *            Long
+     * @param uin Long
      *
      */
     public User(String email, String firstName, String lastName, String role) {
@@ -104,8 +93,8 @@ public class User extends AbstractWeaverUserDetails {
     }
 
     public User(User user) {
-    	this(user.getUsername());
-    	setFirstName(user.getFirstName());
+        this(user.getUsername());
+        setFirstName(user.getFirstName());
         setLastName(user.getLastName());
         setRole(user.getRole());
     }
@@ -120,8 +109,7 @@ public class User extends AbstractWeaverUserDetails {
     }
 
     /**
-     * @param role
-     *            the role to set
+     * @param role the role to set
      */
     @Override
     @JsonSerialize(as = Role.class)
@@ -139,8 +127,7 @@ public class User extends AbstractWeaverUserDetails {
     }
 
     /**
-     * @param firstName
-     *            String
+     * @param firstName String
      *
      */
     public void setFirstName(String firstName) {
@@ -156,8 +143,7 @@ public class User extends AbstractWeaverUserDetails {
     }
 
     /**
-     * @param lastName
-     *            String
+     * @param lastName String
      *
      */
     public void setLastName(String lastName) {
@@ -172,24 +158,22 @@ public class User extends AbstractWeaverUserDetails {
     }
 
     /**
-     * @param email
-     *            the email to set
+     * @param email the email to set
      */
     public void setEmail(String email) {
         this.email = email;
     }
 
-	@Override
-	@JsonIgnore
-	public String getPassword() {
-		return password;
-	}
+    @Override
+    @JsonIgnore
+    public String getPassword() {
+        return password;
+    }
 
     /**
      * Stores an encoded password
      *
-     * @param password
-     *            the password to set
+     * @param password the password to set
      */
     public void setPassword(String password) {
         this.password = password;
@@ -213,7 +197,6 @@ public class User extends AbstractWeaverUserDetails {
         }
         return foundRepositoryView;
     }
-
 
     @Override
     @JsonIgnore
