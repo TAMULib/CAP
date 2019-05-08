@@ -69,7 +69,7 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
 
   $scope.propertiesNeedsLoading = function(schema) {
     return !($scope.checkNamespaceOnEdit === undefined || $scope.checkNamespaceOnEdit === schema.namespace);
-  }
+  };
 
   $scope.propertiesFound = function(properties) {
     if (Array.isArray(properties) && properties.length > 0) {
