@@ -1,4 +1,4 @@
-cap.model("RepositoryView", function($location, $timeout, $cookies, $filter, $interval, $q, HttpMethodVerbs, RepositoryViewContext, WsApi, StorageService, UserService) {
+cap.model("RepositoryView", function($location, $timeout, $cookies, $filter, $interval, $q, HttpMethodVerbs, RepositoryViewContext, WsApi, UserService) {
   return function RepositoryView() {
     var repositoryView = this;
 
