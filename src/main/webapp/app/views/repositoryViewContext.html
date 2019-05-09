@@ -162,10 +162,10 @@
             </h4>
             <dl class="dl-horizontal context-metadata" ng-show="!context.metadataCollapsedByNamespace[namespace]" ng-repeat="triple in context.metadata | unique:'predicate'" ng-if="namespace === (triple.predicate | schemaNamespace: context.schemas)">
               <dt class="metadata-term">
-                <input ng-show="removeListElements && totalTriples > 1" type="checkbox" ng-checked="isPredicateChecked(predicate)" ng-click="checkPredicate(triple.predicate)">
+                <input ng-show="removeListElements && isCollapsable(context.metadata, triple.predicate)" type="checkbox" ng-checked="isPredicateChecked(predicate)" ng-click="checkPredicate(triple.predicate)">
                 <a href="{{triple.predicate}}">{{triple.predicate | metadataLabel}}</a>
               </dt>
-              <span ng-if="isCollapsable(context.metadata, property.predicate)">
+              <span ng-if="isCollapsable(context.metadata, triple.predicate)">
                 <span title="collapse {{triple.predicate | metadataLabel}}" class="glyphicon glyphicon-minus clickable metadata-collapsable" ng-click="context.metadataCollapsed[triple.predicate]=true" ng-show="!context.metadataCollapsed[triple.predicate]"></span>
                 <span title="expand {{triple.predicate | metadataLabel}}"  class="glyphicon glyphicon-plus clickable metadata-collapsable" ng-click="context.metadataCollapsed[triple.predicate]=false" ng-show="context.metadataCollapsed[triple.predicate]"></span>
               </span>
