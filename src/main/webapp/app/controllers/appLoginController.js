@@ -1,4 +1,4 @@
-cap.controller('AppLoginController', function ($controller, $location, $scope, UserService, StorageService) {
+cap.controller('AppLoginController', function ($controller, $scope) {
 
     angular.extend(this, $controller('LoginController', {
         $scope: $scope
