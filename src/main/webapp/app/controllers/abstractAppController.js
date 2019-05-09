@@ -10,10 +10,10 @@ cap.controller("AbstractAppController", function($controller, $scope) {
 
   $scope.isCollapsable = function(triples, predicate) {
     var matches = 0;
-    for(var triple of triples) {
-      if(triple.predicate === predicate) {
+    for (var i = 0; i < triples.length; i++) {
+      if (triples.hasOwnProperty(i) && triples[i].predicate === predicate) {
         matches++;
-        if(matches > 1) {
+        if (matches > 1) {
           return true;
         }
       }
