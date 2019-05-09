@@ -1,6 +1,6 @@
 cap.controller("RepositoryViewContextController", function ($controller, $location, $routeParams, $scope, $timeout, $filter, $q, RepositoryViewRepo, SchemaRepo, FixityReport) {
 
-  angular.extend(this, $controller('CoreAdminController', {
+  angular.extend(this, $controller('AbstractAppController', {
     $scope: $scope
   }));
 
@@ -14,12 +14,6 @@ cap.controller("RepositoryViewContextController", function ($controller, $locati
 
   $scope.setOrToggleTheaterMode = function (mode) {
     $scope.theaterMode = mode ? mode : !$scope.theaterMode;
-  };
-
-  $scope.isCollapsable = function(triples, predicate) {
-    return triples.filter(function(triple) {
-      return triple.predicate === predicate;
-    }).length > 1;
   };
 
   RepositoryViewRepo.ready().then(function () {
