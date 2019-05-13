@@ -1,4 +1,4 @@
-cap.model("RepositoryView", function($location, $timeout, $cookies, $filter, $interval, $q, HttpMethodVerbs, RepositoryViewContext, WsApi, StorageService, UserService) {
+cap.model("RepositoryView", function($location, $timeout, $cookies, $filter, $interval, $q, HttpMethodVerbs, RepositoryViewContext, WsApi, UserService) {
   return function RepositoryView() {
     var repositoryView = this;
 
@@ -36,7 +36,6 @@ cap.model("RepositoryView", function($location, $timeout, $cookies, $filter, $in
           uri: contextUri,
           fetch: true
         });
-        console.log(context.repositoryView);
         repositoryView.cacheContext(context);
       } else if(reload) {
         context.reloadContext();

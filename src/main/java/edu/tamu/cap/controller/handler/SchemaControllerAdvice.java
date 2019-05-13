@@ -14,11 +14,11 @@ import edu.tamu.weaver.response.ApiResponse;
 @RestController
 @ControllerAdvice
 public class SchemaControllerAdvice {
-	
-	@ResponseStatus(value = HttpStatus.OK)
-	@ExceptionHandler(OntModelReadException.class)
-	public ApiResponse handleFindPropertiesByNamespaceHttpException(OntModelReadException e) {
-		return new ApiResponse(ERROR, e.getMessage());
-	}
-	
+
+    @ResponseStatus(value = HttpStatus.OK)
+    @ExceptionHandler(OntModelReadException.class)
+    public ApiResponse handleFindPropertiesByNamespaceHttpException(OntModelReadException e) {
+        return new ApiResponse(ERROR, e.getMessage());
+    }
+
 }

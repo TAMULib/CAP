@@ -1,7 +1,7 @@
 <alerts view="views/alerts/repositoryViewVerificationAlert.html" channels="schema/properties" exclusive></alerts>
 
 <div class="find-properties text-center">
-    <button ng-if="!properties.length" type="button" class="find-properties-btn btn btn-lg btn-success" ng-click="getProperties(schemaToCreate)" ng-disabled="!schema.namespace">
+    <button ng-if="!properties.length" type="button" class="find-properties-btn btn btn-lg btn-success" ng-click="getProperties()" ng-disabled="!schema.namespace">
         <span ng-if="!gettingProperties">Get Properties</span>
         <span ng-if="gettingProperties" class="glyphicon glyphicon-refresh spinning"></span>
     </button>

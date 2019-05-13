@@ -40,10 +40,10 @@ public class RepositoryViewContextTransactionController {
 
         String rootUri = repositoryViewService.getRepositoryView().getRootUri();
 
-        ApiStatus status = trancationToken.isPresent()?SUCCESS:ERROR;
-        String message = trancationToken.isPresent()?"Transaction successfully commited":"Failed to find transaction token.";
+        ApiStatus status = trancationToken.isPresent() ? SUCCESS : ERROR;
+        String message = trancationToken.isPresent() ? "Transaction successfully commited" : "Failed to find transaction token.";
 
-        repositoryViewService.commitTransaction(rootUri+trancationToken.get());
+        repositoryViewService.commitTransaction(rootUri + trancationToken.get());
 
         return new ApiResponse(status, message);
     }
@@ -56,10 +56,10 @@ public class RepositoryViewContextTransactionController {
 
         String rootUri = repositoryViewService.getRepositoryView().getRootUri();
 
-        ApiStatus status = trancationToken.isPresent()?SUCCESS:ERROR;
-        String message = trancationToken.isPresent()?"Transaction successfully created":"Failed to find transaction token.";
+        ApiStatus status = trancationToken.isPresent() ? SUCCESS : ERROR;
+        String message = trancationToken.isPresent() ? "Transaction successfully created" : "Failed to find transaction token.";
 
-        repositoryViewService.rollbackTransaction(rootUri+trancationToken.get());
+        repositoryViewService.rollbackTransaction(rootUri + trancationToken.get());
 
         return new ApiResponse(status, message);
     }
@@ -74,16 +74,16 @@ public class RepositoryViewContextTransactionController {
         if (transactionToken.isPresent()) {
             String rootUri = repositoryViewService.getRepositoryView().getRootUri();
             rootUri += repositoryViewService.getRepositoryView().getRootUri().endsWith("/") ? "" : "/";
-            transactionDetails = Optional.ofNullable(repositoryViewService.refreshTransaction(rootUri+transactionToken.get()));
+            transactionDetails = Optional.ofNullable(repositoryViewService.refreshTransaction(rootUri + transactionToken.get()));
         }
 
         boolean transactionDetailsPresent = transactionDetails.isPresent();
 
-        ApiStatus status = transactionDetailsPresent?SUCCESS:ERROR;
-        String message = transactionDetailsPresent?"Transaction successfully created":"Failed to find transaction token.";
-        TransactionDetails td = transactionDetailsPresent?transactionDetails.get():null;
+        ApiStatus status = transactionDetailsPresent ? SUCCESS : ERROR;
+        String message = transactionDetailsPresent ? "Transaction successfully created" : "Failed to find transaction token.";
+        TransactionDetails td = transactionDetailsPresent ? transactionDetails.get() : null;
 
-        if(transactionDetailsPresent) {
+        if (transactionDetailsPresent) {
             return new ApiResponse(status, message, td);
         } else {
             return new ApiResponse(status, message);

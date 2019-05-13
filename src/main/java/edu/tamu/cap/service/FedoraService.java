@@ -55,7 +55,7 @@ import edu.tamu.cap.model.response.FixityReport;
 import edu.tamu.cap.model.response.RepositoryViewContext;
 import edu.tamu.cap.model.response.Triple;
 import edu.tamu.cap.model.response.Version;
-import edu.tamu.cap.util.StringUtil;
+import edu.tamu.cap.utility.StringUtil;
 
 @Service("Fedora")
 public class FedoraService implements RepositoryViewService<Model>, VersioningRepositoryViewService<Model>, VerifyingRepositoryViewService<Model>, TransactingRepositoryViewService<Model>, QueryableRepositoryViewService<Model>, FixityRepositoryViewService<Model> {
@@ -143,7 +143,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
         String longContextUri = buildLongContextUri(contextUri);
 
-        if(cookies != null) {
+        if (cookies != null) {
             for (Cookie c : cookies) {
                 if (c.getName().equals("transaction")) {
                     cookie = Optional.of(c);
@@ -164,22 +164,22 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
             StringBuilder strngBldr = new StringBuilder();
 
-            strngBldr
-                .append(transactionToken.contains("https://")?"https":"http")
-                .append("://")
-                .append(rootURI.getHost());
+            strngBldr.append(transactionToken.contains("https://") ? "https" : "http").append("://").append(rootURI.getHost());
 
-            if(!rootURI.getHost().endsWith("/") && !transactionURI.getPath().startsWith("/")) strngBldr.append("/");
+            if (!rootURI.getHost().endsWith("/") && !transactionURI.getPath().startsWith("/"))
+                strngBldr.append("/");
 
-            if(rootURI.getHost().endsWith("/") && transactionURI.getPath().startsWith("/")) {
+            if (rootURI.getHost().endsWith("/") && transactionURI.getPath().startsWith("/")) {
                 strngBldr.append(transactionURI.getPath().substring(1));
             } else {
                 strngBldr.append(transactionURI.getPath());
             }
 
-            if(!transactionURI.getPath().endsWith("/")&&!contextPath.startsWith("/")) strngBldr.append("/").append(contextPath);
+            if (!transactionURI.getPath().endsWith("/") && !contextPath.startsWith("/"))
+                strngBldr.append("/").append(contextPath);
 
-            if(transactionURI.getPath().endsWith("/")&&contextPath.startsWith("/")) strngBldr.append("/").append(contextPath.substring(1));
+            if (transactionURI.getPath().endsWith("/") && contextPath.startsWith("/"))
+                strngBldr.append("/").append(contextPath.substring(1));
 
             longContextUri = strngBldr.toString();
         }
@@ -197,7 +197,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
     }
 
     private void checkFedoraResult(FcrepoResponse response) throws Exception {
-        if(response.getStatusCode()>399) {
+        if (response.getStatusCode() > 399) {
             throw new FcrepoOperationFailedException(response.getUrl(), response.getStatusCode(), "Error response from fedora: " + response.getStatusCode());
         }
     }
@@ -216,7 +216,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
         allTriples.addAll(context.getProperties());
         allTriples.addAll(context.getMetadata());
-        //TODO add all resource triples
+        // TODO add all resource triples
 
         return allTriples;
     }
@@ -228,12 +228,12 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
         PostBuilder post = new PostBuilder(new URI(longContextUri), client);
 
         Model model = ModelFactory.createDefaultModel();
-        metadata.forEach(metadatum->{
-          Property prop = model.createProperty(metadatum.getPredicate());
-          model.createResource("").addProperty(prop, metadatum.getObject());
-          ByteArrayOutputStream out = new ByteArrayOutputStream();
-          RDFDataMgr.write(out, model, Lang.TURTLE);
-          post.body(new ByteArrayInputStream(out.toByteArray()), "text/turtle");
+        metadata.forEach(metadatum -> {
+            Property prop = model.createProperty(metadatum.getPredicate());
+            model.createResource("").addProperty(prop, metadatum.getObject());
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            RDFDataMgr.write(out, model, Lang.TURTLE);
+            post.body(new ByteArrayInputStream(out.toByteArray()), "text/turtle");
         });
 
         FcrepoResponse response = post.perform();
@@ -245,7 +245,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
     @Override
     public List<Triple> getChildren(String contextUri) throws Exception {
         List<Triple> childrenTriples = new ArrayList<Triple>();
-        getRepositoryViewContext(contextUri).getChildren().forEach(childContext->{
+        getRepositoryViewContext(contextUri).getChildren().forEach(childContext -> {
             childrenTriples.add(childContext.getTriple());
         });
         return childrenTriples;
@@ -445,16 +445,16 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
         FcrepoClient client = buildClient();
 
-        URI transactionContextURI = new URI(repositoryView.getRootUri()+"fcr:tx");
+        URI transactionContextURI = new URI(repositoryView.getRootUri() + "fcr:tx");
 
         FcrepoResponse response = new PostBuilder(transactionContextURI, client).perform();
 
         String fedoraDate = response.getHeaderValue("Expires");
 
         DateTimeFormatter f = DateTimeFormatter.ofPattern("EEE, dd MMM uuuu kk:mm:ss z");
-        ZonedDateTime expirationDate = ZonedDateTime.parse(fedoraDate,f);
+        ZonedDateTime expirationDate = ZonedDateTime.parse(fedoraDate, f);
 
-        logger.debug("Transaction Start: {}",transactionContextURI);
+        logger.debug("Transaction Start: {}", transactionContextURI);
 
         return makeTransactionDetails(response.getLocation().toString(), DateTimeFormatter.ISO_ZONED_DATE_TIME.format(expirationDate));
     }
@@ -464,19 +464,18 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
         FcrepoClient client = buildClient();
 
-        URI transactionContextURI = new URI(tokenURI+"/fcr:tx");
-
+        URI transactionContextURI = new URI(tokenURI + "/fcr:tx");
 
         FcrepoResponse response = new PostBuilder(transactionContextURI, client).perform();
 
         String fedoraDate = response.getHeaderValue("Expires");
 
         DateTimeFormatter f = DateTimeFormatter.ofPattern("EEE, dd MMM uuuu kk:mm:ss z");
-        ZonedDateTime expirationDate = ZonedDateTime.parse(fedoraDate,f);
+        ZonedDateTime expirationDate = ZonedDateTime.parse(fedoraDate, f);
 
         String location = response.getLocation() != null ? response.getLocation().toString() : tokenURI;
 
-        logger.debug("Transaction Refresh: {}",transactionContextURI);
+        logger.debug("Transaction Refresh: {}", transactionContextURI);
 
         return makeTransactionDetails(location, DateTimeFormatter.ISO_ZONED_DATE_TIME.format(expirationDate));
     }
@@ -486,11 +485,11 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
         FcrepoClient client = buildClient();
 
-        URI transactionContextURI = new URI(tokenURI+"/fcr:tx/fcr:commit" );
+        URI transactionContextURI = new URI(tokenURI + "/fcr:tx/fcr:commit");
 
         FcrepoResponse response = new PostBuilder(transactionContextURI, client).perform();
 
-        logger.debug("Transaction Commited: {}",response.getStatusCode());
+        logger.debug("Transaction Commited: {}", response.getStatusCode());
     }
 
     @Override
@@ -498,11 +497,11 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
         FcrepoClient client = buildClient();
 
-        URI transactionContextURI = new URI(tokenURI+"/fcr:tx/fcr:rollback" );
+        URI transactionContextURI = new URI(tokenURI + "/fcr:tx/fcr:rollback");
 
         FcrepoResponse response = new PostBuilder(transactionContextURI, client).perform();
 
-        logger.debug("Transaction RollBack: {}",response.getStatusCode());
+        logger.debug("Transaction RollBack: {}", response.getStatusCode());
     }
 
     @Override
@@ -535,7 +534,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
         StringBuilder strbldr = new StringBuilder();
 
-        repositoryView.getSchemas().forEach(schema->{
+        repositoryView.getSchemas().forEach(schema -> {
             strbldr.append("PREFIX ").append(schema.getAbbreviation()).append(": <").append(schema.getNamespace()).append(">\n");
         });
 
@@ -627,13 +626,12 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
         });
 
-
         String rootFromContext = contextUri;
-        if(rootFromContext.contains("tx:")) {
+        if (rootFromContext.contains("tx:")) {
             rootFromContext = rootFromContext.replaceAll("tx:.*\\/", "");
         }
 
-        if(rootFromContext.equals(repositoryView.getRootUri())) {
+        if (rootFromContext.equals(repositoryView.getRootUri())) {
             repositoryViewContext.setName("Root");
         } else {
             repositoryViewContext.setName(contextUri);

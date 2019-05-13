@@ -3,7 +3,7 @@
         <button type="button" class="btn btn-success btn-lg" ng-click="verifyRepositroyViewConnection()" ng-disabled="disableVerify()">Verify Connection</button>
     </div>
     <div class="col-sm-5">
-        <div class="alert alert-info" ng-show="disableVerify()">{{repositoryView.type}} VRs do not support verification</div>        
+        <div class="alert alert-info" ng-show="disableVerify()">{{repositoryView.type}} Repository Views do not support verification.</div>
         <ul ng-if="(repositoryView && !disableVerify()) || verificationFinished" class="list-unstyled">
             <li ng-repeat="repositoryViewVerification in repositoryViewVerifications track by $index">
                 <span ng-if="repositoryViewVerifications[$index].status === 'PENDING'" class="glyphicon glyphicon-repeat spinning"></span> 

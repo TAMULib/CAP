@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 
 import edu.tamu.cap.model.repositoryviewcontext.TransactionDetails;
@@ -13,7 +12,7 @@ import edu.tamu.cap.service.FedoraService;
 
 public class RepositoryViewContext implements Serializable {
 
-    private static final long serialVersionUID = -8489156248122941988L;
+    private final static long serialVersionUID = -8489156248122941988L;
 
     private String name;
 
@@ -35,7 +34,7 @@ public class RepositoryViewContext implements Serializable {
 
     private Map<String, Boolean> features;
 
-	public RepositoryViewContext() {
+    public RepositoryViewContext() {
         super();
         properties = new ArrayList<Triple>();
         metadata = new ArrayList<Triple>();

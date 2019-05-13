@@ -1,12 +1,3 @@
-/*
- * AppUserRepo.java
- *
- * Version:
- *     $Id$
- *
- * Revisions:
- *     $Log$
- */
 package edu.tamu.cap.model.repo;
 
 import java.util.List;
@@ -25,7 +16,9 @@ import edu.tamu.weaver.auth.model.repo.AbstractWeaverUserRepo;
  */
 @Repository
 public interface UserRepo extends AbstractWeaverUserRepo<User>, UserRepoCustom {
-	public User findByEmail(String email);
 
-	public List<User> findByRole(int roleId);
+    public User findByEmail(String email);
+
+    public List<User> findByRole(int roleId);
+
 }

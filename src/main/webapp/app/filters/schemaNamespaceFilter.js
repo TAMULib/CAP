@@ -1,10 +1,10 @@
 cap.filter("schemaNamespace", function() {
-  return function(namespace, schemas) {
-    var output = namespace;
+  return function(predicate, schemas) {
+    var output = predicate;
 
     if (schemas) {
       for (var i = 0; i < schemas.length; i++) {
-        if (schemas[i].namespace === namespace) {
+        if (predicate.indexOf(schemas[i].namespace) >= 0) {
           output = schemas[i].name + " (" + schemas[i].abbreviation + ")";
           break;
         }
