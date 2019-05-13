@@ -22,16 +22,20 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.resource.ResourceUrlEncodingFilter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import edu.tamu.cap.model.User;
+import edu.tamu.cap.model.repo.RepositoryViewRepo;
 import edu.tamu.cap.model.repo.UserRepo;
+import edu.tamu.cap.resolver.RepositoryViewServiceArgumentResolver;
 import edu.tamu.weaver.auth.resolver.WeaverCredentialsArgumentResolver;
 import edu.tamu.weaver.auth.resolver.WeaverUserArgumentResolver;
 import edu.tamu.weaver.validation.resolver.WeaverValidatedModelMethodProcessor;
 
 @EnableWebMvc
 @Configuration
-@EntityScan(basePackages = { "edu.tamu.cap.model", "edu.tamu.weaver.wro.model" })
-@EnableJpaRepositories(basePackages = { "edu.tamu.cap.model.repo", "edu.tamu.weaver.wro.model.repo" })
+@EntityScan(basePackages = { "edu.tamu.cap.model" })
+@EnableJpaRepositories(basePackages = { "edu.tamu.cap.model.repo" })
 public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
 
     @Value("${app.ui.path}")
@@ -46,6 +50,12 @@ public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
     @Autowired
     private UserRepo userRepo;
 
+    @Autowired
+    private RepositoryViewRepo repositoryViewRepo;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Bean
     public ResourceUrlEncodingFilter resourceUrlEncodingFilter() {
         return new ResourceUrlEncodingFilter();
@@ -58,7 +68,7 @@ public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
 
     /**
      * Executor Service configuration.
-     * 
+     *
      * @return ExecutorSevice
      */
     @Bean(name = "executorService")
@@ -83,6 +93,7 @@ public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
         argumentResolvers.add(new WeaverValidatedModelMethodProcessor(converters));
         argumentResolvers.add(new WeaverCredentialsArgumentResolver());
         argumentResolvers.add(new WeaverUserArgumentResolver<User, UserRepo>(userRepo));
+        argumentResolvers.add(new RepositoryViewServiceArgumentResolver(repositoryViewRepo, objectMapper));
     }
 
     @Bean

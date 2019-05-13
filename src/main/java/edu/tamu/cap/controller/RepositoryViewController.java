@@ -1,7 +1,7 @@
 package edu.tamu.cap.controller;
 
-import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static edu.tamu.weaver.response.ApiStatus.ERROR;
+import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
@@ -37,8 +37,8 @@ import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 @RequestMapping("/repository-view")
 public class RepositoryViewController {
 
-	@Autowired
-	private RepositoryViewRepo repositoryViewRepo;
+    @Autowired
+    private RepositoryViewRepo repositoryViewRepo;
 
     @Autowired
     private EmailSender emailSender;
@@ -46,33 +46,33 @@ public class RepositoryViewController {
     @Autowired
     private EmailTemplateService emailTemplateService;
 
-	private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	@RequestMapping(method = RequestMethod.POST)
-  @PreAuthorize("hasRole('ADMIN')")
-  @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
-  public ApiResponse createRepositoryView(@RequestBody @WeaverValidatedModel RepositoryView repositoryView) {
-      logger.info("Creating Repository View:  " + repositoryView.getName() + " with schema " + repositoryView.getSchemas());
-      return new ApiResponse(SUCCESS, repositoryViewRepo.create(repositoryView));
-  }
+    @RequestMapping(method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ADMIN')")
+    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
+    public ApiResponse createRepositoryView(@RequestBody @WeaverValidatedModel RepositoryView repositoryView) {
+        logger.info("Creating Repository View:  " + repositoryView.getName() + " with schema " + repositoryView.getSchemas());
+        return new ApiResponse(SUCCESS, repositoryViewRepo.create(repositoryView));
+    }
 
-	@RequestMapping(method = RequestMethod.GET)
-	@PreAuthorize("hasRole('CURATOR')")
-	public ApiResponse allRepositoryViews(@WeaverUser User user) {
-	    List<RepositoryView> repositoryViews = new ArrayList<RepositoryView>();
-	    if (user.getRole().ordinal() == Role.ROLE_CURATOR.ordinal()) {
-	        repositoryViews = user.getRepositoryViews();
-	    } else {
-	        repositoryViews = repositoryViewRepo.findAll();
-	    }
-	    return new ApiResponse(SUCCESS, repositoryViews);
-	}
-
-	@RequestMapping(method = RequestMethod.PUT)
+    @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasRole('CURATOR')")
-	@WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
-	public ApiResponse updateRV(@WeaverUser User user, @RequestBody @WeaverValidatedModel RepositoryView repositoryView) {
-        if (checkRepositoryViewAccess(user,repositoryView.getId())) {
+    public ApiResponse allRepositoryViews(@WeaverUser User user) {
+        List<RepositoryView> repositoryViews = new ArrayList<RepositoryView>();
+        if (user.getRole().ordinal() == Role.ROLE_CURATOR.ordinal()) {
+            repositoryViews = user.getRepositoryViews();
+        } else {
+            repositoryViews = repositoryViewRepo.findAll();
+        }
+        return new ApiResponse(SUCCESS, repositoryViews);
+    }
+
+    @RequestMapping(method = RequestMethod.PUT)
+    @PreAuthorize("hasRole('CURATOR')")
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
+    public ApiResponse updateRV(@WeaverUser User user, @RequestBody @WeaverValidatedModel RepositoryView repositoryView) {
+        if (checkRepositoryViewAccess(user, repositoryView.getId())) {
             logger.info("Updating Repository View:  " + repositoryView.getName());
 
             List<User> originalCurators = new ArrayList<User>();
@@ -81,7 +81,7 @@ public class RepositoryViewController {
             RepositoryView updatedRepositoryView = repositoryViewRepo.update(repositoryView);
             List<User> updatedCurators = repositoryViewRepo.getOne(repositoryView.getId()).getCurators();
 
-            HashMap<String,String> emailData = new HashMap<String,String>();
+            HashMap<String, String> emailData = new HashMap<String, String>();
             emailData.put("REPOSITORY_VIEW", repositoryView.getName());
 
             for (User originalCurator : originalCurators) {
@@ -114,40 +114,40 @@ public class RepositoryViewController {
 
             return new ApiResponse(SUCCESS, updatedRepositoryView);
         } else {
-            return new ApiResponse(ERROR, "Unauthorized RepositoryView update attempt by: "+user.getId());
-        }
-	}
-
-	@RequestMapping(method = RequestMethod.DELETE)
-    @PreAuthorize("hasRole('ADMIN')")
-	@WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
-	public ApiResponse deleteRepositoryView(@RequestBody @WeaverValidatedModel RepositoryView repositoryView) {
-		logger.info("Deleting Repository View:  " + repositoryView.getName());
-		repositoryViewRepo.delete(repositoryView);
-		return new ApiResponse(SUCCESS);
-	}
-
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    @PreAuthorize("hasRole('CURATOR')")
-    public ApiResponse getRepositoryView(@WeaverUser User user, @PathVariable Long repositoryViewId) {
-        if (checkRepositoryViewAccess(user,repositoryViewId)) {
-            return new ApiResponse(SUCCESS, repositoryViewRepo.read(repositoryViewId));
-        } else {
-            return new ApiResponse(ERROR, "Unauthorized RepositoryView GET attempt by: "+user.getId());
+            return new ApiResponse(ERROR, "Unauthorized RepositoryView update attempt by: " + user.getId());
         }
     }
 
-	@RequestMapping(value = "/types", method = RequestMethod.GET)
-	@PreAuthorize("hasRole('CURATOR')")
-	public ApiResponse getRepositoryViewTypes() {
-		return new ApiResponse(SUCCESS, RepositoryViewType.getValues());
-	}
+    @RequestMapping(method = RequestMethod.DELETE)
+    @PreAuthorize("hasRole('ADMIN')")
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
+    public ApiResponse deleteRepositoryView(@RequestBody @WeaverValidatedModel RepositoryView repositoryView) {
+        logger.info("Deleting Repository View:  " + repositoryView.getName());
+        repositoryViewRepo.delete(repositoryView);
+        return new ApiResponse(SUCCESS);
+    }
 
-	protected boolean checkRepositoryViewAccess(User user, Long repositoryViewId) {
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('CURATOR')")
+    public ApiResponse getRepositoryView(@WeaverUser User user, @PathVariable Long repositoryViewId) {
+        if (checkRepositoryViewAccess(user, repositoryViewId)) {
+            return new ApiResponse(SUCCESS, repositoryViewRepo.read(repositoryViewId));
+        } else {
+            return new ApiResponse(ERROR, "Unauthorized RepositoryView GET attempt by: " + user.getId());
+        }
+    }
+
+    @RequestMapping(value = "/types", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('CURATOR')")
+    public ApiResponse getRepositoryViewTypes() {
+        return new ApiResponse(SUCCESS, RepositoryViewType.getValues());
+    }
+
+    protected boolean checkRepositoryViewAccess(User user, Long repositoryViewId) {
         return ((user.getRole().ordinal() == Role.ROLE_ADMIN.ordinal()) || (user.getRole().ordinal() == Role.ROLE_CURATOR.ordinal() && user.hasRepositoryView(repositoryViewId)));
-	}
+    }
 
-    private void sendEmail(String address, String templateName, HashMap<String,String> emailData) {
+    private void sendEmail(String address, String templateName, HashMap<String, String> emailData) {
         EmailTemplate template = emailTemplateService.buildEmail(templateName, emailData);
 
         try {

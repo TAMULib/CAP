@@ -1,15 +1,20 @@
 package edu.tamu.cap.model;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
 public class Property {
-    
+
+    @Column(nullable = false)
     private String uri;
-    
+
+    @Column(nullable = false)
     private String label;
-    
-    public Property() {}
+
+    public Property() {
+
+    }
 
     public String getUri() {
         return uri;
@@ -26,5 +31,5 @@ public class Property {
     public void setLabel(String label) {
         this.label = label;
     }
-    
+
 }

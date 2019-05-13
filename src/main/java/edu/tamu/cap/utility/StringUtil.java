@@ -1,4 +1,4 @@
-package edu.tamu.cap.util;
+package edu.tamu.cap.utility;
 
 import org.apache.jena.ext.com.google.common.collect.ImmutableMap;
 
@@ -20,7 +20,6 @@ public class StringUtil {
         .build();
 
     public static String escape(String string) {
-
         StringBuffer bufOutput = new StringBuffer(string);
         for (int i = 0; i < bufOutput.length(); i++) {
             String replacement = (String) SPARQL_ESCAPE_SEARCH_REPLACEMENTS.get("" + bufOutput.charAt(i));
@@ -35,7 +34,6 @@ public class StringUtil {
     }
 
     public static String removeQuotes(String string) {
-
         if((string.startsWith("'") && string.endsWith("'")) || (string.startsWith("\"") && string.endsWith("\""))) {
             string = string.substring(1);
             string = string.substring(0, string.length() - 1);

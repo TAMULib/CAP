@@ -1,4 +1,4 @@
-cap.directive("repositoryViewSection", function($controller, $timeout, RepositoryViewSectionService) {
+cap.directive("repositoryViewSection", function($controller, RepositoryViewSectionService) {
     return {
         templateUrl: "views/directives/repositoryViewSection.html",
         restrict: "E",
@@ -15,7 +15,7 @@ cap.directive("repositoryViewSection", function($controller, $timeout, Repositor
         },
         link: function($scope, elem, attr, ctrl, transclude) {
 
-          angular.extend(this, $controller('CoreAdminController', {
+          angular.extend(this, $controller('AbstractAppController', {
               $scope: $scope
           }));
 

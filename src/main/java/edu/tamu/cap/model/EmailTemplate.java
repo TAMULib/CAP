@@ -8,17 +8,16 @@ public class EmailTemplate {
 
     private String message;
 
-    public EmailTemplate() {}
+    public EmailTemplate() {
+
+    }
 
     /**
      * Create a new EmailTemplate
      *
-     * @param name
-     *            The new template's name.
-     * @param subject
-     *            The new template's subject.
-     * @param message
-     *            The new template's message
+     * @param name    The new template's name.
+     * @param subject The new template's subject.
+     * @param message The new template's message
      */
     public EmailTemplate(String name, String subject, String message) {
         setName(name);
@@ -34,8 +33,7 @@ public class EmailTemplate {
     }
 
     /**
-     * @param name
-     *            the name to set
+     * @param name the name to set
      */
     public void setName(String name) {
         this.name = name;
@@ -49,8 +47,7 @@ public class EmailTemplate {
     }
 
     /**
-     * @param subject
-     *            the subject to set
+     * @param subject the subject to set
      */
     public void setSubject(String subject) {
         this.subject = subject;
@@ -64,8 +61,7 @@ public class EmailTemplate {
     }
 
     /**
-     * @param message
-     *            the message to set
+     * @param message the message to set
      */
     public void setMessage(String message) {
         this.message = message;

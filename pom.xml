@@ -15,7 +15,7 @@
   <parent>
     <groupId>edu.tamu.weaver</groupId>
     <artifactId>webservice-parent</artifactId>
-    <version>2.x-MESSAGING-MODULE-SNAPSHOT</version>
+    <version>2.x-WRO-INIT-SNAPSHOT</version>
   </parent>
 
   <properties>
@@ -31,37 +31,37 @@
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>auth</artifactId>
-      <version>2.x-MESSAGING-MODULE-SNAPSHOT</version>
+      <version>2.x-WRO-INIT-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>token-provider</artifactId>
-      <version>2.x-MESSAGING-MODULE-SNAPSHOT</version>
+      <version>2.x-WRO-INIT-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>validation</artifactId>
-      <version>2.x-MESSAGING-MODULE-SNAPSHOT</version>
+      <version>2.x-WRO-INIT-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>wro</artifactId>
-      <version>2.x-MESSAGING-MODULE-SNAPSHOT</version>
+      <version>2.x-WRO-INIT-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>reporting</artifactId>
-      <version>2.x-MESSAGING-MODULE-SNAPSHOT</version>
+      <version>2.x-WRO-INIT-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>messaging</artifactId>
-      <version>2.x-MESSAGING-MODULE-SNAPSHOT</version>
+      <version>2.x-WRO-INIT-SNAPSHOT</version>
     </dependency>
 
     <dependency>

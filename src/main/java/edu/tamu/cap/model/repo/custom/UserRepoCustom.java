@@ -13,8 +13,7 @@ public interface UserRepoCustom {
     /**
      * Creates application user based on uin in the repository
      *
-     * @param uin
-     *            String
+     * @param uin String
      */
     public User create(String uin);
 

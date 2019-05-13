@@ -3,14 +3,8 @@ package edu.tamu.cap.controller;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
@@ -38,7 +32,6 @@ import edu.tamu.cap.model.User;
 import edu.tamu.cap.model.repo.RepositoryViewRepo;
 import edu.tamu.cap.model.repo.UserRepo;
 import edu.tamu.cap.service.RepositoryViewType;
-import edu.tamu.cap.utility.ConstraintDescriptionsHelper;
 import edu.tamu.cap.utility.MockUserUtility;
 import edu.tamu.weaver.auth.model.Credentials;
 
@@ -49,7 +42,7 @@ import edu.tamu.weaver.auth.model.Credentials;
 
 public class RepositoryViewControllerTest {
 
-    private static final ConstraintDescriptionsHelper describeRepositoryView = new ConstraintDescriptionsHelper(RepositoryView.class);
+//    private static final ConstraintDescriptionsHelper describeRepositoryView = new ConstraintDescriptionsHelper(RepositoryView.class);
 
     private static final String REPOSITORY_VIEW_URI = "/repository-view";
 
