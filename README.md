@@ -13,7 +13,7 @@ CAP boasts an intuitive user interface, but some much needed user documentation 
 ### Developer Documentation
 
 - [Contributors Documentation](https://github.com/TAMULib/Cap/blob/master/CONTRIBUTING.md)
-- [Deployment Documentation](https://github.com/TAMULib/Cap/blob/master/DPELOYING.md)
+- [Deployment Documentation](https://github.com/TAMULib/Cap/blob/master/DEPLOYING.md)
 - [API Documentation](https://tamulib.github.io/CAP)
 
 Please feel free to file any issues concerning CAP to the issues section of the repository. Any questions concerning cap can be directed to [helpdesk@library.tamu.edu]()
