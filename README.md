@@ -8,7 +8,7 @@ Currently CAP has support for Fedora 4x through use of the [fcrepo-java-client](
 
 ### User Documentation
 
-CAP boasts an intuitive user interface, but some much needed user documentation is currently a work in progress.
+CAP user documentation can be found in [this repos wiki](https://github.com/TAMULib/CAP/wiki/User-Documentation).
 
 ### Developer Documentation
 
