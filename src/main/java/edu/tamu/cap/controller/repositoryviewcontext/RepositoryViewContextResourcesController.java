@@ -19,19 +19,19 @@ import edu.tamu.weaver.response.ApiResponse;
 @RestController
 @RequestMapping("repository-view-context/{type}/{repositoryViewId}/resource")
 public class RepositoryViewContextResourcesController {
-    
+
     @RequestMapping(method = POST)
     @PreAuthorize("hasRole('USER')")
     public ApiResponse createResource(RepositoryViewService<?> repositoryViewService, @Param("contextUri") String contextUri, @RequestParam("file") MultipartFile file) throws Exception {
         return new ApiResponse(SUCCESS, repositoryViewService.createResource(contextUri, file));
     }
-    
+
     @RequestMapping(method = GET)
     @PreAuthorize("hasRole('USER')")
     public ApiResponse getResources(RepositoryViewService<?> repositoryViewService, @Param("contextUri") String contextUri) throws Exception {
         return new ApiResponse(SUCCESS, repositoryViewService.getResource(contextUri));
     }
-    
+
     @RequestMapping(method = DELETE)
     @PreAuthorize("hasRole('USER')")
     public ApiResponse deleteResources(RepositoryViewService<?> repositoryViewService, @Param("contextUri") String contextUri) throws Exception {

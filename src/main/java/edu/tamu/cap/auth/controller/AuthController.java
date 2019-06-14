@@ -73,15 +73,14 @@ public class AuthController extends WeaverAuthController {
                 return new ApiResponse(INVALID, invalidEmail);
             }
 
-            HashMap<String,String> emailData = new HashMap<String,String>();
+            HashMap<String, String> emailData = new HashMap<String, String>();
             try {
-				emailData.put("REGISTRATION_URL", url + "/register?token=" + cryptoService.generateGenericToken(email, EMAIL_VERIFICATION_TYPE));
-			} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException
-					| BadPaddingException e) {
+                emailData.put("REGISTRATION_URL", url + "/register?token=" + cryptoService.generateGenericToken(email, EMAIL_VERIFICATION_TYPE));
+            } catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException e) {
                 logger.debug("Unable to generate token! " + email);
                 return new ApiResponse(ERROR, "Unable to generate token! " + email);
-			}
-            EmailTemplate finalEmail = emailTemplateService.buildEmail("user_registration",emailData);
+            }
+            EmailTemplate finalEmail = emailTemplateService.buildEmail("user_registration", emailData);
 
             try {
                 emailSender.sendEmail(email, finalEmail.getSubject(), finalEmail.getMessage());
@@ -139,7 +138,7 @@ public class AuthController extends WeaverAuthController {
 
         User user = appUserCredentialsService.createUserFromRegistration(email, firstName, lastName, cryptoService.encodePassword(password));
 
-        HashMap<String,String> confirmationEmailData = new HashMap<String,String>();
+        HashMap<String, String> confirmationEmailData = new HashMap<String, String>();
         EmailTemplate confirmationEmail = emailTemplateService.buildEmail("user_registration_confirmed", confirmationEmailData);
 
         try {

@@ -4,20 +4,20 @@ import java.io.Serializable;
 
 public class Version implements Serializable {
 
+    private final static long serialVersionUID = 6125496651739394381L;
+
     private String name;
 
     private String time;
 
     private Triple triple;
 
-    private static final long serialVersionUID = 6125496651739394381L;
-
     public Version() {
         super();
     }
 
     public Version(String name, String time, Triple triple) {
-        super();
+        this();
         setName(name);
         setTime(time);
         setTriple(triple);

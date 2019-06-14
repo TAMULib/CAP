@@ -7,7 +7,7 @@ var appConfig = {
 
     'authStrategies': ['emailRegistration'],
 
-    'authService': window.location.protocol + '//' + window.location.host + window.location.base+'/auth',
+    'authService': window.location.protocol + '//' + window.location.host + window.location.base + '/auth',
     'webService': window.location.protocol + '//' + window.location.host + window.location.base,
 
     'storageType': 'session',
@@ -25,8 +25,8 @@ var appConfig = {
     /*
       Determines the type of connection stomp will attempt to make with the service.
       TYPES:  websocket, xhr-streaming, xdr-streaming, eventsource, iframe-eventsource,
-          htmlfile, iframe-htmlfile, xhr-polling, xdr-polling, iframe-xhr-polling,
-          jsonp-polling
+              htmlfile, iframe-htmlfile, xhr-polling, xdr-polling, iframe-xhr-polling,
+              jsonp-polling
     */
     'sockJsConnectionType': ['websocket', 'xhr-polling'],
 
@@ -38,14 +38,15 @@ var appConfig = {
     'messagingEnabled': false,
 
     'contentMap': {
-      "image": ["image/jpeg","image/png","image/gif"],
+      "image": ["image/jpeg", "image/png", "image/gif"],
       "plaintext": ["text/plain", "text/html", "text/css", "text/javascript", "text/csv", "text/markdown", "text/calendar", "text/xml",  "application/xml", "application/json"],
-      "seadragon": ["image/jp2","image/tiff"],
+      "seadragon": ["image/jp2", "image/tiff"],
       "pdf": ["application/pdf"]
     },
 
-    'cantaloupeBaseUrl': 'https://api-dev.library.tamu.edu/iiif/2/',
     'fedoraPath': '/fcrepo/rest/',
+
+    'cantaloupeBaseUrl': 'https://api-dev.library.tamu.edu/iiif/2/',
 
     'iiifServiceUrl': 'https://api-dev.library.tamu.edu/iiif-service/'
 

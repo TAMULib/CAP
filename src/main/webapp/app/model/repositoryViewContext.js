@@ -1,4 +1,4 @@
-cap.model("RepositoryViewContext", function ($q, $filter, $interval, $location, $routeParams, $cookies, WsApi, UserService, HttpMethodVerbs, StorageService) {
+cap.model("RepositoryViewContext", function ($q, $filter, HttpMethodVerbs) {
   return function RepositoryViewContext() {
 
     var repositoryViewContext = this;
@@ -16,10 +16,6 @@ cap.model("RepositoryViewContext", function ($q, $filter, $interval, $location, 
           contextUri: shortenContextUri(contextUri)
         }
       });
-    };
-
-    var removeQuotes = function (value) {
-      return $filter('removeQuotes')(value);
     };
 
     repositoryViewContext.before(function () {
@@ -349,6 +345,6 @@ cap.model("RepositoryViewContext", function ($q, $filter, $interval, $location, 
       return queryHelp;
     };
 
-    return this;
+    return repositoryViewContext;
   };
 });

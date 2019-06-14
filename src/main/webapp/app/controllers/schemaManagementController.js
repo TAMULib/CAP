@@ -7,7 +7,6 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
   $scope.schemas = SchemaRepo.getAll();
 
   $scope.schemaToCreate = SchemaRepo.getScaffold();
-  $scope.schemaToEdit = SchemaRepo.getScaffold();
   $scope.schemaToDelete = {};
 
   $scope.schemaForms = {
@@ -17,7 +16,7 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
 
   $scope.submitClicked = false;
 
-  $scope.resetCreateSchemaPropertyList = true;
+  $scope.resetSchemaPropertyList = true;
 
   $scope.resetSchemaForms = function() {
     SchemaRepo.clearValidationResults();
@@ -44,9 +43,9 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
   $scope.cancelCreateSchema = function() {
     angular.extend($scope.schemaToCreate, SchemaRepo.getScaffold());
     $scope.resetSchemaForms();
-    $scope.resetCreateSchemaPropertyList = false;
+    $scope.resetSchemaPropertyList = false;
     $timeout(function(){
-      $scope.resetCreateSchemaPropertyList = true;
+      $scope.resetSchemaPropertyList = true;
     });
   };
 
@@ -63,10 +62,14 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
     });
   };
 
-  $scope.cancelEditSchema = function(schema) {
+  $scope.cancelEditSchema = function() {
     $scope.schemaToEdit.refresh();
-    $scope.schemaToEdit = SchemaRepo.getScaffold();
+    delete $scope.schemaToEdit;
     $scope.resetSchemaForms();
+    $scope.resetSchemaPropertyList = false;
+    $timeout(function(){
+      $scope.resetSchemaPropertyList = true;
+    });
   };
 
   $scope.confirmDeleteSchema = function(schema) {
@@ -74,7 +77,7 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
     $scope.openModal('#schemaDeleteModal');
   };
 
-  $scope.cancelDeleteSchema = function(schema) {
+  $scope.cancelDeleteSchema = function() {
     $scope.schemaToDelete = {};
     $scope.closeModal();
   };

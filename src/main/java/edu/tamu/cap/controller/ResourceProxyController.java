@@ -23,8 +23,7 @@ public class ResourceProxyController {
     RepositoryViewRepo repositoryViewRepo;
 
     /**
-     * Streaming proxy for resources contained in RepositoryViews associated with a Cap instance
-     * Serves PDFs inline instead of as an attachment, acts as a pass-through for other types
+     * Streaming proxy for resources contained in RepositoryViews associated with a Cap instance Serves PDFs inline instead of as an attachment, acts as a pass-through for other types
      *
      * @param String uri
      *
@@ -35,7 +34,7 @@ public class ResourceProxyController {
         try {
             sourceURL = new URL(uri);
 
-            //only proxy for domains associated with existing RepositoryViews
+            // only proxy for domains associated with existing RepositoryViews
             if (repositoryViewRepo.findByRootUriContainingIgnoreCase(sourceURL.getHost()).size() > 0) {
                 byte[] sourceBytes = new byte[1024];
                 int sourceLength;
@@ -45,9 +44,9 @@ public class ResourceProxyController {
 
                     response.setContentType(connection.getContentType());
 
-                    //we want to display pdfs inline, not download
+                    // we want to display pdfs inline, not download
                     if (connection.getContentType().equalsIgnoreCase("application/pdf")) {
-                        response.setHeader("Content-Disposition", connection.getHeaderField("Content-Disposition").replace("attachment","inline"));
+                        response.setHeader("Content-Disposition", connection.getHeaderField("Content-Disposition").replace("attachment", "inline"));
                     } else {
                         response.setHeader("Content-Disposition", connection.getHeaderField("Content-Disposition"));
                     }
@@ -69,14 +68,14 @@ public class ResourceProxyController {
                 }
             } else {
                 try {
-                    response.sendError(HttpServletResponse.SC_FORBIDDEN,"Unknown Repository");
+                    response.sendError(HttpServletResponse.SC_FORBIDDEN, "Unknown Repository");
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
             }
         } catch (MalformedURLException e2) {
             try {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST,"Bad URI");
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad URI");
                 e2.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();

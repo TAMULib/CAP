@@ -46,12 +46,11 @@
               </li>
             </ul>
           </div>
-          <div ng-if="!isAnonymous()" class="col-md-12" ng-controller="AdminController">
+          <div ng-if="!isAnonymous()" class="col-md-12">
             <div class="row">
               <nav class="pull-right">
                 <div class="dropdown">
                   <span class="glyphicon glyphicon-user"></span>
-
                   <a class="dropdown-toggle clickable" data-toggle="dropdown" aria-expanded="false">
                     <username></username> <span class="caret"></span>
                   </a>
@@ -59,7 +58,7 @@
                     <li ng-if="isAdmin()"><a href="users">Manage Users</a></li>
                     <li ng-if="isAdmin() || isAssuming() == 'true'" role="presentation" class="divider"></li>
                     <li ng-if="isAdmin() || isAssuming() == 'true'" role="presentation" class="dropdown-header">Admin Actions header</li>
-                    <li ng-if="isAdmin() || isAssuming() == 'true'">
+                    <li ng-if="isAdmin() || isAssuming() == 'true'" ng-controller="AdminController">
                       <a href ng-if="isAssuming() == 'false'" data-toggle="modal" ng-click="openModal('#assumeUserModal')">{{assumedControl.button}}</a>
                       <a href ng-if="isAssuming() == 'true'" ng-click="assumeUser(assume)">{{assumedControl.button}}</a>
                     </li>
@@ -237,6 +236,7 @@
   <script src="filters/containedInFilter.js"></script>
   <script src="filters/propertyValueFilter.js"></script>
   <script src="filters/cantaloupeUrlFilter.js"></script>
+  <script src="filters/metadataByNamespaceFilter.js"></script>
   <script src="filters/schemaNamespaceFilter.js"></script>
 
   <!-- Controllers -->
