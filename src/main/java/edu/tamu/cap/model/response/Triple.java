@@ -62,11 +62,7 @@ public class Triple implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder stngBldr = new StringBuilder();
-        stngBldr.append("<").append(subject).append("> ");
-        stngBldr.append("<").append(predicate).append("> ");
-        stngBldr.append(object);
-        return stngBldr.toString();
+        return String.format("<%s> <%s> %s", subject, predicate, object);
     }
 
 }
