@@ -15,13 +15,13 @@
                 Status:
             </dt>
             <dd>
-                {{fixityReport.status | removeQuotes }}
+                {{fixityReport.status | unescapeLiteral}}
             </dd>
             <dt>
                 Message Digest:
             </dt>
             <dd>
-                {{fixityReport.messageDigest}} 
+                {{fixityReport.messageDigest}}
                 <button class="btn btn-default btn-sm" ng-click="copyToClipboard(fixityReport.messageDigest, 'fixity')" uib-tooltip="Copied!" tooltip-trigger="'none'" tooltip-is-open="fixityCopied === true">
                     <span class="glyphicon glyphicon-copy" style="margin-left: 0px;"></span>
                 </button>
@@ -30,11 +30,11 @@
                 Size:
             </dt>
             <dd>
-                {{fixityReport.size.split("^^")[0] | removeQuotes }}
+                {{fixityReport.size.split("^^")[0] | unescapeLiteral}}
             </dd>
         </dl>
     </div>
-    
+
 </div>
 
 </div>

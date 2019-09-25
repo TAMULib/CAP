@@ -92,7 +92,7 @@ cap.directive("repositoryViewSection", function($controller, RepositoryViewSecti
             });
           };
 
-          $scope.editItem = function(argObj,editValue) {
+          $scope.editItem = function(argObj) {
             $scope.editWorking = true;
             $scope.editAction(argObj).then(function() {
               $scope.editWorking = false;

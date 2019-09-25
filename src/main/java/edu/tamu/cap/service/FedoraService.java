@@ -23,7 +23,6 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.NodeIterator;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.update.UpdateFactory;
@@ -55,7 +54,7 @@ import edu.tamu.cap.model.response.FixityReport;
 import edu.tamu.cap.model.response.RepositoryViewContext;
 import edu.tamu.cap.model.response.Triple;
 import edu.tamu.cap.model.response.Version;
-import edu.tamu.cap.utility.StringUtil;
+import edu.tamu.cap.utility.TripleUtil;
 
 @Service("Fedora")
 public class FedoraService implements RepositoryViewService<Model>, VersioningRepositoryViewService<Model>, VerifyingRepositoryViewService<Model>, TransactingRepositoryViewService<Model>, QueryableRepositoryViewService<Model>, FixityRepositoryViewService<Model> {
@@ -256,6 +255,9 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
         String longContextUri = buildLongContextUri(contextUri);
         triple.setSubject(buildLongContextUri(triple.getSubject()));
 
+        // validate the triple.
+        TripleUtil.toJenaTriple(triple);
+
         FcrepoClient client = buildClient();
         PatchBuilder patch = new PatchBuilder(new URI(longContextUri + "/fcr:metadata"), client);
         String sparql = "INSERT { " + triple.toString() + " . } WHERE {}";
@@ -280,11 +282,15 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
     @Override
     public RepositoryViewContext updateMetadata(String contextUri, Triple originalTriple, String newValue) throws Exception {
         String longContextUri = buildLongContextUri(contextUri);
-
         StringBuilder stngBldr = new StringBuilder();
 
-        stngBldr.append("DELETE { <> <").append(originalTriple.getPredicate()).append("> '").append(StringUtil.escape(StringUtil.removeQuotes(originalTriple.getObject()))).append("' } ");
-        stngBldr.append("INSERT { <> <").append(originalTriple.getPredicate()).append("> '").append(StringUtil.escape(StringUtil.removeQuotes(newValue))).append("' } ");
+        // validate both original and new triple object value.
+        Triple newTriple = new Triple(originalTriple.getSubject(), originalTriple.getPredicate(), newValue);
+        TripleUtil.toJenaTriple(originalTriple);
+        TripleUtil.toJenaTriple(newTriple);
+
+        stngBldr.append("DELETE { <> <").append(originalTriple.getPredicate()).append("> ").append(originalTriple.getObject()).append(" } ");
+        stngBldr.append("INSERT { <> <").append(originalTriple.getPredicate()).append("> ").append(newValue).append(" } ");
         stngBldr.append("WHERE { }");
         String sparql = stngBldr.toString();
 
@@ -294,8 +300,8 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
         FcrepoResponse response = patch.perform();
         checkFedoraResult(response);
-        URI location = response.getLocation();
-        logger.debug("Metadata update status and location: {}, {}", response.getStatusCode(), location);
+        logger.debug("Metadata update status and location: {}, {}", response.getStatusCode(), response.getLocation());
+
         return getRepositoryViewContext(contextUri);
     }
 
@@ -303,6 +309,9 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
     public RepositoryViewContext deleteMetadata(String contextUri, Triple triple) throws Exception {
         String longContextUri = buildLongContextUri(contextUri);
         triple.setSubject(buildLongContextUri(triple.getSubject()));
+
+        // validate the triple.
+        TripleUtil.toJenaTriple(triple);
 
         logger.debug("Attempting to delete");
 
@@ -554,7 +563,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
         // System.out.println("\n::\n");
         model.listStatements().forEachRemaining(statement -> {
 
-            Triple triple = craftTriple(statement);
+            Triple triple = TripleUtil.fromJenaTriple(statement.asTriple());
 
             // System.out.println();
             // System.out.println(" SUBJECT: " + triple.getSubject());
@@ -661,13 +670,6 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
     private FcrepoClient buildClient() {
         return (repositoryView.getUsername() == null || repositoryView.getPassword() == null) ? FcrepoClient.client().build() : FcrepoClient.client().credentials(repositoryView.getUsername(), repositoryView.getPassword()).build();
-    }
-
-    private Triple craftTriple(Statement statement) {
-        String subject = statement.asTriple().getSubject().toString();
-        String predicate = statement.asTriple().getPredicate().toString();
-        String object = statement.asTriple().getObject().toString();
-        return Triple.of(subject, predicate, object);
     }
 
     private Optional<String> getLiteralForProperty(Model model, Property property) {
