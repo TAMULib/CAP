@@ -49,9 +49,9 @@ public final class FedoraServiceTest {
 
     private final static Property TEST_PREDICATE = RDF.type;
 
-    private final static String TEST_OBJECT_1 = "TestObject1";
+    private final static String TEST_OBJECT_1 = "\"TestObject1\"";
 
-    private final static String TEST_OBJECT_2 = "TestObject2";
+    private final static String TEST_OBJECT_2 = "\"\\\"TestObject2\\\"\"";
 
     private HttpServletRequest request;
 
