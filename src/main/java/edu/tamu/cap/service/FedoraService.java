@@ -54,7 +54,6 @@ import edu.tamu.cap.model.response.FixityReport;
 import edu.tamu.cap.model.response.RepositoryViewContext;
 import edu.tamu.cap.model.response.Triple;
 import edu.tamu.cap.model.response.Version;
-import edu.tamu.cap.utility.TripleUtil;
 
 @Service("Fedora")
 public class FedoraService implements RepositoryViewService<Model>, VersioningRepositoryViewService<Model>, VerifyingRepositoryViewService<Model>, TransactingRepositoryViewService<Model>, QueryableRepositoryViewService<Model>, FixityRepositoryViewService<Model> {
@@ -254,9 +253,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
     public RepositoryViewContext createMetadata(String contextUri, Triple triple) throws Exception {
         String longContextUri = buildLongContextUri(contextUri);
         triple.setSubject(buildLongContextUri(triple.getSubject()));
-
-        // validate the triple.
-        TripleUtil.toJenaTriple(triple);
+        Triple.validateTriple(triple);
 
         FcrepoClient client = buildClient();
         PatchBuilder patch = new PatchBuilder(new URI(longContextUri + "/fcr:metadata"), client);
@@ -284,10 +281,9 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
         String longContextUri = buildLongContextUri(contextUri);
         StringBuilder stngBldr = new StringBuilder();
 
-        // validate both original and new triple object value.
         Triple newTriple = new Triple(originalTriple.getSubject(), originalTriple.getPredicate(), newValue);
-        TripleUtil.toJenaTriple(originalTriple);
-        TripleUtil.toJenaTriple(newTriple);
+        Triple.validateTriple(originalTriple);
+        Triple.validateTriple(newTriple);
 
         stngBldr.append("DELETE { <> <").append(originalTriple.getPredicate()).append("> ").append(originalTriple.getObject()).append(" } ");
         stngBldr.append("INSERT { <> <").append(originalTriple.getPredicate()).append("> ").append(newValue).append(" } ");
@@ -309,9 +305,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
     public RepositoryViewContext deleteMetadata(String contextUri, Triple triple) throws Exception {
         String longContextUri = buildLongContextUri(contextUri);
         triple.setSubject(buildLongContextUri(triple.getSubject()));
-
-        // validate the triple.
-        TripleUtil.toJenaTriple(triple);
+        Triple.validateTriple(triple);
 
         logger.debug("Attempting to delete");
 
@@ -563,7 +557,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
         // System.out.println("\n::\n");
         model.listStatements().forEachRemaining(statement -> {
 
-            Triple triple = TripleUtil.fromJenaTriple(statement.asTriple());
+            Triple triple = Triple.fromJenaTriple(statement.asTriple());
 
             // System.out.println();
             // System.out.println(" SUBJECT: " + triple.getSubject());
