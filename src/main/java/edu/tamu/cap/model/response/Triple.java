@@ -66,10 +66,6 @@ public class Triple implements Serializable {
         return new Triple(tripleMap.get("subject"), tripleMap.get("predicate"), tripleMap.get("object"));
     }
 
-    public static Triple of(org.apache.jena.graph.Triple asTriple) {
-        return Triple.of(asTriple.getSubject().toString(true), asTriple.getPredicate().toString(true), asTriple.getObject().toString(true));
-    }
-
     /**
      * Convert an Apache Jena Triple into a Cap Triple.
      *
@@ -100,21 +96,21 @@ public class Triple implements Serializable {
      *
      * @throws InvalidTripleException
      */
-    public static org.apache.jena.graph.Triple toJenaTriple(Triple triple) throws InvalidTripleException {
+    public org.apache.jena.graph.Triple toJenaTriple() throws InvalidTripleException {
         Model model =  ModelFactory.createDefaultModel();
-        InputStream stream = new ByteArrayInputStream(triple.toString().getBytes(StandardCharsets.UTF_8));
+        InputStream stream = new ByteArrayInputStream(toString().getBytes(StandardCharsets.UTF_8));
         RDFDataMgr.read(model, stream, RDFLanguages.N3);
         org.apache.jena.graph.Triple jenaTriple = model.getGraph().find().next();
 
-        if (!jenaTriple.getSubject().toString(true).equals(triple.getSubject())) {
+        if (!jenaTriple.getSubject().toString(true).equals(getSubject())) {
             throw new InvalidTripleException("Triple Subject is invalid.");
         }
 
-        if (!jenaTriple.getPredicate().toString(true).equals(triple.getPredicate())) {
+        if (!jenaTriple.getPredicate().toString(true).equals(getPredicate())) {
             throw new InvalidTripleException("Triple Predicate is invalid.");
         }
 
-        if (!jenaTriple.getObject().toString(true).equals(triple.getObject())) {
+        if (!jenaTriple.getObject().toString(true).equals(getObject())) {
             throw new InvalidTripleException("Triple Object is invalid.");
         }
 
@@ -129,8 +125,8 @@ public class Triple implements Serializable {
      *
      * @throws InvalidTripleException
      */
-    public static void validateTriple(Triple triple) throws InvalidTripleException {
-        Triple.toJenaTriple(triple);
+    public void validate() throws InvalidTripleException {
+        toJenaTriple();
     }
 
     @Override

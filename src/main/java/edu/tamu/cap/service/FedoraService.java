@@ -253,7 +253,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
     public RepositoryViewContext createMetadata(String contextUri, Triple triple) throws Exception {
         String longContextUri = buildLongContextUri(contextUri);
         triple.setSubject(buildLongContextUri(triple.getSubject()));
-        Triple.validateTriple(triple);
+        triple.validate();
 
         FcrepoClient client = buildClient();
         PatchBuilder patch = new PatchBuilder(new URI(longContextUri + "/fcr:metadata"), client);
@@ -282,8 +282,8 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
         StringBuilder stngBldr = new StringBuilder();
 
         Triple newTriple = new Triple(originalTriple.getSubject(), originalTriple.getPredicate(), newValue);
-        Triple.validateTriple(originalTriple);
-        Triple.validateTriple(newTriple);
+        originalTriple.validate();
+        newTriple.validate();
 
         stngBldr.append("DELETE { <> <").append(originalTriple.getPredicate()).append("> ").append(originalTriple.getObject()).append(" } ");
         stngBldr.append("INSERT { <> <").append(originalTriple.getPredicate()).append("> ").append(newValue).append(" } ");
@@ -305,7 +305,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
     public RepositoryViewContext deleteMetadata(String contextUri, Triple triple) throws Exception {
         String longContextUri = buildLongContextUri(contextUri);
         triple.setSubject(buildLongContextUri(triple.getSubject()));
-        Triple.validateTriple(triple);
+        triple.validate();
 
         logger.debug("Attempting to delete");
 
