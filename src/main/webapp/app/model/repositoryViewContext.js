@@ -249,15 +249,11 @@ cap.model("RepositoryViewContext", function ($q, $filter, HttpMethodVerbs) {
     repositoryViewContext.updateMetadatum = function (metadataTriple, newValue) {
       newValue = $filter("escapeLiteral")(newValue);
 
-      // convert backslashes for HTTP URL parameter.
-      var regex = /\\/g;
-      newValue = newValue.replace(regex, "%5C");
-
       var updatePromise = repositoryViewContext.repositoryView.performRequest(repositoryViewContext.getMapping().metadata, {
         method: HttpMethodVerbs.PUT,
         query: {
           contextUri: shortenContextUri(repositoryViewContext.uri),
-          newValue: newValue
+          newValue: encodeURIComponent(newValue)
         },
         data: metadataTriple
       });
