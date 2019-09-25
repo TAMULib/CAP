@@ -1,9 +1,17 @@
 package edu.tamu.cap.model.response;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-import edu.tamu.cap.utility.StringUtil;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.RDFLanguages;
+
+import edu.tamu.cap.exceptions.InvalidTripleException;
 
 public class Triple implements Serializable {
 
@@ -58,21 +66,72 @@ public class Triple implements Serializable {
         return new Triple(tripleMap.get("subject"), tripleMap.get("predicate"), tripleMap.get("object"));
     }
 
-    public static Triple of(org.apache.jena.graph.Triple asTriple) {
-        return Triple.of(asTriple.getSubject().toString(), asTriple.getPredicate().toString(), asTriple.getObject().toString());
+    /**
+     * Convert an Apache Jena Triple into a Cap Triple.
+     *
+     * @param jenaTriple
+     *   The Apache Jena Triple to convert from.
+     *
+     * @return
+     *   The generated Cap Triple.
+     */
+    public static Triple fromJenaTriple(org.apache.jena.graph.Triple jenaTriple) {
+        String subject = jenaTriple.getSubject().toString(true);
+        String predicate = jenaTriple.getPredicate().toString(true);
+        String object = jenaTriple.getObject().toString(true);
+        return Triple.of(subject, predicate, object);
+    }
+
+    /**
+     * Convert and validate a Cap Triple to an Apache Jena Triple.
+     *
+     * This uses the triple language N3 because it fully complies with the RDF specification in regards to a Triple and UTF-8.
+     * When validation fails, InvalidTripleException is thrown.
+     *
+     * @param triple
+     *   The triple to validate that it has the proper format and is properly escaped.
+     *
+     * @return
+     *   The generated triple.
+     *
+     * @throws InvalidTripleException
+     */
+    public org.apache.jena.graph.Triple toJenaTriple() throws InvalidTripleException {
+        Model model =  ModelFactory.createDefaultModel();
+        InputStream stream = new ByteArrayInputStream(toString().getBytes(StandardCharsets.UTF_8));
+        RDFDataMgr.read(model, stream, RDFLanguages.N3);
+        org.apache.jena.graph.Triple jenaTriple = model.getGraph().find().next();
+
+        if (!jenaTriple.getSubject().toString(true).equals(getSubject())) {
+            throw new InvalidTripleException("Triple Subject is invalid.");
+        }
+
+        if (!jenaTriple.getPredicate().toString(true).equals(getPredicate())) {
+            throw new InvalidTripleException("Triple Predicate is invalid.");
+        }
+
+        if (!jenaTriple.getObject().toString(true).equals(getObject())) {
+            throw new InvalidTripleException("Triple Object is invalid.");
+        }
+
+        return jenaTriple;
+    }
+
+    /**
+     * Validate a Cap Triple.
+     *
+     * @param triple
+     *   The triple to validate that it has the proper format and is properly escaped.
+     *
+     * @throws InvalidTripleException
+     */
+    public void validate() throws InvalidTripleException {
+        toJenaTriple();
     }
 
     @Override
     public String toString() {
-        StringBuilder stngBldr = new StringBuilder();
-        stngBldr.append("<").append(subject).append("> ");
-        stngBldr.append("<").append(predicate).append("> ");
-        if (object.contains("http://") || object.contains("https://")) {
-            stngBldr.append("<").append(object).append("> ");
-        } else {
-            stngBldr.append("'").append(StringUtil.escape(StringUtil.removeQuotes(object))).append("' ");
-        }
-        return stngBldr.toString();
+        return String.format("<%s> <%s> %s", subject, predicate, object);
     }
 
 }

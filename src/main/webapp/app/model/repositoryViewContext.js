@@ -223,7 +223,6 @@ cap.model("RepositoryViewContext", function ($q, $filter, HttpMethodVerbs) {
       var promises = [];
 
       angular.forEach(metadataTriples, function (metadataTriple) {
-
         var removePromise = repositoryViewContext.repositoryView.performRequest(repositoryViewContext.getMapping().metadata, {
           method: HttpMethodVerbs.DELETE,
           query: {
@@ -248,12 +247,13 @@ cap.model("RepositoryViewContext", function ($q, $filter, HttpMethodVerbs) {
     };
 
     repositoryViewContext.updateMetadatum = function (metadataTriple, newValue) {
+      newValue = $filter("escapeLiteral")(newValue);
 
       var updatePromise = repositoryViewContext.repositoryView.performRequest(repositoryViewContext.getMapping().metadata, {
         method: HttpMethodVerbs.PUT,
         query: {
           contextUri: shortenContextUri(repositoryViewContext.uri),
-          newValue: newValue
+          newValue: encodeURIComponent(newValue)
         },
         data: metadataTriple
       });

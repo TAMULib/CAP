@@ -118,7 +118,7 @@ cap.controller("RepositoryViewContextController", function ($controller, $locati
         triples.push({
           subject: $scope.context.uri,
           predicate: entry.property.uri,
-          object: entry.value
+          object: $filter("escapeLiteral")(entry.value)
         });
       });
 
@@ -249,7 +249,7 @@ cap.controller("RepositoryViewContextController", function ($controller, $locati
       for (var i in $scope.context.properties) {
         var triple = $scope.context.properties[i];
         if (triple.predicate.indexOf("#hasMimeType") !== -1) {
-          contentType = $filter("removeQuotes")(triple.object);
+          contentType = $filter("escapeLiteral")(triple.object);
           break;
         }
 
