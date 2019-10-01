@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.tamu.cap.exceptions.OntModelReadException;
+import edu.tamu.cap.model.RepositoryView;
 import edu.tamu.cap.model.Schema;
 import edu.tamu.cap.model.repo.SchemaRepo;
 import edu.tamu.weaver.response.ApiResponse;
@@ -56,7 +57,7 @@ public class SchemaController {
 
     @RequestMapping(method = RequestMethod.DELETE)
     @PreAuthorize("hasRole('ADMIN')")
-    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, joins = { RepositoryView.class }, path = { "schemas" }) })
     public ApiResponse deleteSchema(@RequestBody @WeaverValidatedModel Schema schema) {
         logger.info("Deleating schema:  " + schema.getName());
         schemaRepo.delete(schema);
