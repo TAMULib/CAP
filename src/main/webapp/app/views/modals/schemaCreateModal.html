@@ -1,9 +1,10 @@
-<form name="schemaForms.create" ng-submit="createSchema()" novalidate class="schema-forms-create">
+<form name="schemaForms.create" ng-submit="onCreateSchema()" novalidate class="schema-forms-create">
   <div class="modal-header {{attr.modalHeaderClass}}">
-    <button type="button" class="close modal-close" aria-label="Close" ng-click="cancelCreateSchema()"><span aria-hidden="true">&times;</span></button>
+    <button type="button" class="close modal-close" aria-label="Close" ng-click="onCancelCreateSchema()"><span aria-hidden="true">&times;</span></button>
     <h4 class="modal-title">Create Schema</h4>
   </div>
   <div class="modal-body">
+    <alerts seconds="60" channels="schema/properties" types="WARNING,ERROR" exclusive></alerts>
 
     <validationmessage results="schemaForms.getResults()"></validationmessage>
 
@@ -11,7 +12,7 @@
       <div class="col-sm-5 col-sm-offset-1">
 
         <validatedinput
-          model="schemaToCreate"
+          model="schema"
           property="name"
           label="Name"
           placeholder="e.g. Dublin Core"
@@ -22,7 +23,7 @@
         </validatedinput>
 
         <validatedinput
-          model="schemaToCreate"
+          model="schema"
           property="abbreviation"
           label="Abbreviation"
           placeholder="e.g. DC"
@@ -33,7 +34,7 @@
         </validatedinput>
 
         <validatedinput
-          model="schemaToCreate"
+          model="schema"
           property="namespace"
           label="Namespace"
           placeholder="e.g. http://purl.org/dc/terms/"
@@ -45,13 +46,13 @@
 
       </div>
       <div class="col-sm-5">
-        <findproperties ng-if="resetSchemaPropertyList" schema="schemaToCreate"></findproperties>
+        <findproperties ng-if="resetSchemaPropertyList" schema="schema"></findproperties>
       </div>
     </div>
 
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn" ng-class="{'btn-default': schemaForms.create.$pristine, 'btn-warning': !schemaForms.create.$pristine}" ng-click="cancelCreateSchema()">Cancel</button>
-    <button type="submit" class="btn btn-success" ng-disabled="schemaForms.create.$invalid || !schemaToCreate.properties.length || submitClicked">Create</button>
+    <button type="button" class="btn" ng-class="{'btn-default': schemaForms.create.$pristine, 'btn-warning': !schemaForms.create.$pristine}" ng-click="onCancelCreateSchema()">Cancel</button>
+    <button type="submit" class="btn btn-success" ng-disabled="schemaForms.create.$invalid || !schema.properties.length || submitClicked">Create</button>
   </div>
 </form>
