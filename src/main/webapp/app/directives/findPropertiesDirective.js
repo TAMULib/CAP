@@ -5,13 +5,14 @@ cap.directive("findproperties", function(SchemaRepo) {
         scope: {
             schema: "=",
             mode: "=",
+            status: "="
         },
         link: function($scope) {
-
             $scope.properties = [];
 
             $scope.getProperties = function() {
-                $scope.gettingProperties = true;
+                $scope.status.loading = true;
+                $scope.status.loaded = false;
                 var getPropertiesPromise = SchemaRepo.findProperties($scope.schema);
                 
                 getPropertiesPromise.then(function(res) {
@@ -26,7 +27,8 @@ cap.directive("findproperties", function(SchemaRepo) {
 
                     var properties = angular.fromJson(res.body).payload['ArrayList<Property>'];
                     angular.extend($scope.properties, properties);
-                    $scope.gettingProperties = false;
+                    $scope.status.loading = false;
+                    $scope.status.loaded = true;
                 });
 
                 return getPropertiesPromise;
@@ -61,7 +63,7 @@ cap.directive("findproperties", function(SchemaRepo) {
                 return indx;
             };
 
-            if($scope.mode==="edit") {
+            if ($scope.mode === "edit") {
                 $scope.getProperties();
             }
 

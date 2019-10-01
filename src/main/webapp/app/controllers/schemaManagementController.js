@@ -8,12 +8,17 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
 
   $scope.schema = {};
 
+  $scope.propertiesStatus = {
+    loading: false,
+    loaded: false
+  };
+
   $scope.schemaForms = {
     validations: SchemaRepo.getValidations(),
     getResults: SchemaRepo.getValidationResults
   };
 
-  $scope.submitClicked = false;
+  $scope.submitting = false;
 
   $scope.resetSchemaPropertyList = true;
 
@@ -35,12 +40,12 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
   };
 
   $scope.onCreateSchema = function() {
-    $scope.submitClicked = true;
+    $scope.submitting = true;
     SchemaRepo.create($scope.schema).then(function(res) {
       if(angular.fromJson(res.body).meta.status === "SUCCESS") {
         $scope.onCancelCreateSchema();
       }
-      $scope.submitClicked = false;
+      $scope.submitting = false;
     });
   };
 
@@ -59,10 +64,10 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
   };
 
   $scope.onEditSchema = function() {
-    $scope.submitClicked = true;
+    $scope.submitting = true;
     $scope.schema.save().then(function() {
       $scope.onCancelEditSchema();
-      $scope.submitClicked = false;
+      $scope.submitting = false;
     });
   };
 
@@ -86,12 +91,12 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
   };
 
   $scope.onDeleteSchema = function() {
-    $scope.submitClicked = true;
+    $scope.submitting = true;
     $scope.schema.delete().then(function(res) {
       if(angular.fromJson(res.body).meta.status === "SUCCESS") {
         $scope.resetSchemaForms();
       }
-      $scope.submitClicked = false;
+      $scope.submitting = false;
     });
   };
 
