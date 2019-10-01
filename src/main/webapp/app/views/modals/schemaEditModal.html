@@ -53,7 +53,6 @@
 
   </div>
   <div class="modal-footer">
-    {{loadingProperties}}
     <button type="button" class="btn" ng-class="{'btn-default': schemaForms.edit.$pristine, 'btn-warning': !schemaForms.edit.$pristine}" ng-click="onCancelEditSchema()">Cancel</button>
     <button type="submit" class="btn btn-success" ng-disabled="schemaForms.edit.$invalid || !schema.properties.length || submitting || propertiesStatus.loading || !propertiesStatus.loaded">Update</button>
   </div>
