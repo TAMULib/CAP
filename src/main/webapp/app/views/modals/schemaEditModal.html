@@ -1,9 +1,10 @@
-<form name="schemaForms.edit" ng-submit="updateSchema()" novalidate class="schema-forms-edit">
+<form name="schemaForms.edit" ng-submit="onEditSchema()" novalidate class="schema-forms-edit">
   <div class="modal-header {{attr.modalHeaderClass}}">
-    <button type="button" class="close modal-close" aria-label="Close" ng-click="cancelEditSchema()"><span aria-hidden="true">&times;</span></button>
+    <button type="button" class="close modal-close" aria-label="Close" ng-click="onCancelEditSchema()"><span aria-hidden="true">&times;</span></button>
     <h4 class="modal-title">Edit Schema</h4>
   </div>
-  <div class="modal-body" ng-if="schemaToEdit">
+  <div class="modal-body" ng-if="schema.id">
+    <alerts seconds="60" channels="schema/properties" types="WARNING,ERROR" exclusive></alerts>
 
     <validationmessage results="schemaForms.getResults()"></validationmessage>
 
@@ -11,7 +12,7 @@
       <div class="col-sm-5 col-sm-offset-1">
 
         <validatedinput
-          model="schemaToEdit"
+          model="schema"
           property="name"
           label="Name"
           placeholder="Name of the new schema"
@@ -22,7 +23,7 @@
         </validatedinput>
 
         <validatedinput
-          model="schemaToEdit"
+          model="schema"
           property="abbreviation"
           label="Abbreviation"
           placeholder="Abbreviation for the new schema name"
@@ -33,7 +34,7 @@
         </validatedinput>
 
         <validatedinput
-          model="schemaToEdit"
+          model="schema"
           property="namespace"
           label="Namespace"
           placeholder="URI of the schema namespace"
@@ -45,13 +46,13 @@
 
       </div>
       <div class="col-sm-5">
-        <findproperties ng-if="resetSchemaPropertyList" schema="schemaToEdit" mode="'edit'"></findproperties>
+        <findproperties ng-if="resetSchemaPropertyList" schema="schema" mode="'edit'"></findproperties>
       </div>
     </div>
 
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn" ng-class="{'btn-default': schemaForms.edit.$pristine, 'btn-warning': !schemaForms.edit.$pristine}" ng-click="cancelEditSchema()">Cancel</button>
-    <button type="submit" class="btn btn-success" ng-disabled="schemaForms.edit.$invalid || !schemaToEdit.properties.length || submitClicked">Update</button>
+    <button type="button" class="btn" ng-class="{'btn-default': schemaForms.edit.$pristine, 'btn-warning': !schemaForms.edit.$pristine}" ng-click="onCancelEditSchema()">Cancel</button>
+    <button type="submit" class="btn btn-success" ng-disabled="schemaForms.edit.$invalid || !schema.properties.length || submitClicked">Update</button>
   </div>
 </form>

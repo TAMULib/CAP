@@ -7,15 +7,7 @@
   <div class="panel panel-default repository-view-container">
 
     <div class="panel-heading clearfix">
-      <modal
-        modal-id="createSchemaModal"
-        modal-view="views/modals/createSchemaModal.html"
-        modal-btn-classes="btn btn-success pull-right"
-        modal-header-class="modal-header-primary"
-        modal-fullscreen="true"
-        wvr-modal-backdrop="static">
-        New
-      </modal>
+      <button class="btn btn-success pull-right" ng-click="createSchema(schema)">New</button>
     </div>
 
     <div class="panel-body">
@@ -33,7 +25,7 @@
             </td>
             <td data-title="'Actions'" class="actions">
                 <span title="edit" ng-click="editSchema(schema)" class="glyphicon glyphicon-pencil action clickable"></span>
-                <span title="delete" ng-click="confirmDeleteSchema(schema)" class="glyphicon glyphicon-trash action clickable"></span>
+                <span title="delete" ng-click="deleteSchema(schema)" class="glyphicon glyphicon-trash action clickable"></span>
             </td>
           </tr>
         </tbody>
@@ -42,9 +34,10 @@
   </div>
 
   <modal
-    modal-id="schemaDeleteModal"
-    modal-view="views/modals/schemaDeleteModal.html"
-    modal-header-class="modal-header-danger"
+    modal-id="schemaCreateModal"
+    modal-view="views/modals/schemaCreateModal.html"
+    modal-header-class="modal-header-primary"
+    modal-fullscreen="true"
     wvr-modal-backdrop="static">
   </modal>
 
@@ -53,6 +46,13 @@
     modal-view="views/modals/schemaEditModal.html"
     modal-header-class="modal-header-warning"
     modal-fullscreen="true"
+    wvr-modal-backdrop="static">
+  </modal>
+
+  <modal
+    modal-id="schemaDeleteModal"
+    modal-view="views/modals/schemaDeleteModal.html"
+    modal-header-class="modal-header-danger"
     wvr-modal-backdrop="static">
   </modal>
 

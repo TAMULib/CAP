@@ -1,14 +1,15 @@
-<form name="schemaForm.create" ng-submit="deleteSchema(schemaToDelete)" novalidate>
-    <div class="modal-header {{attr.modalHeaderClass}}">
-      <button type="button" class="close modal-close" aria-label="Close" ng-click="cancelDeleteSchema()"><span aria-hidden="true">&times;</span></button>
-      <h4 class="modal-title">Confirm Removal</h4>
-    </div>
-    <div class="modal-body">
-      <h3>Are you sure you want to remove:</h3>
-      <p>{{schemaToDelete.name}}</p>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-default" ng-click="cancelDeleteSchema()">Cancel</button>
-      <button type="submit" class="btn btn-danger" ng-disabled="submitClicked">Confirm</button>
-    </div>
+<form name="schemaForm.create" ng-submit="onDeleteSchema(schemaToDelete)" novalidate>
+  <validationmessage results="schemaForms.getResults()"></validationmessage>
+  <div class="modal-header {{attr.modalHeaderClass}}">
+    <button type="button" class="close modal-close" aria-label="Close" ng-click="onCancelDeleteSchema()"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title">Confirm Removal</h4>
+  </div>
+  <div class="modal-body">
+    <h3>Are you sure you want to remove:</h3>
+    <p>{{schema.name}}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="onCancelDeleteSchema()">Cancel</button>
+    <button type="submit" class="btn btn-danger" ng-disabled="submitClicked">Confirm</button>
+  </div>
 </form>

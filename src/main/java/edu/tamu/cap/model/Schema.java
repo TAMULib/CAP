@@ -1,9 +1,9 @@
 package edu.tamu.cap.model;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -16,13 +16,13 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 @Entity
 public class Schema extends ValidatingBaseEntity {
 
-    @Column
+    @Column(nullable = false)
     private String name;
 
-    @Column
+    @Column(nullable = false)
     private String abbreviation;
 
-    @Column
+    @Column(nullable = false)
     private String namespace;
 
     @ElementCollection(fetch = FetchType.EAGER)
@@ -78,11 +78,7 @@ public class Schema extends ValidatingBaseEntity {
     }
 
     public Set<String> getNamespaces() {
-        Set<String> namespaces = new HashSet<String>();
-        properties.stream().forEach(property -> {
-            namespaces.add(getNamespaceFromProperty(property));
-        });
-        return namespaces;
+        return properties.stream().map(this::getNamespaceFromProperty).collect(Collectors.toSet());
     }
 
     private String getNamespaceFromProperty(Property property) {

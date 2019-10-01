@@ -1,4 +1,4 @@
-cap.controller("SchemaManagementController", function($controller, $scope, $timeout, SchemaRepo, NgTableParams) {
+cap.controller("SchemaManagementController", function($controller, $scope, $timeout, Schema, SchemaRepo, NgTableParams) {
 
   angular.extend(this, $controller('CoreAdminController', {
       $scope: $scope
@@ -6,8 +6,7 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
 
   $scope.schemas = SchemaRepo.getAll();
 
-  $scope.schemaToCreate = SchemaRepo.getScaffold();
-  $scope.schemaToDelete = {};
+  $scope.schema = {};
 
   $scope.schemaForms = {
     validations: SchemaRepo.getValidations(),
@@ -31,17 +30,22 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
   $scope.resetSchemaForms();
 
   $scope.createSchema = function() {
+    $scope.schema = new Schema(SchemaRepo.getScaffold());
+    $scope.openModal('#schemaCreateModal');
+  };
+
+  $scope.onCreateSchema = function() {
     $scope.submitClicked = true;
-    SchemaRepo.create($scope.schemaToCreate).then(function(res) {
+    SchemaRepo.create($scope.schema).then(function(res) {
       if(angular.fromJson(res.body).meta.status === "SUCCESS") {
-        $scope.cancelCreateSchema();
+        $scope.onCancelCreateSchema();
       }
       $scope.submitClicked = false;
     });
   };
 
-  $scope.cancelCreateSchema = function() {
-    angular.extend($scope.schemaToCreate, SchemaRepo.getScaffold());
+  $scope.onCancelCreateSchema = function() {
+    $scope.schema = {};
     $scope.resetSchemaForms();
     $scope.resetSchemaPropertyList = false;
     $timeout(function(){
@@ -50,21 +54,20 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
   };
 
   $scope.editSchema = function(schema) {
-    $scope.schemaToEdit = schema;
+    $scope.schema = new Schema(angular.copy(schema));
     $scope.openModal('#schemaEditModal');
   };
 
-  $scope.updateSchema = function() {
+  $scope.onEditSchema = function() {
     $scope.submitClicked = true;
-    $scope.schemaToEdit.save().then(function() {
-      $scope.cancelEditSchema();
+    $scope.schema.save().then(function() {
+      $scope.onCancelEditSchema();
       $scope.submitClicked = false;
     });
   };
 
-  $scope.cancelEditSchema = function() {
-    $scope.schemaToEdit.refresh();
-    delete $scope.schemaToEdit;
+  $scope.onCancelEditSchema = function() {
+    $scope.schema = {};
     $scope.resetSchemaForms();
     $scope.resetSchemaPropertyList = false;
     $timeout(function(){
@@ -72,19 +75,19 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
     });
   };
 
-  $scope.confirmDeleteSchema = function(schema) {
-    $scope.schemaToDelete = schema;
+  $scope.deleteSchema = function(schema) {
+    $scope.schema = schema;
     $scope.openModal('#schemaDeleteModal');
   };
 
-  $scope.cancelDeleteSchema = function() {
-    $scope.schemaToDelete = {};
-    $scope.closeModal();
+  $scope.onCancelDeleteSchema = function() {
+    $scope.schema = {};
+    $scope.resetSchemaForms();
   };
 
-  $scope.deleteSchema = function(schema) {
+  $scope.onDeleteSchema = function() {
     $scope.submitClicked = true;
-    SchemaRepo.delete(schema).then(function(res) {
+    $scope.schema.delete().then(function(res) {
       if(angular.fromJson(res.body).meta.status === "SUCCESS") {
         $scope.resetSchemaForms();
       }
