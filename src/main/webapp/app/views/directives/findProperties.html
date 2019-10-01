@@ -2,8 +2,8 @@
 
 <div class="find-properties text-center">
     <button ng-if="!properties.length" type="button" class="find-properties-btn btn btn-lg btn-success" ng-click="getProperties()" ng-disabled="!schema.namespace">
-        <span ng-if="!gettingProperties">Get Properties</span>
-        <span ng-if="gettingProperties" class="glyphicon glyphicon-refresh spinning"></span>
+        <span ng-if="!status.loading">Get Properties</span>
+        <span ng-if="status.loading" class="glyphicon glyphicon-refresh spinning"></span>
     </button>
     <div ng-if="properties.length" class="panel panel-default properties-list-panel">
         <div class="panel-heading">

@@ -41,18 +41,19 @@
           form="schemaForms.edit"
           validations="schemaForms.validations"
           results="schemaForms.getResults()"
-          autocomplete="off">
+          autocomplete="off"
+          disabled="propertiesStatus.loading">
         </validatedinput>
 
       </div>
       <div class="col-sm-5">
-        <findproperties ng-if="resetSchemaPropertyList" schema="schema" mode="'edit'"></findproperties>
+        <findproperties ng-if="resetSchemaPropertyList" schema="schema" mode="'edit'" status='propertiesStatus'></findproperties>
       </div>
     </div>
 
   </div>
   <div class="modal-footer">
     <button type="button" class="btn" ng-class="{'btn-default': schemaForms.edit.$pristine, 'btn-warning': !schemaForms.edit.$pristine}" ng-click="onCancelEditSchema()">Cancel</button>
-    <button type="submit" class="btn btn-success" ng-disabled="schemaForms.edit.$invalid || !schema.properties.length || submitClicked">Update</button>
+    <button type="submit" class="btn btn-success" ng-disabled="schemaForms.edit.$invalid || !schema.properties.length || submitting || propertiesStatus.loading || !propertiesStatus.loaded">Update</button>
   </div>
 </form>
