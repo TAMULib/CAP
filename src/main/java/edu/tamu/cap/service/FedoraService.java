@@ -18,6 +18,7 @@ import java.util.Optional;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.NodeIterator;
@@ -697,24 +698,16 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
     }
 
     private String buildLongContextUri(String contextUri) {
-        URI uriContext = URI.create(contextUri);
-
-        String longContextUri = contextUri;
-        if (!uriContext.isAbsolute()) {
-            String rootUri = repositoryView.getRootUri();
-            String slash = rootUri.length() > 1 && rootUri.charAt(rootUri.length() - 1) != '/' && rootUri.charAt(rootUri.length() - 1) != '#' ? "/" : "";
-            if (contextUri.length() == 0) {
-                slash = "";
-            } else if (contextUri.charAt(0) == '/') {
-                slash = "";
-
-                if (rootUri.length() > 0 && rootUri.charAt(rootUri.length() - 1) == '/') {
-                    contextUri = contextUri.substring(1);
-                }
+        String rootUri = repositoryView.getRootUri();
+        if (!contextUri.startsWith(rootUri)) {
+            if (rootUri.endsWith("/")) {
+                rootUri = StringUtils.chop(rootUri);
             }
-            longContextUri = repositoryView.getRootUri() + slash + contextUri;
+            if (contextUri.startsWith("/")) {
+                contextUri = contextUri.substring(1);
+            }
+            contextUri = String.format("%s/%s", rootUri, contextUri);
         }
-
-        return longContextUri;
+        return contextUri;
     }
 }
