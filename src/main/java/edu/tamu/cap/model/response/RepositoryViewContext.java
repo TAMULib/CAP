@@ -77,7 +77,7 @@ public class RepositoryViewContext implements Serializable {
     }
 
     public boolean isResource() {
-        return triple != null ? triple.getObject().equals(FedoraService.FEDORA_BINRAY_PREDICATE) : false;
+        return triple != null ? triple.getObject().equals(FedoraService.FEDORA_BINARY_PREDICATE) : false;
     }
 
     public List<Triple> getProperties() {

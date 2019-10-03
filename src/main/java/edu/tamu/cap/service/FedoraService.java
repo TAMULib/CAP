@@ -1,5 +1,7 @@
 package edu.tamu.cap.service;
 
+import static org.springframework.web.context.WebApplicationContext.SCOPE_REQUEST;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -40,6 +42,7 @@ import org.fcrepo.client.PostBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -57,6 +60,7 @@ import edu.tamu.cap.model.response.Triple;
 import edu.tamu.cap.model.response.Version;
 
 @Service("Fedora")
+@Scope(value = SCOPE_REQUEST)
 public class FedoraService implements RepositoryViewService<Model>, VersioningRepositoryViewService<Model>, VerifyingRepositoryViewService<Model>, TransactingRepositoryViewService<Model>, QueryableRepositoryViewService<Model>, FixityRepositoryViewService<Model> {
 
     private final static String LDP_CONTAINS_PREDICATE = "http://www.w3.org/ns/ldp#contains";
@@ -71,7 +75,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
     private final static String FEDORA_CONTAINER_PREDICATE = "http://fedora.info/definitions/v4/repository#Container";
 
-    public final static String FEDORA_BINRAY_PREDICATE = "http://fedora.info/definitions/v4/repository#Binary";
+    public final static String FEDORA_BINARY_PREDICATE = "http://fedora.info/definitions/v4/repository#Binary";
 
     public final static String FEDORA_HAS_VERSIONS_PREDICATE = "http://fedora.info/definitions/v4/repository#hasVersions";
 
@@ -446,7 +450,6 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
     @Override
     public TransactionDetails startTransaction() throws Exception {
-
         FcrepoClient client = buildClient();
 
         URI transactionContextURI = new URI(repositoryView.getRootUri() + "fcr:tx");
@@ -465,7 +468,6 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
     @Override
     public TransactionDetails refreshTransaction(String tokenURI) throws Exception {
-
         FcrepoClient client = buildClient();
 
         URI transactionContextURI = new URI(tokenURI + "/fcr:tx");
@@ -486,7 +488,6 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
     @Override
     public void commitTransaction(String tokenURI) throws Exception {
-
         FcrepoClient client = buildClient();
 
         URI transactionContextURI = new URI(tokenURI + "/fcr:tx/fcr:commit");
@@ -498,7 +499,6 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
     @Override
     public void rollbackTransaction(String tokenURI) throws Exception {
-
         FcrepoClient client = buildClient();
 
         URI transactionContextURI = new URI(tokenURI + "/fcr:tx/fcr:rollback");
@@ -612,8 +612,8 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
                 String object = triple.getObject();
 
                 switch (object) {
-                case FEDORA_BINRAY_PREDICATE:
-                    repositoryViewContext.getTriple().setObject(FEDORA_BINRAY_PREDICATE);
+                case FEDORA_BINARY_PREDICATE:
+                    repositoryViewContext.getTriple().setObject(FEDORA_BINARY_PREDICATE);
                     break;
                 case FEDORA_VERSION:
 
