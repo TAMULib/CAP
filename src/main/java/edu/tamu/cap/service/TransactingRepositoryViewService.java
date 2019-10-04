@@ -1,6 +1,6 @@
 package edu.tamu.cap.service;
 
-import edu.tamu.cap.model.repositoryviewcontext.TransactionDetails;
+import edu.tamu.cap.model.response.TransactionDetails;
 
 public interface TransactingRepositoryViewService<M> extends RepositoryViewService<M> {
 

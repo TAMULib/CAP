@@ -1,5 +1,7 @@
 package edu.tamu.cap.service;
 
+import static edu.tamu.cap.utility.ContextUtility.buildFullContextURI;
+import static edu.tamu.cap.utility.ContextUtility.getTransactionToken;
 import static org.springframework.web.context.WebApplicationContext.SCOPE_REQUEST;
 
 import java.io.ByteArrayInputStream;
@@ -9,18 +11,14 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.NodeIterator;
@@ -47,15 +45,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.cap.exceptions.RepositoryViewVerificationException;
 import edu.tamu.cap.model.RepositoryView;
-import edu.tamu.cap.model.repositoryviewcontext.FedoraTransactionDetails;
-import edu.tamu.cap.model.repositoryviewcontext.TransactionDetails;
 import edu.tamu.cap.model.response.FixityReport;
 import edu.tamu.cap.model.response.RepositoryViewContext;
+import edu.tamu.cap.model.response.TransactionDetails;
 import edu.tamu.cap.model.response.Triple;
 import edu.tamu.cap.model.response.Version;
 
@@ -99,10 +94,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
     // @formatter:on
 
     @Autowired
-    private HttpServletRequest request;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+    private TransactionService transactionService;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -139,59 +131,24 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
     @Override
     public RepositoryViewContext getRepositoryViewContext(String contextUri) throws Exception {
-
-        Optional<Cookie> cookie = Optional.empty();
-
-        Cookie[] cookies = request.getCookies();
-
-        String longContextUri = buildLongContextUri(contextUri);
-
-        if (cookies != null) {
-            for (Cookie c : cookies) {
-                if (c.getName().equals("transaction")) {
-                    cookie = Optional.of(c);
-                    break;
-                }
-            }
-        }
-
-        if (cookie.isPresent() && !longContextUri.contains("tx:")) {
-            JsonNode cookieObject = objectMapper.readTree(URLDecoder.decode(cookie.get().getValue(), "UTF-8"));
-
-            String transactionToken = cookieObject.get("transactionToken").asText();
-
-            String contextPath = longContextUri.replace(repositoryView.getRootUri(), "");
-
-            URI transactionURI = URI.create(transactionToken);
-            URI rootURI = URI.create(repositoryView.getRootUri());
-
-            StringBuilder strngBldr = new StringBuilder();
-
-            strngBldr.append(transactionToken.contains("https://") ? "https" : "http").append("://").append(rootURI.getHost());
-
-            if (!rootURI.getHost().endsWith("/") && !transactionURI.getPath().startsWith("/"))
-                strngBldr.append("/");
-
-            if (rootURI.getHost().endsWith("/") && transactionURI.getPath().startsWith("/")) {
-                strngBldr.append(transactionURI.getPath().substring(1));
-            } else {
-                strngBldr.append(transactionURI.getPath());
-            }
-
-            if (!transactionURI.getPath().endsWith("/") && !contextPath.startsWith("/"))
-                strngBldr.append("/").append(contextPath);
-
-            if (transactionURI.getPath().endsWith("/") && contextPath.startsWith("/"))
-                strngBldr.append("/").append(contextPath.substring(1));
-
-            longContextUri = strngBldr.toString();
-        }
+        String longContextUri = buildFullContextURI(repositoryView.getRootUri(), contextUri);
 
         FcrepoClient client = buildClient();
         FcrepoResponse response = new GetBuilder(new URI(longContextUri + "/fcr:metadata"), client).accept("application/rdf+xml").perform();
 
         Model model = createRdfModelFromResponse(response);
-        return buildRepositoryViewContext(model, longContextUri);
+        RepositoryViewContext context = buildRepositoryViewContext(model, longContextUri);
+
+        Optional<String> transactionToken = getTransactionToken(longContextUri);
+
+        if (transactionToken.isPresent()) {
+            Optional<ZonedDateTime> tokenExpiration = transactionService.get(transactionToken.get());
+            if (tokenExpiration.isPresent()) {
+                context.setTransactionDetails(TransactionDetails.of(transactionToken.get(), tokenExpiration.get()));
+            }
+        }
+
+        return context;
     }
 
     private Model createRdfModelFromResponse(FcrepoResponse response) throws Exception {
@@ -226,7 +183,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
     @Override
     public RepositoryViewContext createChild(String contextUri, List<Triple> metadata) throws Exception {
-        String longContextUri = buildLongContextUri(contextUri);
+        String longContextUri = buildFullContextURI(repositoryView.getRootUri(), contextUri);
         FcrepoClient client = buildClient();
         PostBuilder post = new PostBuilder(new URI(longContextUri), client);
 
@@ -256,8 +213,8 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
     @Override
     public RepositoryViewContext createMetadata(String contextUri, Triple triple) throws Exception {
-        String longContextUri = buildLongContextUri(contextUri);
-        triple.setSubject(buildLongContextUri(triple.getSubject()));
+        String longContextUri = buildFullContextURI(repositoryView.getRootUri(), contextUri);
+        triple.setSubject(buildFullContextURI(repositoryView.getRootUri(), triple.getSubject()));
         triple.validate();
 
         FcrepoClient client = buildClient();
@@ -283,7 +240,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
     @Override
     public RepositoryViewContext updateMetadata(String contextUri, Triple originalTriple, String newValue) throws Exception {
-        String longContextUri = buildLongContextUri(contextUri);
+        String longContextUri = buildFullContextURI(repositoryView.getRootUri(), contextUri);
         StringBuilder stngBldr = new StringBuilder();
 
         Triple newTriple = new Triple(originalTriple.getSubject(), originalTriple.getPredicate(), newValue);
@@ -308,8 +265,8 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
     @Override
     public RepositoryViewContext deleteMetadata(String contextUri, Triple triple) throws Exception {
-        String longContextUri = buildLongContextUri(contextUri);
-        triple.setSubject(buildLongContextUri(triple.getSubject()));
+        String longContextUri = buildFullContextURI(repositoryView.getRootUri(), contextUri);
+        triple.setSubject(buildFullContextURI(repositoryView.getRootUri(), triple.getSubject()));
         triple.validate();
 
         logger.debug("Attempting to delete");
@@ -335,7 +292,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
     @Override
     public RepositoryViewContext createResource(String contextUri, MultipartFile file) throws Exception {
-        String longContextUri = buildLongContextUri(contextUri);
+        String longContextUri = buildFullContextURI(repositoryView.getRootUri(), contextUri);
         FcrepoClient client = buildClient();
         PostBuilder post = new PostBuilder(new URI(longContextUri), client);
         post.body(file.getInputStream(), file.getContentType());
@@ -354,14 +311,14 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
     @Override
     public void deleteResource(String contextUri) throws Exception {
-        String longContextUri = buildLongContextUri(contextUri);
+        String longContextUri = buildFullContextURI(repositoryView.getRootUri(), contextUri);
         logger.info("Deleting resource: {}", longContextUri);
         deleteContainer(longContextUri);
     }
 
     @Override
     public FixityReport resourceFixity(String contextUri) throws Exception {
-        String longContextUri = buildLongContextUri(contextUri);
+        String longContextUri = buildFullContextURI(repositoryView.getRootUri(), contextUri);
         FcrepoClient client = buildClient();
         FcrepoResponse response = new GetBuilder(URI.create(longContextUri + "/fcr:fixity"), client).perform();
 
@@ -376,7 +333,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
     @Override
     public List<Version> getVersions(String contextUri) throws Exception {
-        String longContextUri = buildLongContextUri(contextUri);
+        String longContextUri = buildFullContextURI(repositoryView.getRootUri(), contextUri);
         FcrepoClient client = buildClient();
         FcrepoResponse response = new GetBuilder(new URI(longContextUri + "/fcr:versions"), client).accept("application/rdf+xml").perform();
         Model model = createRdfModelFromResponse(response);
@@ -405,7 +362,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
     @Override
     public RepositoryViewContext createVersion(String contextUri, String name) throws Exception {
-        String longContextUri = buildLongContextUri(contextUri);
+        String longContextUri = buildFullContextURI(repositoryView.getRootUri(), contextUri);
 
         if (name.isEmpty()) {
             SimpleDateFormat output = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -426,7 +383,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
     @Override
     public RepositoryViewContext restoreVersion(String contextUri) throws Exception {
-        String longContextUri = buildLongContextUri(contextUri);
+        String longContextUri = buildFullContextURI(repositoryView.getRootUri(), contextUri);
         RepositoryViewContext versionContext = getRepositoryViewContext(contextUri);
         String parentUri = versionContext.getParent().getSubject();
         URI uri = URI.create(longContextUri);
@@ -463,7 +420,11 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
         logger.debug("Transaction Start: {}", transactionContextURI);
 
-        return makeTransactionDetails(response.getLocation().toString(), DateTimeFormatter.ISO_ZONED_DATE_TIME.format(expirationDate));
+        Optional<String> token = getTransactionToken(response.getLocation().toString());
+
+        transactionService.add(token.get(), Duration.ofMinutes(3));
+
+        return makeTransactionDetails(token.get(), DateTimeFormatter.ISO_ZONED_DATE_TIME.format(expirationDate));
     }
 
     @Override
@@ -483,7 +444,11 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
         logger.debug("Transaction Refresh: {}", transactionContextURI);
 
-        return makeTransactionDetails(location, DateTimeFormatter.ISO_ZONED_DATE_TIME.format(expirationDate));
+        Optional<String> token = getTransactionToken(location);
+
+        transactionService.add(token.get(), Duration.ofMinutes(3));
+
+        return makeTransactionDetails(token.get(), DateTimeFormatter.ISO_ZONED_DATE_TIME.format(expirationDate));
     }
 
     @Override
@@ -510,8 +475,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
     @Override
     public TransactionDetails makeTransactionDetails(String transactionToken, String expirationString) throws Exception {
-        FedoraTransactionDetails transactionDetails = new FedoraTransactionDetails(transactionToken, expirationString);
-        return transactionDetails;
+        return TransactionDetails.of(transactionToken, expirationString);
     }
 
     @Override
@@ -521,7 +485,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
     @Override
     public RepositoryViewContext query(String contextUri, String sparql) throws Exception {
-        String longContextUri = buildLongContextUri(contextUri);
+        String longContextUri = buildFullContextURI(repositoryView.getRootUri(), contextUri);
         FcrepoClient client = buildClient();
         PatchBuilder patch = new PatchBuilder(new URI(longContextUri + "/fcr:metadata"), client);
         patch.body(new ByteArrayInputStream(sparql.getBytes()));
@@ -535,7 +499,6 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
     @Override
     public String getQueryHelp() throws Exception {
-
         StringBuilder strbldr = new StringBuilder();
 
         repositoryView.getSchemas().forEach(schema -> {
@@ -551,9 +514,9 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
     }
 
     @Override
-    public synchronized RepositoryViewContext buildRepositoryViewContext(Model model, String contextUri) throws JsonProcessingException, UnsupportedEncodingException, IOException {
+    public synchronized RepositoryViewContext buildRepositoryViewContext(Model model, String longContextUri) throws JsonProcessingException, UnsupportedEncodingException, IOException {
 
-        RepositoryViewContext repositoryViewContext = new RepositoryViewContext(Triple.of(contextUri, RDF_TYPE_PREDICATE, FEDORA_CONTAINER_PREDICATE));
+        RepositoryViewContext repositoryViewContext = new RepositoryViewContext(Triple.of(longContextUri, RDF_TYPE_PREDICATE, FEDORA_CONTAINER_PREDICATE));
 
         // System.out.println("\n::\n");
         model.listStatements().forEachRemaining(statement -> {
@@ -617,10 +580,10 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
                     break;
                 case FEDORA_VERSION:
 
-                    String verionName = contextUri.substring(contextUri.lastIndexOf("/") + 1, contextUri.length());
+                    String verionName = longContextUri.substring(longContextUri.lastIndexOf("/") + 1, longContextUri.length());
                     repositoryViewContext.setVersion(verionName);
 
-                    repositoryViewContext.setParent(Triple.of(object, FEDORA_HAS_PARENT_PREDICATE, contextUri.replace("/fcr:versions/" + verionName, "")));
+                    repositoryViewContext.setParent(Triple.of(object, FEDORA_HAS_PARENT_PREDICATE, longContextUri.replace("/fcr:versions/" + verionName, "")));
 
                     break;
                 default:
@@ -630,15 +593,10 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
         });
 
-        String rootFromContext = contextUri;
-        if (rootFromContext.contains("tx:")) {
-            rootFromContext = rootFromContext.replaceAll("tx:.*\\/", "");
-        }
-
-        if (rootFromContext.equals(repositoryView.getRootUri())) {
+        if (longContextUri.equals(repositoryView.getRootUri())) {
             repositoryViewContext.setName("Root");
         } else {
-            repositoryViewContext.setName(contextUri);
+            repositoryViewContext.setName(longContextUri);
         }
 
         Optional<String> title = getLiteralForProperty(model, RDFS.label);
@@ -697,17 +655,4 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
         return repositoryView;
     }
 
-    private String buildLongContextUri(String contextUri) {
-        String rootUri = repositoryView.getRootUri();
-        if (!contextUri.startsWith(rootUri)) {
-            if (rootUri.endsWith("/")) {
-                rootUri = StringUtils.chop(rootUri);
-            }
-            if (contextUri.startsWith("/")) {
-                contextUri = contextUri.substring(1);
-            }
-            contextUri = String.format("%s/%s", rootUri, contextUri);
-        }
-        return contextUri;
-    }
 }

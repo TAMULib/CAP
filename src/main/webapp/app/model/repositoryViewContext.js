@@ -29,7 +29,7 @@ cap.model("RepositoryViewContext", function ($q, $filter, HttpMethodVerbs) {
           defer.resolve(repositoryViewContext);
 
           repositoryViewContext.ready().then(function() {
-            if(repositoryViewContext.repositoryView.getTransaction().active) {
+            if(repositoryViewContext.repositoryView.inTransaction()) {
               repositoryViewContext.repositoryView.startTransactionTimer();
             }
           });
