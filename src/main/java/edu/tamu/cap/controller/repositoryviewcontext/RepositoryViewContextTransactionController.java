@@ -35,7 +35,6 @@ public class RepositoryViewContextTransactionController {
     @RequestMapping(method = POST)
     @PreAuthorize("hasRole('USER')")
     public ApiResponse commitTransaction(TransactingRepositoryViewService<?> repositoryViewService, @Param("contextUri") String contextUri) throws Exception {
-
         Optional<String> trancationToken = Optional.ofNullable(extractTokenFromContextUri(contextUri));
 
         String rootUri = repositoryViewService.getRepositoryView().getRootUri();
@@ -51,7 +50,6 @@ public class RepositoryViewContextTransactionController {
     @RequestMapping(method = DELETE)
     @PreAuthorize("hasRole('USER')")
     public ApiResponse rollbackTransaction(TransactingRepositoryViewService<?> repositoryViewService, @Param("contextUri") String contextUri) throws Exception {
-
         Optional<String> trancationToken = Optional.ofNullable(extractTokenFromContextUri(contextUri));
 
         String rootUri = repositoryViewService.getRepositoryView().getRootUri();
@@ -67,7 +65,6 @@ public class RepositoryViewContextTransactionController {
     @RequestMapping(method = PUT)
     @PreAuthorize("hasRole('USER')")
     public ApiResponse refreshTransaction(TransactingRepositoryViewService<?> repositoryViewService, @Param("contextUri") String contextUri) throws Exception {
-
         Optional<TransactionDetails> transactionDetails = Optional.empty();
         Optional<String> transactionToken = Optional.ofNullable(extractTokenFromContextUri(contextUri));
 
@@ -88,7 +85,6 @@ public class RepositoryViewContextTransactionController {
         } else {
             return new ApiResponse(status, message);
         }
-
     }
 
     private String extractTokenFromContextUri(String contextUri) {
@@ -101,7 +97,6 @@ public class RepositoryViewContextTransactionController {
         }
 
         return transactionToken;
-
     }
 
 }

@@ -7,8 +7,6 @@ import static org.springframework.web.context.WebApplicationContext.SCOPE_REQUES
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.net.URLDecoder;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
 
@@ -58,13 +56,25 @@ public class TransactionRefreshAspect extends RepositoryViewResolver {
     @Autowired
     private HttpServletRequest request;
 
-    @AfterReturning(pointcut = "execution(* edu.tamu.cap.controller.repositoryviewcontext..*(..))", returning = "apiResponse")
+    // @formatter:off
+    @AfterReturning(
+        pointcut = "execution(* edu.tamu.cap.controller.repositoryviewcontext.RepositoryViewContextChildrenController.createChildContainer(..)) || " +
+                   "execution(* edu.tamu.cap.controller.repositoryviewcontext.RepositoryViewContextController.delete(..)) || " +
+                   "execution(* edu.tamu.cap.controller.repositoryviewcontext.RepositoryViewContextMetadataController.createMetadata(..)) || " +
+                   "execution(* edu.tamu.cap.controller.repositoryviewcontext.RepositoryViewContextMetadataController.updateMetadata(..)) || " +
+                   "execution(* edu.tamu.cap.controller.repositoryviewcontext.RepositoryViewContextMetadataController.deleteMetadata(..)) || " +
+                   "execution(* edu.tamu.cap.controller.repositoryviewcontext.RepositoryViewContextQueryController.submitQuery(..)) || " +
+                   "execution(* edu.tamu.cap.controller.repositoryviewcontext.RepositoryViewContextResourcesController.createResource(..)) || " +
+                   "execution(* edu.tamu.cap.controller.repositoryviewcontext.RepositoryViewContextResourcesController.deleteResources(..)) || " +
+                   "execution(* edu.tamu.cap.controller.repositoryviewcontext.RepositoryViewContextVersionController.createVersion(..)) || " +
+                   "execution(* edu.tamu.cap.controller.repositoryviewcontext.RepositoryViewContextVersionController.restoreVersion(..)) || " +
+                   "execution(* edu.tamu.cap.controller.repositoryviewcontext.RepositoryViewContextVersionController.deleteVersion(..))",
+        returning = "apiResponse"
+    )
+    // @formatter:on
     public void refreshTransaction(JoinPoint joinPoint, ApiResponse apiResponse) throws Throwable {
-
         Optional<Cookie> cookie = Optional.empty();
-
         Cookie[] cookies = request.getCookies();
-
         if (cookies != null) {
             for (Cookie c : cookies) {
                 if (c.getName().equals("transaction")) {
@@ -74,42 +84,27 @@ public class TransactionRefreshAspect extends RepositoryViewResolver {
             }
         }
 
-        String httpMethod = request.getMethod();
-
-        if (cookie.isPresent() && (httpMethod.equals("POST") || httpMethod.equals("PUT") || httpMethod.equals("DELETE"))) {
-
+        if (cookie.isPresent()) {
             JsonNode cookieObject = objectMapper.readTree(URLDecoder.decode(cookie.get().getValue(), "UTF-8"));
-            String transactionToken = cookieObject.get("transactionToken").asText();
-
-            String transactionExpiration = DateTimeFormatter.ISO_ZONED_DATE_TIME.format(ZonedDateTime.now().plusSeconds(180));
+            String tokenUri = cookieObject.get("transactionToken").asText();
 
             MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
             Method method = methodSignature.getMethod();
 
-            Optional<TransactingRepositoryViewService<?>> transactingRepositoryViewService = Optional.empty();
             for (Parameter parameter : method.getParameters()) {
-                Optional<RepositoryViewService<?>> repositoryViewService = Optional.empty();
-
+                System.out.println("\n\n" + parameter + "\n\n");
                 if (RepositoryViewService.class.isAssignableFrom(parameter.getType())) {
-                    RepositoryViewService<?> repositoryViews = SpringContext.bean(getRepositoryViewType().getGloss());
+                    TransactingRepositoryViewService<?> repositoryViewService = SpringContext.bean(getRepositoryViewType().getGloss());
                     Optional<Long> repositoryViewid = getRepositoryViewId();
                     if (repositoryViewid.isPresent()) {
-                        repositoryViews.setRepositoryView(repositoryViewRepo.read(repositoryViewid.get()));
+                        repositoryViewService.setRepositoryView(repositoryViewRepo.read(repositoryViewid.get()));
                     } else {
-                        repositoryViews.setRepositoryView(getRepositoryViewFromRequest(request));
+                        repositoryViewService.setRepositoryView(getRepositoryViewFromRequest(request));
                     }
-                    repositoryViewService = Optional.of(repositoryViews);
-                }
-
-                if (repositoryViewService.isPresent()) {
-                    transactingRepositoryViewService = Optional.of((TransactingRepositoryViewService<?>) repositoryViewService.get());
-                    break;
+                    TransactionDetails transactionDetails = repositoryViewService.refreshTransaction(tokenUri);
+                    simpMessagingTemplate.convertAndSend("/queue/transaction/" + request.getUserPrincipal().getName(), new ApiResponse(SUCCESS, BROADCAST, transactionDetails));
                 }
             }
-
-            TransactionDetails transactionDetails = transactingRepositoryViewService.get().makeTransactionDetails(transactionToken, transactionExpiration);
-
-            simpMessagingTemplate.convertAndSend("/queue/transaction/" + request.getUserPrincipal().getName(), new ApiResponse(SUCCESS, BROADCAST, transactionDetails));
         }
     }
 

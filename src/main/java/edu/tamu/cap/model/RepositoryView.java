@@ -26,7 +26,7 @@ public class RepositoryView extends ValidatingBaseEntity {
     @Column(unique = true)
     private String name;
 
-    @Column
+    @Column(nullable = false)
     private String rootUri;
 
     @Column

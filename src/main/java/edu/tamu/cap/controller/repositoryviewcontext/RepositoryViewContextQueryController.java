@@ -19,7 +19,7 @@ public class RepositoryViewContextQueryController {
 
     @RequestMapping(method = POST)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse makeQuery(QueryableRepositoryViewService<?> repositoryViewService, @Param("contextUri") String contextUri, @RequestBody String query) throws Exception {
+    public ApiResponse submitQuery(QueryableRepositoryViewService<?> repositoryViewService, @Param("contextUri") String contextUri, @RequestBody String query) throws Exception {
         return new ApiResponse(SUCCESS, repositoryViewService.query(contextUri, query));
     }
 
