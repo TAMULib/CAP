@@ -140,11 +140,11 @@ cap.model("RepositoryView", function($location, $timeout, $interval, $q, HttpMet
     };
 
     repositoryView.isTransactionAboutToExpire = function() {
-      return (repositoryView.currentContext.transactionDetails.expiration - new Date().getTime()) < 30000;
+      return repositoryView.inTransaction() && (repositoryView.currentContext.transactionDetails.expiration - new Date().getTime()) < 30000;
     };
 
     repositoryView.getTransactionSecondsRemaining = function() {
-      var secondsRemaining = Math.round((repositoryView.currentContext.transactionDetails.expiration - new Date().getTime()) / 1000);
+      var secondsRemaining = repositoryView.inTransaction() ? Math.round((repositoryView.currentContext.transactionDetails.expiration - new Date().getTime()) / 1000) : 0;
       return secondsRemaining > 9 ? secondsRemaining : '0' + secondsRemaining;
     };
 
@@ -201,6 +201,7 @@ cap.model("RepositoryView", function($location, $timeout, $interval, $q, HttpMet
       angular.extend(repositoryView.currentContext, {
         transactionDetails: transactionDetails
       });
+      repositoryView.currentContext.reloadContext();
     });
 
     return repositoryView;

@@ -19,16 +19,14 @@ cap.directive("breadcrumbs", function($filter) {
               }
               if (index) {
                 var prev = $scope.breadcrumbs.length > 0 ? $scope.breadcrumbs[index - 1] : undefined;
-
-                if(prev && !context.isVersion) {
+                if (prev && !context.isVersion) {
                   var prevName = prev.name.replace(context.repositoryView.rootUri, '...');
                   name = name.replace(prevName, '...');
                 }
-                if(index === $scope.breadcrumbs.length) {
-                  if(name.indexOf('...') === 0) {
+                if (index === $scope.breadcrumbs.length) {
+                  if (name.indexOf('...') === 0) {
                     name = name.replace('...', '');
-                  }
-                  if(name.indexOf('/') === 0) {
+                  } else if (name.indexOf('/') === 0) {
                     name = name.replace('/', '');
                   }
                 }
@@ -42,7 +40,7 @@ cap.directive("breadcrumbs", function($filter) {
 
             var getParent = function(context) {
                 var parentContext = $scope.context.repositoryView.getContext(context.parent.object);
-                if(parentContext.hasParent) {
+                if (parentContext.hasParent) {
                     getParent(parentContext);
                     $scope.breadcrumbs.push(parentContext);
                  } else {
