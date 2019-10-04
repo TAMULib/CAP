@@ -7,13 +7,17 @@ cap.directive("breadcrumbs", function($filter) {
         },
         link: function($scope, attr, elem) {
             $scope.breadcrumbs = [];
+            var pattern = new RegExp(/tx:.*\//);
 
             $scope.trimName = function(context, index) {
               var name = context.name;
-              if (context.name.indexOf(context.repositoryView.rootUri) === 0) {
+              if (index === 0 && pattern.test(name)) {
+                name = 'tx:Root';
+              }
+              if (name.indexOf(context.repositoryView.rootUri) === 0) {
                 name = name.replace(context.repositoryView.rootUri, '...').replace(/tx:.*\//, '');
               }
-              if(index) {
+              if (index) {
                 var prev = $scope.breadcrumbs.length > 0 ? $scope.breadcrumbs[index - 1] : undefined;
 
                 if(prev && !context.isVersion) {

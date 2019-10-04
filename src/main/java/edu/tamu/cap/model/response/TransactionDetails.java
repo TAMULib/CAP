@@ -1,9 +1,7 @@
 package edu.tamu.cap.model.response;
 
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 
 public class TransactionDetails {
 
@@ -21,12 +19,8 @@ public class TransactionDetails {
         return token;
     }
 
-    public ZonedDateTime getExpiration() {
-        return expiration;
-    }
-
-    public int getSecondsRemaining() {
-        return (int) ChronoUnit.SECONDS.between(ZonedDateTime.now(ZoneId.of("GMT")), expiration);
+    public long getExpiration() {
+        return expiration.toInstant().toEpochMilli();
     }
 
     public static TransactionDetails of(String token, String expiration) {

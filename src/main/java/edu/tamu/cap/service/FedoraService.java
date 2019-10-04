@@ -163,9 +163,9 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
     }
 
     @Override
-    public void deleteRepositoryViewContext(String uri) throws Exception {
-        logger.info("Deletion or contianer: {}", uri);
-        deleteContainer(uri);
+    public void deleteRepositoryViewContext(String contextUri) throws Exception {
+        logger.info("Deletion or contianer: {}", contextUri);
+        delete(contextUri);
     }
 
     @Override
@@ -311,9 +311,8 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
     @Override
     public void deleteResource(String contextUri) throws Exception {
-        String longContextUri = buildFullContextURI(repositoryView.getRootUri(), contextUri);
-        logger.info("Deleting resource: {}", longContextUri);
-        deleteContainer(longContextUri);
+        logger.info("Deleting resource: {}", contextUri);
+        delete(contextUri);
     }
 
     @Override
@@ -392,17 +391,9 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
     }
 
     @Override
-    public void deleteVersion(String uri) throws Exception {
-        logger.info("Deleting version: {}", uri);
-        deleteContainer(uri);
-    }
-
-    private FcrepoResponse deleteContainer(String uri) throws URISyntaxException, FcrepoOperationFailedException {
-        FcrepoClient client = buildClient();
-        URI newURI = new URI(uri);
-        DeleteBuilder builder = new DeleteBuilder(newURI, client);
-
-        return builder.perform();
+    public void deleteVersion(String contextUri) throws Exception {
+        logger.info("Deleting version: {}", contextUri);
+        delete(contextUri);
     }
 
     @Override
@@ -511,6 +502,11 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
         strbldr.append("WHERE { }\n\n");
 
         return strbldr.toString();
+    }
+
+    @Override
+    public RepositoryView getRepositoryView() {
+        return repositoryView;
     }
 
     @Override
@@ -625,6 +621,14 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
         return (repositoryView.getUsername() == null || repositoryView.getPassword() == null) ? FcrepoClient.client().build() : FcrepoClient.client().credentials(repositoryView.getUsername(), repositoryView.getPassword()).build();
     }
 
+    private FcrepoResponse delete(String contextUri) throws URISyntaxException, FcrepoOperationFailedException {
+        String longContextUri = buildFullContextURI(repositoryView.getRootUri(), contextUri);
+        FcrepoClient client = buildClient();
+        URI newURI = new URI(longContextUri);
+        DeleteBuilder builder = new DeleteBuilder(newURI, client);
+        return builder.perform();
+    }
+
     private Optional<String> getLiteralForProperty(Model model, Property property) {
         Optional<String> literal = Optional.empty();
         NodeIterator nodeIterator = model.listObjectsOfProperty(property);
@@ -648,11 +652,6 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
         // System.out.println("\n");
 
         return model;
-    }
-
-    @Override
-    public RepositoryView getRepositoryView() {
-        return repositoryView;
     }
 
 }

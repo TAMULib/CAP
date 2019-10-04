@@ -66,8 +66,8 @@
   <div ng-if="context.repositoryView.inTransaction()" class="alert alert-info clearfix" role="alert">
     <span>
       <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> This Repository View is currently in transaction.
-      <button ng-if="context.repositoryView.getTransaction().secondsRemaining < 31" class="btn btn-sm btn-info" ng-click="context.repositoryView.refreshTransaction()">
-        <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> 0:{{context.repositoryView.getTransaction().secondsRemaining}}
+      <button ng-if="context.repositoryView.isTransactionAboutToExpire()" class="btn btn-sm btn-info" ng-click="context.repositoryView.refreshTransaction()">
+        <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> 0:{{context.repositoryView.getTransactionSecondsRemaining()}}
       </button>
     </span>
     <div class="pull-right">

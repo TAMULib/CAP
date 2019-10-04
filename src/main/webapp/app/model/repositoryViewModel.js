@@ -136,7 +136,16 @@ cap.model("RepositoryView", function($location, $timeout, $interval, $q, HttpMet
     repositoryView.inTransaction = function() {
       return repositoryView.currentContext.transactionDetails !== null && 
         repositoryView.currentContext.transactionDetails !== undefined && 
-        repositoryView.currentContext.transactionDetails.secondsRemaining > 1;
+        repositoryView.currentContext.transactionDetails.expiration > new Date().getTime();
+    };
+
+    repositoryView.isTransactionAboutToExpire = function() {
+      return (repositoryView.currentContext.transactionDetails.expiration - new Date().getTime()) < 30000;
+    };
+
+    repositoryView.getTransactionSecondsRemaining = function() {
+      var secondsRemaining = Math.round((repositoryView.currentContext.transactionDetails.expiration - new Date().getTime()) / 1000);
+      return secondsRemaining > 9 ? secondsRemaining : '0' + secondsRemaining;
     };
 
     repositoryView.transactionTimer = undefined;
@@ -147,8 +156,8 @@ cap.model("RepositoryView", function($location, $timeout, $interval, $q, HttpMet
       if (!angular.isDefined(repositoryView.transactionTimer)) {
         repositoryView.transactionTimer = $interval(function() {
           var transaction = repositoryView.getTransaction();
-          if (transaction.secondsRemaining < 1) {
-           repositoryView.stopTransactionTimer();
+          if (transaction.expiration <= new Date().getTime()) {
+            repositoryView.stopTransactionTimer();
           }
         }, 1000);
       }
