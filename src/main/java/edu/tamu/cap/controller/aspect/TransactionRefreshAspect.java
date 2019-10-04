@@ -74,31 +74,18 @@ public class TransactionRefreshAspect extends RepositoryViewResolver {
     // @formatter:on
     public void refreshTransaction(JoinPoint joinPoint, ApiResponse apiResponse) throws Throwable {
         String contextUri = request.getParameter("contextUri");
-        System.out.println("\n\n" + contextUri + "\n\n");
         Optional<String> transactionToken = getTransactionToken(contextUri);
-        System.out.println("\n\n" + transactionToken.isPresent() + "\n\n");
         if (transactionToken.isPresent()) {
-
             MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
             Method method = methodSignature.getMethod();
-
             for (Parameter parameter : method.getParameters()) {
-
                 if (RepositoryViewService.class.isAssignableFrom(parameter.getType())) {
                     TransactingRepositoryViewService<?> repositoryViewService = SpringContext.bean(getRepositoryViewType().getGloss());
                     Optional<Long> repositoryViewid = getRepositoryViewId();
-
                     RepositoryView repositoryView = repositoryViewid.isPresent() ? repositoryViewRepo.read(repositoryViewid.get()) : getRepositoryViewFromRequest(request);
-
                     repositoryViewService.setRepositoryView(repositoryView);
-
                     String longContextUri = buildFullContextURI(repositoryView.getRootUri(), transactionToken.get());
-
-                    System.out.println("\n\n" + longContextUri + "\n\n");
-
                     TransactionDetails transactionDetails = repositoryViewService.refreshTransaction(longContextUri);
-
-                    System.out.println("\n\n" + transactionDetails.getExpiration() + "\n\n");
                     simpMessagingTemplate.convertAndSend("/queue/transaction/" + request.getUserPrincipal().getName(), new ApiResponse(SUCCESS, BROADCAST, transactionDetails));
                 }
             }
