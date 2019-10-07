@@ -1,14 +1,14 @@
-<form name="irForm.create" ng-submit="deleteRepositoryView(repositoryViewToDelete)" novalidate>
-    <div class="modal-header {{attr.modalHeaderClass}}">
-      <button type="button" class="close modal-close" aria-label="Close" ng-click="cancelDeleteRepositoryView()"><span aria-hidden="true">&times;</span></button>
-      <h4 class="modal-title">Confirm Removal</h4>
-    </div>
-    <div class="modal-body">
-      <h3>Are you sure you want to remove:</h3>
-      <p>{{repositoryViewToDelete.name}}</p>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-default" ng-click="cancelDeleteRepositoryView()">Cancel</button>
-      <button type="submit" class="btn btn-danger" ng-disabled="submitClicked">Confirm</button>
-    </div>
+<form name="irForm.create" ng-submit="onDeleteRepositoryView()" novalidate>
+  <div class="modal-header {{attr.modalHeaderClass}}">
+    <button type="button" class="close modal-close" aria-label="Close" ng-click="onCancelDeleteRepositoryView()"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title">Confirm Removal</h4>
+  </div>
+  <div class="modal-body">
+    <h3>Are you sure you want to remove:</h3>
+    <p>{{repositoryView.name}}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="onCancelDeleteRepositoryView()">Cancel</button>
+    <button type="submit" class="btn btn-danger" ng-disabled="submitting">Confirm</button>
+  </div>
 </form>
