@@ -9,7 +9,7 @@ cap.controller("AbstractAppController", function($controller, $q, $scope, $timeo
       ModalService.closeModal();
       $timeout(function() {
           resolve();
-      }, 250)
+      }, 250);
     });
   };
 
