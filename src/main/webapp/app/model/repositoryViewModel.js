@@ -38,8 +38,8 @@ cap.model("RepositoryView", function($location, $timeout, $interval, $q, HttpMet
     };
 
     repositoryView.loadContext = function(contextUri, reload) {
-      $location.search("context", contextUri);
       repositoryView.currentContext = repositoryView.getContext(contextUri, reload);
+      $location.search("context", contextUri);
       return repositoryView.currentContext;
     };
 

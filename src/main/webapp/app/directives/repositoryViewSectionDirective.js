@@ -112,7 +112,7 @@ cap.directive("repositoryViewSection", function($controller, RepositoryViewSecti
 
           // TODO: provide a better solution than using a watch or remove entirely if adding manual refresh buttons.
           $scope.$watch("list", function(newList, oldList) {
-            if (oldList !== undefined) {
+            if (newList !== undefined && oldList !== undefined) {
               if (newList.length == oldList.length) {
                 angular.forEach(oldList, function (value, key) {
                   if (value != newList[key]) {

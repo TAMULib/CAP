@@ -7,7 +7,7 @@ import edu.tamu.cap.model.response.Version;
 
 public interface VersioningRepositoryViewService<M> extends RepositoryViewService<M> {
 
-    public RepositoryViewContext createVersion(String contextUri, String Name) throws Exception;
+    public RepositoryViewContext createVersion(String contextUri, String versionName) throws Exception;
 
     public List<Version> getVersions(String contextUri) throws Exception;
 

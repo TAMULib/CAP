@@ -360,19 +360,19 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
     }
 
     @Override
-    public RepositoryViewContext createVersion(String contextUri, String name) throws Exception {
+    public RepositoryViewContext createVersion(String contextUri, String versionName) throws Exception {
         String longContextUri = buildFullContextURI(repositoryView.getRootUri(), contextUri);
 
-        if (name.isEmpty()) {
+        if (versionName.isEmpty()) {
             SimpleDateFormat output = new SimpleDateFormat("yyyyMMddHHmmss");
-            name = "version." + output.format(System.currentTimeMillis());
+            versionName = "version." + output.format(System.currentTimeMillis());
         } else {
-            name = "version." + name;
+            versionName = "version." + versionName;
         }
 
         URI uri = URI.create(longContextUri + "/fcr:versions");
         logger.info("Attempting to create version: {}", uri.toString());
-        FcrepoResponse response = new PostBuilder(uri, buildClient()).slug(name).perform();
+        FcrepoResponse response = new PostBuilder(uri, buildClient()).slug(versionName).perform();
         checkFedoraResult(response);
         URI location = response.getLocation();
         logger.info("Version creation status and location: {}, {}", response.getStatusCode(), location);

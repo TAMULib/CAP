@@ -25,8 +25,8 @@ public class RepositoryViewContextQueryController {
 
     @RequestMapping(method = GET)
     @PreAuthorize("hasRole('USER')")
-    public ApiResponse getQueryHelp(QueryableRepositoryViewService<?> rvService) throws Exception {
-        return new ApiResponse(SUCCESS, "Successfully retrieved query help.", rvService.getQueryHelp());
+    public ApiResponse getQueryHelp(QueryableRepositoryViewService<?> repositoryViewService) throws Exception {
+        return new ApiResponse(SUCCESS, "Successfully retrieved query help.", repositoryViewService.getQueryHelp());
     }
 
 }

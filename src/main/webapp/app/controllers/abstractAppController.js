@@ -1,8 +1,17 @@
-cap.controller("AbstractAppController", function($controller, $scope) {
+cap.controller("AbstractAppController", function($controller, $q, $scope, $timeout, ModalService) {
 
   angular.extend(this, $controller('AbstractController', {
         $scope: $scope
   }));
+
+  $scope.closeModal = function() {
+    return $q(function(resolve) {
+      ModalService.closeModal();
+      $timeout(function() {
+          resolve();
+      }, 250)
+    });
+  };
 
   $scope.isCurator = function () {
       return (sessionStorage.role === "ROLE_CURATOR");
