@@ -1,7 +1,6 @@
 package edu.tamu.cap.service;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.time.Duration;
@@ -22,7 +21,6 @@ public class TransactionServiceTest {
     public void testAdd() {
         transactionService.add(tids[0], Duration.ofHours(1));
         assertEquals(1, transactionService.count());
-        assertFalse(transactionService.isAboutToExpire(tids[0]));
     }
 
     @Test
@@ -36,13 +34,6 @@ public class TransactionServiceTest {
         testAdd();
         transactionService.remove(tids[0]);
         assertEquals(0, transactionService.count());
-    }
-
-    @Test
-    public void testIsAboutToExpire() {
-        transactionService.add(tids[0], Duration.ofSeconds(10));
-        assertEquals(1, transactionService.count());
-        assertTrue(transactionService.isAboutToExpire(tids[0]));
     }
 
     @Test
