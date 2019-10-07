@@ -4,8 +4,6 @@ cap.model("RepositoryView", function($location, $timeout, $interval, $q, HttpMet
 
     var cache = {};
 
-    repositoryView.currentContext = {};
-
     repositoryView.cacheContext = function(context) {
       cache[context.uri] = context;
     };
@@ -197,11 +195,17 @@ cap.model("RepositoryView", function($location, $timeout, $interval, $q, HttpMet
     var user = UserService.getCurrentUser();
 
     WsApi.listen("/queue/transaction/" + user.uin).then(null, null, function(res) {
-      var transactionDetails = angular.fromJson(res.body).payload.TransactionDetails;
-      angular.extend(repositoryView.currentContext, {
-        transactionDetails: transactionDetails
-      });
-      repositoryView.currentContext.reloadContext();
+      // only process broadcast if repository view has a context
+      if (angular.isDefined(repositoryView.currentContext)) {
+        var transactionDetails = angular.fromJson(res.body).payload.TransactionDetails;
+        // only update context if matching transaction
+        if (repositoryView.currentContext.uri.startsWith(transactionDetails.token)) {
+          angular.extend(repositoryView.currentContext, {
+            transactionDetails: transactionDetails
+          });
+          repositoryView.currentContext.reloadContext();
+        }
+      }
     });
 
     return repositoryView;
