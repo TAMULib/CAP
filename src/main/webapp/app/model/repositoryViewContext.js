@@ -29,7 +29,7 @@ cap.model("RepositoryViewContext", function ($q, $filter, HttpMethodVerbs) {
           defer.resolve(repositoryViewContext);
 
           repositoryViewContext.ready().then(function() {
-            if(repositoryViewContext.repositoryView.getTransaction().active) {
+            if(repositoryViewContext.repositoryView.inTransaction()) {
               repositoryViewContext.repositoryView.startTransactionTimer();
             }
           });
@@ -267,10 +267,8 @@ cap.model("RepositoryViewContext", function ($q, $filter, HttpMethodVerbs) {
       var versionPromise = repositoryViewContext.repositoryView.performRequest(repositoryViewContext.getMapping().version, {
         method: HttpMethodVerbs.POST,
         query: {
-          contextUri: shortenContextUri(repositoryViewContext.uri)
-        },
-        data: {
-          name: form.name
+          contextUri: shortenContextUri(repositoryViewContext.uri),
+          versionName: form.name
         }
       });
 
@@ -298,11 +296,11 @@ cap.model("RepositoryViewContext", function ($q, $filter, HttpMethodVerbs) {
       });
     };
 
-    repositoryViewContext.revertVersion = function(context) {
+    repositoryViewContext.revertVersion = function(versionContext) {
       var revertVersionPromise = repositoryViewContext.repositoryView.performRequest(repositoryViewContext.getMapping().version, {
         method: HttpMethodVerbs.PATCH,
         query: {
-          contextUri: shortenContextUri(context.uri)
+          contextUri: shortenContextUri(versionContext.uri)
         }
       });
       return revertVersionPromise;

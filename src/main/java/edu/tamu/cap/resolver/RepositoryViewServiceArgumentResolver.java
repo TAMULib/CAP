@@ -5,8 +5,6 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -16,15 +14,13 @@ import org.springframework.web.servlet.HandlerMapping;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import edu.tamu.cap.model.RepositoryView;
 import edu.tamu.cap.model.repo.RepositoryViewRepo;
-import edu.tamu.cap.service.RepositoryViewResolver;
 import edu.tamu.cap.service.RepositoryViewService;
 import edu.tamu.cap.service.RepositoryViewType;
 import edu.tamu.weaver.context.SpringContext;
 
-public final class RepositoryViewServiceArgumentResolver extends RepositoryViewResolver implements HandlerMethodArgumentResolver {
-
-    private final static Logger logger = LoggerFactory.getLogger(RepositoryViewServiceArgumentResolver.class);
+public final class RepositoryViewServiceArgumentResolver implements HandlerMethodArgumentResolver {
 
     private RepositoryViewRepo repositoryViewRepo;
 
@@ -42,7 +38,6 @@ public final class RepositoryViewServiceArgumentResolver extends RepositoryViewR
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
 
         @SuppressWarnings("unchecked")
@@ -50,26 +45,30 @@ public final class RepositoryViewServiceArgumentResolver extends RepositoryViewR
 
         RepositoryViewType type = RepositoryViewType.valueOf(pathVariables.get("type"));
 
-        Optional<Long> repositoryViewId = Optional.empty();
-        try {
-            repositoryViewId = Optional.of(Long.parseLong(pathVariables.get("repositoryViewId")));
-        } catch (NumberFormatException e) {
-            logger.info("Id not provided in path!");
+        RepositoryViewService<?> repositoryViewService = SpringContext.bean(type.getGloss());
+
+        Optional<String> repositoryViewId = Optional.ofNullable(pathVariables.get("repositoryViewId"));
+
+        if (repositoryViewId.isPresent()) {
+            RepositoryView repositoryView = repositoryViewRepo.read(Long.parseLong(repositoryViewId.get()));
+            if (repositoryView != null) {
+                repositoryViewService.setRepositoryView(repositoryView);
+            }
+            return repositoryViewService;
         }
 
-        RepositoryViewService<?> repositoryViewService = SpringContext.bean(type.getGloss());
-        if (repositoryViewId.isPresent()) {
-            repositoryViewService.setRepositoryView(repositoryViewRepo.read(repositoryViewId.get()));
-        } else {
-            repositoryViewService.setRepositoryView(getRepositoryViewFromRequest(request));
-        }
+        // NOTE: This should be only if repository view id is not present!
+        //
+        // The actual use case of the request body being a valid repository view
+        // is during verification. There is probably a better way to verify
+        // a repository view before creation.
+        //
+        // Tests rely on the ability for the request body be the repository view
+        // rather then acquire a persisted one.
+        RepositoryView repositoryView = objectMapper.readValue(request.getInputStream(), RepositoryView.class);
+        repositoryViewService.setRepositoryView(repositoryView);
 
         return repositoryViewService;
-    }
-
-    @Override
-    protected ObjectMapper getObjectMapper() {
-        return objectMapper;
     }
 
 }

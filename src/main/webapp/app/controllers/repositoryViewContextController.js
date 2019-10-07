@@ -1,4 +1,4 @@
-cap.controller("RepositoryViewContextController", function ($controller, $location, $routeParams, $scope, $timeout, $filter, $q, RepositoryViewRepo, SchemaRepo, FixityReport) {
+cap.controller("RepositoryViewContextController", function ($controller, $filter, $location, $routeParams, $scope, $timeout, $q, RepositoryViewRepo, SchemaRepo, FixityReport) {
 
   angular.extend(this, $controller('AbstractAppController', {
     $scope: $scope
@@ -18,6 +18,10 @@ cap.controller("RepositoryViewContextController", function ($controller, $locati
 
   RepositoryViewRepo.ready().then(function () {
     $scope.repositoryView = RepositoryViewRepo.findByName(decodeURI($routeParams.irName));
+
+    var shortenContextUri = function (contextUri) {
+      return $scope.repositoryView.rootUri ? $filter('shortenUri')(contextUri, $scope.repositoryView.rootUri) : contextUri;
+    };
 
     if(!$scope.repositoryView) $location.path("/error/404");
 
@@ -129,7 +133,7 @@ cap.controller("RepositoryViewContextController", function ($controller, $locati
 
     };
 
-    $scope.cancelDeleteRepositoryViewContext = function (repositoryViewContext) {
+    $scope.cancelDeleteRepositoryViewContext = function () {
       $scope.repositoryViewContextToDelete = {};
       $scope.closeModal();
     };
@@ -137,48 +141,65 @@ cap.controller("RepositoryViewContextController", function ($controller, $locati
     $scope.deleteRepositoryViewContext = function () {
       $scope.submitClicked = true;
 
-      var repositoryView = $scope.context.repositoryView;
-      var currentTriple = $scope.context.triple;
-      var isResource = $scope.context.resource;
+      $scope.closeModal().then(function() {
+        var repositoryView = $scope.context.repositoryView;
+        var currentTriple = $scope.context.triple;
+        var isResource = $scope.context.resource;
 
-      var deleteContext = isResource ? $scope.context.removeResources : $scope.context.removeContainers;
+        var deleteContext = isResource ? $scope.context.removeResources : $scope.context.removeContainers;
 
-      $scope.context = repositoryView.loadContext($scope.context.parent.object);
+        var parentContextUri = shortenContextUri($scope.context.parent.object);
 
-      deleteContext([currentTriple]).then(function () {
-        $scope.context = repositoryView.loadContext($scope.context.uri, true);
-        $scope.submitClicked = false;
+        deleteContext([currentTriple]).then(function () {
+          $scope.context = repositoryView.loadContext(parentContextUri, true);
+          $scope.submitClicked = false;
+        });
       });
+    };
 
+    $scope.viewVersion = function (version) {
+      $scope.closeModal().then(function() {
+        var repositoryView = $scope.context.repositoryView;
+        var versionContextUri = shortenContextUri(version.triple.object);
+        $scope.context = repositoryView.loadContext(versionContextUri, true);
+      });
     };
 
     $scope.revertVersion = function () {
       $scope.submitClicked = true;
 
-      var repositoryView = $scope.context.repositoryView;
-      var currentContext = $scope.context;
+      $scope.closeModal().then(function() {
+        var repositoryView = $scope.context.repositoryView;
+        var currentContext = $scope.context;
+        var currentContextUri = shortenContextUri(currentContext.uri);
 
-      $scope.context = repositoryView.loadContext($scope.context.parent.object);
+        var parentContextUri = shortenContextUri($scope.context.parent.object);
 
-      $scope.context.revertVersion(currentContext).then(function () {
-        $scope.context = repositoryView.loadContext($scope.context.uri, true);
-        $scope.submitClicked = false;
+        repositoryView.removeCachedContext(currentContextUri);
+
+        $scope.context.revertVersion(currentContext).then(function () {
+          $scope.context = repositoryView.loadContext(parentContextUri, true);
+          $scope.submitClicked = false;
+        });
       });
     };
 
     $scope.deleteVersion = function () {
       $scope.submitClicked = true;
 
-      var repositoryView = $scope.context.repositoryView;
-      var currentContext = $scope.context;
+      $scope.closeModal().then(function() {
+        var repositoryView = $scope.context.repositoryView;
+        var currentContext = $scope.context;
+        var currentContextUri = shortenContextUri(currentContext.uri);
 
-      $scope.context = repositoryView.loadContext($scope.context.parent.object);
+        var parentContextUri = shortenContextUri($scope.context.parent.object);
 
-      repositoryView.removeCachedContext($scope.context.uri);
+        repositoryView.removeCachedContext(currentContextUri);
 
-      $scope.context.deleteVersion(currentContext).then(function () {
-        $scope.context = repositoryView.loadContext($scope.context.uri, true);
-        $scope.submitClicked = false;
+        $scope.context.deleteVersion(currentContext).then(function () {
+          $scope.context = repositoryView.loadContext(parentContextUri, true);
+          $scope.submitClicked = false;
+        });
       });
     };
 
@@ -280,9 +301,9 @@ cap.controller("RepositoryViewContextController", function ($controller, $locati
         var iiifUri = null;
 
         if ($scope.context.resource && $scope.context.hasParent) {
-          var parentContext = $scope.context.repositoryView.getContext($scope.context.parent.object);
+          var parentContext = $scope.context.repositoryView.getContext(shortenContextUri($scope.context.parent.object));
           if (parentContext.hasParent) {
-            var grandParentContext = $scope.context.repositoryView.getContext(parentContext.parent.object);
+            var grandParentContext = $scope.context.repositoryView.getContext(shortenContextUri(parentContext.parent.object));
             contextProperties = grandParentContext.properties;
             iiifUri = grandParentContext.uri;
           }

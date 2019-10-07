@@ -13,8 +13,8 @@
       </modal>
       <ul ng-if="!context.isVersion" class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
         <li class="dropdown-header">Container Actions</li>
-        <li role="menuitem" ng-class="{'disabled': context.repositoryView.getTransaction().active}" ng-if="context.features.transacting" ng-click="context.repositoryView.getTransaction().active||startTransaction()"><a href="#"><span class="glyphicon glyphicon-play-circle"></span> Start Transaction</a></li>
-        <li role="menuitem" ng-class="{'disabled': context.repositoryView.getTransaction().active}" ng-if="context.features.versioning" ng-click="context.repositoryView.getTransaction().active||openModal('#versionsModal')"><a href="#"><span class="glyphicon glyphicon-scissors"></span> Versions</a></li>
+        <li role="menuitem" ng-class="{'disabled': context.repositoryView.inTransaction()}" ng-if="context.features.transacting" ng-click="context.repositoryView.inTransaction()||startTransaction()"><a href="#"><span class="glyphicon glyphicon-play-circle"></span> Start Transaction</a></li>
+        <li role="menuitem" ng-class="{'disabled': context.repositoryView.inTransaction()}" ng-if="context.features.versioning" ng-click="context.repositoryView.inTransaction()||openModal('#versionsModal')"><a href="#"><span class="glyphicon glyphicon-scissors"></span> Versions</a></li>
         <li role="menuitem" ng-if="messagingEnabled" ng-click="refreshContext()"><a href="#"><span class="glyphicon glyphicon-refresh"></span> Emit Refresh Message</a></li>
         <li role="menuitem" class="disabled"><a href="#"><span class="glyphicon glyphicon-move"></span> Move</a></li>
         <li role="menuitem" class="disabled"><a href="#"><span class="glyphicon glyphicon-random"></span> Migrate</a></li>
@@ -63,11 +63,11 @@
     </div>
   </div>
 
-  <div ng-if="context.repositoryView.getTransaction().active" class="alert alert-info clearfix" role="alert">
+  <div ng-if="context.repositoryView.inTransaction()" class="alert alert-info clearfix" role="alert">
     <span>
       <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> This Repository View is currently in transaction.
-      <button ng-if="context.repositoryView.getTransaction().secondsRemaining<31" class="btn btn-sm btn-info" ng-click="context.repositoryView.refreshTransaction()">
-        <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> 0:{{context.repositoryView.getTransaction().secondsRemaining}}
+      <button ng-if="context.repositoryView.isTransactionAboutToExpire()" class="btn btn-sm btn-info" ng-click="context.repositoryView.refreshTransaction()">
+        <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> 0:{{context.repositoryView.getTransactionSecondsRemaining()}}
       </button>
     </span>
     <div class="pull-right">
