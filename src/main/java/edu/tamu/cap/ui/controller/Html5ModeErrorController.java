@@ -22,7 +22,6 @@ public class Html5ModeErrorController implements ErrorController {
     @RequestMapping(value = PATH)
     public ModelAndView error(HttpServletRequest request, HttpServletResponse response) {
         Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
-
         if (statusCode == HttpServletResponse.SC_BAD_REQUEST || statusCode == HttpServletResponse.SC_FORBIDDEN) {
             response.setStatus(statusCode);
         } else if (request.getHeader("X-Requested-With") == null) {

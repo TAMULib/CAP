@@ -1,4 +1,4 @@
-cap.controller('UsersController', function ($controller, $location, $injector, $scope, $route, StorageService, UserService) {
+cap.controller('UsersController', function ($controller, $location, $injector, $scope, $route, UserService) {
 
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
@@ -7,11 +7,11 @@ cap.controller('UsersController', function ($controller, $location, $injector, $
     UserService.userReady().then(function() {
 
         $scope.assignableRoles = function(userRole) {
-            if($scope.isAdmin()) {
+            if ($scope.isAdmin()) {
                 return ['ROLE_ADMIN','ROLE_CURATOR','ROLE_USER'];
             }
-            else if($scope.isManager()) {
-                if(userRole == 'ROLE_ADMIN') {
+            else if ($scope.isManager()) {
+                if (userRole == 'ROLE_ADMIN') {
                     return ['ROLE_ADMIN'];
                 }
                 return ['ROLE_CURATOR','ROLE_USER'];
@@ -23,13 +23,13 @@ cap.controller('UsersController', function ($controller, $location, $injector, $
 
         $scope.canDelete = function(user) {
             var canDelete = false;
-            if((user.uin != $scope.user.uin) && $scope.isAdmin()) {
+            if ((user.uin != $scope.user.uin) && $scope.isAdmin()) {
                 canDelete = true;
             }
             return canDelete;
         };
 
-        if($scope.isAdmin()) {
+        if ($scope.isAdmin()) {
 
             var UserRepo = $injector.get("UserRepo");
 
@@ -43,8 +43,8 @@ cap.controller('UsersController', function ($controller, $location, $injector, $
 
                 user.save();
 
-                if($scope.user.username == user.username) {
-                    if(user.role == 'ROLE_USER') {
+                if ($scope.user.username == user.username) {
+                    if (user.role == 'ROLE_USER') {
                         $location.path('/myview');
                     }
                     else {}
