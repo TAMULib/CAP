@@ -4,8 +4,7 @@
       <button type="button" class="btn btn-default" uib-dropdown-toggle>
         Context Actions <span class="caret"></span>
       </button>
-      <modal modal-id="fixityModalDD" modal-view="views/modals/fixityModal.html" modal-header-class="modal-header-primary" modal-fullscreen="true" wvr-modal-backdrop="static">
-      </modal>
+      <modal modal-id="fixityModalDD" modal-view="views/modals/fixityModal.html" modal-header-class="modal-header-primary" modal-fullscreen="true" wvr-modal-backdrop="static"></modal>
       <ul ng-if="!context.isVersion" class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
         <li class="dropdown-header">Container Actions</li>
         <li role="menuitem" ng-class="{'disabled': context.repositoryView.inTransaction()}" ng-if="context.features.transacting" ng-click="context.repositoryView.inTransaction()||startTransaction()"><a href="#"><span class="glyphicon glyphicon-play-circle"></span> Start Transaction</a></li>
@@ -214,37 +213,26 @@
     </div>
   </div>
 
-  <modal modal-id="createContainer" modal-view="views/modals/createContainerModal.html" modal-header-class="modal-header-primary" modal-fullscreen="true" wvr-modal-backdrop="static">
-  </modal>
+  <modal modal-id="createContainer" modal-view="views/modals/createContainerModal.html" modal-header-class="modal-header-primary" modal-fullscreen="true" wvr-modal-backdrop="static"></modal>
 
-  <modal modal-id="uploadResource" modal-view="views/modals/uploadResource.html" modal-header-class="modal-header-primary" wvr-modal-backdrop="static">
-  </modal>
+  <modal modal-id="uploadResource" modal-view="views/modals/uploadResource.html" modal-header-class="modal-header-primary" wvr-modal-backdrop="static"></modal>
 
-  <modal modal-id="addMetadata" modal-view="views/modals/addMetadataModal.html" modal-header-class="modal-header-primary" modal-fullscreen="true" wvr-modal-backdrop="static">
-  </modal>
+  <modal modal-id="addMetadata" modal-view="views/modals/addMetadataModal.html" modal-header-class="modal-header-primary" modal-fullscreen="true" wvr-modal-backdrop="static"></modal>
 
-  <modal ng-if="isAdmin && context.features.queryable" modal-id="advancedUpdate" modal-view="views/modals/advancedUpdateModal.html" modal-header-class="modal-header-primary" wvr-modal-backdrop="static">
-  </modal>
+  <modal ng-if="isAdmin && context.features.queryable" modal-id="advancedUpdate" modal-view="views/modals/advancedUpdateModal.html" modal-header-class="modal-header-primary" wvr-modal-backdrop="static"></modal>
 
-  <modal modal-id="repositoryViewContextDeleteModal" modal-view="views/modals/repositoryViewContextDeleteModal.html" modal-header-class="modal-header-danger" wvr-modal-backdrop="static">
-  </modal>
+  <modal modal-id="repositoryViewContextDeleteModal" modal-view="views/modals/repositoryViewContextDeleteModal.html" modal-header-class="modal-header-danger" wvr-modal-backdrop="static"></modal>
 
-  <modal ng-if="context.features.versioning" modal-id="versionsModal" modal-view="views/modals/versionsModal.html" modal-header-class="modal-header-primary" modal-fullscreen="true" wvr-modal-backdrop="static">
-  </modal>
+  <modal ng-if="context.features.versioning" modal-id="versionsModal" modal-view="views/modals/versionsModal.html" modal-header-class="modal-header-primary" modal-fullscreen="true" wvr-modal-backdrop="static"></modal>
 
-  <modal modal-id="contextVersionDeleteModal" modal-view="views/modals/contextVersionDeleteModal.html" modal-header-class="modal-header-danger" wvr-modal-backdrop="static">
-  </modal>
+  <modal modal-id="contextVersionDeleteModal" modal-view="views/modals/contextVersionDeleteModal.html" modal-header-class="modal-header-danger" wvr-modal-backdrop="static"></modal>
 
-  <modal modal-id="contextVersionRevertModal" modal-view="views/modals/contextVersionRevertModal.html" modal-header-class="modal-header-warning" wvr-modal-backdrop="static">
-  </modal>
+  <modal modal-id="contextVersionRevertModal" modal-view="views/modals/contextVersionRevertModal.html" modal-header-class="modal-header-warning" wvr-modal-backdrop="static"></modal>
 
-  <modal modal-id="commitTransactionModal" modal-view="views/modals/commitTransactionModal.html" modal-header-class="modal-header-primary" wvr-modal-backdrop="static">
-  </modal>
+  <modal modal-id="commitTransactionModal" modal-view="views/modals/commitTransactionModal.html" modal-header-class="modal-header-primary" wvr-modal-backdrop="static"></modal>
 
-  <modal modal-id="rollbackTransactionModal" modal-view="views/modals/rollbackTransactionModal.html" modal-header-class="modal-header-warning" wvr-modal-backdrop="static">
-  </modal>
+  <modal modal-id="rollbackTransactionModal" modal-view="views/modals/rollbackTransactionModal.html" modal-header-class="modal-header-warning" wvr-modal-backdrop="static"></modal>
 
-  <modal modal-id="fixityModalButton" modal-view="views/modals/fixityModal.html" modal-header-class="modal-header-primary" modal-fullscreen="true" wvr-modal-backdrop="static">
-  </modal>
+  <modal modal-id="fixityModalButton" modal-view="views/modals/fixityModal.html" modal-header-class="modal-header-primary" modal-fullscreen="true" wvr-modal-backdrop="static"></modal>
 
 </div>
