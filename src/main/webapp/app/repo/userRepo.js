@@ -1,5 +1,5 @@
 cap.repo("UserRepo", function UserRepo() {
-  userRepo = this;
+  var userRepo = this;
 
   userRepo.getCurators = function() {
     var users = userRepo.getAll();

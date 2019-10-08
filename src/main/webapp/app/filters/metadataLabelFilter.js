@@ -1,4 +1,3 @@
-
 cap.filter("metadataLabel", function() {
     return function(input) {
 

@@ -16,8 +16,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.cap.model.RepositoryView;
 import edu.tamu.cap.model.repo.RepositoryViewRepo;
-import edu.tamu.cap.service.RepositoryViewService;
 import edu.tamu.cap.service.RepositoryViewType;
+import edu.tamu.cap.service.repositoryview.RepositoryViewService;
 import edu.tamu.weaver.context.SpringContext;
 
 public final class RepositoryViewServiceArgumentResolver implements HandlerMethodArgumentResolver {

@@ -1,20 +1,20 @@
 cap.controller("AbstractAppController", function($controller, $q, $scope, $timeout, ModalService) {
 
   angular.extend(this, $controller('AbstractController', {
-        $scope: $scope
+    $scope: $scope
   }));
 
   $scope.closeModal = function() {
     return $q(function(resolve) {
       ModalService.closeModal();
       $timeout(function() {
-          resolve();
+        resolve();
       }, 250);
     });
   };
 
   $scope.isCurator = function () {
-      return (sessionStorage.role === "ROLE_CURATOR");
+    return (sessionStorage.role === "ROLE_CURATOR");
   };
 
   $scope.isCollapsable = function(triples, predicate) {

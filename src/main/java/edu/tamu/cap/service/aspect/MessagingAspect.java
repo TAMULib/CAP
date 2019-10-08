@@ -44,43 +44,43 @@ public class MessagingAspect {
     @Autowired
     private HttpServletRequest request;
 
-    @AfterReturning(pointcut = "execution(* edu.tamu.cap.service.RepositoryViewService.createMetadata(..))", returning = "context")
+    @AfterReturning(pointcut = "execution(* edu.tamu.cap.service.repositoryview.RepositoryViewService.createMetadata(..))", returning = "context")
     public void createMetadataMessage(RepositoryViewContext context) throws Throwable {
         logger.info(String.format("Messaging create metadata action"));
         messagingService.sendMessage(MESSAGING_CHANNEL, buildMessage(getContextPath(context), MessageAction.CREATE));
     }
 
-    @AfterReturning(pointcut = "execution(* edu.tamu.cap.service.RepositoryViewService.updateMetadata(..))", returning = "context")
+    @AfterReturning(pointcut = "execution(* edu.tamu.cap.service.repositoryview.RepositoryViewService.updateMetadata(..))", returning = "context")
     public void updateMetadataMessage(RepositoryViewContext context) throws Throwable {
         logger.info(String.format("Messaging update metadata action"));
         messagingService.sendMessage(MESSAGING_CHANNEL, buildMessage(getContextPath(context), MessageAction.UPDATE));
     }
 
-    @AfterReturning(pointcut = "execution(* edu.tamu.cap.service.RepositoryViewService.deleteMetadata(..))", returning = "context")
+    @AfterReturning(pointcut = "execution(* edu.tamu.cap.service.repositoryview.RepositoryViewService.deleteMetadata(..))", returning = "context")
     public void deleteMetadataMessage(RepositoryViewContext context) throws Throwable {
         logger.info(String.format("Messaging delete metadata action"));
         messagingService.sendMessage(MESSAGING_CHANNEL, buildMessage(getContextPath(context), MessageAction.DELETE));
     }
 
-    @AfterReturning(pointcut = "execution(* edu.tamu.cap.service.RepositoryViewService.createResource(..))", returning = "context")
+    @AfterReturning(pointcut = "execution(* edu.tamu.cap.service.repositoryview.RepositoryViewService.createResource(..))", returning = "context")
     public void createResourceMessage(RepositoryViewContext context) throws Throwable {
         logger.info(String.format("Messaging create resource action"));
         messagingService.sendMessage(MESSAGING_CHANNEL, buildMessage(getParentContextPath(context), MessageAction.CREATE));
     }
 
-    @AfterReturning(pointcut = "execution(* edu.tamu.cap.service.RepositoryViewService.deleteResource(..))", returning = "context")
+    @AfterReturning(pointcut = "execution(* edu.tamu.cap.service.repositoryview.RepositoryViewService.deleteResource(..))", returning = "context")
     public void deleteResourceMessage(RepositoryViewContext context) throws Throwable {
         logger.info(String.format("Messaging delete resource action"));
         messagingService.sendMessage(MESSAGING_CHANNEL, buildMessage(getParentContextPath(context), MessageAction.DELETE));
     }
 
-    @AfterReturning(pointcut = "execution(* edu.tamu.cap.service.RepositoryViewService.createChild(..))", returning = "context")
+    @AfterReturning(pointcut = "execution(* edu.tamu.cap.service.repositoryview.RepositoryViewService.createChild(..))", returning = "context")
     public void createChild(RepositoryViewContext context) throws Throwable {
         logger.info(String.format("Messaging create child action"));
         messagingService.sendMessage(MESSAGING_CHANNEL, buildMessage(getParentContextPath(context), MessageAction.CREATE));
     }
 
-    @AfterReturning(pointcut = "execution(* edu.tamu.cap.service.RepositoryViewService.deleteRepositoryViewContext(..))", returning = "context")
+    @AfterReturning(pointcut = "execution(* edu.tamu.cap.service.repositoryview.RepositoryViewService.deleteRepositoryViewContext(..))", returning = "context")
     public void deleteChild(RepositoryViewContext context) throws Throwable {
         logger.info(String.format("Messaging delete child action"));
         messagingService.sendMessage(MESSAGING_CHANNEL, buildMessage(getParentContextPath(context), MessageAction.DELETE));

@@ -1,7 +1,7 @@
 cap.controller("SchemaManagementController", function($controller, $scope, $timeout, Schema, SchemaRepo, NgTableParams) {
 
   angular.extend(this, $controller('CoreAdminController', {
-      $scope: $scope
+    $scope: $scope
   }));
 
   $scope.schemas = SchemaRepo.getAll();
@@ -108,11 +108,11 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
         sorting: {
           name: 'asc'
         }
-    }, {
-      counts: [],
-      total: 0,
-      getData: function (params) {
-        return $scope.schemas;
+      }, {
+        counts: [],
+        total: 0,
+        getData: function (params) {
+          return $scope.schemas;
         }
       });
     };

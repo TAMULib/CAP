@@ -11,7 +11,6 @@ cap.component('plaintextLoader', {
         "application/json": "json"
       };
 
-
       $http.get(this.src).then(function(res) {
         var contentType = res.headers()['content-type'];
         var filterName = filterTypes[contentType];

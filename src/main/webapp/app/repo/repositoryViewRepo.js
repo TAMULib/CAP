@@ -1,4 +1,4 @@
-cap.repo("RepositoryViewRepo", function($q, WsApi, api, HttpMethodVerbs) {
+cap.repo("RepositoryViewRepo", function(WsApi, api) {
   var repositoryViewRepo = this;
 
   repositoryViewRepo.scaffold = {

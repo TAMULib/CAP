@@ -1,4 +1,4 @@
-package edu.tamu.cap.service;
+package edu.tamu.cap.service.repositoryview;
 
 public interface VerifyingRepositoryViewService<M> extends RepositoryViewService<M> {
 

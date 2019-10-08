@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.tamu.cap.model.response.Triple;
-import edu.tamu.cap.service.RepositoryViewService;
+import edu.tamu.cap.service.repositoryview.RepositoryViewService;
 import edu.tamu.weaver.response.ApiResponse;
 
 @RestController

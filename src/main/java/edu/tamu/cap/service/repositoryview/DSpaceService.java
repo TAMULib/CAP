@@ -1,4 +1,4 @@
-package edu.tamu.cap.service;
+package edu.tamu.cap.service.repositoryview;
 
 import java.util.List;
 
@@ -15,7 +15,6 @@ public class DSpaceService implements RepositoryViewService<Model> {
 
     @Override
     public RepositoryViewContext getRepositoryViewContext(String contextUri) throws Exception {
-
         return null;
     }
 
@@ -31,19 +30,16 @@ public class DSpaceService implements RepositoryViewService<Model> {
 
     @Override
     public RepositoryViewContext createResource(String contextUri, MultipartFile file) throws Exception {
-
         return null;
     }
 
     @Override
     public RepositoryViewContext createMetadata(String contextUri, Triple triple) throws Exception {
-
         return null;
     }
 
     @Override
     public RepositoryViewContext updateMetadata(String contextUri, Triple originalTriple, String query) throws Exception {
-
         return null;
     }
 
@@ -54,13 +50,11 @@ public class DSpaceService implements RepositoryViewService<Model> {
 
     @Override
     public RepositoryViewContext buildRepositoryViewContext(Model model, String contextUri) {
-
         return null;
     }
 
     @Override
     public RepositoryViewContext deleteMetadata(String contextUri, Triple triple) throws Exception {
-
         return null;
     }
 

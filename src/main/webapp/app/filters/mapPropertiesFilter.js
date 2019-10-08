@@ -1,4 +1,3 @@
-
 cap.filter("mapProperties", function() {
 
   var output = {};

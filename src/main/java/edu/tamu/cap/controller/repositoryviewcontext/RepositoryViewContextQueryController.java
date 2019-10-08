@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.tamu.cap.service.QueryableRepositoryViewService;
+import edu.tamu.cap.service.repositoryview.QueryableRepositoryViewService;
 import edu.tamu.weaver.response.ApiResponse;
 
 @RestController
