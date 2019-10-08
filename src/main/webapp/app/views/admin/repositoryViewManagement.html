@@ -7,14 +7,7 @@
   <div class="panel panel-default repository-view-container">
 
     <div ng-if="isAdmin()" class="panel-heading clearfix">
-      <button class="btn btn-success pull-right" ng-click="startCreate()">New</button>
-      <modal
-        modal-id="createRepositoryViewModal"
-        modal-view="views/modals/createRepositoryViewModal.html"
-        modal-header-class="modal-header-primary"
-        modal-fullscreen="true"
-        wvr-modal-backdrop="static">
-      </modal>
+      <button class="btn btn-success pull-right" ng-click="createRepositoryView()">New</button>
     </div>
 
     <div class="panel-body">
@@ -40,6 +33,14 @@
       </table>
     </div>
   </div>
+
+  <modal
+    modal-id="repositoryViewCreateModal"
+    modal-view="views/modals/repositoryViewCreateModal.html"
+    modal-header-class="modal-header-primary"
+    modal-fullscreen="true"
+    wvr-modal-backdrop="static">
+  </modal>
 
   <modal
     ng-if="isAdmin()"

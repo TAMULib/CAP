@@ -6,8 +6,6 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
 
   $scope.schemas = SchemaRepo.getAll();
 
-  $scope.schema = {};
-
   $scope.propertiesStatus = {
     loading: false,
     loaded: false
@@ -29,6 +27,7 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
         $scope.schemaForms[key].$setPristine();
       }
     }
+    delete $scope.schema;
     $scope.closeModal();
   };
 
@@ -50,7 +49,6 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
   };
 
   $scope.onCancelCreateSchema = function() {
-    $scope.schema = {};
     $scope.resetSchemaForms();
     $scope.resetSchemaPropertyList = false;
     $timeout(function(){
@@ -72,7 +70,6 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
   };
 
   $scope.onCancelEditSchema = function() {
-    $scope.schema = {};
     $scope.resetSchemaForms();
     $scope.resetSchemaPropertyList = false;
     $timeout(function(){
@@ -81,12 +78,11 @@ cap.controller("SchemaManagementController", function($controller, $scope, $time
   };
 
   $scope.deleteSchema = function(schema) {
-    $scope.schema = schema;
+    $scope.schema = new Schema(angular.copy(schema));
     $scope.openModal('#schemaDeleteModal');
   };
 
   $scope.onCancelDeleteSchema = function() {
-    $scope.schema = {};
     $scope.resetSchemaForms();
   };
 
