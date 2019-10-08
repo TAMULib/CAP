@@ -1,30 +1,30 @@
 .image-controls {
-    position: absolute;
-    color: white;
-    font-size: 2em;
-    top: 15px;
-    right: 30px;
+  position: absolute;
+  color: white;
+  font-size: 2em;
+  top: 15px;
+  right: 30px;
 
-    .image-control {
-        background: black;
-        padding: 6px 6px 0px 6px;
-        margin: 0px;
-        border-radius: 5px;
-        opacity: .25;
-        display: inline-block;
-    }
+  .image-control {
+    background: black;
+    padding: 6px 6px 0px 6px;
+    margin: 0px;
+    border-radius: 5px;
+    opacity: .25;
+    display: inline-block;
+  }
 
-    .image-control:hover {
-        opacity: .6;
-    }
+  .image-control:hover {
+    opacity: .6;
+  }
 
 }
 
 .openseadragon-container, .pdf-container {
-    min-height: 550px;
+  min-height: 550px;
 }
 
 .pdf-container {
-    display:block;
-    width:100%;
+  display:block;
+  width:100%;
 }

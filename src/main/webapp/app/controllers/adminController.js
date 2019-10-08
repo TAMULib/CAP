@@ -1,7 +1,7 @@
 cap.controller('AdminController', function ($controller, $scope) {
-  
-    angular.extend(this, $controller('CoreAdminController', {
-        $scope: $scope
-    }));
+
+  angular.extend(this, $controller('CoreAdminController', {
+    $scope: $scope
+  }));
 
 });

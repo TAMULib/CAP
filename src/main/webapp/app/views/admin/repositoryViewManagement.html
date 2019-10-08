@@ -18,15 +18,15 @@
               {{repositoryView.name}}
             </td>
             <td data-title="'Root URI'">
-                {{repositoryView.rootUri}}
+              {{repositoryView.rootUri}}
             </td>
             <td data-title="'Schemas'">
               <span class="badge clickable" ng-click="showSchemas(repositoryView.schemas)">{{repositoryView.schemas.length || 0}}</span>
             </td>
             <td data-title="'Actions'" class="actions">
-                <a href="rv/{{repositoryView.name}}?context=" title="view" class="glyphicon glyphicon-eye-open action"></a>
-                <span ng-if="isAdmin()" title="edit" ng-click="editRepositoryView(repositoryView)" class="glyphicon glyphicon-pencil action"></span>
-                <span ng-if="isAdmin()" title="delete" ng-click="confirmDeleteRepositoryView(repositoryView)" class="glyphicon glyphicon-trash action"></span>
+              <a href="rv/{{repositoryView.name}}?context=" title="view" class="glyphicon glyphicon-eye-open action"></a>
+              <span ng-if="isAdmin()" title="edit" ng-click="editRepositoryView(repositoryView)" class="glyphicon glyphicon-pencil action"></span>
+              <span ng-if="isAdmin()" title="delete" ng-click="confirmDeleteRepositoryView(repositoryView)" class="glyphicon glyphicon-trash action"></span>
             </td>
           </tr>
         </tbody>
@@ -34,36 +34,12 @@
     </div>
   </div>
 
-  <modal
-    modal-id="repositoryViewCreateModal"
-    modal-view="views/modals/repositoryViewCreateModal.html"
-    modal-header-class="modal-header-primary"
-    modal-fullscreen="true"
-    wvr-modal-backdrop="static">
-  </modal>
+  <modal modal-id="repositoryViewCreateModal" modal-view="views/modals/repositoryViewCreateModal.html" modal-header-class="modal-header-primary" modal-fullscreen="true" wvr-modal-backdrop="static"></modal>
 
-  <modal
-    ng-if="isAdmin()"
-    modal-id="repositoryViewDeleteModal"
-    modal-view="views/modals/repositoryViewDeleteModal.html"
-    modal-header-class="modal-header-danger"
-    wvr-modal-backdrop="static">
-  </modal>
+  <modal ng-if="isAdmin()" modal-id="repositoryViewDeleteModal" modal-view="views/modals/repositoryViewDeleteModal.html" modal-header-class="modal-header-danger" wvr-modal-backdrop="static"></modal>
 
-  <modal
-    ng-if="isAdmin()"
-    modal-id="repositoryViewEditModal"
-    modal-view="views/modals/repositoryViewEditModal.html"
-    modal-header-class="modal-header-warning"
-    modal-fullscreen="true"
-    wvr-modal-backdrop="static">
-  </modal>
+  <modal ng-if="isAdmin()" modal-id="repositoryViewEditModal" modal-view="views/modals/repositoryViewEditModal.html" modal-header-class="modal-header-warning" modal-fullscreen="true" wvr-modal-backdrop="static"></modal>
 
-  <modal
-    modal-id="showSchemasModal"
-    modal-view="views/modals/showSchemasModal.html"
-    modal-header-class="modal-header-info"
-    wvr-modal-backdrop="static">
-  </modal>
+  <modal modal-id="showSchemasModal" modal-view="views/modals/showSchemasModal.html" modal-header-class="modal-header-info" wvr-modal-backdrop="static"></modal>
 
 </div>

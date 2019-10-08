@@ -1,73 +1,73 @@
-cap.directive("findproperties", function(SchemaRepo) {
-    return  {
-        templateUrl: "views/directives/findProperties.html",
-        restrict: "E",
-        scope: {
-            schema: "=",
-            mode: "=",
-            status: "="
-        },
-        link: function($scope) {
-            $scope.properties = [];
+cap.directive("findproperties", function (SchemaRepo) {
+  return {
+    templateUrl: "views/directives/findProperties.html",
+    restrict: "E",
+    scope: {
+      schema: "=",
+      mode: "=",
+      status: "="
+    },
+    link: function ($scope) {
+      $scope.properties = [];
 
-            $scope.getProperties = function() {
-                $scope.status.loading = true;
-                $scope.status.loaded = false;
-                var getPropertiesPromise = SchemaRepo.findProperties($scope.schema);
-                
-                getPropertiesPromise.then(function(res) {
+      $scope.getProperties = function () {
+        $scope.status.loading = true;
+        $scope.status.loaded = false;
+        var getPropertiesPromise = SchemaRepo.findProperties($scope.schema);
 
-                    var un = $scope.$watch("schema.namespace", function(current, next) {
-                        if(current !== next) {
-                            $scope.properties.length = 0;
-                            $scope.schema.properties.length = 0;
-                            un();
-                        }
-                    });
+        getPropertiesPromise.then(function (res) {
 
-                    var properties = angular.fromJson(res.body).payload['ArrayList<Property>'];
-                    angular.extend($scope.properties, properties);
-                    $scope.status.loading = false;
-                    $scope.status.loaded = true;
-                });
-
-                return getPropertiesPromise;
-            };
-
-            $scope.toggleProp = function(prop) {
-                var propIndex = $scope.indexOfProp(prop);
-                if(propIndex === -1) {
-                    $scope.schema.properties.push(prop);
-                } else {
-                    $scope.schema.properties.splice(propIndex, 1);
-                }
-            };
-
-            $scope.toggleAllProps = function() {
-                if($scope.schema.properties.length === $scope.properties.length) {
-                    $scope.schema.properties.length = 0;
-                } else {
-                    angular.extend($scope.schema.properties, $scope.properties);
-                }
-            };
-
-            $scope.indexOfProp = function(prop) {
-                var indx = -1;
-                for(var i in $scope.schema.properties) {
-                    var p = $scope.schema.properties[i];
-                    if(prop.uri===p.uri) {
-                        indx = i;
-                        break;
-                    }
-                }
-                return indx;
-            };
-
-            if ($scope.mode === "edit") {
-                $scope.getProperties();
+          var un = $scope.$watch("schema.namespace", function (current, next) {
+            if (current !== next) {
+              $scope.properties.length = 0;
+              $scope.schema.properties.length = 0;
+              un();
             }
+          });
 
+          var properties = angular.fromJson(res.body).payload['ArrayList<Property>'];
+          angular.extend($scope.properties, properties);
+          $scope.status.loading = false;
+          $scope.status.loaded = true;
+        });
+
+        return getPropertiesPromise;
+      };
+
+      $scope.toggleProp = function (prop) {
+        var propIndex = $scope.indexOfProp(prop);
+        if (propIndex === -1) {
+          $scope.schema.properties.push(prop);
+        } else {
+          $scope.schema.properties.splice(propIndex, 1);
         }
+      };
 
-    };
+      $scope.toggleAllProps = function () {
+        if ($scope.schema.properties.length === $scope.properties.length) {
+          $scope.schema.properties.length = 0;
+        } else {
+          angular.extend($scope.schema.properties, $scope.properties);
+        }
+      };
+
+      $scope.indexOfProp = function (prop) {
+        var indx = -1;
+        for (var i in $scope.schema.properties) {
+          var p = $scope.schema.properties[i];
+          if (prop.uri === p.uri) {
+            indx = i;
+            break;
+          }
+        }
+        return indx;
+      };
+
+      if ($scope.mode === "edit") {
+        $scope.getProperties();
+      }
+
+    }
+
+  };
 });

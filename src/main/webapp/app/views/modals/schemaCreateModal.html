@@ -11,39 +11,11 @@
     <div class="row">
       <div class="col-sm-5 col-sm-offset-1">
 
-        <validatedinput
-          model="schema"
-          property="name"
-          label="Name"
-          placeholder="e.g. Dublin Core"
-          form="schemaForms.create"
-          validations="schemaForms.validations"
-          results="schemaForms.getResults()"
-          autocomplete="off">
-        </validatedinput>
+        <validatedinput model="schema" property="name" label="Name" placeholder="e.g. Dublin Core" form="schemaForms.create" validations="schemaForms.validations" results="schemaForms.getResults()" autocomplete="off"></validatedinput>
 
-        <validatedinput
-          model="schema"
-          property="abbreviation"
-          label="Abbreviation"
-          placeholder="e.g. DC"
-          form="schemaForms.create"
-          validations="schemaForms.validations"
-          results="schemaForms.getResults()"
-          autocomplete="off">
-        </validatedinput>
+        <validatedinput model="schema" property="abbreviation" label="Abbreviation" placeholder="e.g. DC" form="schemaForms.create" validations="schemaForms.validations" results="schemaForms.getResults()" autocomplete="off"></validatedinput>
 
-        <validatedinput
-          model="schema"
-          property="namespace"
-          label="Namespace"
-          placeholder="e.g. http://purl.org/dc/terms/"
-          form="schemaForms.create"
-          validations="schemaForms.validations"
-          results="schemaForms.getResults()"
-          autocomplete="off"
-          disabled="propertiesStatus.loading">
-        </validatedinput>
+        <validatedinput model="schema" property="namespace" label="Namespace" placeholder="e.g. http://purl.org/dc/terms/" form="schemaForms.create" validations="schemaForms.validations" results="schemaForms.getResults()" autocomplete="off" disabled="propertiesStatus.loading"></validatedinput>
 
       </div>
       <div class="col-sm-5">

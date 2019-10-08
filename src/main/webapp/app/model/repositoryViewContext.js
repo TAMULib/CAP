@@ -28,8 +28,8 @@ cap.model("RepositoryViewContext", function ($q, $filter, HttpMethodVerbs) {
           repositoryViewContext.repositoryView.cacheContext(repositoryViewContext);
           defer.resolve(repositoryViewContext);
 
-          repositoryViewContext.ready().then(function() {
-            if(repositoryViewContext.repositoryView.inTransaction()) {
+          repositoryViewContext.ready().then(function () {
+            if (repositoryViewContext.repositoryView.inTransaction()) {
               repositoryViewContext.repositoryView.startTransactionTimer();
             }
           });
@@ -41,7 +41,7 @@ cap.model("RepositoryViewContext", function ($q, $filter, HttpMethodVerbs) {
       return defer.promise;
     });
 
-    repositoryViewContext.reloadContext = function() {
+    repositoryViewContext.reloadContext = function () {
       var reloadPromise = fetchContext(repositoryViewContext.uri);
       reloadPromise.then(function (res) {
         angular.extend(repositoryViewContext, angular.fromJson(res.body).payload.RepositoryViewContext, {
@@ -182,7 +182,7 @@ cap.model("RepositoryViewContext", function ($q, $filter, HttpMethodVerbs) {
       return createPromise;
     };
 
-    repositoryViewContext.refreshContext = function() {
+    repositoryViewContext.refreshContext = function () {
       var refreshPromise = repositoryViewContext.repositoryView.performRequest(repositoryViewContext.getMapping().refreshContext, {
         method: HttpMethodVerbs.POST,
         query: {
@@ -260,7 +260,7 @@ cap.model("RepositoryViewContext", function ($q, $filter, HttpMethodVerbs) {
 
     };
 
-    repositoryViewContext.createVersion = function(form) {
+    repositoryViewContext.createVersion = function (form) {
 
       var versionPromise = repositoryViewContext.repositoryView.performRequest(repositoryViewContext.getMapping().version, {
         method: HttpMethodVerbs.POST,
@@ -270,7 +270,7 @@ cap.model("RepositoryViewContext", function ($q, $filter, HttpMethodVerbs) {
         }
       });
 
-      versionPromise.then(function(apiRes) {
+      versionPromise.then(function (apiRes) {
 
         var newContext = angular.fromJson(apiRes.body).payload.RepositoryViewContext;
         angular.extend(repositoryViewContext, newContext);
@@ -285,7 +285,7 @@ cap.model("RepositoryViewContext", function ($q, $filter, HttpMethodVerbs) {
       return versionPromise;
     };
 
-    repositoryViewContext.deleteVersion = function(versionContext) {
+    repositoryViewContext.deleteVersion = function (versionContext) {
       return repositoryViewContext.repositoryView.performRequest(repositoryViewContext.getMapping().version, {
         method: HttpMethodVerbs.DELETE,
         query: {
@@ -294,7 +294,7 @@ cap.model("RepositoryViewContext", function ($q, $filter, HttpMethodVerbs) {
       });
     };
 
-    repositoryViewContext.revertVersion = function(versionContext) {
+    repositoryViewContext.revertVersion = function (versionContext) {
       var revertVersionPromise = repositoryViewContext.repositoryView.performRequest(repositoryViewContext.getMapping().version, {
         method: HttpMethodVerbs.PATCH,
         query: {
@@ -324,7 +324,7 @@ cap.model("RepositoryViewContext", function ($q, $filter, HttpMethodVerbs) {
 
     repositoryViewContext.getQueryHelp = function () {
 
-      if(!queryHelp.message) {
+      if (!queryHelp.message) {
 
         var updatePromise = repositoryViewContext.repositoryView.performRequest(repositoryViewContext.getMapping().advancedQuery, {
           method: HttpMethodVerbs.GET

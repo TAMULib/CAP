@@ -1,28 +1,28 @@
-cap.model("RepositoryView", function($location, $timeout, $interval, $q, HttpMethodVerbs, RepositoryViewContext, WsApi, UserService) {
+cap.model("RepositoryView", function ($location, $timeout, $interval, $q, HttpMethodVerbs, RepositoryViewContext, WsApi, UserService) {
   return function RepositoryView() {
     var repositoryView = this;
 
     var cache = {};
 
-    repositoryView.cacheContext = function(context) {
+    repositoryView.cacheContext = function (context) {
       cache[context.uri] = context;
     };
 
-    repositoryView.getCachedContext = function(contextUri) {
+    repositoryView.getCachedContext = function (contextUri) {
       return cache[contextUri];
     };
 
-    repositoryView.removeCachedContext = function(contextUri) {
+    repositoryView.removeCachedContext = function (contextUri) {
       delete cache[contextUri];
     };
 
-    repositoryView.clearCache = function() {
-      angular.forEach(cache, function(v, uri){
+    repositoryView.clearCache = function () {
+      angular.forEach(cache, function (v, uri) {
         repositoryView.removeCachedContext(uri);
       });
     };
 
-    repositoryView.getContext = function(contextUri, reload) {
+    repositoryView.getContext = function (contextUri, reload) {
       var context = repositoryView.getCachedContext(contextUri);
       if (context === undefined) {
         context = new RepositoryViewContext({
@@ -37,19 +37,19 @@ cap.model("RepositoryView", function($location, $timeout, $interval, $q, HttpMet
       return context;
     };
 
-    repositoryView.loadContext = function(contextUri, reload) {
+    repositoryView.loadContext = function (contextUri, reload) {
       repositoryView.currentContext = repositoryView.getContext(contextUri, reload);
       $location.search("context", contextUri);
       return repositoryView.currentContext;
     };
 
-    repositoryView.performRequest = function(endpoint, options) {
+    repositoryView.performRequest = function (endpoint, options) {
       var defaultPathValues = {
         type: repositoryView.type,
         repositoryViewId: repositoryView.id
       };
 
-      if(options.pathValues) {
+      if (options.pathValues) {
         angular.extend(options.pathValues, defaultPathValues);
       } else {
         options.pathValues = defaultPathValues;
@@ -58,12 +58,12 @@ cap.model("RepositoryView", function($location, $timeout, $interval, $q, HttpMet
       return WsApi.fetch(endpoint, options);
     };
 
-    repositoryView.startTransaction = function() {
+    repositoryView.startTransaction = function () {
       var transactionPromise = repositoryView.performRequest(repositoryView.getMapping().transaction, {
         method: HttpMethodVerbs.GET
       });
 
-      transactionPromise.then(function(res) {
+      transactionPromise.then(function (res) {
         var transactionDetails = angular.fromJson(res.body).payload.TransactionDetails;
 
         repositoryView.clearCache();
@@ -75,14 +75,14 @@ cap.model("RepositoryView", function($location, $timeout, $interval, $q, HttpMet
 
         $location.search("context", repositoryView.currentContext.uri);
 
-        repositoryView.startTransactionTimer().then(function() {
+        repositoryView.startTransactionTimer().then(function () {
           repositoryView.currentContext.reloadContext();
         });
       });
       return transactionPromise;
     };
 
-    repositoryView.refreshTransaction = function() {
+    repositoryView.refreshTransaction = function () {
       var transaction = repositoryView.getTransaction();
       var refeshPromise = repositoryView.performRequest(repositoryView.getMapping().transaction, {
         method: HttpMethodVerbs.PUT,
@@ -90,7 +90,7 @@ cap.model("RepositoryView", function($location, $timeout, $interval, $q, HttpMet
           contextUri: repositoryView.rootUri + (repositoryView.rootUri.endsWith('/') ? "" : "/") + transaction.token
         }
       });
-      refeshPromise.then(function(res) {
+      refeshPromise.then(function (res) {
         var transactionDetails = angular.fromJson(res.body).payload.TransactionDetails;
         angular.extend(repositoryView.currentContext, {
           transactionDetails: transactionDetails
@@ -99,7 +99,7 @@ cap.model("RepositoryView", function($location, $timeout, $interval, $q, HttpMet
       return refeshPromise;
     };
 
-    repositoryView.commitTransaction = function() {
+    repositoryView.commitTransaction = function () {
       var transaction = repositoryView.getTransaction();
       var refeshPromise = repositoryView.performRequest(repositoryView.getMapping().transaction, {
         method: HttpMethodVerbs.POST,
@@ -107,13 +107,13 @@ cap.model("RepositoryView", function($location, $timeout, $interval, $q, HttpMet
           contextUri: repositoryView.rootUri + (repositoryView.rootUri.endsWith('/') ? "" : "/") + transaction.token
         }
       });
-      refeshPromise.then(function() {
+      refeshPromise.then(function () {
         repositoryView.stopTransactionTimer();
       });
       return refeshPromise;
     };
 
-    repositoryView.rollbackTransaction = function() {
+    repositoryView.rollbackTransaction = function () {
       var transaction = repositoryView.getTransaction();
       var rollbackPromise = repositoryView.performRequest(repositoryView.getMapping().transaction, {
         method: HttpMethodVerbs.DELETE,
@@ -121,38 +121,38 @@ cap.model("RepositoryView", function($location, $timeout, $interval, $q, HttpMet
           contextUri: repositoryView.rootUri + (repositoryView.rootUri.endsWith('/') ? "" : "/") + transaction.token
         }
       });
-      rollbackPromise.then(function() {
+      rollbackPromise.then(function () {
         repositoryView.stopTransactionTimer();
       });
       return rollbackPromise;
     };
 
-    repositoryView.getTransaction = function() {
+    repositoryView.getTransaction = function () {
       return repositoryView.currentContext.transactionDetails;
     };
 
-    repositoryView.inTransaction = function() {
-      return repositoryView.currentContext.transactionDetails !== null && 
-        repositoryView.currentContext.transactionDetails !== undefined && 
+    repositoryView.inTransaction = function () {
+      return repositoryView.currentContext.transactionDetails !== null &&
+        repositoryView.currentContext.transactionDetails !== undefined &&
         repositoryView.currentContext.transactionDetails.expiration > new Date().getTime();
     };
 
-    repositoryView.isTransactionAboutToExpire = function() {
+    repositoryView.isTransactionAboutToExpire = function () {
       return repositoryView.inTransaction() && (repositoryView.currentContext.transactionDetails.expiration - new Date().getTime()) < 30000;
     };
 
-    repositoryView.getTransactionSecondsRemaining = function() {
+    repositoryView.getTransactionSecondsRemaining = function () {
       var secondsRemaining = repositoryView.inTransaction() ? Math.round((repositoryView.currentContext.transactionDetails.expiration - new Date().getTime()) / 1000) : 0;
       return secondsRemaining > 9 ? secondsRemaining : '0' + secondsRemaining;
     };
 
     repositoryView.transactionTimer = undefined;
 
-    repositoryView.startTransactionTimer = function() {
+    repositoryView.startTransactionTimer = function () {
       var timerDefer = $q.defer();
 
       if (!angular.isDefined(repositoryView.transactionTimer)) {
-        repositoryView.transactionTimer = $interval(function() {
+        repositoryView.transactionTimer = $interval(function () {
           var transaction = repositoryView.getTransaction();
           if (transaction.expiration <= new Date().getTime()) {
             repositoryView.stopTransactionTimer();
@@ -163,11 +163,11 @@ cap.model("RepositoryView", function($location, $timeout, $interval, $q, HttpMet
       return timerDefer.promise;
     };
 
-    repositoryView.stopTransactionTimer = function() {
-      if(repositoryView.transactionTimer) {
+    repositoryView.stopTransactionTimer = function () {
+      if (repositoryView.transactionTimer) {
         $interval.cancel(repositoryView.transactionTimer);
         repositoryView.transactionTimer = undefined;
-        $timeout(function() {
+        $timeout(function () {
           var transaction = repositoryView.getTransaction();
           angular.extend(repositoryView.currentContext, {
             transactionDetails: null,
@@ -179,7 +179,7 @@ cap.model("RepositoryView", function($location, $timeout, $interval, $q, HttpMet
       }
     };
 
-    WsApi.listen("/queue/context").then(null, null, function(res) {
+    WsApi.listen("/queue/context").then(null, null, function (res) {
       var context = angular.fromJson(res.body).payload.RepositoryViewContext;
       var contextUri = context.triple.subject.replace(repositoryView.rootUri, '');
       if (cache[contextUri] === undefined) {
@@ -194,7 +194,7 @@ cap.model("RepositoryView", function($location, $timeout, $interval, $q, HttpMet
 
     var user = UserService.getCurrentUser();
 
-    WsApi.listen("/queue/transaction/" + user.uin).then(null, null, function(res) {
+    WsApi.listen("/queue/transaction/" + user.uin).then(null, null, function (res) {
       // only process broadcast if repository view has a context
       if (angular.isDefined(repositoryView.currentContext)) {
         var transactionDetails = angular.fromJson(res.body).payload.TransactionDetails;

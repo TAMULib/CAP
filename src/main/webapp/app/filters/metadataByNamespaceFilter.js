@@ -1,4 +1,4 @@
-cap.filter("metadataByNamespace", function() {
+cap.filter("metadataByNamespace", function () {
   return function (metadata, schemas) {
     if (schemas && angular.isArray(schemas)) {
       var uniqueByNamespace = [];

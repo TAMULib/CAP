@@ -10,41 +10,9 @@
       <uib-tab index="0" heading="General">
         <div class="row">
           <div class="col-sm-10 col-sm-offset-1">
-            <validatedselect
-              model="repositoryView"
-              property="type"
-              options="repositoryViewTypes"
-              optionproperty="gloss"
-              optionvalue="value"
-              label="Type"
-              placeholder="Type of the new Repository View"
-              form="repositoryViewForms.create"
-              validations="repositoryViewForms.validations"
-              results="repositoryViewForms.getResults()"
-              no-id="true">
-            </validatedselect>
-            <validatedinput
-              model="repositoryView"
-              property="name"
-              label="Name"
-              placeholder="Name of the new Repository View"
-              form="repositoryViewForms.create"
-              validations="repositoryViewForms.validations"
-              results="repositoryViewForms.getResults()"
-              autocomplete="off"
-              no-id="true">
-            </validatedinput>
-            <validatedinput
-              model="repositoryView"
-              property="rootUri"
-              label="Root URI"
-              placeholder="Root URI of the new Repository View"
-              form="repositoryViewForms.create"
-              validations="repositoryViewForms.validations"
-              results="repositoryViewForms.getResults()"
-              autocomplete="off"
-              no-id="true">
-            </validatedinput>
+            <validatedselect model="repositoryView" property="type" options="repositoryViewTypes" optionproperty="gloss" optionvalue="value" label="Type" placeholder="Type of the new Repository View" form="repositoryViewForms.create" validations="repositoryViewForms.validations" results="repositoryViewForms.getResults()" no-id="true"></validatedselect>
+            <validatedinput model="repositoryView" property="name" label="Name" placeholder="Name of the new Repository View" form="repositoryViewForms.create" validations="repositoryViewForms.validations" results="repositoryViewForms.getResults()" autocomplete="off" no-id="true"></validatedinput>
+            <validatedinput model="repositoryView" property="rootUri" label="Root URI" placeholder="Root URI of the new Repository View" form="repositoryViewForms.create" validations="repositoryViewForms.validations" results="repositoryViewForms.getResults()" autocomplete="off" no-id="true"></validatedinput>
           </div>
         </div>
       </uib-tab>
@@ -52,30 +20,8 @@
       <uib-tab index="1" heading="Authentication">
         <div class="row">
           <div class="col-sm-10 col-sm-offset-1">
-            <validatedinput
-              model="repositoryView"
-              property="username"
-              label="Username"
-              placeholder="Username of the new Repository View"
-              form="repositoryViewForms.create"
-              validations="repositoryViewForms.validations"
-              results="repositoryViewForms.getResults()"
-              autocomplete="off"
-              no-id="true">
-            </validatedinput>
-
-            <validatedinput
-              model="repositoryView"
-              property="password"
-              label="Password"
-              placeholder="Password of the new Repository View"
-              form="repositoryViewForms.create"
-              validations="repositoryViewForms.validations"
-              results="repositoryViewForms.getResults()"
-              autocomplete="off"
-              type="password"
-              no-id="true">
-            </validatedinput>
+            <validatedinput model="repositoryView" property="username" label="Username" placeholder="Username of the new Repository View" form="repositoryViewForms.create" validations="repositoryViewForms.validations" results="repositoryViewForms.getResults()" autocomplete="off" no-id="true"></validatedinput>
+            <validatedinput model="repositoryView" property="password" label="Password" placeholder="Password of the new Repository View" form="repositoryViewForms.create" validations="repositoryViewForms.validations" results="repositoryViewForms.getResults()" autocomplete="off" type="password" no-id="true"></validatedinput>
           </div>
         </div>
       </uib-tab>

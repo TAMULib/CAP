@@ -1,13 +1,13 @@
-cap.controller("AbstractAppController", function($controller, $q, $scope, $timeout, ModalService) {
+cap.controller("AbstractAppController", function ($controller, $q, $scope, $timeout, ModalService) {
 
   angular.extend(this, $controller('AbstractController', {
     $scope: $scope
   }));
 
-  $scope.closeModal = function() {
-    return $q(function(resolve) {
+  $scope.closeModal = function () {
+    return $q(function (resolve) {
       ModalService.closeModal();
-      $timeout(function() {
+      $timeout(function () {
         resolve();
       }, 250);
     });
@@ -17,7 +17,7 @@ cap.controller("AbstractAppController", function($controller, $q, $scope, $timeo
     return (sessionStorage.role === "ROLE_CURATOR");
   };
 
-  $scope.isCollapsable = function(triples, predicate) {
+  $scope.isCollapsable = function (triples, predicate) {
     var matches = 0;
     for (var i = 0; i < triples.length; i++) {
       if (triples.hasOwnProperty(i) && triples[i].predicate === predicate) {
