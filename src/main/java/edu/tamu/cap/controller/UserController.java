@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -63,7 +64,7 @@ public class UserController {
      * @return ApiResponse
      *
      */
-    @RequestMapping("/credentials")
+    @GetMapping("/credentials")
     @PreAuthorize("hasRole('USER')")
     public ApiResponse credentials(@WeaverCredentials Credentials credentials) {
         return new ApiResponse(SUCCESS, credentials);
@@ -75,7 +76,7 @@ public class UserController {
      * @return ApiResponse
      *
      */
-    @RequestMapping("/all")
+    @GetMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse allUsers() {
         return new ApiResponse(SUCCESS, userRepo.findAll());

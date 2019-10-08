@@ -61,11 +61,11 @@ cap.controller("RepositoryViewContextController", function ($controller, $filter
       });
     };
 
-    $scope.updateMetadatum = function(triple, newValue) {
+    $scope.updateMetadatum = function(triple, value) {
       var defer = $q.defer();
       var promise = defer.promise;
-      if(newValue && (newValue.length === 0 || newValue !== "\"\"")) {
-        promise = $scope.context.updateMetadatum(triple, newValue);
+      if(value && (value.length === 0 || value !== "\"\"")) {
+        promise = $scope.context.updateMetadatum(triple, value);
       } else {
         defer.reject("Update Rejected: Value was empty.");
       }

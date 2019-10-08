@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.jena.rdf.model.Property;
@@ -67,7 +66,6 @@ public final class FedoraServiceTest {
 
         request = mock(HttpServletRequest.class);
 
-        Mockito.when(request.getCookies()).thenReturn(new Cookie[0]);
         when(request.getMethod()).thenReturn("POST");
         when(request.getUserPrincipal()).thenReturn(new UsernamePasswordAuthenticationToken("aggieJack", ""));
         when(request.getAttribute(Mockito.any(String.class))).thenReturn(new HashMap<String, String>() {

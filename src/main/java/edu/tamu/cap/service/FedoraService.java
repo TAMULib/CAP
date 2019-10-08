@@ -134,6 +134,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
         String longContextUri = buildFullContextURI(repositoryView.getRootUri(), contextUri);
 
         FcrepoClient client = buildClient();
+
         FcrepoResponse response = new GetBuilder(new URI(longContextUri + "/fcr:metadata"), client).accept("application/rdf+xml").perform();
 
         Model model = createRdfModelFromResponse(response);
@@ -239,16 +240,16 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
     }
 
     @Override
-    public RepositoryViewContext updateMetadata(String contextUri, Triple originalTriple, String newValue) throws Exception {
+    public RepositoryViewContext updateMetadata(String contextUri, Triple originalTriple, String value) throws Exception {
         String longContextUri = buildFullContextURI(repositoryView.getRootUri(), contextUri);
         StringBuilder stngBldr = new StringBuilder();
 
-        Triple newTriple = new Triple(originalTriple.getSubject(), originalTriple.getPredicate(), newValue);
+        Triple newTriple = new Triple(originalTriple.getSubject(), originalTriple.getPredicate(), value);
         originalTriple.validate();
         newTriple.validate();
 
         stngBldr.append("DELETE { <> <").append(originalTriple.getPredicate()).append("> ").append(originalTriple.getObject()).append(" } ");
-        stngBldr.append("INSERT { <> <").append(originalTriple.getPredicate()).append("> ").append(newValue).append(" } ");
+        stngBldr.append("INSERT { <> <").append(originalTriple.getPredicate()).append("> ").append(value).append(" } ");
         stngBldr.append("WHERE { }");
         String sparql = stngBldr.toString();
 
@@ -360,19 +361,20 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
     }
 
     @Override
-    public RepositoryViewContext createVersion(String contextUri, String versionName) throws Exception {
+    public RepositoryViewContext createVersion(String contextUri, String name) throws Exception {
         String longContextUri = buildFullContextURI(repositoryView.getRootUri(), contextUri);
 
-        if (versionName.isEmpty()) {
+        if (name.isEmpty()) {
             SimpleDateFormat output = new SimpleDateFormat("yyyyMMddHHmmss");
-            versionName = "version." + output.format(System.currentTimeMillis());
+            name = "version." + output.format(System.currentTimeMillis());
         } else {
-            versionName = "version." + versionName;
+            name = "version." + name;
         }
 
         URI uri = URI.create(longContextUri + "/fcr:versions");
         logger.info("Attempting to create version: {}", uri.toString());
-        FcrepoResponse response = new PostBuilder(uri, buildClient()).slug(versionName).perform();
+
+        FcrepoResponse response = new PostBuilder(uri, buildClient()).slug(name).perform();
         checkFedoraResult(response);
         URI location = response.getLocation();
         logger.info("Version creation status and location: {}, {}", response.getStatusCode(), location);

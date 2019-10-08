@@ -246,14 +246,12 @@ cap.model("RepositoryViewContext", function ($q, $filter, HttpMethodVerbs) {
       return allRemovePromses;
     };
 
-    repositoryViewContext.updateMetadatum = function (metadataTriple, newValue) {
-      newValue = $filter("escapeLiteral")(newValue);
-
+    repositoryViewContext.updateMetadatum = function (metadataTriple, value) {
       var updatePromise = repositoryViewContext.repositoryView.performRequest(repositoryViewContext.getMapping().metadata, {
         method: HttpMethodVerbs.PUT,
         query: {
           contextUri: shortenContextUri(repositoryViewContext.uri),
-          newValue: encodeURIComponent(newValue)
+          value: encodeURIComponent($filter("escapeLiteral")(value))
         },
         data: metadataTriple
       });
@@ -268,7 +266,7 @@ cap.model("RepositoryViewContext", function ($q, $filter, HttpMethodVerbs) {
         method: HttpMethodVerbs.POST,
         query: {
           contextUri: shortenContextUri(repositoryViewContext.uri),
-          versionName: form.name
+          name: form.name
         }
       });
 
@@ -329,10 +327,7 @@ cap.model("RepositoryViewContext", function ($q, $filter, HttpMethodVerbs) {
       if(!queryHelp.message) {
 
         var updatePromise = repositoryViewContext.repositoryView.performRequest(repositoryViewContext.getMapping().advancedQuery, {
-          method: HttpMethodVerbs.GET,
-          query: {
-            contextUri: shortenContextUri(repositoryViewContext.uri)
-          }
+          method: HttpMethodVerbs.GET
         });
 
         updatePromise.then(function (res) {

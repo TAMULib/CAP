@@ -9,8 +9,8 @@ import java.net.URLConnection;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,8 +19,9 @@ import edu.tamu.cap.model.repo.RepositoryViewRepo;
 @RestController
 @RequestMapping("/resource-proxy")
 public class ResourceProxyController {
+
     @Autowired
-    RepositoryViewRepo repositoryViewRepo;
+    private RepositoryViewRepo repositoryViewRepo;
 
     /**
      * Streaming proxy for resources contained in RepositoryViews associated with a Cap instance Serves PDFs inline instead of as an attachment, acts as a pass-through for other types
@@ -28,8 +29,8 @@ public class ResourceProxyController {
      * @param String uri
      *
      */
-    @RequestMapping(method = RequestMethod.GET)
-    public void proxyResource(HttpServletResponse response, @RequestParam String uri) {
+    @GetMapping
+    public void proxyResource(HttpServletResponse response, @RequestParam("uri") String uri) {
         URL sourceURL;
         try {
             sourceURL = new URL(uri);
