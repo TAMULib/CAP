@@ -28,13 +28,13 @@ public class ContextBroadcastAspect {
 
     // @formatter:off
     @AfterReturning(
-        pointcut = "execution(edu.tamu.cap.model.response.RepositoryViewContext edu.tamu.cap.service.RepositoryViewService.createChild(..)) || " + 
-                   "execution(edu.tamu.cap.model.response.RepositoryViewContext edu.tamu.cap.service.RepositoryViewService.deleteRepositoryViewContext(..)) || " +
-                   "execution(edu.tamu.cap.model.response.RepositoryViewContext edu.tamu.cap.service.RepositoryViewService.createResource(..)) || " +
-                   "execution(edu.tamu.cap.model.response.RepositoryViewContext edu.tamu.cap.service.RepositoryViewService.deleteResource(..)) || " +
-                   "execution(edu.tamu.cap.model.response.RepositoryViewContext edu.tamu.cap.service.RepositoryViewService.createMetadata(..)) || " +
-                   "execution(edu.tamu.cap.model.response.RepositoryViewContext edu.tamu.cap.service.RepositoryViewService.updateMetadata(..)) || " +
-                   "execution(edu.tamu.cap.model.response.RepositoryViewContext edu.tamu.cap.service.RepositoryViewService.deleteMetadata(..))",
+        pointcut = "execution(edu.tamu.cap.model.response.RepositoryViewContext edu.tamu.cap.service.repositoryview.RepositoryViewService.createChild(..)) || " + 
+                   "execution(edu.tamu.cap.model.response.RepositoryViewContext edu.tamu.cap.service.repositoryview.RepositoryViewService.deleteRepositoryViewContext(..)) || " +
+                   "execution(edu.tamu.cap.model.response.RepositoryViewContext edu.tamu.cap.service.repositoryview.RepositoryViewService.createResource(..)) || " +
+                   "execution(edu.tamu.cap.model.response.RepositoryViewContext edu.tamu.cap.service.repositoryview.RepositoryViewService.deleteResource(..)) || " +
+                   "execution(edu.tamu.cap.model.response.RepositoryViewContext edu.tamu.cap.service.repositoryview.RepositoryViewService.createMetadata(..)) || " +
+                   "execution(edu.tamu.cap.model.response.RepositoryViewContext edu.tamu.cap.service.repositoryview.RepositoryViewService.updateMetadata(..)) || " +
+                   "execution(edu.tamu.cap.model.response.RepositoryViewContext edu.tamu.cap.service.repositoryview.RepositoryViewService.deleteMetadata(..))",
         returning = "context")
     // @formatter:on
     public void broadcastContext(RepositoryViewContext context) throws Throwable {

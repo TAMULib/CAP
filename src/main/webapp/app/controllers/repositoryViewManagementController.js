@@ -1,16 +1,16 @@
-cap.controller("RepositoryViewManagementController", function($controller, $scope, $q, ApiResponseActions, NgTableParams, RepositoryView, RepositoryViewRepo, SchemaRepo, UserRepo) {
+cap.controller("RepositoryViewManagementController", function ($controller, $scope, $q, ApiResponseActions, NgTableParams, RepositoryView, RepositoryViewRepo, SchemaRepo, UserRepo) {
 
   angular.extend(this, $controller('CoreAdminController', {
-      $scope: $scope
+    $scope: $scope
   }));
 
   angular.extend(this, $controller('AbstractAppController', {
-      $scope: $scope
+    $scope: $scope
   }));
 
   var startupQueue = [];
 
-  var resetVerification = function(force) {
+  var resetVerification = function (force) {
     if (force || $scope.verificationResults.status === 'SUCCESS') {
       $scope.verificationResults = {};
     }
@@ -28,7 +28,7 @@ cap.controller("RepositoryViewManagementController", function($controller, $scop
 
     $scope.submitting = false;
 
-    RepositoryViewRepo.getTypes($scope.repositoryViewTypes).then(function() {
+    RepositoryViewRepo.getTypes($scope.repositoryViewTypes).then(function () {
       $scope.repositoryViewToCreate = RepositoryViewRepo.getScaffold({
         type: $scope.repositoryViewTypes[0].value
       });
@@ -37,17 +37,17 @@ cap.controller("RepositoryViewManagementController", function($controller, $scop
         repositoryView.clearCache();
       });
 
-      $scope.$watch('repositoryView',function() {
+      $scope.$watch('repositoryView', function () {
         resetVerification();
-      },true);
+      }, true);
 
-      $scope.disableVerify = function(activeRepositoryView) {
+      $scope.disableVerify = function (activeRepositoryView) {
         if (angular.isDefined(activeRepositoryView)) {
           var typeIsVerifying = false;
           for (var i in $scope.repositoryViewTypes) {
             var type = $scope.repositoryViewTypes[i];
             if (type.value === activeRepositoryView.type) {
-              typeIsVerifying = type.verifying===true;
+              typeIsVerifying = type.verifying === true;
             }
           }
           return activeRepositoryView.rootUri && !typeIsVerifying;
@@ -63,7 +63,7 @@ cap.controller("RepositoryViewManagementController", function($controller, $scop
       getResults: RepositoryViewRepo.getValidationResults
     };
 
-    $scope.resetRepositoryViewForms = function() {
+    $scope.resetRepositoryViewForms = function () {
       RepositoryViewRepo.clearValidationResults();
       for (var key in $scope.repositoryViewForms) {
         if ($scope.repositoryViewForms[key] !== undefined && !$scope.repositoryViewForms[key].$pristine && $scope.repositoryViewForms[key].$setPristine) {
@@ -77,15 +77,15 @@ cap.controller("RepositoryViewManagementController", function($controller, $scop
 
     $scope.resetRepositoryViewForms();
 
-    $scope.createRepositoryView = function() {
+    $scope.createRepositoryView = function () {
       $scope.schemas = SchemaRepo.getAll();
       $scope.repositoryView = new RepositoryView(RepositoryViewRepo.getScaffold());
       $scope.openModal("#repositoryViewCreateModal");
     };
 
-    $scope.onCreateRepositoryView = function() {
+    $scope.onCreateRepositoryView = function () {
       $scope.submitting = true;
-      RepositoryViewRepo.create($scope.repositoryView).then(function(res) {
+      RepositoryViewRepo.create($scope.repositoryView).then(function (res) {
         if (angular.fromJson(res.body).meta.status === "SUCCESS") {
           $scope.resetRepositoryViewForms();
         }
@@ -93,20 +93,20 @@ cap.controller("RepositoryViewManagementController", function($controller, $scop
       });
     };
 
-    $scope.onCancelCreateRepositoryView = function() {
+    $scope.onCancelCreateRepositoryView = function () {
       $scope.resetRepositoryViewForms();
     };
 
-    $scope.editRepositoryView = function(repositoryView) {
+    $scope.editRepositoryView = function (repositoryView) {
       $scope.schemas = SchemaRepo.getAll();
       $scope.repositoryView = new RepositoryView(angular.copy(repositoryView));
       $scope.openModal('#repositoryViewEditModal');
     };
 
-    $scope.onEditRepositoryView = function() {
+    $scope.onEditRepositoryView = function () {
       $scope.submitting = true;
       $scope.repositoryView.dirty(true);
-      $scope.repositoryView.save().then(function(res) {
+      $scope.repositoryView.save().then(function (res) {
         if (angular.fromJson(res.body).meta.status === "SUCCESS") {
           $scope.resetRepositoryViewForms();
         }
@@ -114,22 +114,22 @@ cap.controller("RepositoryViewManagementController", function($controller, $scop
       });
     };
 
-    $scope.onCancelEditRepositoryView = function() {
+    $scope.onCancelEditRepositoryView = function () {
       $scope.resetRepositoryViewForms();
     };
 
-    $scope.confirmDeleteRepositoryView = function(repositoryView) {
+    $scope.confirmDeleteRepositoryView = function (repositoryView) {
       $scope.repositoryView = new RepositoryView(angular.copy(repositoryView));
       $scope.openModal('#repositoryViewDeleteModal');
     };
 
-    $scope.onCancelDeleteRepositoryView = function() {
+    $scope.onCancelDeleteRepositoryView = function () {
       $scope.resetRepositoryViewForms();
     };
 
-    $scope.onDeleteRepositoryView = function() {
+    $scope.onDeleteRepositoryView = function () {
       $scope.submitting = true;
-      $scope.repositoryView.delete().then(function(res) {
+      $scope.repositoryView.delete().then(function (res) {
         if (angular.fromJson(res.body).meta.status === "SUCCESS") {
           $scope.resetRepositoryViewForms();
         }
@@ -137,28 +137,28 @@ cap.controller("RepositoryViewManagementController", function($controller, $scop
       });
     };
 
-    startupQueue = [RepositoryViewRepo.ready(),SchemaRepo.ready()];
+    startupQueue = [RepositoryViewRepo.ready(), SchemaRepo.ready()];
   } else if ($scope.isCurator()) {
-    startupQueue = [RepositoryViewRepo.ready(),SchemaRepo.ready()];
+    startupQueue = [RepositoryViewRepo.ready(), SchemaRepo.ready()];
   }
 
-  $scope.showSchemas = function(schemas) {
+  $scope.showSchemas = function (schemas) {
     $scope.schemasToShow = schemas;
     $scope.openModal("#showSchemasModal");
   };
 
-  $q.all(startupQueue).then(function() {
+  $q.all(startupQueue).then(function () {
     $scope.setTable = function () {
       $scope.tableParams = new NgTableParams({
         count: $scope.repositoryViews.length,
         sorting: {
           name: 'asc'
         }
-    }, {
-      counts: [],
-      total: 0,
-      getData: function (params) {
-        return $scope.repositoryViews;
+      }, {
+        counts: [],
+        total: 0,
+        getData: function (params) {
+          return $scope.repositoryViews;
         }
       });
     };

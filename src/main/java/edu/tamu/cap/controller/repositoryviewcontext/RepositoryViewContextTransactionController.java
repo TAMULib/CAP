@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.tamu.cap.model.response.TransactionDetails;
-import edu.tamu.cap.service.TransactingRepositoryViewService;
+import edu.tamu.cap.service.repositoryview.TransactingRepositoryViewService;
 import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.response.ApiStatus;
 

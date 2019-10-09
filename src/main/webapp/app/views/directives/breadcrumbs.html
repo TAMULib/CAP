@@ -1,9 +1,9 @@
 <ol class="breadcrumb">
-    <li ng-repeat="breadcrumb in breadcrumbs track by $index">
-        <a href="" ng-click="breadcrumb.repositoryView.loadContext(shortenBreadcrumbUri(breadcrumb))">{{trimName(breadcrumb, $index)}}</a>
-    </li>
-    <br ng-if="breadcrumbs.length" />
-    <li class="active">
-        <h3><span ng-if="breadcrumbs.length" class="glyphicon glyphicon-share-alt"></span> {{trimName(context, breadcrumbs.length)}}</h3>
-    </li>
+  <li ng-repeat="breadcrumb in breadcrumbs track by $index">
+    <a href="" ng-click="breadcrumb.repositoryView.loadContext(shortenBreadcrumbUri(breadcrumb))">{{trimName(breadcrumb, $index)}}</a>
+  </li>
+  <br ng-if="breadcrumbs.length" />
+  <li class="active">
+    <h3><span ng-if="breadcrumbs.length" class="glyphicon glyphicon-share-alt"></span> {{trimName(context, breadcrumbs.length)}}</h3>
+  </li>
 </ol>

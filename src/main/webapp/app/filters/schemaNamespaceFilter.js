@@ -1,5 +1,5 @@
-cap.filter("schemaNamespace", function() {
-  return function(predicate, schemas) {
+cap.filter("schemaNamespace", function () {
+  return function (predicate, schemas) {
     var output = predicate;
 
     if (schemas) {

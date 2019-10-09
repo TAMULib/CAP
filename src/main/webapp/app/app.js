@@ -1,6 +1,6 @@
 var cap = angular.module('cap', [
   'ngRoute',
-  'ngTable'  
+  'ngTable'
 ]);
 
 cap.model = core.model;
@@ -16,26 +16,26 @@ setUpApp(function (connected) {
   cap.constant('api', apiMapping);
 
   angular.element(document).ready(function () {
-      try {
-          // If the app is already bootstrapped then an error will be thrown
-          // caution: if module is not found app will result in blank page with no stack trace!!!
-          angular.bootstrap(document, ['core', 'cap', 'ngMessages', 'ui.bootstrap', 'ngFileUpload', 'ui.openseadragon']);
-      } catch (e) {
-          console.error(e);
-          /*
-           * If websockets dissconnect the app will attempt to re-bootstrap. Since the app is already running we will
-           * end up in this block, and can generate an error indicating the disconnect.
-           */
-          var doc = angular.element(document);
-          var injector = doc.injector();
-          if (typeof injector != 'undefined') {
-              AlertService = injector.get('AlertService');
-              AlertService.add({
-                  type: "ERROR",
-                  message: "Web service cannot be reached."
-              }, "/app/errors");
-          }
+    try {
+      // If the app is already bootstrapped then an error will be thrown
+      // caution: if module is not found app will result in blank page with no stack trace!!!
+      angular.bootstrap(document, ['core', 'cap', 'ngMessages', 'ui.bootstrap', 'ngFileUpload', 'ui.openseadragon']);
+    } catch (e) {
+      console.error(e);
+      /*
+       * If websockets dissconnect the app will attempt to re-bootstrap. Since the app is already running we will
+       * end up in this block, and can generate an error indicating the disconnect.
+       */
+      var doc = angular.element(document);
+      var injector = doc.injector();
+      if (typeof injector != 'undefined') {
+        AlertService = injector.get('AlertService');
+        AlertService.add({
+          type: "ERROR",
+          message: "Web service cannot be reached."
+        }, "/app/errors");
       }
+    }
   });
 
 });

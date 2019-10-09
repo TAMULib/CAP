@@ -1,53 +1,53 @@
 var appConfig = {
 
-    'version': '1.0.x',
+  'version': '1.0.x',
 
-    'allowAnonymous': true,
-    'anonymousRole': 'ROLE_ANONYMOUS',
+  'allowAnonymous': true,
+  'anonymousRole': 'ROLE_ANONYMOUS',
 
-    'authStrategies': ['emailRegistration'],
+  'authStrategies': ['emailRegistration'],
 
-    'authService': window.location.protocol + '//' + window.location.host + window.location.base + '/auth',
-    'webService': window.location.protocol + '//' + window.location.host + window.location.base,
+  'authService': window.location.protocol + '//' + window.location.host + window.location.base + '/auth',
+  'webService': window.location.protocol + '//' + window.location.host + window.location.base,
 
-    'storageType': 'session',
+  'storageType': 'session',
 
-    'logging': {
-        'log': true,
-        'info': true,
-        'warn': true,
-        'error': true,
-        'debug': true
-    },
+  'logging': {
+    'log': true,
+    'info': true,
+    'warn': true,
+    'error': true,
+    'debug': true
+  },
 
-    'stompDebug': false,
+  'stompDebug': false,
 
-    /*
-      Determines the type of connection stomp will attempt to make with the service.
-      TYPES:  websocket, xhr-streaming, xdr-streaming, eventsource, iframe-eventsource,
-              htmlfile, iframe-htmlfile, xhr-polling, xdr-polling, iframe-xhr-polling,
-              jsonp-polling
-    */
-    'sockJsConnectionType': ['websocket', 'xhr-polling'],
+  /*
+    Determines the type of connection stomp will attempt to make with the service.
+    TYPES:  websocket, xhr-streaming, xdr-streaming, eventsource, iframe-eventsource,
+            htmlfile, iframe-htmlfile, xhr-polling, xdr-polling, iframe-xhr-polling,
+            jsonp-polling
+  */
+  'sockJsConnectionType': ['websocket', 'xhr-polling'],
 
-    // Set this to 'admin' or 'user' if using mock AuthService
-    // otherwise set to null or false
+  // Set this to 'admin' or 'user' if using mock AuthService
+  // otherwise set to null or false
 
-    'mockRole': null,
+  'mockRole': null,
 
-    'messagingEnabled': false,
+  'messagingEnabled': false,
 
-    'contentMap': {
-      "image": ["image/jpeg", "image/png", "image/gif"],
-      "plaintext": ["text/plain", "text/html", "text/css", "text/javascript", "text/csv", "text/markdown", "text/calendar", "text/xml",  "application/xml", "application/json"],
-      "seadragon": ["image/jp2", "image/tiff"],
-      "pdf": ["application/pdf"]
-    },
+  'contentMap': {
+    "image": ["image/jpeg", "image/png", "image/gif"],
+    "plaintext": ["text/plain", "text/html", "text/css", "text/javascript", "text/csv", "text/markdown", "text/calendar", "text/xml", "application/xml", "application/json"],
+    "seadragon": ["image/jp2", "image/tiff"],
+    "pdf": ["application/pdf"]
+  },
 
-    'fedoraPath': '/fcrepo/rest/',
+  'fedoraPath': '/fcrepo/rest/',
 
-    'cantaloupeBaseUrl': 'https://api-dev.library.tamu.edu/iiif/2/',
+  'cantaloupeBaseUrl': 'https://api-dev.library.tamu.edu/iiif/2/',
 
-    'iiifServiceUrl': 'https://api-dev.library.tamu.edu/iiif-service/'
+  'iiifServiceUrl': 'https://api-dev.library.tamu.edu/iiif-service/'
 
 };

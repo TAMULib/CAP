@@ -1,15 +1,15 @@
 <div class="panel panel-default properties-list-panel">
-    <div class="panel-heading">
-        <h4><span class="badge pull-left">{{schemasToShow.length}}</span> Schemas</h4>
-        <input placeholder="Find Schema in List" type="text" class="form-control" ng-model="limitSchemas" />
+  <div class="panel-heading">
+    <h4><span class="badge pull-left">{{schemasToShow.length}}</span> Schemas</h4>
+    <input placeholder="Find Schema in List" type="text" class="form-control" ng-model="limitSchemas" />
+  </div>
+  <div class="properties-list-group">
+    <div class="list-group-item text-left" ng-repeat="schema in schemasToShow |  orderBy:'name' | filter:{name: limitSchemas}">
+      <h4 class="list-group-item-heading">{{schema.name}} ({{schema.abbreviation}})</h4>
+      <a href="{{schema.namespace}}" class="list-group-item-text">{{schema.namespace}}</a>
     </div>
-    <div class="properties-list-group">
-        <div class="list-group-item text-left" ng-repeat="schema in schemasToShow |  orderBy:'name' | filter:{name: limitSchemas}">
-            <h4 class="list-group-item-heading">{{schema.name}} ({{schema.abbreviation}})</h4>
-            <a href="{{schema.namespace}}" class="list-group-item-text">{{schema.namespace}}</a>
-        </div>
-    </div>
-</div>    
+  </div>
+</div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-default" ng-click="limitSchemas='';closeModal()">Close</button>
+  <button type="button" class="btn btn-default" ng-click="limitSchemas='';closeModal()">Close</button>
 </div>

@@ -26,9 +26,9 @@ import org.springframework.web.servlet.HandlerMapping;
 import edu.tamu.cap.model.RepositoryView;
 import edu.tamu.cap.model.repo.RepositoryViewRepo;
 import edu.tamu.cap.model.response.TransactionDetails;
-import edu.tamu.cap.service.RepositoryViewService;
 import edu.tamu.cap.service.RepositoryViewType;
-import edu.tamu.cap.service.TransactingRepositoryViewService;
+import edu.tamu.cap.service.repositoryview.RepositoryViewService;
+import edu.tamu.cap.service.repositoryview.TransactingRepositoryViewService;
 import edu.tamu.weaver.context.SpringContext;
 import edu.tamu.weaver.response.ApiResponse;
 

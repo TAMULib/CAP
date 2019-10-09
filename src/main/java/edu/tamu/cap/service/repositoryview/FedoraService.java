@@ -1,4 +1,4 @@
-package edu.tamu.cap.service;
+package edu.tamu.cap.service.repositoryview;
 
 import static edu.tamu.cap.utility.ContextUtility.buildFullContextURI;
 import static edu.tamu.cap.utility.ContextUtility.getTransactionToken;
@@ -53,6 +53,7 @@ import edu.tamu.cap.model.response.RepositoryViewContext;
 import edu.tamu.cap.model.response.TransactionDetails;
 import edu.tamu.cap.model.response.Triple;
 import edu.tamu.cap.model.response.Version;
+import edu.tamu.cap.service.TransactionService;
 
 @Service("Fedora")
 @Scope(value = SCOPE_REQUEST)

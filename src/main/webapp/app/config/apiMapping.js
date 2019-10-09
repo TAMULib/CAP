@@ -4,24 +4,24 @@ var apiMapping = {
     channel: '/channel/user',
     lazy: true,
     instantiate: {
-        'endpoint': '/private/queue',
-        'controller': 'user',
-        'method': 'credentials'
+      'endpoint': '/private/queue',
+      'controller': 'user',
+      'method': 'credentials'
     },
     all: {
-        'endpoint': '/private/queue',
-        'controller': 'user',
-        'method': 'all'
+      'endpoint': '/private/queue',
+      'controller': 'user',
+      'method': 'all'
     },
     update: {
-        'endpoint': '/private/queue',
-        'controller': 'user',
-        'method': 'update'
+      'endpoint': '/private/queue',
+      'controller': 'user',
+      'method': 'update'
     },
     remove: {
-        'endpoint': '/private/queue',
-        'controller': 'user',
-        'method': 'delete'
+      'endpoint': '/private/queue',
+      'controller': 'user',
+      'method': 'delete'
     }
   },
   RepositoryViewContext: {
@@ -99,24 +99,24 @@ var apiMapping = {
       'method': ':type/verify/ping'
     },
     verifyAuth: {
-        'endpoint': '/private/queue',
-        'controller': 'repository-view',
-        'method': ':type/verify/auth'
+      'endpoint': '/private/queue',
+      'controller': 'repository-view',
+      'method': ':type/verify/auth'
     },
     verifyContent: {
-        'endpoint': '/private/queue',
-        'controller': 'repository-view',
-        'method': ':type/verify/content'
+      'endpoint': '/private/queue',
+      'controller': 'repository-view',
+      'method': ':type/verify/content'
     }
   },
   RepositoryView: {
     channel: '/channel/repository-view',
     validations: true,
     all: {
-        'endpoint': '/private/queue',
-        'controller': 'repository-view',
-        'method': '',
-        'httpMethod': "GET"
+      'endpoint': '/private/queue',
+      'controller': 'repository-view',
+      'method': '',
+      'httpMethod': "GET"
     },
     create: {
       'endpoint': '/private/queue',
@@ -125,16 +125,16 @@ var apiMapping = {
       'httpMethod': "POST"
     },
     update: {
-        'endpoint': '/private/queue',
-        'controller': 'repository-view',
-        'method': '',
-        'httpMethod': "PUT"
+      'endpoint': '/private/queue',
+      'controller': 'repository-view',
+      'method': '',
+      'httpMethod': "PUT"
     },
     remove: {
-        'endpoint': '/private/queue',
-        'controller': 'repository-view',
-        'method': '',
-        'httpMethod': "DELETE"
+      'endpoint': '/private/queue',
+      'controller': 'repository-view',
+      'method': '',
+      'httpMethod': "DELETE"
     },
     transaction: {
       'endpoint': '/private/queue',
@@ -151,10 +151,10 @@ var apiMapping = {
     channel: '/channel/schema',
     validations: true,
     all: {
-        'endpoint': '/private/queue',
-        'controller': 'schema',
-        'method': '',
-        'httpMethod': 'GET'
+      'endpoint': '/private/queue',
+      'controller': 'schema',
+      'method': '',
+      'httpMethod': 'GET'
     },
     create: {
       'endpoint': '/private/queue',
@@ -163,16 +163,16 @@ var apiMapping = {
       'httpMethod': 'POST'
     },
     update: {
-        'endpoint': '/private/queue',
-        'controller': 'schema',
-        'method': '',
-        'httpMethod': 'PUT'
+      'endpoint': '/private/queue',
+      'controller': 'schema',
+      'method': '',
+      'httpMethod': 'PUT'
     },
     remove: {
-        'endpoint': '/private/queue',
-        'controller': 'schema',
-        'method': '',
-        'httpMethod': 'DELETE'
+      'endpoint': '/private/queue',
+      'controller': 'schema',
+      'method': '',
+      'httpMethod': 'DELETE'
     },
     findProperties: {
       'endpoint': '/private/queue',

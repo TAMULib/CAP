@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/TAMULib/CAP.svg?branch=master)](https://travis-ci.org/TAMULib/CAP)
+[![Coverage Status](https://coveralls.io/repos/github/TAMULib/Cap/badge.svg?branch=master)](https://coveralls.io/github/TAMULib/Cap?branch=master)
+
 # CAP
 
 CAP is the Curator's Administration Platform developed and maintained by [Texas A&M University Libraries](http://library.tamu.edu). 

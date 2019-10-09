@@ -1,4 +1,4 @@
-package edu.tamu.cap.service;
+package edu.tamu.cap.service.repositoryview;
 
 import edu.tamu.cap.model.response.RepositoryViewContext;
 

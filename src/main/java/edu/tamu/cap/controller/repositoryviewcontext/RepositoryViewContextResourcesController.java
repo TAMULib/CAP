@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import edu.tamu.cap.service.FixityRepositoryViewService;
-import edu.tamu.cap.service.RepositoryViewService;
+import edu.tamu.cap.service.repositoryview.FixityRepositoryViewService;
+import edu.tamu.cap.service.repositoryview.RepositoryViewService;
 import edu.tamu.weaver.response.ApiResponse;
 
 @RestController

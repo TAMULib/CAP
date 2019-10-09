@@ -30,6 +30,7 @@ import edu.tamu.cap.model.RepositoryView;
 import edu.tamu.cap.model.response.RepositoryViewContext;
 import edu.tamu.cap.model.response.Triple;
 import edu.tamu.cap.model.response.Version;
+import edu.tamu.cap.service.repositoryview.FedoraService;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = { CapApplication.class }, webEnvironment = WebEnvironment.DEFINED_PORT)

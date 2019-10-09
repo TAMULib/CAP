@@ -23,7 +23,7 @@ cap.controller("RepositoryViewContextController", function ($controller, $filter
       return $scope.repositoryView.rootUri ? $filter('shortenUri')(contextUri, $scope.repositoryView.rootUri) : contextUri;
     };
 
-    if(!$scope.repositoryView) $location.path("/error/404");
+    if (!$scope.repositoryView) $location.path("/error/404");
 
     if ($routeParams.context !== undefined) {
       $scope.repositoryView.contextUri = decodeURI($routeParams.context);
@@ -46,7 +46,7 @@ cap.controller("RepositoryViewContextController", function ($controller, $filter
       var subject = $scope.context.uri;
       var triples = [];
       angular.forEach(form.entries, function (entry) {
-        if(entry.property&&entry.value) {
+        if (entry.property && entry.value) {
           triples.push({
             subject: subject,
             predicate: entry.property.uri,
@@ -61,10 +61,10 @@ cap.controller("RepositoryViewContextController", function ($controller, $filter
       });
     };
 
-    $scope.updateMetadatum = function(triple, value) {
+    $scope.updateMetadatum = function (triple, value) {
       var defer = $q.defer();
       var promise = defer.promise;
-      if(value && (value.length === 0 || value !== "\"\"")) {
+      if (value && (value.length === 0 || value !== "\"\"")) {
         promise = $scope.context.updateMetadatum(triple, value);
       } else {
         defer.reject("Update Rejected: Value was empty.");
@@ -107,7 +107,7 @@ cap.controller("RepositoryViewContextController", function ($controller, $filter
       $scope.closeModal();
     };
 
-    $scope.resetAddMetadataModal = function() {
+    $scope.resetAddMetadataModal = function () {
       $scope.repositoryViewForm.addMetadata.$setPristine();
       $scope.repositoryViewForm.addMetadata.entries.length = 0;
       $scope.repositoryViewForm.addMetadata.entries.push({});
@@ -141,7 +141,7 @@ cap.controller("RepositoryViewContextController", function ($controller, $filter
     $scope.deleteRepositoryViewContext = function () {
       $scope.submitClicked = true;
 
-      $scope.closeModal().then(function() {
+      $scope.closeModal().then(function () {
         var repositoryView = $scope.context.repositoryView;
         var currentTriple = $scope.context.triple;
         var isResource = $scope.context.resource;
@@ -158,7 +158,7 @@ cap.controller("RepositoryViewContextController", function ($controller, $filter
     };
 
     $scope.viewVersion = function (version) {
-      $scope.closeModal().then(function() {
+      $scope.closeModal().then(function () {
         var repositoryView = $scope.context.repositoryView;
         var versionContextUri = shortenContextUri(version.triple.object);
         $scope.context = repositoryView.loadContext(versionContextUri, true);
@@ -168,7 +168,7 @@ cap.controller("RepositoryViewContextController", function ($controller, $filter
     $scope.revertVersion = function () {
       $scope.submitClicked = true;
 
-      $scope.closeModal().then(function() {
+      $scope.closeModal().then(function () {
         var repositoryView = $scope.context.repositoryView;
         var currentContext = $scope.context;
         var currentContextUri = shortenContextUri(currentContext.uri);
@@ -187,7 +187,7 @@ cap.controller("RepositoryViewContextController", function ($controller, $filter
     $scope.deleteVersion = function () {
       $scope.submitClicked = true;
 
-      $scope.closeModal().then(function() {
+      $scope.closeModal().then(function () {
         var repositoryView = $scope.context.repositoryView;
         var currentContext = $scope.context;
         var currentContextUri = shortenContextUri(currentContext.uri);
@@ -203,11 +203,11 @@ cap.controller("RepositoryViewContextController", function ($controller, $filter
       });
     };
 
-    $scope.refreshContext = function() {
+    $scope.refreshContext = function () {
       $scope.context.refreshContext();
     };
 
-    $scope.openFixity = function(uriOfContextToCheck) {
+    $scope.openFixity = function (uriOfContextToCheck) {
       $scope.fixityReport = new FixityReport({
         repositoryView: $scope.context.repositoryView,
         contextUri: uriOfContextToCheck
@@ -215,26 +215,26 @@ cap.controller("RepositoryViewContextController", function ($controller, $filter
       $scope.openModal('#fixityModalButton');
     };
 
-    $scope.cancelFixity = function() {
+    $scope.cancelFixity = function () {
       $scope.fixityReport = {};
       $scope.closeModal();
     };
 
-    $scope.startTransaction = function() {
+    $scope.startTransaction = function () {
       $scope.context.repositoryView.startTransaction();
     };
 
-    $scope.commitTransaction = function() {
+    $scope.commitTransaction = function () {
       $scope.submitClicked = true;
-      $scope.context.repositoryView.commitTransaction().then(function() {
+      $scope.context.repositoryView.commitTransaction().then(function () {
         $scope.closeModal();
         $scope.submitClicked = false;
       });
     };
 
-    $scope.rollbackTransaction = function() {
+    $scope.rollbackTransaction = function () {
       $scope.submitClicked = true;
-      $scope.context.repositoryView.rollbackTransaction().then(function() {
+      $scope.context.repositoryView.rollbackTransaction().then(function () {
         $scope.closeModal();
         $scope.submitClicked = false;
       });
@@ -262,10 +262,10 @@ cap.controller("RepositoryViewContextController", function ($controller, $filter
       return URL.createObjectURL(file);
     };
 
-    $scope.getContentType = function() {
+    $scope.getContentType = function () {
       var contentType = null;
       var backupContentType = null;
-      var typeMap = {"jpg":"image/jpeg","png":"image/png","pdf":"application/pdf"};
+      var typeMap = { "jpg": "image/jpeg", "png": "image/png", "pdf": "application/pdf" };
 
       for (var i in $scope.context.properties) {
         var triple = $scope.context.properties[i];
@@ -276,8 +276,8 @@ cap.controller("RepositoryViewContextController", function ($controller, $filter
 
         if (triple.predicate.indexOf("#filename") !== -1) {
           var temp = triple.object.split(".");
-          temp = temp[temp.length-1];
-          backupContentType = temp.substring(0,temp.length-1);
+          temp = temp[temp.length - 1];
+          backupContentType = temp.substring(0, temp.length - 1);
           if (typeMap[backupContentType] !== undefined) {
             backupContentType = typeMap[backupContentType];
           }
@@ -285,17 +285,17 @@ cap.controller("RepositoryViewContextController", function ($controller, $filter
       }
 
       if (!contentType && backupContentType) {
-          contentType = backupContentType;
+        contentType = backupContentType;
       }
       return contentType;
     };
 
-    $scope.canPreview = function(fileType) {
-        var previewable = ['image/png','image/jpeg','image/gif','image/bmp'];
-        return (previewable.indexOf(fileType) !== -1);
+    $scope.canPreview = function (fileType) {
+      var previewable = ['image/png', 'image/jpeg', 'image/gif', 'image/bmp'];
+      return (previewable.indexOf(fileType) !== -1);
     };
 
-    $scope.getIIIFUrl = function() {
+    $scope.getIIIFUrl = function () {
       if (typeof appConfig.iiifServiceUrl !== 'undefined') {
         var contextProperties = [];
         var iiifUri = null;
@@ -325,9 +325,9 @@ cap.controller("RepositoryViewContextController", function ($controller, $filter
             }
             if (!isPCDM) {
               if (triple.predicate.indexOf("#type") !== -1) {
-                  if (triple.object === "http://pcdm.org/models#Object") {
-                    isPCDM = true;
-                  }
+                if (triple.object === "http://pcdm.org/models#Object") {
+                  isPCDM = true;
+                }
               }
             }
             if (isPCDM && hasFile) {
@@ -336,7 +336,7 @@ cap.controller("RepositoryViewContextController", function ($controller, $filter
             }
           }
           if (hasManifest) {
-            return appConfig.iiifServiceUrl+$scope.repositoryView.type.toLowerCase()+"/presentation/"+iiifUri.replace($scope.repositoryView.rootUri,"");
+            return appConfig.iiifServiceUrl + $scope.repositoryView.type.toLowerCase() + "/presentation/" + iiifUri.replace($scope.repositoryView.rootUri, "");
           }
         }
       }
