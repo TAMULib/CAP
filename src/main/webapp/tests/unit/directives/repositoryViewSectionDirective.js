@@ -40,7 +40,7 @@ describe("directive: repositoryViewSection", function () {
   beforeEach(function() {
     module("core");
     module("cap");
-    module('templates');
+    module("templates");
 
     // @fixme: RepositoryViewSectionService is defined within this file! (it probably should be moved and the mock and tests need to then be written.)
     //module("mock.repositoryViewSectionService");

@@ -8,7 +8,7 @@ describe("filter: containedIn", function () {
     inject(function (_$filter_, _$rootScope_) {
       $scope = _$rootScope_.$new();
 
-      filter = _$filter_('containedIn');
+      filter = _$filter_("containedIn");
     });
   };
 

@@ -30,7 +30,7 @@ describe("directive: findproperties", function () {
   beforeEach(function() {
     module("core");
     module("cap");
-    module('templates');
+    module("templates");
 
     installPromiseMatchers();
     initializeVariables();

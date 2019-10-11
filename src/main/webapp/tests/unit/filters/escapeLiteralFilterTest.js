@@ -8,7 +8,7 @@ describe("filter: escapeLiteral", function () {
     inject(function (_$filter_, _$rootScope_) {
       $scope = _$rootScope_.$new();
 
-      filter = _$filter_('escapeLiteral');
+      filter = _$filter_("escapeLiteral");
     });
   };
 

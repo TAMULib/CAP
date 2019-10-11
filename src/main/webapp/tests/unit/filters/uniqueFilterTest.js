@@ -8,7 +8,7 @@ describe("filter: unique", function () {
     inject(function (_$filter_, _$rootScope_) {
       $scope = _$rootScope_.$new();
 
-      filter = _$filter_('unique');
+      filter = _$filter_("unique");
     });
   };
 

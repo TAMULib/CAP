@@ -8,7 +8,7 @@ describe("filter: filterResources", function () {
     inject(function (_$filter_, _$rootScope_) {
       $scope = _$rootScope_.$new();
 
-      filter = _$filter_('filterResources');
+      filter = _$filter_("filterResources");
     });
   };
 

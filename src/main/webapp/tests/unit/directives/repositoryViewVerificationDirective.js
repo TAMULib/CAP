@@ -28,7 +28,7 @@ describe("directive: repositoryViewVerification", function () {
   beforeEach(function() {
     module("core");
     module("cap");
-    module('templates');
+    module("templates");
     module("mock.repositoryViewRepo");
 
     installPromiseMatchers();

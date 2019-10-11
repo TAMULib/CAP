@@ -22,7 +22,7 @@ describe("directive: fileSelected", function () {
   beforeEach(function() {
     module("core");
     module("cap");
-    module('templates');
+    module("templates");
 
     installPromiseMatchers();
     initializeVariables();

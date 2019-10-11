@@ -9,7 +9,7 @@ describe("component: plaintextLoader", function () {
       src = "";
 
       // @todo responsd needs headers set and also provide a valid mocked response.
-      $httpBackend.whenGET(src).respond('');
+      $httpBackend.whenGET(src).respond("");
     });
   };
 
@@ -31,7 +31,7 @@ describe("component: plaintextLoader", function () {
   beforeEach(function() {
     module("core");
     module("cap");
-    module('templates');
+    module("templates");
 
     installPromiseMatchers();
     initializeVariables();

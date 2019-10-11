@@ -8,7 +8,7 @@ describe("filter: cantaloupeUrl", function () {
     inject(function (_$filter_, _$rootScope_) {
       $scope = _$rootScope_.$new();
 
-      filter = _$filter_('cantaloupeUrl');
+      filter = _$filter_("cantaloupeUrl");
     });
   };
 

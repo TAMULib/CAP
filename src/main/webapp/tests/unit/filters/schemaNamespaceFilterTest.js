@@ -8,7 +8,7 @@ describe("filter: schemaNamespace", function () {
     inject(function (_$filter_, _$rootScope_) {
       $scope = _$rootScope_.$new();
 
-      filter = _$filter_('schemaNamespace');
+      filter = _$filter_("schemaNamespace");
     });
   };
 

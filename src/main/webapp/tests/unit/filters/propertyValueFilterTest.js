@@ -8,7 +8,7 @@ describe("filter: propertyValue", function () {
     inject(function (_$filter_, _$rootScope_) {
       $scope = _$rootScope_.$new();
 
-      filter = _$filter_('propertyValue');
+      filter = _$filter_("propertyValue");
     });
   };
 
