@@ -1,14 +1,35 @@
-language: java
+matrix:
+  include:
+  - name: "Java Tests"
+    language: java
+    jdk: openjdk8
+    before_script:
+      - export COVERALLS_PARALLEL=true
+    install:
+      - mvn test-compile -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+    after_success:
+      - mvn clean test cobertura:cobertura jacoco:report coveralls:report -DserviceName="travis-ci" -DserviceBuildNumber=$TRAVIS_BUILD_NUMBER
 
-jdk:
-  - openjdk8
+  - name: "Node/Javascript Tests"
+    language: node_js
+    node_js: "8"
+    addons:
+      chrome: stable
+    services:
+      - xvfb
+    before_script:
+      - export COVERALLS_PARALLEL=true
+      - export CI_NAME="travis-ci"
+      - export CI_BUILD_NUMBER=$TRAVIS_BUILD_NUMBER
+      - npm start > /dev/null &
+      - npm run update-webdriver
+      - sleep 1 # give server time to start
+      - grunt coverage-preprocess
+    script:
+      - npm run test-ci
+      - grunt coverage
 
-install:
-  - mvn test-compile -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-
-after_success:
-  - mvn clean test cobertura:cobertura jacoco:report coveralls:report
-
+# Deploy Github pages after success of Java Tests.
 deploy:
   provider: pages
   skip_cleanup: true
@@ -17,4 +38,11 @@ deploy:
   github_token: "$GITHUB_TOKEN"
   local_dir: "./target/generated-docs"
   on:
-    branch: sprint-tcdl-staging
+    branch: master
+    condition: $TRAVIS_JOB_NAME = "Java Tests"
+
+# Send final notification to coveralls after all jobs have been completed.
+notifications:
+  webhooks:
+    urls:
+      - https://coveralls.io/webhook
