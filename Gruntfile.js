@@ -229,7 +229,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask("coverage-preprocess", ["concat", "usemin", "clean", "copy", "symlink"]);
 
-  grunt.registerTask("coverage", ["jshint", "sass", "symlink", "coveralls"]);
+  grunt.registerTask("coverage", ["jshint", "symlink", "coveralls"]);
 
   grunt.registerTask("watch", ["watch"]);
 
