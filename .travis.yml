@@ -17,6 +17,7 @@ matrix:
       chrome: stable
     services:
       - xvfb
+    repo: "TAMULib/CAP"
     before_script:
       - export COVERALLS_PARALLEL=true
       - export CI_NAME="travis-ci"
