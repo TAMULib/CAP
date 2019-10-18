@@ -40,8 +40,8 @@ import edu.tamu.cap.model.RepositoryView;
 import edu.tamu.cap.model.repo.RepositoryViewRepo;
 import edu.tamu.cap.model.response.RepositoryViewContext;
 import edu.tamu.cap.model.response.Triple;
-import edu.tamu.cap.service.FedoraService;
 import edu.tamu.cap.service.RepositoryViewType;
+import edu.tamu.cap.service.repositoryview.FedoraService;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ExtendWith(SpringExtension.class)
@@ -142,14 +142,14 @@ public class RepositoryViewContextMetadataControllerTest {
     @Test
     @WithMockUser(roles = "USER")
     public void updateMetadata() throws Exception {
-        // TODO: provide a mocked new value.
-        String mockNewValue = "";
+        // TODO: provide a mocked value.
+        String mockValue = "";
         when(mockFedoraService.updateMetadata(any(String.class), any(Triple.class), any(String.class))).thenReturn(mockRepositoryViewContext);
 
         mockMvc.perform(
             put(CONTROLLER_PATH, TEST_REPOSITORY_VIEW_TYPE, mockRepositoryView.getId())
                 .param("contextUri", TEST_CONTEXT_ORG_URI)
-                .param("newValue", mockNewValue)
+                .param("value", mockValue)
                 .content(objectMapper.writeValueAsString(TEST_TRIPLE))
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
         )
@@ -158,7 +158,7 @@ public class RepositoryViewContextMetadataControllerTest {
             pathParameters(urlPathDescriptor),
             requestParameters(
                 contextUriDescriptor[0],
-                parameterWithName("newValue").description("The new value to assign.")
+                parameterWithName("value").description("The new value to assign.")
             )
         ));
     }

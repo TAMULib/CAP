@@ -4,7 +4,7 @@ cap.model("FixityReport", function FixityReport(HttpMethodVerbs) {
     var fixityReport = this;
 
     fixityReport.run = function () {
-      
+
       fixityReport.finished = false;
 
       var fixityPromise = fixityReport.repositoryView.performRequest(fixityReport.getMapping().load, {
@@ -14,7 +14,7 @@ cap.model("FixityReport", function FixityReport(HttpMethodVerbs) {
         }
       });
 
-      fixityPromise.then(function(apiRes) {
+      fixityPromise.then(function (apiRes) {
         var newReport = angular.fromJson(apiRes.body).payload.FixityReport;
         angular.extend(fixityReport, newReport);
         fixityReport.finished = true;

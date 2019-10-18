@@ -12,15 +12,7 @@
     <validationmessage results="user.getValidationResults()"></validationmessage>
 
     <div class="modal-body verifyEmailModal">
-      <validatedinput
-        model="registration"
-        property="userEmail"
-        label="Email"
-        placeholder="Enter email"
-        form="forms.verifyEmail"
-        validations="user.getValidations()"
-        results="user.getValidationResults()">
-      </validatedinput>
+      <validatedinput model="registration" property="userEmail" label="Email" placeholder="Enter email" form="forms.verifyEmail" validations="user.getValidations()" results="user.getValidationResults()"></validatedinput>
     </div>
 
     <div class="modal-footer">
@@ -28,4 +20,4 @@
       <button class="btn btn-primary" type="submit" ng-disabled="forms.verifyEmail.$invalid">Submit</button>
     </div>
   </form>
-<span>
+  <span>

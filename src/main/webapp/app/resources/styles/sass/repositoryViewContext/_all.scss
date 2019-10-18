@@ -1,20 +1,20 @@
 .repository-view-context {
-    @import "./main";
+  @import "./main";
 
-    .resource-section {
-        @import "./resourceSection";
-    }
+  .resource-section {
+    @import "./resourceSection";
+  }
 
-    .properties-section {
-        @import "./propertiesSection";
-    }
+  .properties-section {
+    @import "./propertiesSection";
+  }
 
-    .metadata-section {
-        @import "./metadataSection";
-    }
+  .metadata-section {
+    @import "./metadataSection";
+  }
 
-    .preview {
-        @import "./preview";
-    }
+  .preview {
+    @import "./preview";
+  }
 
 }

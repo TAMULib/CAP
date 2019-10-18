@@ -1,44 +1,44 @@
-cap.directive("repositoryViewVerification", function(RepositoryViewRepo, $q) {
+cap.directive("repositoryViewVerification", function ($q, RepositoryViewRepo) {
   return {
     templateUrl: "views/directives/repositoryViewVerification.html",
     restrict: "E",
     scope: {
-        repositoryView: "=",
-        results: "="
+      repositoryView: "=",
+      results: "="
     },
-    link: function($scope, attr, elem) {
-      $scope.$watch('repositoryView',function() {
+    link: function ($scope, attr, elem) {
+      $scope.$watch('repositoryView', function () {
         $scope.repositoryViewVerifications = [];
-      },true);
+      }, true);
 
       var types = [];
-      RepositoryViewRepo.getTypes(types).then(function() {
-        $scope.disableVerify = function() {
+      RepositoryViewRepo.getTypes(types).then(function () {
+        $scope.disableVerify = function () {
           var typeIsVerifying = false;
-          for(var i in types) {
+          for (var i in types) {
             var type = types[i];
-            if(type.value===$scope.repositoryView.type) {
-              typeIsVerifying = type.verifying===true;
+            if (type.value === $scope.repositoryView.type) {
+              typeIsVerifying = type.verifying === true;
             }
           }
           return $scope.repositoryView.rootUri && !typeIsVerifying;
         };
       });
 
-      $scope.verifyRepositroyViewConnection = function() {
+      $scope.verifyRepositroyViewConnection = function () {
 
         $scope.results.status = false;
 
         $scope.repositoryViewVerifications = [
           {
-            name: "Pinging "+$scope.repositoryView.rootUri,
+            name: "Pinging " + $scope.repositoryView.rootUri,
             key: "verifyingPing",
             execute: RepositoryViewRepo.verifyPing,
             status: "PENDING"
           }
         ];
 
-        if($scope.repositoryView.username && $scope.repositoryView.password) {
+        if ($scope.repositoryView.username && $scope.repositoryView.password) {
           $scope.repositoryViewVerifications.push({
             name: "Verifyinging Authentication",
             key: "verifyingAuth",
@@ -56,18 +56,18 @@ cap.directive("repositoryViewVerification", function(RepositoryViewRepo, $q) {
 
         var chain = $q.when();
         angular.forEach($scope.repositoryViewVerifications, function (verification) {
-          chain = chain.then(function() {
-            return verification.execute($scope.repositoryView).then(function(res) {
+          chain = chain.then(function () {
+            return verification.execute($scope.repositoryView).then(function (res) {
               verification.status = angular.fromJson(res.body).meta.status;
             });
           });
         });
-        chain.then(function() {
+        chain.then(function () {
           var status = "SUCCESS";
-          for(var i in $scope.repositoryViewVerifications) {
+          for (var i in $scope.repositoryViewVerifications) {
             var verification = $scope.repositoryViewVerifications[i];
-            if(verification.status!==status) {
-              status=verification.status;
+            if (verification.status !== status) {
+              status = verification.status;
               break;
             }
           }

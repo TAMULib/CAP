@@ -1,68 +1,68 @@
 <form class="add-metadata-model" name="repositoryViewForm.addMetadata" ng-submit="addMetadata(repositoryViewForm.addMetadata)" novalidate ng-init="repositoryViewForm.addMetadata.entries=[]">
-    <div class="modal-header {{attr.modalHeaderClass}}">
-      <button type="button" class="close modal-close" aria-label="Close" ng-click="resetAddMetadataModal()"><span aria-hidden="true">&times;</span></button>
-      <h4 class="modal-title">Add Metadata</h4>
-    </div>
-    <div class="modal-body" ng-init="repositoryViewForm.addMetadata.entries=[{label:'',value:''}]">
+  <div class="modal-header {{attr.modalHeaderClass}}">
+    <button type="button" class="close modal-close" aria-label="Close" ng-click="resetAddMetadataModal()"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title">Add Metadata</h4>
+  </div>
+  <div class="modal-body" ng-init="repositoryViewForm.addMetadata.entries=[{label:'',value:''}]">
 
-        <div class="row" ng-init="repositoryViewForm.addMetadata.entries[0]={}">
-            <div class="col-xs-2">
-                <div class="form-group" ng-init="selectedSchema=repositoryView.schemas[0]">
-                    <label for="metadata.label">Schema</label>
-                    <select class="form-control" ng-model="selectedSchema" ng-options="schema as schema.abbreviation for schema in repositoryView.schemas track by schema.namespace"></select>
-                    <small><a href="{{selectedSchema.namespace}}" target="_blank">{{selectedSchema.name}}</a></small>
-                </div>
-            </div>
-            <div class="col-xs-3">
-                <div class="form-group">
-                    <label for="metadata.label">Label</label>
-                    <input placeholder="e.g. {{selectedSchema.properties[0].label}}" type="text" class="form-control" ng-model="repositoryViewForm.addMetadata.entries[0].property" typeahead-input-formatter="$model.label" uib-typeahead="property as property.label for property in selectedSchema.properties | filter:$viewValue | orderBy:'label' | limitTo:10">
-                    <small><a href="{{repositoryViewForm.addMetadata.entries[0].property.uri}}" target="_blank">{{repositoryViewForm.addMetadata.entries[0].property.uri}}</a></small>
-                </div>
-            </div>
-            <div class="col-xs-5">
-                <div class="form-group">
-                    <label for="metadata.value">Value</label>
-                    <input name="metadata.value" type="text" ng-model="repositoryViewForm.addMetadata.entries[0].value" class="form-control" placeholder="My Title" ng-disabled="!repositoryViewForm.addMetadata.entries[0].property.uri" required>
-                </div>
-            </div>
-            <div class="col-xs-2">
-                <div class="form-group add-field-group">
-                    <button type="button" class="btn btn-success" ng-click="repositoryViewForm.addMetadata.entries.push({})"><span class="glyphicon glyphicon-plus"></span></button>
-                </div>
-            </div>
+    <div class="row" ng-init="repositoryViewForm.addMetadata.entries[0]={}">
+      <div class="col-xs-2">
+        <div class="form-group" ng-init="selectedSchema=repositoryView.schemas[0]">
+          <label for="metadata.label">Schema</label>
+          <select class="form-control" ng-model="selectedSchema" ng-options="schema as schema.abbreviation for schema in repositoryView.schemas track by schema.namespace"></select>
+          <small><a href="{{selectedSchema.namespace}}" target="_blank">{{selectedSchema.name}}</a></small>
         </div>
-
-        <div class="row" ng-repeat="metadatum in repositoryViewForm.addMetadata.entries track by $index" ng-hide="$first">
-            <div class="col-xs-2">
-                <div class="form-group" ng-init="selectedSchema=repositoryView.schemas[0]">
-                    <select class="form-control" ng-model="selectedSchema" ng-options="schema as schema.abbreviation for schema in repositoryView.schemas track by schema.namespace"></select>
-                    <small><a href="{{selectedSchema.namespace}}" target="_blank">{{selectedSchema.name}}</a></small>
-                </div>
-            </div>
-            <div class="col-xs-3">
-                <div class="form-group">
-                    <input placeholder="e.g. {{selectedSchema.properties[$index].label}}" type="text" class="form-control" ng-model="repositoryViewForm.addMetadata.entries[$index].property" typeahead-input-formatter="$model.label" uib-typeahead="property as property.label for property in selectedSchema.properties | orderBy:'label' | filter:$viewValue | limitTo:10">
-                    <small><a href="{{repositoryViewForm.addMetadata.entries[$index].property.uir}}" target="_blank">{{repositoryViewForm.addMetadata.entries[$index].property.uri}}</a></small>
-                </div>
-            </div>
-            <div class="col-xs-5">
-                <div class="form-group">
-                    <input name="metadata.value" type="text" ng-model="repositoryViewForm.addMetadata.entries[$index].value" class="form-control" placeholder="My Title" ng-disabled="!repositoryViewForm.addMetadata.entries[$index].property.uri" required>
-                </div>
-            </div>
-            <div class="col-xs-2">
-                <div class="form-group">
-                    <button type="button" class="btn btn-danger" ng-click="repositoryViewForm.addMetadata.entries.splice($index,1)"><span class="glyphicon glyphicon-minus"></span></button>
-                </div>
-            </div>
+      </div>
+      <div class="col-xs-3">
+        <div class="form-group">
+          <label for="metadata.label">Label</label>
+          <input placeholder="e.g. {{selectedSchema.properties[0].label}}" type="text" class="form-control" ng-model="repositoryViewForm.addMetadata.entries[0].property" typeahead-input-formatter="$model.label" uib-typeahead="property as property.label for property in selectedSchema.properties | filter:$viewValue | orderBy:'label' | limitTo:10">
+          <small><a href="{{repositoryViewForm.addMetadata.entries[0].property.uri}}" target="_blank">{{repositoryViewForm.addMetadata.entries[0].property.uri}}</a></small>
         </div>
-
-
-
+      </div>
+      <div class="col-xs-5">
+        <div class="form-group">
+          <label for="metadata.value">Value</label>
+          <input name="metadata.value" type="text" ng-model="repositoryViewForm.addMetadata.entries[0].value" class="form-control" placeholder="My Title" ng-disabled="!repositoryViewForm.addMetadata.entries[0].property.uri" required>
+        </div>
+      </div>
+      <div class="col-xs-2">
+        <div class="form-group add-field-group">
+          <button type="button" class="btn btn-success" ng-click="repositoryViewForm.addMetadata.entries.push({})"><span class="glyphicon glyphicon-plus"></span></button>
+        </div>
+      </div>
     </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-default" ng-class="{'btn-warning': repositoryViewForm.addMetadata.$dirty}" ng-click="resetAddMetadataModal()">Cancel</button>
-      <button type="submit" class="btn btn-success" ng-disabled="repositoryViewForm.addMetadata.$invalid || submitClicked">Add</button>
+
+    <div class="row" ng-repeat="metadatum in repositoryViewForm.addMetadata.entries track by $index" ng-hide="$first">
+      <div class="col-xs-2">
+        <div class="form-group" ng-init="selectedSchema=repositoryView.schemas[0]">
+          <select class="form-control" ng-model="selectedSchema" ng-options="schema as schema.abbreviation for schema in repositoryView.schemas track by schema.namespace"></select>
+          <small><a href="{{selectedSchema.namespace}}" target="_blank">{{selectedSchema.name}}</a></small>
+        </div>
+      </div>
+      <div class="col-xs-3">
+        <div class="form-group">
+          <input placeholder="e.g. {{selectedSchema.properties[$index].label}}" type="text" class="form-control" ng-model="repositoryViewForm.addMetadata.entries[$index].property" typeahead-input-formatter="$model.label" uib-typeahead="property as property.label for property in selectedSchema.properties | orderBy:'label' | filter:$viewValue | limitTo:10">
+          <small><a href="{{repositoryViewForm.addMetadata.entries[$index].property.uir}}" target="_blank">{{repositoryViewForm.addMetadata.entries[$index].property.uri}}</a></small>
+        </div>
+      </div>
+      <div class="col-xs-5">
+        <div class="form-group">
+          <input name="metadata.value" type="text" ng-model="repositoryViewForm.addMetadata.entries[$index].value" class="form-control" placeholder="My Title" ng-disabled="!repositoryViewForm.addMetadata.entries[$index].property.uri" required>
+        </div>
+      </div>
+      <div class="col-xs-2">
+        <div class="form-group">
+          <button type="button" class="btn btn-danger" ng-click="repositoryViewForm.addMetadata.entries.splice($index,1)"><span class="glyphicon glyphicon-minus"></span></button>
+        </div>
+      </div>
     </div>
+
+
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-class="{'btn-warning': repositoryViewForm.addMetadata.$dirty}" ng-click="resetAddMetadataModal()">Cancel</button>
+    <button type="submit" class="btn btn-success" ng-disabled="repositoryViewForm.addMetadata.$invalid || submitClicked">Add</button>
+  </div>
 </form>

@@ -1,4 +1,4 @@
-cap.repo("SchemaRepo", function(WsApi, HttpMethodVerbs) {
+cap.repo("SchemaRepo", function (WsApi, HttpMethodVerbs) {
   var schemaRepo = this;
 
   schemaRepo.scaffold = {
@@ -8,7 +8,7 @@ cap.repo("SchemaRepo", function(WsApi, HttpMethodVerbs) {
     properties: []
   };
 
-  schemaRepo.findProperties = function(schema) {
+  schemaRepo.findProperties = function (schema) {
     var findPropertiesPromise = WsApi.fetch(schemaRepo.mapping.findProperties, {
       method: HttpMethodVerbs.GET,
       query: {

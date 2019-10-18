@@ -8,15 +8,19 @@ import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.tamu.cap.exceptions.OntModelReadException;
+import edu.tamu.cap.model.RepositoryView;
 import edu.tamu.cap.model.Schema;
 import edu.tamu.cap.model.repo.SchemaRepo;
 import edu.tamu.weaver.response.ApiResponse;
@@ -32,7 +36,7 @@ public class SchemaController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createSchema(@RequestBody @WeaverValidatedModel Schema schema) {
@@ -40,13 +44,13 @@ public class SchemaController {
         return new ApiResponse(SUCCESS, schemaRepo.create(schema));
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     @PreAuthorize("hasRole('CURATOR')")
     public ApiResponse allSchemas() {
         return new ApiResponse(SUCCESS, schemaRepo.findAll());
     }
 
-    @RequestMapping(method = RequestMethod.PUT)
+    @PutMapping
     @PreAuthorize("hasRole('ADMIN')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateSchema(@RequestBody @WeaverValidatedModel Schema schema) {
@@ -54,24 +58,24 @@ public class SchemaController {
         return new ApiResponse(SUCCESS, schemaRepo.update(schema));
     }
 
-    @RequestMapping(method = RequestMethod.DELETE)
+    @DeleteMapping
     @PreAuthorize("hasRole('ADMIN')")
-    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, joins = { RepositoryView.class }, path = { "schemas" }) })
     public ApiResponse deleteSchema(@RequestBody @WeaverValidatedModel Schema schema) {
         logger.info("Deleating schema:  " + schema.getName());
         schemaRepo.delete(schema);
         return new ApiResponse(SUCCESS);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @GetMapping("/{id}")
     @PreAuthorize("hasRole('CURATOR')")
-    public ApiResponse getSchema(@PathVariable Long id) {
+    public ApiResponse getSchema(@PathVariable("id") Long id) {
         return new ApiResponse(SUCCESS, schemaRepo.read(id));
     }
 
-    @RequestMapping(value = "/properties", method = RequestMethod.GET)
+    @GetMapping("/properties")
     @PreAuthorize("hasRole('CURATOR')")
-    public ApiResponse propertiesByNamespace(@Param("namespace") String namespace) throws OntModelReadException {
+    public ApiResponse propertiesByNamespace(@RequestParam("namespace") String namespace) throws OntModelReadException {
         return new ApiResponse(SUCCESS, schemaRepo.findPropertiesByNamespace(namespace));
     }
 

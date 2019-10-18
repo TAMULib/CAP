@@ -41,8 +41,8 @@ import edu.tamu.cap.model.RepositoryView;
 import edu.tamu.cap.model.repo.RepositoryViewRepo;
 import edu.tamu.cap.model.response.RepositoryViewContext;
 import edu.tamu.cap.model.response.Triple;
-import edu.tamu.cap.service.FedoraService;
 import edu.tamu.cap.service.RepositoryViewType;
+import edu.tamu.cap.service.repositoryview.FedoraService;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ExtendWith(SpringExtension.class)

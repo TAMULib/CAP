@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import edu.tamu.cap.model.response.RepositoryViewContext;
+import edu.tamu.cap.service.repositoryview.RepositoryViewService;
 import edu.tamu.weaver.context.SpringContext;
 
 public enum RepositoryViewType {

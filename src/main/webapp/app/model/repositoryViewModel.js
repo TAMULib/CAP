@@ -1,242 +1,211 @@
-cap.model("RepositoryView", function($location, $timeout, $cookies, $filter, $interval, $q, HttpMethodVerbs, RepositoryViewContext, WsApi, UserService) {
+cap.model("RepositoryView", function ($location, $timeout, $interval, $q, HttpMethodVerbs, RepositoryViewContext, WsApi, UserService) {
   return function RepositoryView() {
     var repositoryView = this;
 
     var cache = {};
 
-    var lengthenContextUri = function (contextUri) {
-      return repositoryView.rootUri ? $filter('lengthenUri')(contextUri, repositoryView.rootUri) : contextUri;
+    repositoryView.cacheContext = function (context) {
+      cache[context.uri] = context;
     };
 
-    repositoryView.currentContext = {};
-
-    repositoryView.cacheContext = function(context) {
-      cache[lengthenContextUri(context.uri)] = context;
+    repositoryView.getCachedContext = function (contextUri) {
+      return cache[contextUri];
     };
 
-    repositoryView.getCachedContext = function(contextUri) {
-      return cache[lengthenContextUri(contextUri)];
+    repositoryView.removeCachedContext = function (contextUri) {
+      delete cache[contextUri];
     };
 
-    repositoryView.removeCachedContext = function(contextUri) {
-      delete cache[lengthenContextUri(contextUri)];
-    };
-
-    repositoryView.clearCache = function() {
-      angular.forEach(cache, function(v, uri){
+    repositoryView.clearCache = function () {
+      angular.forEach(cache, function (v, uri) {
         repositoryView.removeCachedContext(uri);
       });
     };
 
-    repositoryView.getContext = function(contextUri, reload) {
+    repositoryView.getContext = function (contextUri, reload) {
       var context = repositoryView.getCachedContext(contextUri);
-      if(context === undefined) {
+      if (context === undefined) {
         context = new RepositoryViewContext({
           repositoryView: repositoryView,
           uri: contextUri,
           fetch: true
         });
         repositoryView.cacheContext(context);
-      } else if(reload) {
+      } else if (reload) {
         context.reloadContext();
       }
-
       return context;
     };
 
-    repositoryView.loadContext = function(contextUri, reload) {
-      $location.search("context", contextUri);
+    repositoryView.loadContext = function (contextUri, reload) {
       repositoryView.currentContext = repositoryView.getContext(contextUri, reload);
+      $location.search("context", contextUri);
       return repositoryView.currentContext;
     };
 
-    repositoryView.performRequest = function(endpoint, options) {
-
+    repositoryView.performRequest = function (endpoint, options) {
       var defaultPathValues = {
         type: repositoryView.type,
         repositoryViewId: repositoryView.id
       };
 
-      if(options.pathValues) {
+      if (options.pathValues) {
         angular.extend(options.pathValues, defaultPathValues);
       } else {
         options.pathValues = defaultPathValues;
       }
 
       return WsApi.fetch(endpoint, options);
-
     };
 
-    repositoryView.startTransaction = function() {
-
+    repositoryView.startTransaction = function () {
       var transactionPromise = repositoryView.performRequest(repositoryView.getMapping().transaction, {
-        method: HttpMethodVerbs.GET,
+        method: HttpMethodVerbs.GET
       });
 
-      transactionPromise.then(function(apiRes) {
-        var transactionDetails = angular.fromJson(apiRes.body).payload.FedoraTransactionDetails;
+      transactionPromise.then(function (res) {
+        var transactionDetails = angular.fromJson(res.body).payload.TransactionDetails;
+
         repositoryView.clearCache();
-        repositoryView.createTransactionCookie(transactionDetails.transactionToken, transactionDetails.secondsRemaining, transactionDetails.transactionDuration);
-        repositoryView.currentContext.reloadContext().then(function() {
-          repositoryView.startTransactionTimer().then(function() {
-            repositoryView.currentContext.reloadContext();
-          });
+
+        angular.extend(repositoryView.currentContext, {
+          transactionDetails: transactionDetails,
+          uri: transactionDetails.token + "/" + repositoryView.currentContext.uri
+        });
+
+        $location.search("context", repositoryView.currentContext.uri);
+
+        repositoryView.startTransactionTimer().then(function () {
+          repositoryView.currentContext.reloadContext();
         });
       });
-
       return transactionPromise;
-
     };
 
-    repositoryView.refreshTransaction = function() {
-
+    repositoryView.refreshTransaction = function () {
       var transaction = repositoryView.getTransaction();
-
       var refeshPromise = repositoryView.performRequest(repositoryView.getMapping().transaction, {
         method: HttpMethodVerbs.PUT,
         query: {
-          contextUri: transaction.transactionToken
+          contextUri: repositoryView.rootUri + (repositoryView.rootUri.endsWith('/') ? "" : "/") + transaction.token
         }
       });
-
-      refeshPromise.then(function(apiRes) {
-        var transactionDetails = angular.fromJson(apiRes.body).payload.FedoraTransactionDetails;
-        repositoryView.createTransactionCookie(transactionDetails.transactionToken, transactionDetails.secondsRemaining, transactionDetails.transactionDuraction);
+      refeshPromise.then(function (res) {
+        var transactionDetails = angular.fromJson(res.body).payload.TransactionDetails;
+        angular.extend(repositoryView.currentContext, {
+          transactionDetails: transactionDetails
+        });
       });
-
       return refeshPromise;
-
     };
 
-    repositoryView.commitTransaction = function() {
+    repositoryView.commitTransaction = function () {
       var transaction = repositoryView.getTransaction();
-
       var refeshPromise = repositoryView.performRequest(repositoryView.getMapping().transaction, {
         method: HttpMethodVerbs.POST,
         query: {
-          contextUri: transaction.transactionToken
+          contextUri: repositoryView.rootUri + (repositoryView.rootUri.endsWith('/') ? "" : "/") + transaction.token
         }
       });
-
-      refeshPromise.then(function() {
+      refeshPromise.then(function () {
         repositoryView.stopTransactionTimer();
       });
-
       return refeshPromise;
     };
 
-    repositoryView.rollbackTransaction = function() {
+    repositoryView.rollbackTransaction = function () {
       var transaction = repositoryView.getTransaction();
-
       var rollbackPromise = repositoryView.performRequest(repositoryView.getMapping().transaction, {
         method: HttpMethodVerbs.DELETE,
         query: {
-          contextUri: transaction.transactionToken
+          contextUri: repositoryView.rootUri + (repositoryView.rootUri.endsWith('/') ? "" : "/") + transaction.token
         }
       });
-
-      rollbackPromise.then(function() {
+      rollbackPromise.then(function () {
         repositoryView.stopTransactionTimer();
       });
-
       return rollbackPromise;
     };
 
-    repositoryView.createTransactionCookie = function(token, secondsRemaining, transactionDuration) {
-
-      var cookie = {
-        transactionToken: token,
-        secondsRemaining: secondsRemaining,
-        transactionDuration: transactionDuration
-      };
-
-      var expiration = new Date();
-      expiration.setSeconds(expiration.getSeconds() + secondsRemaining);
-
-      $cookies.putObject("transaction", cookie, {
-        expires: expiration,
-        path: "/"
-      });
+    repositoryView.getTransaction = function () {
+      return repositoryView.currentContext.transactionDetails;
     };
 
-    var transactionObject = {
-      active: false
+    repositoryView.inTransaction = function () {
+      return repositoryView.currentContext.transactionDetails !== null &&
+        repositoryView.currentContext.transactionDetails !== undefined &&
+        repositoryView.currentContext.transactionDetails.expiration > new Date().getTime();
     };
 
-    repositoryView.getTransaction = function() {
-      var transactionCookie = $cookies.getObject("transaction");
-      if(transactionCookie)  {
-        transactionObject.active = true;
-      } else {
-        transactionObject.active = false;
-      }
+    repositoryView.isTransactionAboutToExpire = function () {
+      return repositoryView.inTransaction() && (repositoryView.currentContext.transactionDetails.expiration - new Date().getTime()) < 30000;
+    };
 
-      angular.extend(transactionObject, transactionCookie);
-
-      return transactionObject;
-
+    repositoryView.getTransactionSecondsRemaining = function () {
+      var secondsRemaining = repositoryView.inTransaction() ? Math.round((repositoryView.currentContext.transactionDetails.expiration - new Date().getTime()) / 1000) : 0;
+      return secondsRemaining > 9 ? secondsRemaining : '0' + secondsRemaining;
     };
 
     repositoryView.transactionTimer = undefined;
-    repositoryView.startTransactionTimer = function() {
 
+    repositoryView.startTransactionTimer = function () {
       var timerDefer = $q.defer();
 
-      if(!angular.isDefined(repositoryView.transactionTimer)) {
-
-        repositoryView.transactionTimer = $interval(function() {
-
+      if (!angular.isDefined(repositoryView.transactionTimer)) {
+        repositoryView.transactionTimer = $interval(function () {
           var transaction = repositoryView.getTransaction();
-
-          var secondsremaining = transaction.secondsRemaining-1;
-
-          repositoryView.createTransactionCookie(transaction.transactionToken, secondsremaining);
-
-          if(repositoryView.getTransaction().secondsRemaining<1) {
-           repositoryView.stopTransactionTimer();
+          if (transaction.expiration <= new Date().getTime()) {
+            repositoryView.stopTransactionTimer();
           }
         }, 1000);
       }
 
       return timerDefer.promise;
-
     };
 
-    repositoryView.stopTransactionTimer = function() {
-      if(repositoryView.transactionTimer) {
+    repositoryView.stopTransactionTimer = function () {
+      if (repositoryView.transactionTimer) {
         $interval.cancel(repositoryView.transactionTimer);
         repositoryView.transactionTimer = undefined;
-        $timeout(function() {
-          transactionObject.active = false;
+        $timeout(function () {
           var transaction = repositoryView.getTransaction();
-          $cookies.remove("transaction", {
-            path: "/"
+          angular.extend(repositoryView.currentContext, {
+            transactionDetails: null,
+            uri: repositoryView.currentContext.uri.replace(transaction.token + "/", '')
           });
-          repositoryView.currentContext.uri = repositoryView.currentContext.uri.replace(transaction.transactionToken, repositoryView.rootUri);
           repositoryView.clearCache();
           $location.search("context", repositoryView.currentContext.uri);
-        },250);
+        }, 250);
       }
     };
 
-
-    WsApi.listen("/queue/context").then(null, null, function(response) {
-      var context = angular.fromJson(response.body).payload.RepositoryViewContext;
-      if(cache[context.triple.subject] === undefined) {
-        cache[context.triple.subject] = new RepositoryViewContext({
+    WsApi.listen("/queue/context").then(null, null, function (res) {
+      var context = angular.fromJson(res.body).payload.RepositoryViewContext;
+      var contextUri = context.triple.subject.replace(repositoryView.rootUri, '');
+      if (cache[contextUri] === undefined) {
+        cache[contextUri] = new RepositoryViewContext({
           repositoryView: repositoryView,
-          uri: context.triple.subject,
+          uri: contextUri,
           fetch: false
         });
       }
-      angular.extend(cache[context.triple.subject], context);
+      angular.extend(cache[contextUri], context);
     });
 
     var user = UserService.getCurrentUser();
 
-    WsApi.listen("/queue/transaction/"+user.uin).then(null, null, function(apiRes) {
-      var transactionDetails = angular.fromJson(apiRes.body).payload.FedoraTransactionDetails;
-      repositoryView.createTransactionCookie(transactionDetails.transactionToken, transactionDetails.secondsRemaining, transactionDetails.transactionDuraction);
+    WsApi.listen("/queue/transaction/" + user.uin).then(null, null, function (res) {
+      // only process broadcast if repository view has a context
+      if (angular.isDefined(repositoryView.currentContext)) {
+        var transactionDetails = angular.fromJson(res.body).payload.TransactionDetails;
+        // only update context if matching transaction
+        if (repositoryView.currentContext.uri.startsWith(transactionDetails.token)) {
+          angular.extend(repositoryView.currentContext, {
+            transactionDetails: transactionDetails
+          });
+          repositoryView.currentContext.reloadContext();
+        }
+      }
     });
 
     return repositoryView;

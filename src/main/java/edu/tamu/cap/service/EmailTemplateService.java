@@ -13,16 +13,12 @@ import edu.tamu.cap.model.EmailTemplate;
 
 @Service
 public class EmailTemplateService {
+
     @Autowired
-    FileService fileService;
+    private FileService fileService;
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    public EmailTemplate getEmailTemplate(String templateName) throws IOException {
-        EmailTemplate emailTemplate = objectMapper.readValue(fileService.getFileFromResource("config/emails/" + templateName + ".json"), new TypeReference<EmailTemplate>() {});
-        return emailTemplate;
-    }
 
     public EmailTemplate buildEmail(String templateName, Map<String, String> parameters) {
         EmailTemplate emailTemplate = null;
@@ -32,16 +28,19 @@ public class EmailTemplateService {
             e.printStackTrace();
         }
         return templateParameters(emailTemplate, parameters);
-
     }
 
-    public EmailTemplate templateParameters(EmailTemplate emailTemplate, Map<String, String> parameters) {
+    private EmailTemplate getEmailTemplate(String templateName) throws IOException {
+        return objectMapper.readValue(fileService.getFileFromResource("config/emails/" + templateName + ".json"), new TypeReference<EmailTemplate>() {});
+    }
+
+    private EmailTemplate templateParameters(EmailTemplate emailTemplate, Map<String, String> parameters) {
         emailTemplate.setSubject(templateEmailSection(emailTemplate.getSubject(), parameters));
         emailTemplate.setMessage(templateEmailSection(emailTemplate.getMessage(), parameters));
         return emailTemplate;
     }
 
-    protected String templateEmailSection(String emailSection, Map<String, String> parameters) {
+    private String templateEmailSection(String emailSection, Map<String, String> parameters) {
         for (String name : parameters.keySet()) {
             emailSection = emailSection.replaceAll("\\{" + name + "\\}", parameters.get(name));
         }

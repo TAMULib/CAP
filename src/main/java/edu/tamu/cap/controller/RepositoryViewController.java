@@ -14,10 +14,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.tamu.cap.model.EmailTemplate;
@@ -48,7 +51,7 @@ public class RepositoryViewController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createRepositoryView(@RequestBody @WeaverValidatedModel RepositoryView repositoryView) {
@@ -56,7 +59,7 @@ public class RepositoryViewController {
         return new ApiResponse(SUCCESS, repositoryViewRepo.create(repositoryView));
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     @PreAuthorize("hasRole('CURATOR')")
     public ApiResponse allRepositoryViews(@WeaverUser User user) {
         List<RepositoryView> repositoryViews = new ArrayList<RepositoryView>();
@@ -68,7 +71,7 @@ public class RepositoryViewController {
         return new ApiResponse(SUCCESS, repositoryViews);
     }
 
-    @RequestMapping(method = RequestMethod.PUT)
+    @PutMapping
     @PreAuthorize("hasRole('CURATOR')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateRV(@WeaverUser User user, @RequestBody @WeaverValidatedModel RepositoryView repositoryView) {
@@ -118,7 +121,7 @@ public class RepositoryViewController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.DELETE)
+    @DeleteMapping
     @PreAuthorize("hasRole('ADMIN')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
     public ApiResponse deleteRepositoryView(@RequestBody @WeaverValidatedModel RepositoryView repositoryView) {
@@ -127,23 +130,23 @@ public class RepositoryViewController {
         return new ApiResponse(SUCCESS);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @GetMapping("/{id}")
     @PreAuthorize("hasRole('CURATOR')")
-    public ApiResponse getRepositoryView(@WeaverUser User user, @PathVariable Long repositoryViewId) {
-        if (checkRepositoryViewAccess(user, repositoryViewId)) {
-            return new ApiResponse(SUCCESS, repositoryViewRepo.read(repositoryViewId));
+    public ApiResponse getRepositoryView(@WeaverUser User user, @PathVariable("id") Long id) {
+        if (checkRepositoryViewAccess(user, id)) {
+            return new ApiResponse(SUCCESS, repositoryViewRepo.read(id));
         } else {
             return new ApiResponse(ERROR, "Unauthorized RepositoryView GET attempt by: " + user.getId());
         }
     }
 
-    @RequestMapping(value = "/types", method = RequestMethod.GET)
+    @GetMapping("/types")
     @PreAuthorize("hasRole('CURATOR')")
     public ApiResponse getRepositoryViewTypes() {
         return new ApiResponse(SUCCESS, RepositoryViewType.getValues());
     }
 
-    protected boolean checkRepositoryViewAccess(User user, Long repositoryViewId) {
+    private boolean checkRepositoryViewAccess(User user, Long repositoryViewId) {
         return ((user.getRole().ordinal() == Role.ROLE_ADMIN.ordinal()) || (user.getRole().ordinal() == Role.ROLE_CURATOR.ordinal() && user.hasRepositoryView(repositoryViewId)));
     }
 
@@ -156,4 +159,5 @@ public class RepositoryViewController {
             logger.debug("Unable to send " + templateName + " email! " + address);
         }
     }
+
 }

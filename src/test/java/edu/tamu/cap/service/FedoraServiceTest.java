@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.jena.rdf.model.Property;
@@ -31,6 +30,7 @@ import edu.tamu.cap.model.RepositoryView;
 import edu.tamu.cap.model.response.RepositoryViewContext;
 import edu.tamu.cap.model.response.Triple;
 import edu.tamu.cap.model.response.Version;
+import edu.tamu.cap.service.repositoryview.FedoraService;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = { CapApplication.class }, webEnvironment = WebEnvironment.DEFINED_PORT)
@@ -67,7 +67,6 @@ public final class FedoraServiceTest {
 
         request = mock(HttpServletRequest.class);
 
-        Mockito.when(request.getCookies()).thenReturn(new Cookie[0]);
         when(request.getMethod()).thenReturn("POST");
         when(request.getUserPrincipal()).thenReturn(new UsernamePasswordAuthenticationToken("aggieJack", ""));
         when(request.getAttribute(Mockito.any(String.class))).thenReturn(new HashMap<String, String>() {

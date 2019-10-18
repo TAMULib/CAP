@@ -1,4 +1,4 @@
-cap.repo("RepositoryViewRepo", function($q, WsApi, api, HttpMethodVerbs) {
+cap.repo("RepositoryViewRepo", function (WsApi, api) {
   var repositoryViewRepo = this;
 
   repositoryViewRepo.scaffold = {
@@ -11,25 +11,25 @@ cap.repo("RepositoryViewRepo", function($q, WsApi, api, HttpMethodVerbs) {
     curators: []
   };
 
-  repositoryViewRepo.getTypes = function(types) {
+  repositoryViewRepo.getTypes = function (types) {
     var typesPromise = WsApi.fetch(repositoryViewRepo.mapping.getTypes);
-    typesPromise.then(function(res) {
+    typesPromise.then(function (res) {
       angular.extend(types, angular.fromJson(res.body).payload['ArrayList<HashMap>']);
     });
     return typesPromise;
   };
 
-  repositoryViewRepo.findByName = function(name) {
+  repositoryViewRepo.findByName = function (name) {
     var repositoryViews = repositoryViewRepo.getAll();
-    for(var i in repositoryViews) {
+    for (var i in repositoryViews) {
       var repositoryView = repositoryViews[i];
-      if(repositoryView.name === name) {
+      if (repositoryView.name === name) {
         return repositoryView;
       }
     }
   };
 
-  repositoryViewRepo.verifyPing = function(repositoryView) {
+  repositoryViewRepo.verifyPing = function (repositoryView) {
     return WsApi.fetch(api.VerifyRepositoryViewSettings.verifyPing, {
       pathValues: {
         type: repositoryView.type
@@ -38,7 +38,7 @@ cap.repo("RepositoryViewRepo", function($q, WsApi, api, HttpMethodVerbs) {
     });
   };
 
-  repositoryViewRepo.verifyAuth = function(repositoryView) {
+  repositoryViewRepo.verifyAuth = function (repositoryView) {
     return WsApi.fetch(api.VerifyRepositoryViewSettings.verifyAuth, {
       pathValues: {
         type: repositoryView.type
@@ -47,7 +47,7 @@ cap.repo("RepositoryViewRepo", function($q, WsApi, api, HttpMethodVerbs) {
     });
   };
 
-  repositoryViewRepo.verifyContent = function(repositoryView) {
+  repositoryViewRepo.verifyContent = function (repositoryView) {
     return WsApi.fetch(api.VerifyRepositoryViewSettings.verifyContent, {
       pathValues: {
         type: repositoryView.type

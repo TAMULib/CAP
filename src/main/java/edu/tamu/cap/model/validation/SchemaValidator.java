@@ -8,7 +8,6 @@ import edu.tamu.weaver.validation.validators.InputValidator;
 public class SchemaValidator extends BaseModelValidator {
 
     public SchemaValidator() {
-
         String nameProperty = "name";
         this.addInputValidator(new InputValidator(InputValidationType.required, "A schema requires a name", nameProperty, true));
         this.addInputValidator(new InputValidator(InputValidationType.minlength, "Names must be at least 2 charachters long.", nameProperty, 2));
@@ -21,6 +20,6 @@ public class SchemaValidator extends BaseModelValidator {
         String namespace = "namespace";
         this.addInputValidator(new InputValidator(InputValidationType.required, "A schema requires a namespace", namespace, true));
         this.addInputValidator(new InputValidator(InputValidationType.pattern, "A namespace must be a valid URI", namespace, ValidationUtility.URL_REGEX));
-
     }
+
 }

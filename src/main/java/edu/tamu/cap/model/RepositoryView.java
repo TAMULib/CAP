@@ -26,7 +26,7 @@ public class RepositoryView extends ValidatingBaseEntity {
     @Column(unique = true)
     private String name;
 
-    @Column
+    @Column(nullable = false)
     private String rootUri;
 
     @Column
@@ -35,11 +35,11 @@ public class RepositoryView extends ValidatingBaseEntity {
     @Column
     private String password;
 
-    @ManyToMany()
+    @ManyToMany
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Schema> schemas;
 
-    @ManyToMany()
+    @ManyToMany
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<User> curators;
 

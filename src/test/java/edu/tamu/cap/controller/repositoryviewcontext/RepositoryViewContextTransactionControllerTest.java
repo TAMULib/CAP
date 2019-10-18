@@ -35,10 +35,10 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import edu.tamu.cap.model.RepositoryView;
 import edu.tamu.cap.model.repo.RepositoryViewRepo;
-import edu.tamu.cap.model.repositoryviewcontext.FedoraTransactionDetails;
 import edu.tamu.cap.model.response.RepositoryViewContext;
-import edu.tamu.cap.service.FedoraService;
+import edu.tamu.cap.model.response.TransactionDetails;
 import edu.tamu.cap.service.RepositoryViewType;
+import edu.tamu.cap.service.repositoryview.FedoraService;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ExtendWith(SpringExtension.class)
@@ -78,7 +78,7 @@ public class RepositoryViewContextTransactionControllerTest {
 
     private RepositoryView mockRepositoryView;
 
-    private FedoraTransactionDetails mockTransactionDetails;
+    private TransactionDetails mockTransactionDetails;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -96,7 +96,7 @@ public class RepositoryViewContextTransactionControllerTest {
         RepositoryViewContext mockRepositoryViewContext = new RepositoryViewContext();
         when(mockFedoraService.getRepositoryViewContext(any())).thenReturn(mockRepositoryViewContext);
 
-        mockTransactionDetails = new FedoraTransactionDetails(TEST_TOKEN, DateTimeFormatter.ISO_ZONED_DATE_TIME.format(ZonedDateTime.now()));
+        mockTransactionDetails = TransactionDetails.of(TEST_TOKEN, DateTimeFormatter.ISO_ZONED_DATE_TIME.format(ZonedDateTime.now()));
         when(mockFedoraService.refreshTransaction(any())).thenReturn(mockTransactionDetails);
 
         doNothing().when(mockFedoraService).commitTransaction(any());
