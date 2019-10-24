@@ -11,10 +11,12 @@ cap.directive("contentviewer", function ($filter, $sce) {
       function ($scope) {
         var viewerTemplate = "default";
 
+        var contentType = $filter("propertyValue")($filter("unescapeLiteral")($scope.contentType));
+
         typeLoop:
         for (var type in viewerMap) {
           for (var supportedType in viewerMap[type]) {
-            if ($scope.contentType === viewerMap[type][supportedType]) {
+            if (contentType === viewerMap[type][supportedType]) {
               viewerTemplate = type;
               break typeLoop;
             }
