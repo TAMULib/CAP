@@ -60,14 +60,17 @@ describe("controller: UsersController", function () {
     it("should be defined for admin", function () {
       expect(controller).toBeDefined();
     });
+
     it("should be defined for manager", function () {
       initializeController({role: "ROLE_MANAGER"});
       expect(controller).toBeDefined();
     });
+
     it("should be defined for user", function () {
       initializeController({role: "ROLE_USER"});
       expect(controller).toBeDefined();
     });
+
     it("should be defined for anonymous", function () {
       initializeController({role: "ROLE_ANONYMOUS"});
       expect(controller).toBeDefined();
@@ -79,14 +82,17 @@ describe("controller: UsersController", function () {
       expect($scope.assignableRoles).toBeDefined();
       expect(typeof $scope.assignableRoles).toEqual("function");
     });
+
     it("canDelete should be defined", function () {
       expect($scope.canDelete).toBeDefined();
       expect(typeof $scope.canDelete).toEqual("function");
     });
+
     it("delete should be defined", function () {
       expect($scope.delete).toBeDefined();
       expect(typeof $scope.delete).toEqual("function");
     });
+
     it("updateRole should be defined", function () {
       expect($scope.updateRole).toBeDefined();
       expect(typeof $scope.updateRole).toEqual("function");
@@ -109,6 +115,7 @@ describe("controller: UsersController", function () {
       result = $scope.assignableRoles("Should not exist");
       // @todo
     });
+
     it("canDelete should work", function () {
       var user = new mockUser($q);
       var result;
@@ -116,6 +123,7 @@ describe("controller: UsersController", function () {
       result = $scope.canDelete(user);
       // @todo
     });
+
     it("delete should work", function () {
       var user = new mockUser($q);
       var result;
@@ -123,6 +131,7 @@ describe("controller: UsersController", function () {
       result = $scope.delete(user);
       // @todo
     });
+
     it("updateRole should work", function () {
       var user = new mockUser($q);
       var result;

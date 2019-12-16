@@ -6,6 +6,7 @@ describe("controller: AppLoginController", function () {
       $q = _$q_;
 
       MockedUser = new mockUser($q);
+
       WsApi = _WsApi_;
     });
   };

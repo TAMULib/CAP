@@ -1,21 +1,21 @@
 describe("controller: RepositoryViewManagementController", function () {
-  var $q, $scope, MockedRepositoryView, MockedSchema, MockedUser, NgTableParams, WsApi, controller;
+  var $q, $scope, MockedNgTableParams, MockedRepositoryView, MockedSchema, MockedUser, NgTableParams, WsApi, controller;
 
   var initializeVariables = function() {
     inject(function (_$q_, _WsApi_) {
       $q = _$q_;
 
+      MockedNgTableParams = new mockNgTableParams($q);
       MockedRepositoryView = new mockRepositoryView($q);
       MockedSchema = new mockSchema($q);
       MockedUser = new mockUser($q);
 
-      NgTableParams = mockNgTableParams;
       WsApi = _WsApi_;
     });
   };
 
   var initializeController = function(settings) {
-    inject(function (_$controller_, _$rootScope_, _AssumedControl_, _AuthService_, _RepositoryView_, _RepositoryViewRepo_, _SchemaRepo_, _StorageService_, _UserRepo_, _UserService_) {
+    inject(function (_$controller_, _$rootScope_, _AssumedControl_, _AuthService_, _NgTableParams_, _RepositoryView_, _RepositoryViewRepo_, _SchemaRepo_, _StorageService_, _UserRepo_, _UserService_) {
       $scope = _$rootScope_.$new();
 
       sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
@@ -26,7 +26,7 @@ describe("controller: RepositoryViewManagementController", function () {
         $scope: $scope,
         AssumedControl: _AssumedControl_,
         AuthService: _AuthService_,
-        NgTableParams: NgTableParams,
+        NgTableParams: _NgTableParams_,
         RepositoryView: _RepositoryView_,
         RepositoryViewRepo: _RepositoryViewRepo_,
         SchemaRepo: _SchemaRepo_,
@@ -48,7 +48,12 @@ describe("controller: RepositoryViewManagementController", function () {
     module("cap");
     module("mock.assumedControl");
     module("mock.authService");
-    module("mock.ngTableParams");
+    module("mock.ngTableParams", function($provide) {
+      var NgTableParams = function() {
+        return MockedNgTableParams;
+      };
+      $provide.value("NgTableParams", NgTableParams);
+    });
     module("mock.repositoryView", function($provide) {
       var RepositoryView = function() {
         return MockedRepositoryView;
@@ -83,14 +88,17 @@ describe("controller: RepositoryViewManagementController", function () {
     it("should be defined for admin", function () {
       expect(controller).toBeDefined();
     });
+
     it("should be defined for manager", function () {
       initializeController({role: "ROLE_MANAGER"});
       expect(controller).toBeDefined();
     });
+
     it("should be defined for user", function () {
       initializeController({role: "ROLE_USER"});
       expect(controller).toBeDefined();
     });
+
     it("should be defined for anonymous", function () {
       initializeController({role: "ROLE_ANONYMOUS"});
       expect(controller).toBeDefined();

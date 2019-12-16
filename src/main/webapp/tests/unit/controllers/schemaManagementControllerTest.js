@@ -1,21 +1,21 @@
 describe("controller: SchemaManagementController", function () {
-  var $q, $scope, $timeout, MockedSchema, MockedUser, NgTableParams, WsApi, controller;
+  var $q, $scope, $timeout, MockedNgTableParams, MockedSchema, MockedUser, WsApi, controller;
 
   var initializeVariables = function() {
     inject(function (_$q_, _$timeout_, _WsApi_) {
       $q = _$q_;
       $timeout = _$timeout_;
 
+      MockedNgTableParams = new mockNgTableParams($q);
       MockedSchema = new mockSchema($q);
       MockedUser = new mockUser($q);
 
-      NgTableParams = mockNgTableParams;
       WsApi = _WsApi_;
     });
   };
 
   var initializeController = function(settings) {
-    inject(function (_$controller_, _$rootScope_, _AssumedControl_, _AuthService_, _SchemaRepo_, _StorageService_, _UserRepo_, _UserService_) {
+    inject(function (_$controller_, _$rootScope_, _AssumedControl_, _AuthService_, _NgTableParams_, _SchemaRepo_, _StorageService_, _UserRepo_, _UserService_) {
       $scope = _$rootScope_.$new();
 
       sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
@@ -26,7 +26,7 @@ describe("controller: SchemaManagementController", function () {
         $scope: $scope,
         AssumedControl: _AssumedControl_,
         AuthService: _AuthService_,
-        NgTableParams: NgTableParams,
+        NgTableParams: _NgTableParams_,
         SchemaRepo: _SchemaRepo_,
         StorageService: _StorageService_,
         UserRepo: _UserRepo_,
@@ -46,7 +46,12 @@ describe("controller: SchemaManagementController", function () {
     module("cap");
     module("mock.assumedControl");
     module("mock.authService");
-    module("mock.ngTableParams");
+    module("mock.ngTableParams", function($provide) {
+      var NgTableParams = function() {
+        return MockedNgTableParams;
+      };
+      $provide.value("NgTableParams", NgTableParams);
+    });
     module("mock.schema", function($provide) {
       var Schema = function() {
         return MockedSchema;
@@ -74,14 +79,17 @@ describe("controller: SchemaManagementController", function () {
     it("should be defined for admin", function () {
       expect(controller).toBeDefined();
     });
+
     it("should be defined for manager", function () {
       initializeController({role: "ROLE_MANAGER"});
       expect(controller).toBeDefined();
     });
+
     it("should be defined for user", function () {
       initializeController({role: "ROLE_USER"});
       expect(controller).toBeDefined();
     });
+
     it("should be defined for anonymous", function () {
       initializeController({role: "ROLE_ANONYMOUS"});
       expect(controller).toBeDefined();

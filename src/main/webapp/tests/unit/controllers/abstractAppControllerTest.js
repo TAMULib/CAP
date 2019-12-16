@@ -45,14 +45,17 @@ describe("controller: AbstractAppController", function () {
     it("should be defined for admin", function () {
       expect(controller).toBeDefined();
     });
+
     it("should be defined for manager", function () {
       initializeController({role: "ROLE_MANAGER"});
       expect(controller).toBeDefined();
     });
+
     it("should be defined for user", function () {
       initializeController({role: "ROLE_USER"});
       expect(controller).toBeDefined();
     });
+
     it("should be defined for anonymous", function () {
       initializeController({role: "ROLE_ANONYMOUS"});
       expect(controller).toBeDefined();
