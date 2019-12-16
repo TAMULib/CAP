@@ -81,11 +81,11 @@ module.exports = function(config){
       "tests/unit/**/*.js"
     ],
 
-    autoWatch : true,
+    autoWatch: true,
 
     frameworks: ["jasmine"],
 
-    browsers : ["Firefox", "Chrome", "ChromeHeadless", "ChromeHeadlessNoSandbox"],
+    browsers: ["Firefox", "Chrome", "ChromeHeadless", "ChromeHeadlessNoSandbox"],
 
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
@@ -94,16 +94,16 @@ module.exports = function(config){
       }
     },
 
-    plugins : [
-      "karma-coverage",
-      "karma-jasmine",
+    plugins: [
       "karma-chrome-launcher",
+      "karma-coverage",
       "karma-firefox-launcher",
+      "karma-jasmine",
       "karma-junit-reporter",
       "karma-ng-html2js-preprocessor"
     ],
 
-    junitReporter : {
+    junitReporter: {
       outputFile: "test_out/unit.xml",
       suite: "unit"
     },
