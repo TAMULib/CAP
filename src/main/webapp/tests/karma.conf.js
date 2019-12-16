@@ -76,7 +76,7 @@ module.exports = function(config){
 
       "tests/core/**/*.js",
 
-      "tests/mocks/**/*.js",
+      "tests/mock/**/*.js",
 
       "tests/unit/**/*.js"
     ],
