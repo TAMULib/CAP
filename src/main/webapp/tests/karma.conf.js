@@ -66,7 +66,7 @@ module.exports = function(config){
 
       "app/repo/**/*.js",
 
-      "app/services/**/*.js",
+      //"app/services/**/*.js",
 
       "app/views/**/*.html",
 
