@@ -17,11 +17,14 @@ describe("directive: repositoryViewSection", function () {
     });
   };
 
-  var initializeDirective = function() {
+  var initializeDirective = function(settings) {
     inject(function (_$rootScope_) {
       $scope = _$rootScope_.$new();
 
-      element = angular.element("<repository-view-section context=\"context\" title=\"title\" type=\"type\" list=\"list\" list-element-action=\"listElementAction\" add-action=\"addAction\" remove-action=\"removeAction\" edit-action=\"editAction\"></repository-view-section>");
+      var attr = settings && settings.attr ? settings.attr : "context=\"context\" title=\"title\" type=\"type\" list=\"list\" list-element-action=\"listElementAction\" add-action=\"addAction\" remove-action=\"removeAction\" edit-action=\"editAction\"";
+      var body = settings && settings.body ? settings.body : "";
+
+      element = angular.element("<repository-view-section " + attr + ">" + body + "</repository-view-section>");
       directive = $compile(element)($scope);
 
       $scope.context = context;

@@ -8,11 +8,14 @@ describe("directive: fileSelected", function () {
     });
   };
 
-  var initializeDirective = function() {
+  var initializeDirective = function(settings) {
     inject(function (_$rootScope_) {
       $scope = _$rootScope_.$new();
 
-      element = angular.element("<file-selected></file-selected>");
+      var attr = settings && settings.attr ? settings.attr : "";
+      var body = settings && settings.body ? settings.body : "";
+
+      element = angular.element("<file-selected " + attr + ">" + body + "</file-selected>");
       directive = $compile(element)($scope);
 
       $scope.$digest();

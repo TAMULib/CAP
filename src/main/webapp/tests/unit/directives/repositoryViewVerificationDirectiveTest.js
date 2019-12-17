@@ -11,11 +11,14 @@ describe("directive: repositoryViewVerification", function () {
     });
   };
 
-  var initializeDirective = function() {
+  var initializeDirective = function(settings) {
     inject(function (_$rootScope_) {
       $scope = _$rootScope_.$new();
 
-      element = angular.element("<repository-view-verification repository-view=\"repositoryView\" results=\"results\"></repository-view-verification>");
+      var attr = settings && settings.attr ? settings.attr : "repository-view=\"repositoryView\" results=\"results\"";
+      var body = settings && settings.body ? settings.body : "";
+
+      element = angular.element("<repository-view-verification " + attr + ">" + body + "</repository-view-verification>");
       directive = $compile(element)($scope);
 
       $scope.repositoryView = repositoryView;

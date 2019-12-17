@@ -12,11 +12,14 @@ describe("directive: findproperties", function () {
     });
   };
 
-  var initializeDirective = function() {
+  var initializeDirective = function(settings) {
     inject(function (_$rootScope_) {
       $scope = _$rootScope_.$new();
 
-      element = angular.element("<findproperties schema=\"schema\" status=\"status\" mode=\"mode\"></findproperties>");
+      var attr = settings && settings.attr ? settings.attr : "schema=\"schema\" status=\"status\" mode=\"mode\"";
+      var body = settings && settings.body ? settings.body : "";
+
+      element = angular.element("<findproperties " + attr + ">" + body + "</findproperties>");
       directive = $compile(element)($scope);
 
       $scope.schema = schema;

@@ -8,11 +8,14 @@ describe("directive: admintabs", function () {
     });
   };
 
-  var initializeDirective = function() {
+  var initializeDirective = function(settings) {
     inject(function (_$rootScope_) {
       $scope = _$rootScope_.$new();
 
-      element = angular.element("<admintabs></admintabs>");
+      var attr = settings && settings.attr ? settings.attr : "";
+      var body = settings && settings.body ? settings.body : "";
+
+      element = angular.element("<admintabs " + attr + ">" + body + "</admintabs>");
       directive = $compile(element)($scope);
 
       $scope.$digest();
