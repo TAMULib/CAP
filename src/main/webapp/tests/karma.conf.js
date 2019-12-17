@@ -8,9 +8,9 @@ module.exports = function(config){
 
     reporters: ["progress", "coverage"],
 
-    basePath : "../",
+    basePath: "../",
 
-    files : [
+    files: [
       "app/config/appConfig.js",
       "app/config/apiMapping.js",
 
@@ -37,10 +37,6 @@ module.exports = function(config){
 
       "app/node_modules/openseadragon/build/openseadragon/openseadragon.js",
       "app/node_modules/ng-openseadragon/build/angular-openseadragon.js",
-
-      "app/node_modules/weaver-ui-core/app/config/coreConfig.js",
-
-      "app/node_modules/jasmine-promise-matchers/dist/jasmine-promise-matchers.js",
 
       "app/node_modules/jasmine-promise-matchers/dist/jasmine-promise-matchers.js",
 
