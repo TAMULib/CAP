@@ -10,10 +10,10 @@ describe("model: Schema", function () {
   };
 
   var initializeModel = function(settings) {
-    inject(function (Schema) {
+    inject(function (_Schema_) {
       $scope = $rootScope.$new();
 
-      model = angular.extend(new Schema(), dataSchema1);
+      model = angular.extend(new _Schema_(), dataSchema1);
     });
   };
 

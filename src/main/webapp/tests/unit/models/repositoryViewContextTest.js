@@ -19,10 +19,10 @@ describe("model: RepositoryViewContext", function () {
   };
 
   var initializeModel = function(settings) {
-    inject(function (RepositoryViewContext) {
+    inject(function (_RepositoryViewContext_) {
       $scope = $rootScope.$new();
 
-      model = angular.extend(new RepositoryViewContext(), dataRepositoryViewContext1);
+      model = angular.extend(new _RepositoryViewContext_(), dataRepositoryViewContext1);
     });
   };
 

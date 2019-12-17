@@ -10,10 +10,10 @@ describe("model: FixityReport", function () {
   };
 
   var initializeModel = function(settings) {
-    inject(function (FixityReport) {
+    inject(function (_FixityReport_) {
       $scope = $rootScope.$new();
 
-      model = angular.extend(new FixityReport(), dataFixityReport1);
+      model = angular.extend(new _FixityReport_(), dataFixityReport1);
     });
   };
 

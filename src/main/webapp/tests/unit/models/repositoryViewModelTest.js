@@ -14,10 +14,10 @@ describe("model: RepositoryView", function () {
   };
 
   var initializeModel = function(settings) {
-    inject(function (RepositoryView) {
+    inject(function (_RepositoryView_) {
       $scope = $rootScope.$new();
 
-      model = angular.extend(new RepositoryView(), dataRepositoryView1);
+      model = angular.extend(new _RepositoryView_(), dataRepositoryView1);
     });
   };
 
