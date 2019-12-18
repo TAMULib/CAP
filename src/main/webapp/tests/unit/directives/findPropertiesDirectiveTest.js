@@ -41,29 +41,29 @@ describe("directive: findproperties", function () {
 
 // @todo window.stompClient needs to be provided and possibly mocked.
 /*
-  describe("Is the directive defined", function () {
-    it("should be defined", function () {
+  describe("Is the directive", function () {
+    it("defined", function () {
       initializeDirective();
       expect(directive).toBeDefined();
     });
   });
 
-  describe("Does the directive initialize properly", function () {
-    it("should be defined, with schema property", function () {
+  describe("Does the directive", function () {
+    it("work with schema property", function () {
       schema = "";
 
       //initializeDirective();
       //expect(directive).toBeDefined();
     });
 
-    it("should be defined, with status property", function () {
+    it("work with status property", function () {
       status = "";
 
       //initializeDirective();
       //expect(directive).toBeDefined();
     });
 
-    it("should be defined, with mode property", function () {
+    it("work with mode property", function () {
       mode = "";
 
       //initializeDirective();

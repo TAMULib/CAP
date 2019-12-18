@@ -43,91 +43,33 @@ describe("model: RepositoryView", function () {
     });
   });
 
-  describe("Are the model methods defined", function () {
-    it("cacheContext should be defined", function () {
-      expect(model.cacheContext).toBeDefined();
-      expect(typeof model.cacheContext).toEqual("function");
-    });
+  describe("Is the model method", function () {
+    var methods = [
+      "cacheContext",
+      "clearCache",
+      "commitTransaction",
+      "getCachedContext",
+      "getContext",
+      "getTransaction",
+      "getTransactionSecondsRemaining",
+      "inTransaction",
+      "isTransactionAboutToExpire",
+      "loadContext",
+      "performRequest",
+      "refreshTransaction",
+      "removeCachedContext",
+      "rollbackTransaction",
+      "startTransaction",
+      "startTransactionTimer",
+      "stopTransactionTimer"
+    ];
 
-    it("clearCache should be defined", function () {
-      expect(model.clearCache).toBeDefined();
-      expect(typeof model.clearCache).toEqual("function");
-    });
-
-    it("commitTransaction should be defined", function () {
-      expect(model.commitTransaction).toBeDefined();
-      expect(typeof model.commitTransaction).toEqual("function");
-    });
-
-    it("getCachedContext should be defined", function () {
-      expect(model.getCachedContext).toBeDefined();
-      expect(typeof model.getCachedContext).toEqual("function");
-    });
-
-    it("getContext should be defined", function () {
-      expect(model.getContext).toBeDefined();
-      expect(typeof model.getContext).toEqual("function");
-    });
-
-    it("getTransaction should be defined", function () {
-      expect(model.getTransaction).toBeDefined();
-      expect(typeof model.getTransaction).toEqual("function");
-    });
-
-    it("getTransactionSecondsRemaining should be defined", function () {
-      expect(model.getTransactionSecondsRemaining).toBeDefined();
-      expect(typeof model.getTransactionSecondsRemaining).toEqual("function");
-    });
-
-    it("inTransaction should be defined", function () {
-      expect(model.inTransaction).toBeDefined();
-      expect(typeof model.inTransaction).toEqual("function");
-    });
-
-    it("isTransactionAboutToExpire should be defined", function () {
-      expect(model.isTransactionAboutToExpire).toBeDefined();
-      expect(typeof model.isTransactionAboutToExpire).toEqual("function");
-    });
-
-    it("loadContext should be defined", function () {
-      expect(model.loadContext).toBeDefined();
-      expect(typeof model.loadContext).toEqual("function");
-    });
-
-    it("performRequest should be defined", function () {
-      expect(model.performRequest).toBeDefined();
-      expect(typeof model.performRequest).toEqual("function");
-    });
-
-    it("refreshTransaction should be defined", function () {
-      expect(model.refreshTransaction).toBeDefined();
-      expect(typeof model.refreshTransaction).toEqual("function");
-    });
-
-    it("removeCachedContext should be defined", function () {
-      expect(model.removeCachedContext).toBeDefined();
-      expect(typeof model.removeCachedContext).toEqual("function");
-    });
-
-    it("rollbackTransaction should be defined", function () {
-      expect(model.rollbackTransaction).toBeDefined();
-      expect(typeof model.rollbackTransaction).toEqual("function");
-    });
-
-    it("startTransaction should be defined", function () {
-      expect(model.startTransaction).toBeDefined();
-      expect(typeof model.startTransaction).toEqual("function");
-    });
-
-    it("startTransactionTimer should be defined", function () {
-      expect(model.startTransactionTimer).toBeDefined();
-      expect(typeof model.startTransactionTimer).toEqual("function");
-    });
-
-    it("stopTransactionTimer should be defined", function () {
-      expect(model.stopTransactionTimer).toBeDefined();
-      expect(typeof model.stopTransactionTimer).toEqual("function");
-    });
+    for (var i in methods) {
+      it(methods[i] + " defined", function () {
+        expect(model[methods[i]]).toBeDefined();
+        expect(typeof model[methods[i]]).toEqual("function");
+      });
+    }
   });
 
   describe("Are the model methods working as expected", function () {

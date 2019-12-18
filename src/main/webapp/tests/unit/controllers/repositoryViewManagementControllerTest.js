@@ -118,8 +118,8 @@ describe("controller: RepositoryViewManagementController", function () {
     }
   });
 
-  describe("Do the $scope methods work as expected", function () {
-    it("createRepositoryView should work", function () {
+  describe("Does the $scope method", function () {
+    it("createRepositoryView work as expected", function () {
       $scope.schemas = undefined;
       spyOn($scope, "openModal");
 
@@ -128,43 +128,43 @@ describe("controller: RepositoryViewManagementController", function () {
       expect($scope.schemas).toBeDefined();
     });
 
-    it("confirmDeleteRepositoryView should work", function () {
+    it("confirmDeleteRepositoryView work as expected", function () {
       // @todo
       $scope.confirmDeleteRepositoryView();
     });
 
-    it("disableVerify should work", function () {
+    it("disableVerify work as expected", function () {
       var repositoryView = new mockRepositoryView($q);
       // @todo
       $scope.disableVerify(repositoryView);
     });
 
-    it("editRepositoryView should work", function () {
+    it("editRepositoryView work as expected", function () {
       // @todo
       $scope.editRepositoryView();
     });
 
-    it("resetRepositoryViewForms should work", function () {
+    it("resetRepositoryViewForms work as expected", function () {
       // @todo
       $scope.resetRepositoryViewForms();
     });
 
-    it("onCancelCreateRepositoryView should work", function () {
+    it("onCancelCreateRepositoryView work as expected", function () {
       // @todo
       $scope.onCancelCreateRepositoryView();
     });
 
-    it("onCancelDeleteRepositoryView should work", function () {
+    it("onCancelDeleteRepositoryView work as expected", function () {
       // @todo
       $scope.onCancelDeleteRepositoryView();
     });
 
-    it("onCancelEditRepositoryView should work", function () {
+    it("onCancelEditRepositoryView work as expected", function () {
       // @todo
       $scope.onCancelEditRepositoryView();
     });
 
-    it("onCreateRepositoryView should work", function () {
+    it("onCreateRepositoryView work as expected", function () {
       var repositoryView = new mockRepositoryView($q);
       $scope.repositoryView = repositoryView;
 
@@ -173,7 +173,7 @@ describe("controller: RepositoryViewManagementController", function () {
       $scope.$digest();
     });
 
-    it("onDeleteRepositoryView should work", function () {
+    it("onDeleteRepositoryView work as expected", function () {
       var repositoryView = new mockRepositoryView($q);
       $scope.repositoryView = repositoryView;
 
@@ -182,7 +182,7 @@ describe("controller: RepositoryViewManagementController", function () {
       $scope.$digest();
     });
 
-    it("onEditRepositoryView should work", function () {
+    it("onEditRepositoryView work as expected", function () {
       var repositoryView = new mockRepositoryView($q);
       $scope.repositoryView = repositoryView;
 
@@ -191,7 +191,7 @@ describe("controller: RepositoryViewManagementController", function () {
       $scope.$digest();
     });
 
-    it("showSchemas should work", function () {
+    it("showSchemas work as expected", function () {
       // @todo
       $scope.showSchemas();
     });

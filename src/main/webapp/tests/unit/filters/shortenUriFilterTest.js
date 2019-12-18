@@ -21,14 +21,14 @@ describe("filter: shortenUri", function () {
     initializeFilter();
   });
 
-  describe("Is the filter defined", function () {
-    it("should be defined", function () {
+  describe("Is the filter", function () {
+    it("defined", function () {
       expect(filter).toBeDefined();
     });
   });
 
   describe("Does the filter work as expected", function () {
-    it("should return nothing on empty input", function () {
+    it("return nothing on empty input", function () {
       var result;
 
       result = filter("", "");

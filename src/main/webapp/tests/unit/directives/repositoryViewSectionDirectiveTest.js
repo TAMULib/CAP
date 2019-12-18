@@ -52,64 +52,64 @@ describe("directive: repositoryViewSection", function () {
     initializeVariables();
   });
 
-  describe("Is the directive defined", function () {
-    it("should be defined", function () {
+  describe("Is the directive", function () {
+    it("defined", function () {
       initializeDirective();
       expect(directive).toBeDefined();
     });
   });
 
-  describe("Does the directive initialize properly", function () {
-    it("should be defined, with context property", function () {
+  describe("Does the directive", function () {
+    it("work with context property", function () {
       context = "";
 
       //initializeDirective();
       //expect(directive).toBeDefined();
     });
 
-    it("should be defined, with title property", function () {
+    it("work with title property", function () {
       title = "";
 
       //initializeDirective();
       //expect(directive).toBeDefined();
     });
 
-    it("should be defined, with type property", function () {
+    it("work with type property", function () {
       type = "";
 
       //initializeDirective();
       //expect(directive).toBeDefined();
     });
 
-    it("should be defined, with list property", function () {
+    it("work with list property", function () {
       list = "";
 
       //initializeDirective();
       //expect(directive).toBeDefined();
     });
 
-    it("should be defined, with listElementAction property", function () {
+    it("work with listElementAction property", function () {
       listElementAction = "";
 
       //initializeDirective();
       //expect(directive).toBeDefined();
     });
 
-    it("should be defined, with addAction property", function () {
+    it("work with addAction property", function () {
       addAction = "";
 
       //initializeDirective();
       //expect(directive).toBeDefined();
     });
 
-    it("should be defined, with removeAction property", function () {
+    it("work with removeAction property", function () {
       removeAction = "";
 
       //initializeDirective();
       //expect(directive).toBeDefined();
     });
 
-    it("should be defined, with editAction property", function () {
+    it("work with editAction property", function () {
       editAction = "";
 
       //initializeDirective();

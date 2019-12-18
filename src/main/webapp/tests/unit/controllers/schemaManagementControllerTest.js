@@ -109,8 +109,8 @@ describe("controller: SchemaManagementController", function () {
     }
   });
 
-  describe("Do the $scope methods work as expected", function () {
-    it("createSchema should work", function () {
+  describe("Does the $scope method", function () {
+    it("createSchema work as expected", function () {
       $scope.schema = undefined;
       spyOn($scope, "openModal");
 
@@ -119,36 +119,36 @@ describe("controller: SchemaManagementController", function () {
       expect($scope.schema).toBeDefined();
     });
 
-    it("deleteSchema should work", function () {
+    it("deleteSchema work as expected", function () {
       // @todo
       $scope.deleteSchema();
     });
 
-    it("editSchema should work", function () {
+    it("editSchema work as expected", function () {
       // @todo
       $scope.editSchema();
     });
 
-    it("onCancelCreateSchema should work", function () {
+    it("onCancelCreateSchema work as expected", function () {
       // @todo
       $scope.onCancelCreateSchema();
 
       $timeout.flush();
     });
 
-    it("onCancelDeleteSchema should work", function () {
+    it("onCancelDeleteSchema work as expected", function () {
       // @todo
       $scope.onCancelDeleteSchema();
     });
 
-    it("onCancelEditSchema should work", function () {
+    it("onCancelEditSchema work as expected", function () {
       // @todo
       $scope.onCancelEditSchema();
 
       $timeout.flush();
     });
 
-    it("onCreateSchema should work", function () {
+    it("onCreateSchema work as expected", function () {
       var schema = new mockSchema($q);
       $scope.schema = schema;
 
@@ -158,7 +158,7 @@ describe("controller: SchemaManagementController", function () {
       $scope.$digest();
     });
 
-    it("onDeleteSchema should work", function () {
+    it("onDeleteSchema work as expected", function () {
       var schema = new mockSchema($q);
       $scope.schema = schema;
 
@@ -168,7 +168,7 @@ describe("controller: SchemaManagementController", function () {
       $scope.$digest();
     });
 
-    it("onEditSchema should work", function () {
+    it("onEditSchema work as expected", function () {
       var schema = new mockSchema($q);
       $scope.schema = schema;
 
@@ -178,17 +178,17 @@ describe("controller: SchemaManagementController", function () {
       $scope.$digest();
     });
 
-    it("resetSchemaForms should work", function () {
+    it("resetSchemaForms work as expected", function () {
       // @todo
       $scope.resetSchemaForms();
     });
 
-    it("setTable should work", function () {
+    it("setTable work as expected", function () {
       // @todo
       $scope.setTable();
     });
 
-    it("showProperties should work", function () {
+    it("showProperties work as expected", function () {
       // @todo
       $scope.showProperties();
     });

@@ -37,15 +37,15 @@ describe("component: plaintextLoader", function () {
     initializeVariables();
   });
 
-  describe("Is the component defined", function () {
-    it("should be defined", function () {
+  describe("Is the component", function () {
+    it("defined", function () {
       initializeComponent();
       expect(component).toBeDefined();
     });
   });
 
-  describe("Does the component initialize properly", function () {
-    it("should perform a http.get() on the provided src URL", function () {
+  describe("Does the component", function () {
+    it("perform a http.get() on the provided src URL", function () {
       src = "http://localhost/";
 
       initializeComponent();

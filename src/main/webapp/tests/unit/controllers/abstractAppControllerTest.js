@@ -66,13 +66,13 @@ describe("controller: AbstractAppController", function () {
     }
   });
 
-  describe("Do the $scope methods work as expected", function () {
-    it("closeModal should work", function () {
+  describe("Does the $scope method", function () {
+    it("closeModal work as expected", function () {
       // @todo
       $scope.closeModal();
     });
 
-    it("isCollapsable should work", function () {
+    it("isCollapsable work as expected", function () {
       var triples = [];
       var predicate = "";
 
@@ -80,7 +80,7 @@ describe("controller: AbstractAppController", function () {
       $scope.isCollapsable(triples, predicate);
     });
 
-    it("isCurator should work", function () {
+    it("isCurator work as expected", function () {
       // @todo
       $scope.isCurator();
     });

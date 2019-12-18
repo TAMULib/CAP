@@ -26,21 +26,27 @@ describe("model: FixityReport", function () {
     initializeModel();
   });
 
-  describe("Is the model defined", function () {
-    it("should be defined", function () {
+  describe("Is the model", function () {
+    it("defined", function () {
       expect(model).toBeDefined();
     });
   });
 
-  describe("Are the model methods defined", function () {
-    it("run should be defined", function () {
-      expect(model.run).toBeDefined();
-      expect(typeof model.run).toEqual("function");
-    });
+  describe("Is the model method", function () {
+    var methods = [
+      "run"
+    ];
+
+    for (var i in methods) {
+      it(methods[i] + " defined", function () {
+        expect(model[methods[i]]).toBeDefined();
+        expect(typeof model[methods[i]]).toEqual("function");
+      });
+    }
   });
 
-  describe("Are the model methods working as expected", function () {
-    it("run should work", function () {
+  describe("Does the model method", function () {
+    it("run work as expected", function () {
       // @todo
       //$scope.run();
 

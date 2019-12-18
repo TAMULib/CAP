@@ -21,13 +21,13 @@ describe("filter: containedIn", function () {
     initializeFilter();
   });
 
-  describe("Is the filter defined", function () {
+  describe("Is the filter", function () {
     it("should be defined", function () {
       expect(filter).toBeDefined();
     });
   });
 
-  describe("Does the filter work as expected", function () {
+  describe("Does the filter", function () {
     it("should return nothing on empty input", function () {
       var result;
 

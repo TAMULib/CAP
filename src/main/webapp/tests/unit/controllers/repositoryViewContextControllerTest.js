@@ -131,145 +131,145 @@ describe("controller: RepositoryViewContextController", function () {
     }
   });
 
-  describe("Do the $scope methods work as expected", function () {
-    it("addMetadata should work", function () {
+  describe("Does the $scope method", function () {
+    it("addMetadata work as expected", function () {
       // @todo
       //$scope.addMetadata();
     });
 
-    it("advancedUpdate should work", function () {
+    it("advancedUpdate work as expected", function () {
       // @todo
       //$scope.advancedUpdate();
 
       //$scope.$digest();
     });
 
-    it("cancelDeleteRepositoryViewContext should work", function () {
+    it("cancelDeleteRepositoryViewContext work as expected", function () {
       // @todo
       $scope.cancelDeleteRepositoryViewContext();
     });
 
-    it("cancelFixity should work", function () {
+    it("cancelFixity work as expected", function () {
       // @todo
       $scope.cancelFixity();
     });
 
-    it("canPreview should work", function () {
+    it("canPreview work as expected", function () {
       // @todo
       $scope.canPreview();
     });
 
-    it("createContainer should work", function () {
+    it("createContainer work as expected", function () {
       // @todo
       //$scope.createContainer("http://localhost/");
     });
 
-    it("commitTransaction should work", function () {
+    it("commitTransaction work as expected", function () {
       // @todo
       //$scope.commitTransaction();
 
       //$scope.$digest();
     });
 
-    it("copyToClipboard should work", function () {
+    it("copyToClipboard work as expected", function () {
       // @todo
       //$scope.copyToClipboard();
 
       //$timeout.flush();
     });
 
-    it("deleteRepositoryViewContext should work", function () {
+    it("deleteRepositoryViewContext work as expected", function () {
       // @todo
       $scope.deleteRepositoryViewContext();
 
       $scope.$digest();
     });
 
-    it("deleteVersion should work", function () {
+    it("deleteVersion work as expected", function () {
       // @todo
       //$scope.deleteVersion();
 
       //$scope.$digest();
     });
 
-    it("getContentType should work", function () {
+    it("getContentType work as expected", function () {
       // @todo
       //$scope.getContentType();
     });
 
-    it("getIIIFUrl should work", function () {
+    it("getIIIFUrl work as expected", function () {
       // @todo
       $scope.getIIIFUrl();
     });
 
-    it("lengthenContextUri should work", function () {
+    it("lengthenContextUri work as expected", function () {
       // @todo
       //$scope.lengthenContextUri("http://localhost/");
     });
 
-    it("openFixity should work", function () {
+    it("openFixity work as expected", function () {
       // @todo
       $scope.openFixity("http://localhost/");
     });
 
-    it("refreshContext should work", function () {
+    it("refreshContext work as expected", function () {
       // @todo
       //$scope.refreshContext();
     });
 
-    it("resetAddMetadataModal should work", function () {
+    it("resetAddMetadataModal work as expected", function () {
       // @todo
       //$scope.resetAddMetadataModal();
     });
 
-    it("resetAdvancedUpdate should work", function () {
+    it("resetAdvancedUpdate work as expected", function () {
       // @todo
       //$scope.resetAdvancedUpdate();
     });
 
-    it("resetCreateContainer should work", function () {
+    it("resetCreateContainer work as expected", function () {
       // @todo
       $scope.resetCreateContainer();
     });
 
-    it("resetUploadResource should work", function () {
+    it("resetUploadResource work as expected", function () {
       // @todo
       $scope.resetUploadResource();
     });
 
-    it("rollbackTransaction should work", function () {
+    it("rollbackTransaction work as expected", function () {
       // @todo
       //$scope.rollbackTransaction();
     });
 
-    it("revertVersion should work", function () {
+    it("revertVersion work as expected", function () {
       // @todo
       $scope.revertVersion();
 
       $scope.$digest();
     });
 
-    it("setOrToggleTheaterMode should work", function () {
+    it("setOrToggleTheaterMode work as expected", function () {
       // @todo
       $scope.setOrToggleTheaterMode(true);
     });
 
-    it("srcFromFile should work", function () {
+    it("srcFromFile work as expected", function () {
       // @todo
       //$scope.srcFromFile();
     });
 
-    it("startTransaction should work", function () {
+    it("startTransaction work as expected", function () {
       // @todo
       //$scope.startTransaction();
     });
 
-    it("updateMetadatum should work", function () {
+    it("updateMetadatum work as expected", function () {
       // @todo
       $scope.updateMetadatum();
     });
 
-    it("uploadResource should work", function () {
+    it("uploadResource work as expected", function () {
       // @todo
       //$scope.uploadResource();
 

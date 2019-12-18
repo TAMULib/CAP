@@ -38,22 +38,22 @@ describe("directive: repositoryViewVerification", function () {
     initializeVariables();
   });
 
-  describe("Is the directive defined", function () {
-    it("should be defined", function () {
+  describe("Is the directive", function () {
+    it("defined", function () {
       initializeDirective();
       expect(directive).toBeDefined();
     });
   });
 
-  describe("Does the directive initialize properly", function () {
-    it("should be defined, with repositoryView property", function () {
+  describe("Does the directive", function () {
+    it("work with repositoryView property", function () {
       repositoryView = "";
 
       //initializeDirective();
       //expect(directive).toBeDefined();
     });
 
-    it("should be defined, with results property", function () {
+    it("work with results property", function () {
       results = "";
 
       //initializeDirective();
