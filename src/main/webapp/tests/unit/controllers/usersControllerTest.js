@@ -1,7 +1,7 @@
 describe("controller: UsersController", function () {
   var $location, $q, route, $scope, MockedUser, WsApi, controller;
 
-  var initializeVariables = function(settings) {
+  var initializeVariables = function (settings) {
     inject(function ($injector, _$location_, _$q_, $route, _WsApi_) {
       injector = $injector;
       $location = _$location_;
@@ -13,7 +13,7 @@ describe("controller: UsersController", function () {
     });
   };
 
-  var initializeController = function(settings) {
+  var initializeController = function (settings) {
     inject(function (_$controller_, _$location_, _$rootScope_, _StorageService_, _UserService_) {
       $scope = _$rootScope_.$new();
 
@@ -37,12 +37,12 @@ describe("controller: UsersController", function () {
     });
   };
 
-  beforeEach(function() {
+  beforeEach(function () {
     module("core");
     module("cap");
     module("mock.storageService");
-    module("mock.user", function($provide) {
-      var User = function() {
+    module("mock.user", function ($provide) {
+      var User = function () {
         return MockedUser;
       };
       $provide.value("User", User);

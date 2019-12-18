@@ -1,7 +1,7 @@
 describe("model: RepositoryView", function () {
   var $q, $rootScope, $scope, $timeout, MockedRepositoryViewContext, WsApi, model;
 
-  var initializeVariables = function(settings) {
+  var initializeVariables = function (settings) {
     inject(function (_$q_, _$rootScope_, _$timeout_, _WsApi_) {
       $q = _$q_;
       $rootScope = _$rootScope_;
@@ -13,7 +13,7 @@ describe("model: RepositoryView", function () {
     });
   };
 
-  var initializeModel = function(settings) {
+  var initializeModel = function (settings) {
     inject(function (_RepositoryView_) {
       $scope = $rootScope.$new();
 
@@ -21,11 +21,11 @@ describe("model: RepositoryView", function () {
     });
   };
 
-  beforeEach(function() {
+  beforeEach(function () {
     module("core");
     module("cap");
-    module("mock.repositoryViewContext", function($provide) {
-      var RepositoryViewContext = function() {
+    module("mock.repositoryViewContext", function ($provide) {
+      var RepositoryViewContext = function () {
         return MockedRepositoryViewContext;
       };
       $provide.value("RepositoryViewContext", RepositoryViewContext);

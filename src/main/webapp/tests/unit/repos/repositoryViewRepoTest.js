@@ -1,7 +1,7 @@
 describe("service: repositoryViewRepo", function () {
   var $q, $rootScope, $scope, MockedRepositoryView, WsApi, repo;
 
-  var initializeVariables = function(settings) {
+  var initializeVariables = function (settings) {
     inject(function (_$q_, _$rootScope_, _WsApi_) {
       $q = _$q_;
       $rootScope = _$rootScope_;
@@ -11,7 +11,7 @@ describe("service: repositoryViewRepo", function () {
     });
   };
 
-  var initializeRepo = function(settings) {
+  var initializeRepo = function (settings) {
     inject(function ($injector, RepositoryViewRepo) {
       $scope = $rootScope.$new();
 
@@ -19,11 +19,11 @@ describe("service: repositoryViewRepo", function () {
     });
   };
 
-  beforeEach(function() {
+  beforeEach(function () {
     module("core");
     module("cap");
-    module("mock.repositoryView", function($provide) {
-      var RepositoryView = function() {
+    module("mock.repositoryView", function ($provide) {
+      var RepositoryView = function () {
         return MockedRepositoryView;
       };
       $provide.value("RepositoryView", RepositoryView);

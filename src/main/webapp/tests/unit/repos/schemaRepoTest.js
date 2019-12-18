@@ -1,7 +1,7 @@
 describe("service: schemaRepo", function () {
   var $q, $rootScope, $scope, MockedSchema, WsApi, repo;
 
-  var initializeVariables = function(settings) {
+  var initializeVariables = function (settings) {
     inject(function (_$q_, _$rootScope_, _WsApi_) {
       $q = _$q_;
       $rootScope = _$rootScope_;
@@ -11,7 +11,7 @@ describe("service: schemaRepo", function () {
     });
   };
 
-  var initializeRepo = function(settings) {
+  var initializeRepo = function (settings) {
     inject(function ($injector, SchemaRepo) {
       $scope = $rootScope.$new();
 
@@ -19,11 +19,11 @@ describe("service: schemaRepo", function () {
     });
   };
 
-  beforeEach(function() {
+  beforeEach(function () {
     module("core");
     module("cap");
-    module("mock.schema", function($provide) {
-      var Schema = function() {
+    module("mock.schema", function ($provide) {
+      var Schema = function () {
         return MockedSchema;
       };
       $provide.value("Schema", Schema);

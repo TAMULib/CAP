@@ -1,7 +1,7 @@
 describe("controller: SchemaManagementController", function () {
   var $q, $scope, $timeout, MockedNgTableParams, MockedSchema, MockedUser, WsApi, controller;
 
-  var initializeVariables = function() {
+  var initializeVariables = function () {
     inject(function (_$q_, _$timeout_, _WsApi_) {
       $q = _$q_;
       $timeout = _$timeout_;
@@ -14,7 +14,7 @@ describe("controller: SchemaManagementController", function () {
     });
   };
 
-  var initializeController = function(settings) {
+  var initializeController = function (settings) {
     inject(function (_$controller_, _$rootScope_, _AssumedControl_, _AuthService_, _NgTableParams_, _SchemaRepo_, _StorageService_, _UserRepo_, _UserService_) {
       $scope = _$rootScope_.$new();
 
@@ -41,27 +41,27 @@ describe("controller: SchemaManagementController", function () {
     });
   };
 
-  beforeEach(function() {
+  beforeEach(function () {
     module("core");
     module("cap");
     module("mock.assumedControl");
     module("mock.authService");
-    module("mock.ngTableParams", function($provide) {
-      var NgTableParams = function() {
+    module("mock.ngTableParams", function ($provide) {
+      var NgTableParams = function () {
         return MockedNgTableParams;
       };
       $provide.value("NgTableParams", NgTableParams);
     });
-    module("mock.schema", function($provide) {
-      var Schema = function() {
+    module("mock.schema", function ($provide) {
+      var Schema = function () {
         return MockedSchema;
       };
       $provide.value("Schema", Schema);
     });
     module("mock.schemaRepo");
     module("mock.storageService");
-    module("mock.user", function($provide) {
-      var User = function() {
+    module("mock.user", function ($provide) {
+      var User = function () {
         return MockedUser;
       };
       $provide.value("User", User);

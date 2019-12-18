@@ -1,7 +1,7 @@
 describe("directive: contentviewer", function () {
   var $compile, $q, $scope, directive, element, contentType, resource;
 
-  var initializeVariables = function() {
+  var initializeVariables = function () {
     inject(function (_$q_, _$compile_) {
       $q = _$q_;
       $compile = _$compile_;
@@ -11,7 +11,7 @@ describe("directive: contentviewer", function () {
     });
   };
 
-  var initializeDirective = function(settings) {
+  var initializeDirective = function (settings) {
     inject(function (_$rootScope_) {
       $scope = _$rootScope_.$new();
 
@@ -28,7 +28,7 @@ describe("directive: contentviewer", function () {
     });
   };
 
-  beforeEach(function() {
+  beforeEach(function () {
     module("core");
     module("cap");
     module("templates");

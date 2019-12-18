@@ -1,7 +1,7 @@
 describe("controller: AbstractAppController", function () {
   var $q, $scope, WsApi, controller;
 
-  var initializeVariables = function() {
+  var initializeVariables = function () {
     inject(function (_$q_, _WsApi_) {
       $q = _$q_;
 
@@ -9,7 +9,7 @@ describe("controller: AbstractAppController", function () {
     });
   };
 
-  var initializeController = function(settings) {
+  var initializeController = function (settings) {
     inject(function (_$controller_, _$rootScope_, _ModalService_) {
       $scope = _$rootScope_.$new();
 
@@ -30,7 +30,7 @@ describe("controller: AbstractAppController", function () {
     });
   };
 
-  beforeEach(function() {
+  beforeEach(function () {
     module("core");
     module("cap");
     module("mock.modalService");

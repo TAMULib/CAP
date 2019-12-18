@@ -16,7 +16,7 @@ var dataSchemaRepo3 = [
   dataSchema2
 ];
 
-angular.module("mock.schemaRepo", []).service("SchemaRepo", function($q) {
+angular.module("mock.schemaRepo", []).service("SchemaRepo", function ($q) {
   var repo = mockRepo("SchemaRepo", $q, mockSchema, dataSchemaRepo1);
 
   repo.scaffold = {
@@ -26,7 +26,7 @@ angular.module("mock.schemaRepo", []).service("SchemaRepo", function($q) {
     properties: []
   };
 
-  repo.findProperties = function(schema) {
+  repo.findProperties = function (schema) {
     var payload = {};
     // @todo
     return payloadPromise($q.defer(), payload);

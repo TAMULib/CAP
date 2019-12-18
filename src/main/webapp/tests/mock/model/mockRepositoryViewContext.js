@@ -84,7 +84,7 @@ var dataRepositoryViewContext3 = {
   versions: []
 };
 
-var mockRepositoryViewContext = function($q) {
+var mockRepositoryViewContext = function ($q) {
   var model = mockModel("RepositoryViewContext", $q, dataRepositoryViewContext1);
 
   model.advancedUpdate = function (query) {

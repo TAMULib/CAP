@@ -2,7 +2,7 @@
 
 var testUtility = {};
 
-testUtility.repoSorting = function(scope, repo, method) {
+testUtility.repoSorting = function (scope, repo, method) {
   spyOn(repo, "sort");
 
   scope.sortAction = "confirm";

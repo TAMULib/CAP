@@ -1,7 +1,7 @@
 describe("controller: AppLoginController", function () {
   var $q, $scope, MockedUser, WsApi, controller;
 
-  var initializeVariables = function(settings) {
+  var initializeVariables = function (settings) {
     inject(function (_$q_, _WsApi_) {
       $q = _$q_;
 
@@ -11,7 +11,7 @@ describe("controller: AppLoginController", function () {
     });
   };
 
-  var initializeController = function(settings) {
+  var initializeController = function (settings) {
     inject(function (_$controller_, _$rootScope_, _UserService_) {
       $scope = _$rootScope_.$new();
 
@@ -31,11 +31,11 @@ describe("controller: AppLoginController", function () {
     });
   };
 
-  beforeEach(function() {
+  beforeEach(function () {
     module("core");
     module("cap");
-    module("mock.user", function($provide) {
-      var User = function() {
+    module("mock.user", function ($provide) {
+      var User = function () {
         return MockedUser;
       };
       $provide.value("User", User);

@@ -1,7 +1,7 @@
 describe("component: plaintextLoader", function () {
   var $compile, $httpBackend, $scope, component, element, src;
 
-  var initializeVariables = function() {
+  var initializeVariables = function () {
     inject(function (_$compile_, _$httpBackend_) {
       $compile = _$compile_;
       $httpBackend = _$httpBackend_;
@@ -13,7 +13,7 @@ describe("component: plaintextLoader", function () {
     });
   };
 
-  var initializeComponent = function() {
+  var initializeComponent = function () {
     inject(function (_$rootScope_) {
       $scope = _$rootScope_.$new();
 
@@ -28,7 +28,7 @@ describe("component: plaintextLoader", function () {
     });
   };
 
-  beforeEach(function() {
+  beforeEach(function () {
     module("core");
     module("cap");
     module("templates");

@@ -1,7 +1,7 @@
 describe("directive: repositoryViewSection", function () {
   var $compile, $q, $scope, directive, element, context, title, type, list, listElementAction, addAction, removeAction, editAction;
 
-  var initializeVariables = function() {
+  var initializeVariables = function () {
     inject(function (_$q_, _$compile_) {
       $q = _$q_;
       $compile = _$compile_;
@@ -17,7 +17,7 @@ describe("directive: repositoryViewSection", function () {
     });
   };
 
-  var initializeDirective = function(settings) {
+  var initializeDirective = function (settings) {
     inject(function (_$rootScope_) {
       $scope = _$rootScope_.$new();
 
@@ -40,7 +40,7 @@ describe("directive: repositoryViewSection", function () {
     });
   };
 
-  beforeEach(function() {
+  beforeEach(function () {
     module("core");
     module("cap");
     module("templates");

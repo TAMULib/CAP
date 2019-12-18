@@ -1,7 +1,7 @@
 describe("directive: breadcrumbs", function () {
   var $compile, $q, $scope, MockedRepositoryView, RepositoryViewContext, directive, element, context;
 
-  var initializeVariables = function() {
+  var initializeVariables = function () {
     inject(function (_$q_, _$compile_) {
       $q = _$q_;
       $compile = _$compile_;
@@ -14,7 +14,7 @@ describe("directive: breadcrumbs", function () {
     });
   };
 
-  var initializeDirective = function(settings) {
+  var initializeDirective = function (settings) {
     inject(function (_$rootScope_) {
       $scope = _$rootScope_.$new();
 
@@ -30,18 +30,18 @@ describe("directive: breadcrumbs", function () {
     });
   };
 
-  beforeEach(function() {
+  beforeEach(function () {
     module("core");
     module("cap");
     module("templates");
-    module("mock.repositoryView", function($provide) {
-      var RepositoryView = function() {
+    module("mock.repositoryView", function ($provide) {
+      var RepositoryView = function () {
         return MockedRepositoryView;
       };
       $provide.value("RepositoryView", RepositoryView);
     });
-    module("mock.repositoryViewContext", function($provide) {
-      var RepositoryViewContext = function() {
+    module("mock.repositoryViewContext", function ($provide) {
+      var RepositoryViewContext = function () {
         return MockedRepositoryViewContext;
       };
       $provide.value("RepositoryViewContext", RepositoryViewContext);

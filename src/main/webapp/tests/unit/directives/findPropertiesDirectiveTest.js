@@ -1,7 +1,7 @@
 describe("directive: findproperties", function () {
   var $compile, $q, $scope, directive, element, schema, status, mode;
 
-  var initializeVariables = function() {
+  var initializeVariables = function () {
     inject(function (_$q_, _$compile_) {
       $q = _$q_;
       $compile = _$compile_;
@@ -12,7 +12,7 @@ describe("directive: findproperties", function () {
     });
   };
 
-  var initializeDirective = function(settings) {
+  var initializeDirective = function (settings) {
     inject(function (_$rootScope_) {
       $scope = _$rootScope_.$new();
 
@@ -30,7 +30,7 @@ describe("directive: findproperties", function () {
     });
   };
 
-  beforeEach(function() {
+  beforeEach(function () {
     module("core");
     module("cap");
     module("templates");

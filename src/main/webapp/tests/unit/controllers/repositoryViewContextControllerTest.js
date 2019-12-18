@@ -1,7 +1,7 @@
 describe("controller: RepositoryViewContextController", function () {
   var $filter, $location, $q, $scope, $timeout, MockedFixityReport, MockedRepositoryView, MockedSchema, WsApi, controller, routeParams;
 
-  var initializeVariables = function() {
+  var initializeVariables = function () {
     inject(function (_$filter_, _$location_, _$q_, _$timeout_, _WsApi_) {
       $filter = _$filter_;
       $location = _$location_;
@@ -16,7 +16,7 @@ describe("controller: RepositoryViewContextController", function () {
     });
   };
 
-  var initializeController = function(settings) {
+  var initializeController = function (settings) {
     inject(function (_$controller_, _$rootScope_, _FixityReport_, _RepositoryViewRepo_, _SchemaRepo_) {
       $scope = _$rootScope_.$new();
 
@@ -49,27 +49,27 @@ describe("controller: RepositoryViewContextController", function () {
     });
   };
 
-  beforeEach(function() {
-    module("core", function($provide) {
+  beforeEach(function () {
+    module("core", function ($provide) {
       routeParams = {};
       $provide.value("$routeParams", routeParams);
     });
     module("cap");
-    module("mock.fixityReport", function($provide) {
-      FixityReport = function() {
+    module("mock.fixityReport", function ($provide) {
+      FixityReport = function () {
         return MockedFixityReport;
       };
       $provide.value("FixityReport", FixityReport);
     });
-    module("mock.repositoryView", function($provide) {
-      RepositoryView = function() {
+    module("mock.repositoryView", function ($provide) {
+      RepositoryView = function () {
         return MockedRepositoryView;
       };
       $provide.value("RepositoryView", RepositoryView);
     });
     module("mock.repositoryViewRepo");
-    module("mock.schema", function($provide) {
-      Schema = function() {
+    module("mock.schema", function ($provide) {
+      Schema = function () {
         return MockedSchema;
       };
       $provide.value("Schema", Schema);
