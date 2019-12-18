@@ -84,88 +84,38 @@ describe("controller: RepositoryViewManagementController", function () {
     initializeController();
   });
 
-  describe("Is the controller defined", function () {
-    it("should be defined for admin", function () {
-      expect(controller).toBeDefined();
-    });
-
-    it("should be defined for manager", function () {
-      initializeController({role: "ROLE_MANAGER"});
-      expect(controller).toBeDefined();
-    });
-
-    it("should be defined for user", function () {
-      initializeController({role: "ROLE_USER"});
-      expect(controller).toBeDefined();
-    });
-
-    it("should be defined for anonymous", function () {
-      initializeController({role: "ROLE_ANONYMOUS"});
-      expect(controller).toBeDefined();
-    });
+  describe("Is the controller", function () {
+    var roles = [ "ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER", "ROLE_ANONYMOUS" ];
+    for (var i in roles) {
+      it("defined for " + roles[i], function () {
+        initializeController({ role: roles[i] });
+        expect(controller).toBeDefined();
+      });
+    }
   });
 
+  describe("Is the scope method", function () {
+    var methods = [
+      "createRepositoryView",
+      "confirmDeleteRepositoryView",
+      "disableVerify",
+      "editRepositoryView",
+      "resetRepositoryViewForms",
+      "onCancelCreateRepositoryView",
+      "onCancelEditRepositoryView",
+      "onCancelDeleteRepositoryView",
+      "onCreateRepositoryView",
+      "onDeleteRepositoryView",
+      "onEditRepositoryView",
+      "showSchemas"
+    ];
 
-  describe("Are the scope methods defined", function () {
-    it("createRepositoryView should be defined", function () {
-      expect($scope.createRepositoryView).toBeDefined();
-      expect(typeof $scope.createRepositoryView).toEqual("function");
-    });
-
-    it("confirmDeleteRepositoryView should be defined", function () {
-      expect($scope.confirmDeleteRepositoryView).toBeDefined();
-      expect(typeof $scope.confirmDeleteRepositoryView).toEqual("function");
-    });
-
-    it("disableVerify should be defined", function () {
-      expect($scope.disableVerify).toBeDefined();
-      expect(typeof $scope.disableVerify).toEqual("function");
-    });
-
-    it("editRepositoryView should be defined", function () {
-      expect($scope.editRepositoryView).toBeDefined();
-      expect(typeof $scope.editRepositoryView).toEqual("function");
-    });
-
-    it("resetRepositoryViewForms should be defined", function () {
-      expect($scope.resetRepositoryViewForms).toBeDefined();
-      expect(typeof $scope.resetRepositoryViewForms).toEqual("function");
-    });
-
-    it("onCancelCreateRepositoryView should be defined", function () {
-      expect($scope.onCancelCreateRepositoryView).toBeDefined();
-      expect(typeof $scope.onCancelCreateRepositoryView).toEqual("function");
-    });
-
-    it("onCancelEditRepositoryView should be defined", function () {
-      expect($scope.onCancelEditRepositoryView).toBeDefined();
-      expect(typeof $scope.onCancelEditRepositoryView).toEqual("function");
-    });
-
-    it("onCancelDeleteRepositoryView should be defined", function () {
-      expect($scope.onCancelDeleteRepositoryView).toBeDefined();
-      expect(typeof $scope.onCancelDeleteRepositoryView).toEqual("function");
-    });
-
-    it("onCreateRepositoryView should be defined", function () {
-      expect($scope.onCreateRepositoryView).toBeDefined();
-      expect(typeof $scope.onCreateRepositoryView).toEqual("function");
-    });
-
-    it("onDeleteRepositoryView should be defined", function () {
-      expect($scope.onDeleteRepositoryView).toBeDefined();
-      expect(typeof $scope.onDeleteRepositoryView).toEqual("function");
-    });
-
-    it("onEditRepositoryView should be defined", function () {
-      expect($scope.onEditRepositoryView).toBeDefined();
-      expect(typeof $scope.onEditRepositoryView).toEqual("function");
-    });
-
-    it("showSchemas should be defined", function () {
-      expect($scope.showSchemas).toBeDefined();
-      expect(typeof $scope.showSchemas).toEqual("function");
-    });
+    for (var i in methods) {
+      it(methods[i] + " defined", function () {
+        expect($scope[methods[i]]).toBeDefined();
+        expect(typeof $scope[methods[i]]).toEqual("function");
+      });
+    }
   });
 
   describe("Do the $scope methods work as expected", function () {

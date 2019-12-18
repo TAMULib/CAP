@@ -75,87 +75,38 @@ describe("controller: SchemaManagementController", function () {
     initializeController();
   });
 
-  describe("Is the controller defined", function () {
-    it("should be defined for admin", function () {
-      expect(controller).toBeDefined();
-    });
-
-    it("should be defined for manager", function () {
-      initializeController({role: "ROLE_MANAGER"});
-      expect(controller).toBeDefined();
-    });
-
-    it("should be defined for user", function () {
-      initializeController({role: "ROLE_USER"});
-      expect(controller).toBeDefined();
-    });
-
-    it("should be defined for anonymous", function () {
-      initializeController({role: "ROLE_ANONYMOUS"});
-      expect(controller).toBeDefined();
-    });
+  describe("Is the controller", function () {
+    var roles = [ "ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER", "ROLE_ANONYMOUS" ];
+    for (var i in roles) {
+      it("defined for " + roles[i], function () {
+        initializeController({ role: roles[i] });
+        expect(controller).toBeDefined();
+      });
+    }
   });
 
-  describe("Are the scope methods defined", function () {
-    it("createSchema should be defined", function () {
-      expect($scope.createSchema).toBeDefined();
-      expect(typeof $scope.createSchema).toEqual("function");
-    });
+  describe("Is the scope method", function () {
+    var methods = [
+      "createSchema",
+      "deleteSchema",
+      "editSchema",
+      "onCancelCreateSchema",
+      "onCancelDeleteSchema",
+      "onCancelEditSchema",
+      "onCreateSchema",
+      "onDeleteSchema",
+      "onEditSchema",
+      "resetSchemaForms",
+      "setTable",
+      "showProperties"
+    ];
 
-    it("deleteSchema should be defined", function () {
-      expect($scope.deleteSchema).toBeDefined();
-      expect(typeof $scope.deleteSchema).toEqual("function");
-    });
-
-    it("editSchema should be defined", function () {
-      expect($scope.editSchema).toBeDefined();
-      expect(typeof $scope.editSchema).toEqual("function");
-    });
-
-    it("onCancelCreateSchema should be defined", function () {
-      expect($scope.onCancelCreateSchema).toBeDefined();
-      expect(typeof $scope.onCancelCreateSchema).toEqual("function");
-    });
-
-    it("onCancelDeleteSchema should be defined", function () {
-      expect($scope.onCancelDeleteSchema).toBeDefined();
-      expect(typeof $scope.onCancelDeleteSchema).toEqual("function");
-    });
-
-    it("onCancelEditSchema should be defined", function () {
-      expect($scope.onCancelEditSchema).toBeDefined();
-      expect(typeof $scope.onCancelEditSchema).toEqual("function");
-    });
-
-    it("onCreateSchema should be defined", function () {
-      expect($scope.onCreateSchema).toBeDefined();
-      expect(typeof $scope.onCreateSchema).toEqual("function");
-    });
-
-    it("onDeleteSchema should be defined", function () {
-      expect($scope.onDeleteSchema).toBeDefined();
-      expect(typeof $scope.onDeleteSchema).toEqual("function");
-    });
-
-    it("onEditSchema should be defined", function () {
-      expect($scope.onEditSchema).toBeDefined();
-      expect(typeof $scope.onEditSchema).toEqual("function");
-    });
-
-    it("resetSchemaForms should be defined", function () {
-      expect($scope.resetSchemaForms).toBeDefined();
-      expect(typeof $scope.resetSchemaForms).toEqual("function");
-    });
-
-    it("setTable should be defined", function () {
-      expect($scope.setTable).toBeDefined();
-      expect(typeof $scope.setTable).toEqual("function");
-    });
-
-    it("showProperties should be defined", function () {
-      expect($scope.showProperties).toBeDefined();
-      expect(typeof $scope.showProperties).toEqual("function");
-    });
+    for (var i in methods) {
+      it(methods[i] + " defined", function () {
+        expect($scope[methods[i]]).toBeDefined();
+        expect(typeof $scope[methods[i]]).toEqual("function");
+      });
+    }
   });
 
   describe("Do the $scope methods work as expected", function () {

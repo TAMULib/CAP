@@ -82,162 +82,53 @@ describe("controller: RepositoryViewContextController", function () {
     initializeController();
   });
 
-  describe("Is the controller defined", function () {
-    it("should be defined for admin", function () {
-      expect(controller).toBeDefined();
-    });
-
-    it("should be defined for manager", function () {
-      initializeController({role: "ROLE_MANAGER"});
-      expect(controller).toBeDefined();
-    });
-
-    it("should be defined for user", function () {
-      initializeController({role: "ROLE_USER"});
-      expect(controller).toBeDefined();
-    });
-
-    it("should be defined for anonymous", function () {
-      initializeController({role: "ROLE_ANONYMOUS"});
-      expect(controller).toBeDefined();
-    });
+  describe("Is the controller", function () {
+    var roles = [ "ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER", "ROLE_ANONYMOUS" ];
+    for (var i in roles) {
+      it("defined for " + roles[i], function () {
+        initializeController({ role: roles[i] });
+        expect(controller).toBeDefined();
+      });
+    }
   });
 
-  describe("Are the scope methods defined", function () {
-    it("addMetadata should be defined", function () {
-      expect($scope.addMetadata).toBeDefined();
-      expect(typeof $scope.addMetadata).toEqual("function");
-    });
+  describe("Is the scope method", function () {
+    var methods = [
+      "addMetadata",
+      "advancedUpdate",
+      "cancelDeleteRepositoryViewContext",
+      "cancelDeleteRepositoryViewContext",
+      "cancelFixity",
+      "canPreview",
+      "createContainer",
+      "commitTransaction",
+      "copyToClipboard",
+      "deleteRepositoryViewContext",
+      "deleteVersion",
+      "getContentType",
+      "getIIIFUrl",
+      "lengthenContextUri",
+      "openFixity",
+      "refreshContext",
+      "resetAddMetadataModal",
+      "resetAdvancedUpdate",
+      "resetCreateContainer",
+      "resetUploadResource",
+      "revertVersion",
+      "rollbackTransaction",
+      "setOrToggleTheaterMode",
+      "srcFromFile",
+      "startTransaction",
+      "updateMetadatum",
+      "uploadResource"
+    ];
 
-    it("advancedUpdate should be defined", function () {
-      expect($scope.advancedUpdate).toBeDefined();
-      expect(typeof $scope.advancedUpdate).toEqual("function");
-    });
-
-    it("cancelDeleteRepositoryViewContext should be defined", function () {
-      expect($scope.cancelDeleteRepositoryViewContext).toBeDefined();
-      expect(typeof $scope.cancelDeleteRepositoryViewContext).toEqual("function");
-    });
-
-    it("cancelDeleteRepositoryViewContext should be defined", function () {
-      expect($scope.cancelDeleteRepositoryViewContext).toBeDefined();
-      expect(typeof $scope.cancelDeleteRepositoryViewContext).toEqual("function");
-    });
-
-    it("cancelFixity should be defined", function () {
-      expect($scope.cancelFixity).toBeDefined();
-      expect(typeof $scope.cancelFixity).toEqual("function");
-    });
-
-    it("canPreview should be defined", function () {
-      expect($scope.canPreview).toBeDefined();
-      expect(typeof $scope.canPreview).toEqual("function");
-    });
-
-    it("createContainer should be defined", function () {
-      expect($scope.createContainer).toBeDefined();
-      expect(typeof $scope.createContainer).toEqual("function");
-    });
-
-    it("commitTransaction should be defined", function () {
-      expect($scope.commitTransaction).toBeDefined();
-      expect(typeof $scope.commitTransaction).toEqual("function");
-    });
-
-    it("copyToClipboard should be defined", function () {
-      expect($scope.copyToClipboard).toBeDefined();
-      expect(typeof $scope.copyToClipboard).toEqual("function");
-    });
-
-    it("deleteRepositoryViewContext should be defined", function () {
-      expect($scope.deleteRepositoryViewContext).toBeDefined();
-      expect(typeof $scope.deleteRepositoryViewContext).toEqual("function");
-    });
-
-    it("deleteVersion should be defined", function () {
-      expect($scope.deleteVersion).toBeDefined();
-      expect(typeof $scope.deleteVersion).toEqual("function");
-    });
-
-    it("getContentType should be defined", function () {
-      expect($scope.getContentType).toBeDefined();
-      expect(typeof $scope.getContentType).toEqual("function");
-    });
-
-    it("getIIIFUrl should be defined", function () {
-      expect($scope.getIIIFUrl).toBeDefined();
-      expect(typeof $scope.getIIIFUrl).toEqual("function");
-    });
-
-    it("lengthenContextUri should be defined", function () {
-      expect($scope.lengthenContextUri).toBeDefined();
-      expect(typeof $scope.lengthenContextUri).toEqual("function");
-    });
-
-    it("openFixity should be defined", function () {
-      expect($scope.openFixity).toBeDefined();
-      expect(typeof $scope.openFixity).toEqual("function");
-    });
-
-    it("refreshContext should be defined", function () {
-      expect($scope.refreshContext).toBeDefined();
-      expect(typeof $scope.refreshContext).toEqual("function");
-    });
-
-    it("resetAddMetadataModal should be defined", function () {
-      expect($scope.resetAddMetadataModal).toBeDefined();
-      expect(typeof $scope.resetAddMetadataModal).toEqual("function");
-    });
-
-    it("resetAdvancedUpdate should be defined", function () {
-      expect($scope.resetAdvancedUpdate).toBeDefined();
-      expect(typeof $scope.resetAdvancedUpdate).toEqual("function");
-    });
-
-    it("resetCreateContainer should be defined", function () {
-      expect($scope.resetCreateContainer).toBeDefined();
-      expect(typeof $scope.resetCreateContainer).toEqual("function");
-    });
-
-    it("resetUploadResource should be defined", function () {
-      expect($scope.resetUploadResource).toBeDefined();
-      expect(typeof $scope.resetUploadResource).toEqual("function");
-    });
-
-    it("revertVersion should be defined", function () {
-      expect($scope.revertVersion).toBeDefined();
-      expect(typeof $scope.revertVersion).toEqual("function");
-    });
-
-    it("rollbackTransaction should be defined", function () {
-      expect($scope.rollbackTransaction).toBeDefined();
-      expect(typeof $scope.rollbackTransaction).toEqual("function");
-    });
-
-    it("setOrToggleTheaterMode should be defined", function () {
-      expect($scope.setOrToggleTheaterMode).toBeDefined();
-      expect(typeof $scope.setOrToggleTheaterMode).toEqual("function");
-    });
-
-    it("srcFromFile should be defined", function () {
-      expect($scope.srcFromFile).toBeDefined();
-      expect(typeof $scope.srcFromFile).toEqual("function");
-    });
-
-    it("startTransaction should be defined", function () {
-      expect($scope.startTransaction).toBeDefined();
-      expect(typeof $scope.startTransaction).toEqual("function");
-    });
-
-    it("updateMetadatum should be defined", function () {
-      expect($scope.updateMetadatum).toBeDefined();
-      expect(typeof $scope.updateMetadatum).toEqual("function");
-    });
-
-    it("uploadResource should be defined", function () {
-      expect($scope.uploadResource).toBeDefined();
-      expect(typeof $scope.uploadResource).toEqual("function");
-    });
+    for (var i in methods) {
+      it(methods[i] + " defined", function () {
+        expect($scope[methods[i]]).toBeDefined();
+        expect(typeof $scope[methods[i]]).toEqual("function");
+      });
+    }
   });
 
   describe("Do the $scope methods work as expected", function () {
