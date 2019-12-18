@@ -34,21 +34,27 @@ describe("service: userRepo", function () {
     initializeRepo();
   });
 
-  describe("Is the repo defined", function () {
-    it("should be defined", function () {
+  describe("Is the repo", function () {
+    it("defined", function () {
       expect(repo).toBeDefined();
     });
   });
 
-  describe("Are the repo methods defined", function () {
-    it("getCurators should be defined", function () {
-      expect(repo.getCurators).toBeDefined();
-      expect(typeof repo.getCurators).toEqual("function");
-    });
+  describe("Is the repo method", function () {
+    var methods = [
+      "getCurators"
+    ];
+
+    for (var i in methods) {
+      it(methods[i] + " defined", function () {
+        expect(repo[methods[i]]).toBeDefined();
+        expect(typeof repo[methods[i]]).toEqual("function");
+      });
+    }
   });
 
-  describe("Are the repo methods working as expected", function () {
-    it("getCurators should work", function () {
+  describe("Does the repo method", function () {
+    it("getCurators work as expected", function () {
       // @todo
       repo.getCurators();
 

@@ -34,21 +34,27 @@ describe("service: schemaRepo", function () {
     initializeRepo();
   });
 
-  describe("Is the repo defined", function () {
-    it("should be defined", function () {
+  describe("Is the repo", function () {
+    it("defined", function () {
       expect(repo).toBeDefined();
     });
   });
 
-  describe("Are the repo methods defined", function () {
-    it("findProperties should be defined", function () {
-      expect(repo.findProperties).toBeDefined();
-      expect(typeof repo.findProperties).toEqual("function");
-    });
+  describe("Is the repo method", function () {
+    var methods = [
+      "findProperties"
+    ];
+
+    for (var i in methods) {
+      it(methods[i] + " defined", function () {
+        expect(repo[methods[i]]).toBeDefined();
+        expect(typeof repo[methods[i]]).toEqual("function");
+      });
+    }
   });
 
-  describe("Are the repo methods working as expected", function () {
-    it("findProperties should work", function () {
+  describe("Does the repo method", function () {
+    it("findProperties work as expected", function () {
       var schema = new mockSchema($q);
 
       // @todo

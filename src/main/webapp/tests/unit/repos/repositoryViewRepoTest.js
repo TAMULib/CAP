@@ -34,46 +34,36 @@ describe("service: repositoryViewRepo", function () {
     initializeRepo();
   });
 
-  describe("Is the repo defined", function () {
-    it("should be defined", function () {
+  describe("Is the repo", function () {
+    it("defined", function () {
       expect(repo).toBeDefined();
     });
   });
 
-  describe("Are the repo methods defined", function () {
-    it("findByName should be defined", function () {
-      expect(repo.findByName).toBeDefined();
-      expect(typeof repo.findByName).toEqual("function");
-    });
+  describe("Is the repo method", function () {
+    var methods = [
+      "findByName",
+      "getTypes",
+      "verifyAuth",
+      "verifyContent",
+      "verifyPing"
+    ];
 
-    it("getTypes should be defined", function () {
-      expect(repo.getTypes).toBeDefined();
-      expect(typeof repo.getTypes).toEqual("function");
-    });
-
-    it("verifyAuth should be defined", function () {
-      expect(repo.verifyAuth).toBeDefined();
-      expect(typeof repo.verifyAuth).toEqual("function");
-    });
-
-    it("verifyContent should be defined", function () {
-      expect(repo.verifyContent).toBeDefined();
-      expect(typeof repo.verifyContent).toEqual("function");
-    });
-
-    it("verifyPing should be defined", function () {
-      expect(repo.verifyPing).toBeDefined();
-      expect(typeof repo.verifyPing).toEqual("function");
-    });
+    for (var i in methods) {
+      it(methods[i] + " defined", function () {
+        expect(repo[methods[i]]).toBeDefined();
+        expect(typeof repo[methods[i]]).toEqual("function");
+      });
+    }
   });
 
-  describe("Are the repo methods working as expected", function () {
-    it("findByName should work", function () {
+  describe("Does the repo method", function () {
+    it("findByName work as expected", function () {
       // @todo
       repo.findByName();
     });
 
-    it("getTypes should work", function () {
+    it("getTypes work as expected", function () {
       var types = [];
 
       // @todo
@@ -82,21 +72,21 @@ describe("service: repositoryViewRepo", function () {
       $scope.$digest();
     });
 
-    it("verifyAuth should work", function () {
+    it("verifyAuth work as expected", function () {
       var repositoryView = new mockRepositoryView($q);
 
       // @todo
       repo.verifyAuth(repositoryView);
     });
 
-    it("verifyContent should work", function () {
+    it("verifyContent work as expected", function () {
       var repositoryView = new mockRepositoryView($q);
 
       // @todo
       repo.verifyContent(repositoryView);
     });
 
-    it("verifyPing should work", function () {
+    it("verifyPing work as expected", function () {
       var repositoryView = new mockRepositoryView($q);
 
       // @todo
