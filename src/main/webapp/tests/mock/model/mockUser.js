@@ -42,7 +42,7 @@ var mockUser = function ($q) {
 
   model.authenticate = function (registration) {
     return payloadPromise(model.authDefer);
-  }
+  };
 
   model.logout = function () {
     model.anonymous = true;
@@ -51,11 +51,11 @@ var mockUser = function ($q) {
 
   model.register = function (registration) {
     return payloadPromise($q.defer());
-  }
+  };
 
   model.verifyEmail = function (email) {
     return true;
-  }
+  };
 
   return model;
 };
