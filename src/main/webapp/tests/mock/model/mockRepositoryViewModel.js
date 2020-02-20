@@ -28,7 +28,7 @@ var dataRepositoryView3 = {
   username: "mock username 3"
 };
 
-var mockRepositoryView = function($q) {
+var mockRepositoryView = function ($q) {
   var model = mockModel("RepositoryView", $q, dataRepositoryView1);
 
   model.cacheContext = function (context) {

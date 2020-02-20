@@ -22,7 +22,7 @@ var dataSchema3 = {
   properties: []
 };
 
-var mockSchema = function($q) {
+var mockSchema = function ($q) {
   var model = mockModel("Schema", $q, dataSchema1);
 
   return model;

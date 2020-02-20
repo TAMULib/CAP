@@ -19,10 +19,10 @@ var dataFixityReport3 = {
   status: "mock status 3"
 };
 
-var mockFixityReport = function($q) {
+var mockFixityReport = function ($q) {
   var model = mockModel("FixityReport", $q, dataFixityReport1);
 
-  model.run = function() {
+  model.run = function () {
     // @todo
   };
 

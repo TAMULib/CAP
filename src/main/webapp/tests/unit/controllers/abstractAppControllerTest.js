@@ -1,7 +1,7 @@
 describe("controller: AbstractAppController", function () {
   var $q, $scope, WsApi, controller;
 
-  var initializeVariables = function() {
+  var initializeVariables = function () {
     inject(function (_$q_, _WsApi_) {
       $q = _$q_;
 
@@ -9,7 +9,7 @@ describe("controller: AbstractAppController", function () {
     });
   };
 
-  var initializeController = function(settings) {
+  var initializeController = function (settings) {
     inject(function (_$controller_, _$rootScope_, _ModalService_) {
       $scope = _$rootScope_.$new();
 
@@ -30,7 +30,7 @@ describe("controller: AbstractAppController", function () {
     });
   };
 
-  beforeEach(function() {
+  beforeEach(function () {
     module("core");
     module("cap");
     module("mock.modalService");
@@ -41,48 +41,47 @@ describe("controller: AbstractAppController", function () {
     initializeController();
   });
 
-  describe("Is the controller defined", function () {
-    it("should be defined for admin", function () {
-      expect(controller).toBeDefined();
-    });
-    it("should be defined for manager", function () {
-      initializeController({role: "ROLE_MANAGER"});
-      expect(controller).toBeDefined();
-    });
-    it("should be defined for user", function () {
-      initializeController({role: "ROLE_USER"});
-      expect(controller).toBeDefined();
-    });
-    it("should be defined for anonymous", function () {
-      initializeController({role: "ROLE_ANONYMOUS"});
-      expect(controller).toBeDefined();
-    });
+  describe("Is the controller", function () {
+    var roles = [ "ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER", "ROLE_ANONYMOUS" ];
+
+    var controllerExists = function (setting) {
+      return function() {
+        initializeController(setting);
+        expect(controller).toBeDefined();
+      };
+    };
+
+    for (var i in roles) {
+      it("defined for " + roles[i], controllerExists({ role: roles[i] }));
+    }
   });
 
-  describe("Are the scope methods defined", function () {
-    it("closeModal should be defined", function () {
-      expect($scope.closeModal).toBeDefined();
-      expect(typeof $scope.closeModal).toEqual("function");
-    });
+  describe("Is the scope method", function () {
+    var methods = [
+      "closeModal",
+      "isCollapsable",
+      "isCurator"
+    ];
 
-    it("isCollapsable should be defined", function () {
-      expect($scope.isCollapsable).toBeDefined();
-      expect(typeof $scope.isCollapsable).toEqual("function");
-    });
+    var scopeMethodExists = function (method) {
+      return function() {
+        expect($scope[method]).toBeDefined();
+        expect(typeof $scope[method]).toEqual("function");
+      };
+    };
 
-    it("isCurator should be defined", function () {
-      expect($scope.isCurator).toBeDefined();
-      expect(typeof $scope.isCurator).toEqual("function");
-    });
+    for (var i in methods) {
+      it(methods[i] + " defined", scopeMethodExists(methods[i]));
+    }
   });
 
-  describe("Do the $scope methods work as expected", function () {
-    it("closeModal should work", function () {
+  describe("Does the $scope method", function () {
+    it("closeModal work as expected", function () {
       // @todo
       $scope.closeModal();
     });
 
-    it("isCollapsable should work", function () {
+    it("isCollapsable work as expected", function () {
       var triples = [];
       var predicate = "";
 
@@ -90,7 +89,7 @@ describe("controller: AbstractAppController", function () {
       $scope.isCollapsable(triples, predicate);
     });
 
-    it("isCurator should work", function () {
+    it("isCurator work as expected", function () {
       // @todo
       $scope.isCurator();
     });

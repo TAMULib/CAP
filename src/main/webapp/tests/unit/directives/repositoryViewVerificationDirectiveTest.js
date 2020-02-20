@@ -1,7 +1,7 @@
 describe("directive: repositoryViewVerification", function () {
   var $compile, $q, $scope, directive, element, repositoryView, results;
 
-  var initializeVariables = function() {
+  var initializeVariables = function () {
     inject(function (_$q_, _$compile_) {
       $q = _$q_;
       $compile = _$compile_;
@@ -11,11 +11,14 @@ describe("directive: repositoryViewVerification", function () {
     });
   };
 
-  var initializeDirective = function() {
+  var initializeDirective = function (settings) {
     inject(function (_$rootScope_) {
       $scope = _$rootScope_.$new();
 
-      element = angular.element("<repository-view-verification repository-view=\"repositoryView\" results=\"results\"></repository-view-verification>");
+      var attr = settings && settings.attr ? settings.attr : "repository-view=\"repositoryView\" results=\"results\"";
+      var body = settings && settings.body ? settings.body : "";
+
+      element = angular.element("<repository-view-verification " + attr + ">" + body + "</repository-view-verification>");
       directive = $compile(element)($scope);
 
       $scope.repositoryView = repositoryView;
@@ -25,7 +28,7 @@ describe("directive: repositoryViewVerification", function () {
     });
   };
 
-  beforeEach(function() {
+  beforeEach(function () {
     module("core");
     module("cap");
     module("templates");
@@ -35,22 +38,22 @@ describe("directive: repositoryViewVerification", function () {
     initializeVariables();
   });
 
-  describe("Is the directive defined", function () {
-    it("should be defined", function () {
+  describe("Is the directive", function () {
+    it("defined", function () {
       initializeDirective();
       expect(directive).toBeDefined();
     });
   });
 
-  describe("Does the directive initialize properly", function () {
-    it("should be defined, with repositoryView property", function () {
+  describe("Does the directive", function () {
+    it("work with repositoryView property", function () {
       repositoryView = "";
 
       //initializeDirective();
       //expect(directive).toBeDefined();
     });
 
-    it("should be defined, with results property", function () {
+    it("work with results property", function () {
       results = "";
 
       //initializeDirective();

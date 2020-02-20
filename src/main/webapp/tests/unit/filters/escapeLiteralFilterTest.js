@@ -1,10 +1,10 @@
 describe("filter: escapeLiteral", function () {
   var $scope, filter;
 
-  var initializeVariables = function() {
+  var initializeVariables = function () {
   };
 
-  var initializeFilter = function(settings) {
+  var initializeFilter = function (settings) {
     inject(function (_$filter_, _$rootScope_) {
       $scope = _$rootScope_.$new();
 
@@ -12,7 +12,7 @@ describe("filter: escapeLiteral", function () {
     });
   };
 
-  beforeEach(function() {
+  beforeEach(function () {
     module("core");
     module("cap");
 
@@ -21,13 +21,13 @@ describe("filter: escapeLiteral", function () {
     initializeFilter();
   });
 
-  describe("Is the filter defined", function () {
-    it("should be defined", function () {
+  describe("Is the filter", function () {
+    it("defined", function () {
       expect(filter).toBeDefined();
     });
   });
 
-  describe("Does the filter work as expected", function () {
+  describe("Does the filter", function () {
     it("should return nothing on empty input", function () {
       var result;
 

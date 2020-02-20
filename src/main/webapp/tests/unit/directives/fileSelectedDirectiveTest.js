@@ -1,25 +1,28 @@
 describe("directive: fileSelected", function () {
   var $compile, $q, $scope, directive, element;
 
-  var initializeVariables = function() {
+  var initializeVariables = function () {
     inject(function (_$q_, _$compile_) {
       $q = _$q_;
       $compile = _$compile_;
     });
   };
 
-  var initializeDirective = function() {
+  var initializeDirective = function (settings) {
     inject(function (_$rootScope_) {
       $scope = _$rootScope_.$new();
 
-      element = angular.element("<file-selected></file-selected>");
+      var attr = settings && settings.attr ? settings.attr : "";
+      var body = settings && settings.body ? settings.body : "";
+
+      element = angular.element("<file-selected " + attr + ">" + body + "</file-selected>");
       directive = $compile(element)($scope);
 
       $scope.$digest();
     });
   };
 
-  beforeEach(function() {
+  beforeEach(function () {
     module("core");
     module("cap");
     module("templates");
@@ -28,8 +31,8 @@ describe("directive: fileSelected", function () {
     initializeVariables();
   });
 
-  describe("Is the directive defined", function () {
-    it("should be defined", function () {
+  describe("Is the directive", function () {
+    it("defined", function () {
       initializeDirective();
       expect(directive).toBeDefined();
     });

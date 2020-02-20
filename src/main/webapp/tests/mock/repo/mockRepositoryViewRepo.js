@@ -16,7 +16,7 @@ var dataRepositoryViewRepo3 = [
   dataRepositoryView2
 ];
 
-angular.module("mock.repositoryViewRepo", []).service("RepositoryViewRepo", function($q, RepositoryView) {
+angular.module("mock.repositoryViewRepo", []).service("RepositoryViewRepo", function ($q, RepositoryView) {
   var repo = mockRepo("RepositoryViewRepo", $q, mockRepositoryView, dataRepositoryViewRepo1);
 
   repo.scaffold = {

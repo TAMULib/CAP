@@ -1,7 +1,7 @@
 describe("directive: repositoryViewSection", function () {
   var $compile, $q, $scope, directive, element, context, title, type, list, listElementAction, addAction, removeAction, editAction;
 
-  var initializeVariables = function() {
+  var initializeVariables = function () {
     inject(function (_$q_, _$compile_) {
       $q = _$q_;
       $compile = _$compile_;
@@ -17,11 +17,14 @@ describe("directive: repositoryViewSection", function () {
     });
   };
 
-  var initializeDirective = function() {
+  var initializeDirective = function (settings) {
     inject(function (_$rootScope_) {
       $scope = _$rootScope_.$new();
 
-      element = angular.element("<repository-view-section context=\"context\" title=\"title\" type=\"type\" list=\"list\" list-element-action=\"listElementAction\" add-action=\"addAction\" remove-action=\"removeAction\" edit-action=\"editAction\"></repository-view-section>");
+      var attr = settings && settings.attr ? settings.attr : "context=\"context\" title=\"title\" type=\"type\" list=\"list\" list-element-action=\"listElementAction\" add-action=\"addAction\" remove-action=\"removeAction\" edit-action=\"editAction\"";
+      var body = settings && settings.body ? settings.body : "";
+
+      element = angular.element("<repository-view-section " + attr + ">" + body + "</repository-view-section>");
       directive = $compile(element)($scope);
 
       $scope.context = context;
@@ -37,7 +40,7 @@ describe("directive: repositoryViewSection", function () {
     });
   };
 
-  beforeEach(function() {
+  beforeEach(function () {
     module("core");
     module("cap");
     module("templates");
@@ -49,64 +52,64 @@ describe("directive: repositoryViewSection", function () {
     initializeVariables();
   });
 
-  describe("Is the directive defined", function () {
-    it("should be defined", function () {
+  describe("Is the directive", function () {
+    it("defined", function () {
       initializeDirective();
       expect(directive).toBeDefined();
     });
   });
 
-  describe("Does the directive initialize properly", function () {
-    it("should be defined, with context property", function () {
+  describe("Does the directive", function () {
+    it("work with context property", function () {
       context = "";
 
       //initializeDirective();
       //expect(directive).toBeDefined();
     });
 
-    it("should be defined, with title property", function () {
+    it("work with title property", function () {
       title = "";
 
       //initializeDirective();
       //expect(directive).toBeDefined();
     });
 
-    it("should be defined, with type property", function () {
+    it("work with type property", function () {
       type = "";
 
       //initializeDirective();
       //expect(directive).toBeDefined();
     });
 
-    it("should be defined, with list property", function () {
+    it("work with list property", function () {
       list = "";
 
       //initializeDirective();
       //expect(directive).toBeDefined();
     });
 
-    it("should be defined, with listElementAction property", function () {
+    it("work with listElementAction property", function () {
       listElementAction = "";
 
       //initializeDirective();
       //expect(directive).toBeDefined();
     });
 
-    it("should be defined, with addAction property", function () {
+    it("work with addAction property", function () {
       addAction = "";
 
       //initializeDirective();
       //expect(directive).toBeDefined();
     });
 
-    it("should be defined, with removeAction property", function () {
+    it("work with removeAction property", function () {
       removeAction = "";
 
       //initializeDirective();
       //expect(directive).toBeDefined();
     });
 
-    it("should be defined, with editAction property", function () {
+    it("work with editAction property", function () {
       editAction = "";
 
       //initializeDirective();

@@ -1,7 +1,7 @@
 describe("directive: breadcrumbs", function () {
   var $compile, $q, $scope, MockedRepositoryView, RepositoryViewContext, directive, element, context;
 
-  var initializeVariables = function() {
+  var initializeVariables = function () {
     inject(function (_$q_, _$compile_) {
       $q = _$q_;
       $compile = _$compile_;
@@ -14,11 +14,14 @@ describe("directive: breadcrumbs", function () {
     });
   };
 
-  var initializeDirective = function() {
+  var initializeDirective = function (settings) {
     inject(function (_$rootScope_) {
       $scope = _$rootScope_.$new();
 
-      element = angular.element("<breadcrumbs context=\"context\"></breadcrumbs>");
+      var attr = settings && settings.attr ? settings.attr : "context=\"context\"";
+      var body = settings && settings.body ? settings.body : "";
+
+      element = angular.element("<breadcrumbs " + attr + ">" + body + "</breadcrumbs>");
       directive = $compile(element)($scope);
 
       $scope.context = context;
@@ -27,18 +30,18 @@ describe("directive: breadcrumbs", function () {
     });
   };
 
-  beforeEach(function() {
+  beforeEach(function () {
     module("core");
     module("cap");
     module("templates");
-    module("mock.repositoryView", function($provide) {
-      var RepositoryView = function() {
+    module("mock.repositoryView", function ($provide) {
+      var RepositoryView = function () {
         return MockedRepositoryView;
       };
       $provide.value("RepositoryView", RepositoryView);
     });
-    module("mock.repositoryViewContext", function($provide) {
-      var RepositoryViewContext = function() {
+    module("mock.repositoryViewContext", function ($provide) {
+      var RepositoryViewContext = function () {
         return MockedRepositoryViewContext;
       };
       $provide.value("RepositoryViewContext", RepositoryViewContext);
@@ -48,8 +51,8 @@ describe("directive: breadcrumbs", function () {
     initializeVariables();
   });
 
-  describe("Is the directive defined", function () {
-    it("should be defined", function () {
+  describe("Is the directive", function () {
+    it("defined", function () {
       initializeDirective();
       expect(directive).toBeDefined();
     });

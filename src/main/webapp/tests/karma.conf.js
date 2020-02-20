@@ -1,4 +1,4 @@
-module.exports = function(config){
+module.exports = function (config) {
   config.set({
 
     preprocessors: {
@@ -8,9 +8,9 @@ module.exports = function(config){
 
     reporters: ["progress", "coverage"],
 
-    basePath : "../",
+    basePath: "../",
 
-    files : [
+    files: [
       "app/config/appConfig.js",
       "app/config/apiMapping.js",
 
@@ -37,10 +37,6 @@ module.exports = function(config){
 
       "app/node_modules/openseadragon/build/openseadragon/openseadragon.js",
       "app/node_modules/ng-openseadragon/build/angular-openseadragon.js",
-
-      "app/node_modules/weaver-ui-core/app/config/coreConfig.js",
-
-      "app/node_modules/jasmine-promise-matchers/dist/jasmine-promise-matchers.js",
 
       "app/node_modules/jasmine-promise-matchers/dist/jasmine-promise-matchers.js",
 
@@ -70,22 +66,22 @@ module.exports = function(config){
 
       "app/repo/**/*.js",
 
-      "app/services/**/*.js",
+      //"app/services/**/*.js",
 
       "app/views/**/*.html",
 
       "tests/core/**/*.js",
 
-      "tests/mocks/**/*.js",
+      "tests/mock/**/*.js",
 
       "tests/unit/**/*.js"
     ],
 
-    autoWatch : true,
+    autoWatch: true,
 
     frameworks: ["jasmine"],
 
-    browsers : ["Firefox", "Chrome", "ChromeHeadless", "ChromeHeadlessNoSandbox"],
+    browsers: ["Firefox", "Chrome", "ChromeHeadless", "ChromeHeadlessNoSandbox"],
 
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
@@ -94,16 +90,16 @@ module.exports = function(config){
       }
     },
 
-    plugins : [
-      "karma-coverage",
-      "karma-jasmine",
+    plugins: [
       "karma-chrome-launcher",
+      "karma-coverage",
       "karma-firefox-launcher",
+      "karma-jasmine",
       "karma-junit-reporter",
       "karma-ng-html2js-preprocessor"
     ],
 
-    junitReporter : {
+    junitReporter: {
       outputFile: "test_out/unit.xml",
       suite: "unit"
     },

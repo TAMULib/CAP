@@ -1,7 +1,7 @@
 describe("model: RepositoryView", function () {
   var $q, $rootScope, $scope, $timeout, MockedRepositoryViewContext, WsApi, model;
 
-  var initializeVariables = function(settings) {
+  var initializeVariables = function (settings) {
     inject(function (_$q_, _$rootScope_, _$timeout_, _WsApi_) {
       $q = _$q_;
       $rootScope = _$rootScope_;
@@ -13,19 +13,19 @@ describe("model: RepositoryView", function () {
     });
   };
 
-  var initializeModel = function(settings) {
-    inject(function (RepositoryView) {
+  var initializeModel = function (settings) {
+    inject(function (_RepositoryView_) {
       $scope = $rootScope.$new();
 
-      model = angular.extend(new RepositoryView(), dataRepositoryView1);
+      model = angular.extend(new _RepositoryView_(), dataRepositoryView1);
     });
   };
 
-  beforeEach(function() {
+  beforeEach(function () {
     module("core");
     module("cap");
-    module("mock.repositoryViewContext", function($provide) {
-      var RepositoryViewContext = function() {
+    module("mock.repositoryViewContext", function ($provide) {
+      var RepositoryViewContext = function () {
         return MockedRepositoryViewContext;
       };
       $provide.value("RepositoryViewContext", RepositoryViewContext);
@@ -43,91 +43,37 @@ describe("model: RepositoryView", function () {
     });
   });
 
-  describe("Are the model methods defined", function () {
-    it("cacheContext should be defined", function () {
-      expect(model.cacheContext).toBeDefined();
-      expect(typeof model.cacheContext).toEqual("function");
-    });
+  describe("Is the model method", function () {
+    var methods = [
+      "cacheContext",
+      "clearCache",
+      "commitTransaction",
+      "getCachedContext",
+      "getContext",
+      "getTransaction",
+      "getTransactionSecondsRemaining",
+      "inTransaction",
+      "isTransactionAboutToExpire",
+      "loadContext",
+      "performRequest",
+      "refreshTransaction",
+      "removeCachedContext",
+      "rollbackTransaction",
+      "startTransaction",
+      "startTransactionTimer",
+      "stopTransactionTimer"
+    ];
 
-    it("clearCache should be defined", function () {
-      expect(model.clearCache).toBeDefined();
-      expect(typeof model.clearCache).toEqual("function");
-    });
+    var modelMethodExists = function (key) {
+      return function() {
+        expect(model[key]).toBeDefined();
+        expect(typeof model[key]).toEqual("function");
+      };
+    };
 
-    it("commitTransaction should be defined", function () {
-      expect(model.commitTransaction).toBeDefined();
-      expect(typeof model.commitTransaction).toEqual("function");
-    });
-
-    it("getCachedContext should be defined", function () {
-      expect(model.getCachedContext).toBeDefined();
-      expect(typeof model.getCachedContext).toEqual("function");
-    });
-
-    it("getContext should be defined", function () {
-      expect(model.getContext).toBeDefined();
-      expect(typeof model.getContext).toEqual("function");
-    });
-
-    it("getTransaction should be defined", function () {
-      expect(model.getTransaction).toBeDefined();
-      expect(typeof model.getTransaction).toEqual("function");
-    });
-
-    it("getTransactionSecondsRemaining should be defined", function () {
-      expect(model.getTransactionSecondsRemaining).toBeDefined();
-      expect(typeof model.getTransactionSecondsRemaining).toEqual("function");
-    });
-
-    it("inTransaction should be defined", function () {
-      expect(model.inTransaction).toBeDefined();
-      expect(typeof model.inTransaction).toEqual("function");
-    });
-
-    it("isTransactionAboutToExpire should be defined", function () {
-      expect(model.isTransactionAboutToExpire).toBeDefined();
-      expect(typeof model.isTransactionAboutToExpire).toEqual("function");
-    });
-
-    it("loadContext should be defined", function () {
-      expect(model.loadContext).toBeDefined();
-      expect(typeof model.loadContext).toEqual("function");
-    });
-
-    it("performRequest should be defined", function () {
-      expect(model.performRequest).toBeDefined();
-      expect(typeof model.performRequest).toEqual("function");
-    });
-
-    it("refreshTransaction should be defined", function () {
-      expect(model.refreshTransaction).toBeDefined();
-      expect(typeof model.refreshTransaction).toEqual("function");
-    });
-
-    it("removeCachedContext should be defined", function () {
-      expect(model.removeCachedContext).toBeDefined();
-      expect(typeof model.removeCachedContext).toEqual("function");
-    });
-
-    it("rollbackTransaction should be defined", function () {
-      expect(model.rollbackTransaction).toBeDefined();
-      expect(typeof model.rollbackTransaction).toEqual("function");
-    });
-
-    it("startTransaction should be defined", function () {
-      expect(model.startTransaction).toBeDefined();
-      expect(typeof model.startTransaction).toEqual("function");
-    });
-
-    it("startTransactionTimer should be defined", function () {
-      expect(model.startTransactionTimer).toBeDefined();
-      expect(typeof model.startTransactionTimer).toEqual("function");
-    });
-
-    it("stopTransactionTimer should be defined", function () {
-      expect(model.stopTransactionTimer).toBeDefined();
-      expect(typeof model.stopTransactionTimer).toEqual("function");
-    });
+    for (var i in methods) {
+      it(methods[i] + " defined", modelMethodExists(methods[i]));
+    }
   });
 
   describe("Are the model methods working as expected", function () {

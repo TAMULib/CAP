@@ -1,7 +1,7 @@
 describe("directive: findproperties", function () {
   var $compile, $q, $scope, directive, element, schema, status, mode;
 
-  var initializeVariables = function() {
+  var initializeVariables = function () {
     inject(function (_$q_, _$compile_) {
       $q = _$q_;
       $compile = _$compile_;
@@ -12,11 +12,14 @@ describe("directive: findproperties", function () {
     });
   };
 
-  var initializeDirective = function() {
+  var initializeDirective = function (settings) {
     inject(function (_$rootScope_) {
       $scope = _$rootScope_.$new();
 
-      element = angular.element("<findproperties schema=\"schema\" status=\"status\" mode=\"mode\"></findproperties>");
+      var attr = settings && settings.attr ? settings.attr : "schema=\"schema\" status=\"status\" mode=\"mode\"";
+      var body = settings && settings.body ? settings.body : "";
+
+      element = angular.element("<findproperties " + attr + ">" + body + "</findproperties>");
       directive = $compile(element)($scope);
 
       $scope.schema = schema;
@@ -27,7 +30,7 @@ describe("directive: findproperties", function () {
     });
   };
 
-  beforeEach(function() {
+  beforeEach(function () {
     module("core");
     module("cap");
     module("templates");
@@ -38,29 +41,29 @@ describe("directive: findproperties", function () {
 
 // @todo window.stompClient needs to be provided and possibly mocked.
 /*
-  describe("Is the directive defined", function () {
-    it("should be defined", function () {
+  describe("Is the directive", function () {
+    it("defined", function () {
       initializeDirective();
       expect(directive).toBeDefined();
     });
   });
 
-  describe("Does the directive initialize properly", function () {
-    it("should be defined, with schema property", function () {
+  describe("Does the directive", function () {
+    it("work with schema property", function () {
       schema = "";
 
       //initializeDirective();
       //expect(directive).toBeDefined();
     });
 
-    it("should be defined, with status property", function () {
+    it("work with status property", function () {
       status = "";
 
       //initializeDirective();
       //expect(directive).toBeDefined();
     });
 
-    it("should be defined, with mode property", function () {
+    it("work with mode property", function () {
       mode = "";
 
       //initializeDirective();

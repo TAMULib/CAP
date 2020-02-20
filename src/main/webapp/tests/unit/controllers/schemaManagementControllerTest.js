@@ -1,21 +1,21 @@
 describe("controller: SchemaManagementController", function () {
-  var $q, $scope, $timeout, MockedSchema, MockedUser, NgTableParams, WsApi, controller;
+  var $q, $scope, $timeout, MockedNgTableParams, MockedSchema, MockedUser, WsApi, controller;
 
-  var initializeVariables = function() {
+  var initializeVariables = function () {
     inject(function (_$q_, _$timeout_, _WsApi_) {
       $q = _$q_;
       $timeout = _$timeout_;
 
+      MockedNgTableParams = new mockNgTableParams($q);
       MockedSchema = new mockSchema($q);
       MockedUser = new mockUser($q);
 
-      NgTableParams = mockNgTableParams;
       WsApi = _WsApi_;
     });
   };
 
-  var initializeController = function(settings) {
-    inject(function (_$controller_, _$rootScope_, _AssumedControl_, _AuthService_, _SchemaRepo_, _StorageService_, _UserRepo_, _UserService_) {
+  var initializeController = function (settings) {
+    inject(function (_$controller_, _$rootScope_, _AssumedControl_, _AuthService_, _NgTableParams_, _SchemaRepo_, _StorageService_, _UserRepo_, _UserService_) {
       $scope = _$rootScope_.$new();
 
       sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
@@ -26,7 +26,7 @@ describe("controller: SchemaManagementController", function () {
         $scope: $scope,
         AssumedControl: _AssumedControl_,
         AuthService: _AuthService_,
-        NgTableParams: NgTableParams,
+        NgTableParams: _NgTableParams_,
         SchemaRepo: _SchemaRepo_,
         StorageService: _StorageService_,
         UserRepo: _UserRepo_,
@@ -41,22 +41,27 @@ describe("controller: SchemaManagementController", function () {
     });
   };
 
-  beforeEach(function() {
+  beforeEach(function () {
     module("core");
     module("cap");
     module("mock.assumedControl");
     module("mock.authService");
-    module("mock.ngTableParams");
-    module("mock.schema", function($provide) {
-      var Schema = function() {
+    module("mock.ngTableParams", function ($provide) {
+      var NgTableParams = function () {
+        return MockedNgTableParams;
+      };
+      $provide.value("NgTableParams", NgTableParams);
+    });
+    module("mock.schema", function ($provide) {
+      var Schema = function () {
         return MockedSchema;
       };
       $provide.value("Schema", Schema);
     });
     module("mock.schemaRepo");
     module("mock.storageService");
-    module("mock.user", function($provide) {
-      var User = function() {
+    module("mock.user", function ($provide) {
+      var User = function () {
         return MockedUser;
       };
       $provide.value("User", User);
@@ -70,88 +75,51 @@ describe("controller: SchemaManagementController", function () {
     initializeController();
   });
 
-  describe("Is the controller defined", function () {
-    it("should be defined for admin", function () {
-      expect(controller).toBeDefined();
-    });
-    it("should be defined for manager", function () {
-      initializeController({role: "ROLE_MANAGER"});
-      expect(controller).toBeDefined();
-    });
-    it("should be defined for user", function () {
-      initializeController({role: "ROLE_USER"});
-      expect(controller).toBeDefined();
-    });
-    it("should be defined for anonymous", function () {
-      initializeController({role: "ROLE_ANONYMOUS"});
-      expect(controller).toBeDefined();
-    });
+  describe("Is the controller", function () {
+    var roles = [ "ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER", "ROLE_ANONYMOUS" ];
+
+    var controllerExists = function (setting) {
+      return function() {
+        initializeController(setting);
+        expect(controller).toBeDefined();
+      };
+    };
+
+    for (var i in roles) {
+      it("defined for " + roles[i], controllerExists({ role: roles[i] }));
+    }
   });
 
-  describe("Are the scope methods defined", function () {
-    it("createSchema should be defined", function () {
-      expect($scope.createSchema).toBeDefined();
-      expect(typeof $scope.createSchema).toEqual("function");
-    });
+  describe("Is the scope method", function () {
+    var methods = [
+      "createSchema",
+      "deleteSchema",
+      "editSchema",
+      "onCancelCreateSchema",
+      "onCancelDeleteSchema",
+      "onCancelEditSchema",
+      "onCreateSchema",
+      "onDeleteSchema",
+      "onEditSchema",
+      "resetSchemaForms",
+      "setTable",
+      "showProperties"
+    ];
 
-    it("deleteSchema should be defined", function () {
-      expect($scope.deleteSchema).toBeDefined();
-      expect(typeof $scope.deleteSchema).toEqual("function");
-    });
+    var scopeMethodExists = function (method) {
+      return function() {
+        expect($scope[method]).toBeDefined();
+        expect(typeof $scope[method]).toEqual("function");
+      };
+    };
 
-    it("editSchema should be defined", function () {
-      expect($scope.editSchema).toBeDefined();
-      expect(typeof $scope.editSchema).toEqual("function");
-    });
-
-    it("onCancelCreateSchema should be defined", function () {
-      expect($scope.onCancelCreateSchema).toBeDefined();
-      expect(typeof $scope.onCancelCreateSchema).toEqual("function");
-    });
-
-    it("onCancelDeleteSchema should be defined", function () {
-      expect($scope.onCancelDeleteSchema).toBeDefined();
-      expect(typeof $scope.onCancelDeleteSchema).toEqual("function");
-    });
-
-    it("onCancelEditSchema should be defined", function () {
-      expect($scope.onCancelEditSchema).toBeDefined();
-      expect(typeof $scope.onCancelEditSchema).toEqual("function");
-    });
-
-    it("onCreateSchema should be defined", function () {
-      expect($scope.onCreateSchema).toBeDefined();
-      expect(typeof $scope.onCreateSchema).toEqual("function");
-    });
-
-    it("onDeleteSchema should be defined", function () {
-      expect($scope.onDeleteSchema).toBeDefined();
-      expect(typeof $scope.onDeleteSchema).toEqual("function");
-    });
-
-    it("onEditSchema should be defined", function () {
-      expect($scope.onEditSchema).toBeDefined();
-      expect(typeof $scope.onEditSchema).toEqual("function");
-    });
-
-    it("resetSchemaForms should be defined", function () {
-      expect($scope.resetSchemaForms).toBeDefined();
-      expect(typeof $scope.resetSchemaForms).toEqual("function");
-    });
-
-    it("setTable should be defined", function () {
-      expect($scope.setTable).toBeDefined();
-      expect(typeof $scope.setTable).toEqual("function");
-    });
-
-    it("showProperties should be defined", function () {
-      expect($scope.showProperties).toBeDefined();
-      expect(typeof $scope.showProperties).toEqual("function");
-    });
+    for (var i in methods) {
+      it(methods[i] + " defined", scopeMethodExists(methods[i]));
+    }
   });
 
-  describe("Do the $scope methods work as expected", function () {
-    it("createSchema should work", function () {
+  describe("Does the $scope method", function () {
+    it("createSchema work as expected", function () {
       $scope.schema = undefined;
       spyOn($scope, "openModal");
 
@@ -160,36 +128,36 @@ describe("controller: SchemaManagementController", function () {
       expect($scope.schema).toBeDefined();
     });
 
-    it("deleteSchema should work", function () {
+    it("deleteSchema work as expected", function () {
       // @todo
       $scope.deleteSchema();
     });
 
-    it("editSchema should work", function () {
+    it("editSchema work as expected", function () {
       // @todo
       $scope.editSchema();
     });
 
-    it("onCancelCreateSchema should work", function () {
+    it("onCancelCreateSchema work as expected", function () {
       // @todo
       $scope.onCancelCreateSchema();
 
       $timeout.flush();
     });
 
-    it("onCancelDeleteSchema should work", function () {
+    it("onCancelDeleteSchema work as expected", function () {
       // @todo
       $scope.onCancelDeleteSchema();
     });
 
-    it("onCancelEditSchema should work", function () {
+    it("onCancelEditSchema work as expected", function () {
       // @todo
       $scope.onCancelEditSchema();
 
       $timeout.flush();
     });
 
-    it("onCreateSchema should work", function () {
+    it("onCreateSchema work as expected", function () {
       var schema = new mockSchema($q);
       $scope.schema = schema;
 
@@ -199,7 +167,7 @@ describe("controller: SchemaManagementController", function () {
       $scope.$digest();
     });
 
-    it("onDeleteSchema should work", function () {
+    it("onDeleteSchema work as expected", function () {
       var schema = new mockSchema($q);
       $scope.schema = schema;
 
@@ -209,7 +177,7 @@ describe("controller: SchemaManagementController", function () {
       $scope.$digest();
     });
 
-    it("onEditSchema should work", function () {
+    it("onEditSchema work as expected", function () {
       var schema = new mockSchema($q);
       $scope.schema = schema;
 
@@ -219,17 +187,17 @@ describe("controller: SchemaManagementController", function () {
       $scope.$digest();
     });
 
-    it("resetSchemaForms should work", function () {
+    it("resetSchemaForms work as expected", function () {
       // @todo
       $scope.resetSchemaForms();
     });
 
-    it("setTable should work", function () {
+    it("setTable work as expected", function () {
       // @todo
       $scope.setTable();
     });
 
-    it("showProperties should work", function () {
+    it("showProperties work as expected", function () {
       // @todo
       $scope.showProperties();
     });

@@ -1,7 +1,7 @@
 describe("model: FixityReport", function () {
   var $rootScope, $scope, WsApi, model;
 
-  var initializeVariables = function(settings) {
+  var initializeVariables = function (settings) {
     inject(function (_$rootScope_, _WsApi_) {
       $rootScope = _$rootScope_;
 
@@ -9,15 +9,15 @@ describe("model: FixityReport", function () {
     });
   };
 
-  var initializeModel = function(settings) {
-    inject(function (FixityReport) {
+  var initializeModel = function (settings) {
+    inject(function (_FixityReport_) {
       $scope = $rootScope.$new();
 
-      model = angular.extend(new FixityReport(), dataFixityReport1);
+      model = angular.extend(new _FixityReport_(), dataFixityReport1);
     });
   };
 
-  beforeEach(function() {
+  beforeEach(function () {
     module("core");
     module("cap");
     module("mock.wsApi");
@@ -26,21 +26,31 @@ describe("model: FixityReport", function () {
     initializeModel();
   });
 
-  describe("Is the model defined", function () {
-    it("should be defined", function () {
+  describe("Is the model", function () {
+    it("defined", function () {
       expect(model).toBeDefined();
     });
   });
 
-  describe("Are the model methods defined", function () {
-    it("run should be defined", function () {
-      expect(model.run).toBeDefined();
-      expect(typeof model.run).toEqual("function");
-    });
+  describe("Is the model method", function () {
+    var methods = [
+      "run"
+    ];
+
+    var modelMethodExists = function (key) {
+      return function() {
+        expect(model[key]).toBeDefined();
+        expect(typeof model[key]).toEqual("function");
+      };
+    };
+
+    for (var i in methods) {
+      it(methods[i] + " defined", modelMethodExists(methods[i]));
+    }
   });
 
-  describe("Are the model methods working as expected", function () {
-    it("run should work", function () {
+  describe("Does the model method", function () {
+    it("run work as expected", function () {
       // @todo
       //$scope.run();
 

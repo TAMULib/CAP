@@ -1,7 +1,7 @@
 describe("service: repositoryViewRepo", function () {
   var $q, $rootScope, $scope, MockedRepositoryView, WsApi, repo;
 
-  var initializeVariables = function(settings) {
+  var initializeVariables = function (settings) {
     inject(function (_$q_, _$rootScope_, _WsApi_) {
       $q = _$q_;
       $rootScope = _$rootScope_;
@@ -11,7 +11,7 @@ describe("service: repositoryViewRepo", function () {
     });
   };
 
-  var initializeRepo = function(settings) {
+  var initializeRepo = function (settings) {
     inject(function ($injector, RepositoryViewRepo) {
       $scope = $rootScope.$new();
 
@@ -19,11 +19,11 @@ describe("service: repositoryViewRepo", function () {
     });
   };
 
-  beforeEach(function() {
+  beforeEach(function () {
     module("core");
     module("cap");
-    module("mock.repositoryView", function($provide) {
-      var RepositoryView = function() {
+    module("mock.repositoryView", function ($provide) {
+      var RepositoryView = function () {
         return MockedRepositoryView;
       };
       $provide.value("RepositoryView", RepositoryView);
@@ -34,46 +34,40 @@ describe("service: repositoryViewRepo", function () {
     initializeRepo();
   });
 
-  describe("Is the repo defined", function () {
-    it("should be defined", function () {
+  describe("Is the repo", function () {
+    it("defined", function () {
       expect(repo).toBeDefined();
     });
   });
 
-  describe("Are the repo methods defined", function () {
-    it("findByName should be defined", function () {
-      expect(repo.findByName).toBeDefined();
-      expect(typeof repo.findByName).toEqual("function");
-    });
+  describe("Is the repo method", function () {
+    var methods = [
+      "findByName",
+      "getTypes",
+      "verifyAuth",
+      "verifyContent",
+      "verifyPing"
+    ];
 
-    it("getTypes should be defined", function () {
-      expect(repo.getTypes).toBeDefined();
-      expect(typeof repo.getTypes).toEqual("function");
-    });
+    var repoMethodExists = function (key) {
+      return function() {
+        expect(repo[key]).toBeDefined();
+        expect(typeof repo[key]).toEqual("function");
+      };
+    };
 
-    it("verifyAuth should be defined", function () {
-      expect(repo.verifyAuth).toBeDefined();
-      expect(typeof repo.verifyAuth).toEqual("function");
-    });
-
-    it("verifyContent should be defined", function () {
-      expect(repo.verifyContent).toBeDefined();
-      expect(typeof repo.verifyContent).toEqual("function");
-    });
-
-    it("verifyPing should be defined", function () {
-      expect(repo.verifyPing).toBeDefined();
-      expect(typeof repo.verifyPing).toEqual("function");
-    });
+    for (var i in methods) {
+      it(methods[i] + " defined", repoMethodExists(methods[i]));
+    }
   });
 
-  describe("Are the repo methods working as expected", function () {
-    it("findByName should work", function () {
+  describe("Does the repo method", function () {
+    it("findByName work as expected", function () {
       // @todo
       repo.findByName();
     });
 
-    it("getTypes should work", function () {
+    it("getTypes work as expected", function () {
       var types = [];
 
       // @todo
@@ -82,21 +76,21 @@ describe("service: repositoryViewRepo", function () {
       $scope.$digest();
     });
 
-    it("verifyAuth should work", function () {
+    it("verifyAuth work as expected", function () {
       var repositoryView = new mockRepositoryView($q);
 
       // @todo
       repo.verifyAuth(repositoryView);
     });
 
-    it("verifyContent should work", function () {
+    it("verifyContent work as expected", function () {
       var repositoryView = new mockRepositoryView($q);
 
       // @todo
       repo.verifyContent(repositoryView);
     });
 
-    it("verifyPing should work", function () {
+    it("verifyPing work as expected", function () {
       var repositoryView = new mockRepositoryView($q);
 
       // @todo

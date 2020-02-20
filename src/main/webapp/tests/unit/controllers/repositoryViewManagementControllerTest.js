@@ -1,21 +1,21 @@
 describe("controller: RepositoryViewManagementController", function () {
-  var $q, $scope, MockedRepositoryView, MockedSchema, MockedUser, NgTableParams, WsApi, controller;
+  var $q, $scope, MockedNgTableParams, MockedRepositoryView, MockedSchema, MockedUser, NgTableParams, WsApi, controller;
 
-  var initializeVariables = function() {
+  var initializeVariables = function () {
     inject(function (_$q_, _WsApi_) {
       $q = _$q_;
 
+      MockedNgTableParams = new mockNgTableParams($q);
       MockedRepositoryView = new mockRepositoryView($q);
       MockedSchema = new mockSchema($q);
       MockedUser = new mockUser($q);
 
-      NgTableParams = mockNgTableParams;
       WsApi = _WsApi_;
     });
   };
 
-  var initializeController = function(settings) {
-    inject(function (_$controller_, _$rootScope_, _AssumedControl_, _AuthService_, _RepositoryView_, _RepositoryViewRepo_, _SchemaRepo_, _StorageService_, _UserRepo_, _UserService_) {
+  var initializeController = function (settings) {
+    inject(function (_$controller_, _$rootScope_, _AssumedControl_, _AuthService_, _NgTableParams_, _RepositoryView_, _RepositoryViewRepo_, _SchemaRepo_, _StorageService_, _UserRepo_, _UserService_) {
       $scope = _$rootScope_.$new();
 
       sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
@@ -26,7 +26,7 @@ describe("controller: RepositoryViewManagementController", function () {
         $scope: $scope,
         AssumedControl: _AssumedControl_,
         AuthService: _AuthService_,
-        NgTableParams: NgTableParams,
+        NgTableParams: _NgTableParams_,
         RepositoryView: _RepositoryView_,
         RepositoryViewRepo: _RepositoryViewRepo_,
         SchemaRepo: _SchemaRepo_,
@@ -43,29 +43,34 @@ describe("controller: RepositoryViewManagementController", function () {
     });
   };
 
-  beforeEach(function() {
+  beforeEach(function () {
     module("core");
     module("cap");
     module("mock.assumedControl");
     module("mock.authService");
-    module("mock.ngTableParams");
-    module("mock.repositoryView", function($provide) {
-      var RepositoryView = function() {
+    module("mock.ngTableParams", function ($provide) {
+      var NgTableParams = function () {
+        return MockedNgTableParams;
+      };
+      $provide.value("NgTableParams", NgTableParams);
+    });
+    module("mock.repositoryView", function ($provide) {
+      var RepositoryView = function () {
         return MockedRepositoryView;
       };
       $provide.value("RepositoryView", RepositoryView);
     });
     module("mock.repositoryViewRepo");
-    module("mock.schema", function($provide) {
-      var Schema = function() {
+    module("mock.schema", function ($provide) {
+      var Schema = function () {
         return MockedSchema;
       };
       $provide.value("Schema", Schema);
     });
     module("mock.schemaRepo");
     module("mock.storageService");
-    module("mock.user", function($provide) {
-      var User = function() {
+    module("mock.user", function ($provide) {
+      var User = function () {
         return MockedUser;
       };
       $provide.value("User", User);
@@ -79,89 +84,51 @@ describe("controller: RepositoryViewManagementController", function () {
     initializeController();
   });
 
-  describe("Is the controller defined", function () {
-    it("should be defined for admin", function () {
-      expect(controller).toBeDefined();
-    });
-    it("should be defined for manager", function () {
-      initializeController({role: "ROLE_MANAGER"});
-      expect(controller).toBeDefined();
-    });
-    it("should be defined for user", function () {
-      initializeController({role: "ROLE_USER"});
-      expect(controller).toBeDefined();
-    });
-    it("should be defined for anonymous", function () {
-      initializeController({role: "ROLE_ANONYMOUS"});
-      expect(controller).toBeDefined();
-    });
+  describe("Is the controller", function () {
+    var roles = [ "ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER", "ROLE_ANONYMOUS" ];
+
+    var controllerExists = function (setting) {
+      return function() {
+        initializeController(setting);
+        expect(controller).toBeDefined();
+      };
+    };
+
+    for (var i in roles) {
+      it("defined for " + roles[i], controllerExists({ role: roles[i] }));
+    }
   });
 
+  describe("Is the scope method", function () {
+    var methods = [
+      "createRepositoryView",
+      "confirmDeleteRepositoryView",
+      "disableVerify",
+      "editRepositoryView",
+      "resetRepositoryViewForms",
+      "onCancelCreateRepositoryView",
+      "onCancelEditRepositoryView",
+      "onCancelDeleteRepositoryView",
+      "onCreateRepositoryView",
+      "onDeleteRepositoryView",
+      "onEditRepositoryView",
+      "showSchemas"
+    ];
 
-  describe("Are the scope methods defined", function () {
-    it("createRepositoryView should be defined", function () {
-      expect($scope.createRepositoryView).toBeDefined();
-      expect(typeof $scope.createRepositoryView).toEqual("function");
-    });
+    var scopeMethodExists = function (method) {
+      return function() {
+        expect($scope[method]).toBeDefined();
+        expect(typeof $scope[method]).toEqual("function");
+      };
+    };
 
-    it("confirmDeleteRepositoryView should be defined", function () {
-      expect($scope.confirmDeleteRepositoryView).toBeDefined();
-      expect(typeof $scope.confirmDeleteRepositoryView).toEqual("function");
-    });
-
-    it("disableVerify should be defined", function () {
-      expect($scope.disableVerify).toBeDefined();
-      expect(typeof $scope.disableVerify).toEqual("function");
-    });
-
-    it("editRepositoryView should be defined", function () {
-      expect($scope.editRepositoryView).toBeDefined();
-      expect(typeof $scope.editRepositoryView).toEqual("function");
-    });
-
-    it("resetRepositoryViewForms should be defined", function () {
-      expect($scope.resetRepositoryViewForms).toBeDefined();
-      expect(typeof $scope.resetRepositoryViewForms).toEqual("function");
-    });
-
-    it("onCancelCreateRepositoryView should be defined", function () {
-      expect($scope.onCancelCreateRepositoryView).toBeDefined();
-      expect(typeof $scope.onCancelCreateRepositoryView).toEqual("function");
-    });
-
-    it("onCancelEditRepositoryView should be defined", function () {
-      expect($scope.onCancelEditRepositoryView).toBeDefined();
-      expect(typeof $scope.onCancelEditRepositoryView).toEqual("function");
-    });
-
-    it("onCancelDeleteRepositoryView should be defined", function () {
-      expect($scope.onCancelDeleteRepositoryView).toBeDefined();
-      expect(typeof $scope.onCancelDeleteRepositoryView).toEqual("function");
-    });
-
-    it("onCreateRepositoryView should be defined", function () {
-      expect($scope.onCreateRepositoryView).toBeDefined();
-      expect(typeof $scope.onCreateRepositoryView).toEqual("function");
-    });
-
-    it("onDeleteRepositoryView should be defined", function () {
-      expect($scope.onDeleteRepositoryView).toBeDefined();
-      expect(typeof $scope.onDeleteRepositoryView).toEqual("function");
-    });
-
-    it("onEditRepositoryView should be defined", function () {
-      expect($scope.onEditRepositoryView).toBeDefined();
-      expect(typeof $scope.onEditRepositoryView).toEqual("function");
-    });
-
-    it("showSchemas should be defined", function () {
-      expect($scope.showSchemas).toBeDefined();
-      expect(typeof $scope.showSchemas).toEqual("function");
-    });
+    for (var i in methods) {
+      it(methods[i] + " defined", scopeMethodExists(methods[i]));
+    }
   });
 
-  describe("Do the $scope methods work as expected", function () {
-    it("createRepositoryView should work", function () {
+  describe("Does the $scope method", function () {
+    it("createRepositoryView work as expected", function () {
       $scope.schemas = undefined;
       spyOn($scope, "openModal");
 
@@ -170,43 +137,43 @@ describe("controller: RepositoryViewManagementController", function () {
       expect($scope.schemas).toBeDefined();
     });
 
-    it("confirmDeleteRepositoryView should work", function () {
+    it("confirmDeleteRepositoryView work as expected", function () {
       // @todo
       $scope.confirmDeleteRepositoryView();
     });
 
-    it("disableVerify should work", function () {
+    it("disableVerify work as expected", function () {
       var repositoryView = new mockRepositoryView($q);
       // @todo
       $scope.disableVerify(repositoryView);
     });
 
-    it("editRepositoryView should work", function () {
+    it("editRepositoryView work as expected", function () {
       // @todo
       $scope.editRepositoryView();
     });
 
-    it("resetRepositoryViewForms should work", function () {
+    it("resetRepositoryViewForms work as expected", function () {
       // @todo
       $scope.resetRepositoryViewForms();
     });
 
-    it("onCancelCreateRepositoryView should work", function () {
+    it("onCancelCreateRepositoryView work as expected", function () {
       // @todo
       $scope.onCancelCreateRepositoryView();
     });
 
-    it("onCancelDeleteRepositoryView should work", function () {
+    it("onCancelDeleteRepositoryView work as expected", function () {
       // @todo
       $scope.onCancelDeleteRepositoryView();
     });
 
-    it("onCancelEditRepositoryView should work", function () {
+    it("onCancelEditRepositoryView work as expected", function () {
       // @todo
       $scope.onCancelEditRepositoryView();
     });
 
-    it("onCreateRepositoryView should work", function () {
+    it("onCreateRepositoryView work as expected", function () {
       var repositoryView = new mockRepositoryView($q);
       $scope.repositoryView = repositoryView;
 
@@ -215,7 +182,7 @@ describe("controller: RepositoryViewManagementController", function () {
       $scope.$digest();
     });
 
-    it("onDeleteRepositoryView should work", function () {
+    it("onDeleteRepositoryView work as expected", function () {
       var repositoryView = new mockRepositoryView($q);
       $scope.repositoryView = repositoryView;
 
@@ -224,7 +191,7 @@ describe("controller: RepositoryViewManagementController", function () {
       $scope.$digest();
     });
 
-    it("onEditRepositoryView should work", function () {
+    it("onEditRepositoryView work as expected", function () {
       var repositoryView = new mockRepositoryView($q);
       $scope.repositoryView = repositoryView;
 
@@ -233,7 +200,7 @@ describe("controller: RepositoryViewManagementController", function () {
       $scope.$digest();
     });
 
-    it("showSchemas should work", function () {
+    it("showSchemas work as expected", function () {
       // @todo
       $scope.showSchemas();
     });
