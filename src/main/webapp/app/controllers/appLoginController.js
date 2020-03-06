@@ -1,6 +1,6 @@
 cap.controller('AppLoginController', function ($controller, $scope) {
 
-  angular.extend(this, $controller('LoginController', {
+  angular.extend(this, $controller('AuthenticationController', {
     $scope: $scope
   }));
 
