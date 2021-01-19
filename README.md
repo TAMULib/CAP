@@ -1,9 +1,10 @@
-[![Build Status](https://travis-ci.org/TAMULib/CAP.svg?branch=master)](https://travis-ci.org/TAMULib/CAP)
-[![Coverage Status](https://coveralls.io/repos/github/TAMULib/Cap/badge.svg?branch=master)](https://coveralls.io/github/TAMULib/Cap?branch=master)
+[![Build Status](https://github.com/TAMULib/CAP/workflows/Build/badge.svg)](https://github.com/TAMULib/CAP/actions?query=workflow%3ABuild)
+[![Coverage Status](https://coveralls.io/repos/github/TAMULib/CAP/badge.svg)](https://coveralls.io/github/TAMULib/CAP)
+[![GHPages Status](https://github.com/TAMULib/CAP/workflows/GHPages/badge.svg)](https://github.com/TAMULib/CAP/actions?query=workflow%3AGHPages)
 
 # CAP
 
-CAP is the Curator's Administration Platform developed and maintained by [Texas A&M University Libraries](http://library.tamu.edu). 
+CAP is the Curator's Administration Platform developed and maintained by [Texas A&M University Libraries](http://library.tamu.edu).
 
 CAP is an open source application that has been designed to provide a common user interface (UI) and application programing interface (API) for any Institutional Repository (IR) participating within a Digital Asset Management Ecosystem (DAME.)
 
