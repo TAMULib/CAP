@@ -102,10 +102,22 @@
     </dependency>
 
     <dependency>
+      <groupId>com.github.jsonld-java.jsonld-java</groupId>
+      <artifactId>jsonld-java</artifactId>
+      <version>0.12.5</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.apache.jena</groupId>
       <artifactId>apache-jena-libs</artifactId>
       <type>pom</type>
-      <version>3.16.0</version>
+      <version>3.17.0</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.github.jsonld-java</groupId>
+          <artifactId>jsonld-java</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -235,32 +247,6 @@
     </dependency>
 
   </dependencies>
-
-  <repositories>
-
-    <repository>
-      <id>tamu-releases</id>
-      <url>https://artifacts.library.tamu.edu/repository/maven-releases/</url>
-    </repository>
-
-    <repository>
-      <id>tamu-snapshots</id>
-      <url>https://artifacts.library.tamu.edu/repository/maven-snapshots/</url>
-    </repository>
-
-    <repository>
-      <id>mvnrepository</id>
-      <name>Maven Central Repository</name>
-      <url>https://repo1.maven.org/maven2/</url>
-    </repository>
-
-    <repository>
-      <id>jitpack.io</id>
-      <name>JitPack for Maven</name>
-      <url>https://jitpack.io/</url>
-    </repository>
-
-  </repositories>
 
   <build>
     <finalName>ROOT</finalName>
@@ -925,5 +911,21 @@
     </profile>
 
   </profiles>
+
+  <repositories>
+    <repository>
+      <id>tamu-releases</id>
+      <url>https://artifacts.library.tamu.edu/repository/maven-releases</url>
+    </repository>
+    <repository>
+      <id>tamu-snapshots</id>
+      <url>https://artifacts.library.tamu.edu/repository/maven-snapshots</url>
+    </repository>
+    <repository>
+      <id>jitpack.io</id>
+      <name>JitPack for Maven</name>
+      <url>https://jitpack.io</url>
+    </repository>
+  </repositories>
 
 </project>
