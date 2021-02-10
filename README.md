@@ -2,6 +2,14 @@
 [![Coverage Status](https://coveralls.io/repos/github/TAMULib/CAP/badge.svg)](https://coveralls.io/github/TAMULib/CAP)
 [![GHPages Status](https://github.com/TAMULib/CAP/workflows/GHPages/badge.svg)](https://github.com/TAMULib/CAP/actions?query=workflow%3AGHPages)
 
+# Lighthouse Badges
+
+[![Performance](https://tamulib.github.io/CAP/audit/assets/performance.svg)](https://tamulib.github.io/CAP/audit/#performance)
+[![Accessibility](https://tamulib.github.io/CAP/audit/assets/accessibility.svg)](https://tamulib.github.io/CAP/audit/#accessibility)
+[![Best Practices](https://tamulib.github.io/CAP/audit/assets/best-practices.svg)](https://tamulib.github.io/CAP/audit/#best-practices)
+[![SEO](https://tamulib.github.io/CAP/audit/assets/seo.svg)](https://tamulib.github.io/CAP/audit/#seo)
+[![Progressive Web App](https://tamulib.github.io/CAP/audit/assets/pwa.svg)](https://tamulib.github.io/CAP/audit/#pwa)
+
 # CAP
 
 CAP is the Curator's Administration Platform developed and maintained by [Texas A&M University Libraries](http://library.tamu.edu).
