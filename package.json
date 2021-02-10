@@ -20,8 +20,7 @@
     "preprotractor": "npm run update-webdriver",
     "stop": "wvr server --stop",
     "start": "wvr server -b /cap --prod --uid cap-webserver",
-    "start-dev": "wvr server -b /cap --uid cap-webserver",
-    "start:dist": "node scripts/serve-dist.js"
+    "start-dev": "wvr server -b /cap --uid cap-webserver"
   },
   "dependencies": {
     "@wvr/core": "2.0.8",
@@ -55,9 +54,9 @@
     "karma-jasmine": "2.0.1",
     "karma-junit-reporter": "2.0.1",
     "karma-ng-html2js-preprocessor": "1.0.0",
+    "@lhci/cli": "^0.6.1",
     "lighthouse": "^6.5.0",
     "lighthouse-badges": "^1.0.37",
-    "protractor": "5.4.2",
-    "static-server": "^2.2.1"
+    "protractor": "5.4.2"
   }
 }
