@@ -9,6 +9,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: "Install Chrome Drivers"
+        run: sudo apt-get install xvfb
+
       - name: "Node Cache"
         uses: actions/cache@v2
         with:
@@ -49,6 +52,11 @@ jobs:
           github-token: ${{ secrets.github_token }}
           path-to-file: './coveralls.json'
           coverage-format: raw
+
+      - name: "Lighthouse Report"
+        run: xvfb-run --auto-servernum npm run test:audit
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
       - name: "Deploy GH-Pages"
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'

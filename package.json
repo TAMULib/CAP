@@ -13,13 +13,15 @@
     "test": "karma start src/main/webapp/tests/karma.conf.js --single-run --browsers Firefox,ChromeHeadlessNoSandbox",
     "test-single-run": "karma start src/main/webapp/tests/karma.conf.js --single-run",
     "test-ci": "karma start src/main/webapp/tests/karma.conf.js --no-auto-watch --single-run --browsers=ChromeHeadlessNoSandbox",
+    "test:audit": "rimraf .lighthouseci && lhci autorun --upload.target=temporary-public-storage --config=./lighthouserc.json && node scripts/build-cap-lighthouse-badges.js",
     "posttest-ci": "grunt coverage",
     "preupdate-webdriver": "npm install",
     "update-webdriver": "webdriver-manager update",
     "preprotractor": "npm run update-webdriver",
     "stop": "wvr server --stop",
     "start": "wvr server -b /cap --prod --uid cap-webserver",
-    "start-dev": "wvr server -b /cap --uid cap-webserver"
+    "start-dev": "wvr server -b /cap --uid cap-webserver",
+    "start:dist": "node scripts/serve-dist.js"
   },
   "dependencies": {
     "@wvr/core": "2.0.8",
@@ -53,6 +55,9 @@
     "karma-jasmine": "2.0.1",
     "karma-junit-reporter": "2.0.1",
     "karma-ng-html2js-preprocessor": "1.0.0",
-    "protractor": "5.4.2"
+    "lighthouse": "^6.5.0",
+    "lighthouse-badges": "^1.0.37",
+    "protractor": "5.4.2",
+    "static-server": "^2.2.1"
   }
 }
