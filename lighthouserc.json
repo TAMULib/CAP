@@ -5,7 +5,7 @@
     "collect": {
       "numberOfRuns": 1,
       "url": ["http://localhost:9000/"],
-      "startServerCommand": "mvn clean spring-boot:run"
+      "startServerCommand": "mvn spring-boot:run"
     },
     "assert": {
       "assertions": {
