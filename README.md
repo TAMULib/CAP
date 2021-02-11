@@ -1,7 +1,5 @@
 [![Build Status](https://github.com/TAMULib/CAP/workflows/Build/badge.svg)](https://github.com/TAMULib/CAP/actions?query=workflow%3ABuild)
 [![Coverage Status](https://coveralls.io/repos/github/TAMULib/CAP/badge.svg)](https://coveralls.io/github/TAMULib/CAP)
-[![GHPages Status](https://github.com/TAMULib/CAP/workflows/GHPages/badge.svg)](https://github.com/TAMULib/CAP/actions?query=workflow%3AGHPages)
-
 # Lighthouse Badges
 
 [![Performance](https://tamulib.github.io/CAP/audit/assets/performance.svg)](https://tamulib.github.io/CAP/audit/#performance)
