@@ -59,8 +59,7 @@ jobs:
       - name: "Lighthouse Report"
         run: |
           xvfb-run --auto-servernum npm run test:audit
-          ls -altr | grep -v target/generated-docs | xargs rimraf && mv target/generated-docs/* .
-          pwd && ls -altr
+          ls -altr && pwd && mv target/generated-docs gh-pages/api-docs/ && ls -altr
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
