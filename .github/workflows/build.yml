@@ -59,8 +59,8 @@ jobs:
       - name: "Lighthouse Report"
         run: |
           xvfb-run --auto-servernum npm run test:audit
-          cd target
-          ls -altr
+          mvn test
+          cd target && ls -altr
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
