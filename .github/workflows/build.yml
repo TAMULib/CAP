@@ -54,10 +54,7 @@ jobs:
       #     coverage-format: raw
 
       - name: "Lighthouse Report"
-        run: |
-          xvfb-run --auto-servernum npm run test:audit
-          ls -altr
-          cd target/gh-pages && ls -altr
+        run: xvfb-run --auto-servernum npm run test:audit
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
