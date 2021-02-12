@@ -4,7 +4,8 @@ const https = require('https');
 const fs = require('fs-extra');
 const glob = require("glob");
 
-const lighthousePath = `./audit`;
+const ghPagesPath = `src/main/resources/gh-pages`;
+const lighthousePath = `src/main/resources/gh-pages/audit`;
 const lighthouseAssetsPath = `${lighthousePath}/assets`;
 const lighthouseCiPath = './.lighthouseci';
 
@@ -50,6 +51,16 @@ const logSoreList = scoreList => {
   });
 }
 
+const createGhPagesDir = () => {
+  if(fs.existsSync(ghPagesPath)) {
+    const targetPath = 'target/';
+    fs.ensureDir(targetPath);
+    fs.copy(`./${ghPagesPath}/index.html`, `${targetPath}/gh-pages/index.html`);
+    fs.copy(`./${ghPagesPath}/audit/assets/`, `${targetPath}/gh-pages/audit/assets/`);
+    fs.copy(`${targetPath}/generated-docs/`, `${targetPath}/gh-pages/api-docs/`);
+  }
+}
+
 if(fs.existsSync(lighthouseCiPath)) {
   fs.ensureDir(`${lighthousePath}`);
   const htmlReportPath = glob.sync(`${lighthouseCiPath}/lhr-*.html`, {})[0];
@@ -60,6 +71,8 @@ if(fs.existsSync(lighthouseCiPath)) {
   createReport(htmlReportPath);
   createBadges(scoreList);
   logSoreList(scoreList);
+  createGhPagesDir();
+
 } else {
   console.warn(`${lighthouseCiPath} does not exist. Please run 'npm run test:audit'`);
 }

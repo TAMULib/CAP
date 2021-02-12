@@ -59,7 +59,6 @@ jobs:
       - name: "Lighthouse Report"
         run: |
           xvfb-run --auto-servernum npm run test:audit
-          ls -altr && pwd && mv target/generated-docs gh-pages/api-docs/ && ls -altr
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
@@ -69,6 +68,6 @@ jobs:
         with:
           github_token: ${{ secrets.github_token }}
           branch: gh-pages
-          folder: gh-pages
+          folder: target/gh-pages
           clean: true
           single_commit: true
