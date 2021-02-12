@@ -57,7 +57,7 @@ jobs:
         run: |
           xvfb-run --auto-servernum npm run test:audit
           ls -altr
-          cd target && ls -altr
+          cd target/gh-pages && ls -altr
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
