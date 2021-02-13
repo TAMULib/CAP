@@ -52,15 +52,13 @@ const logSoreList = scoreList => {
 }
 
 const createGhPagesDir = () => {
-  if(fs.existsSync(ghPagesPath)) {
-    const targetPath = 'target/';
-    fs.ensureDir(targetPath);
-    fs.ensureDir(`${lighthousePath}`);
-    // fs.ensureDir(`${ghPagesPath}/assets`);
-    fs.copy(`./${ghPagesPath}/index.html`, `${targetPath}/gh-pages/index.html`);
-    fs.copy(`./${lighthousePath}/`, `${targetPath}/gh-pages/audit/`);
-    fs.copy(`${targetPath}/generated-docs/`, `${targetPath}/gh-pages/api-docs/`);
-  }
+  fs.ensureDir(ghPagesPath);
+  const targetPath = 'target/';
+  fs.ensureDir(targetPath);
+  fs.ensureDir(`${lighthousePath}`);
+  fs.copy(`./${ghPagesPath}/index.html`, `${targetPath}/gh-pages/index.html`);
+  fs.copy(`./${lighthousePath}/`, `${targetPath}/gh-pages/audit/`);
+  fs.copy(`${targetPath}/generated-docs/`, `${targetPath}/gh-pages/api-docs/`);
 }
 
 if(fs.existsSync(lighthouseCiPath)) {
