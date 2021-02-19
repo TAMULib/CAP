@@ -28,3 +28,7 @@ node_modules/
 src/main/webapp/app/resources/scripts/
 
 package-lock.json
+
+.lighthouseci/
+
+audit/
