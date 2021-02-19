@@ -58,6 +58,7 @@ const createGhPagesDir = () => {
   fs.ensureDir(`${lighthousePath}`);
   fs.copy(`./${ghPagesPath}/index.html`, `${targetPath}/gh-pages/index.html`);
   fs.copy(`./${lighthousePath}/`, `${targetPath}/gh-pages/audit/`);
+  fs.copy(`./${lighthousePath}/assets/`, `${targetPath}/gh-pages/audit/assets/`);
   fs.copy(`${targetPath}/generated-docs/`, `${targetPath}/gh-pages/api-docs/`);
 }
 
