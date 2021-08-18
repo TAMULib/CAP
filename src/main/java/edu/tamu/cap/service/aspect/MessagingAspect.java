@@ -101,7 +101,7 @@ public class MessagingAspect {
             if (logger.isDebugEnabled()) {
                 e.printStackTrace();
             }
-            logger.error("Unable to send message to {}", MESSAGING_CHANNEL, e);
+            logger.error("Unable to send message to channel {}", MESSAGING_CHANNEL, e);
         }
     }
 
