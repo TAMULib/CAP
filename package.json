@@ -23,7 +23,7 @@
     "start-dev": "wvr server -b /cap --uid cap-webserver"
   },
   "dependencies": {
-    "@wvr/core": "2.0.8",
+    "@wvr/core": "2.2.2-rc.0",
     "ng-csv": "0.3.6",
     "ng-file-upload": "12.2.13",
     "ng-openseadragon": "1.3.5",
