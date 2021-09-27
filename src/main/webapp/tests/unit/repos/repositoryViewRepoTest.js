@@ -22,6 +22,7 @@ describe("service: repositoryViewRepo", function () {
   beforeEach(function () {
     module("core");
     module("cap");
+    module("mock.userService");
     module("mock.repositoryView", function ($provide) {
       var RepositoryView = function () {
         return MockedRepositoryView;

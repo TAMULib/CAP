@@ -29,6 +29,7 @@ describe("service: schemaRepo", function () {
       $provide.value("Schema", Schema);
     });
     module("mock.wsApi");
+    module("mock.userService");
 
     initializeVariables();
     initializeRepo();

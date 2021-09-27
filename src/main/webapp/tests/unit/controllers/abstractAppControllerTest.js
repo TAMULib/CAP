@@ -35,6 +35,7 @@ describe("controller: AbstractAppController", function () {
     module("cap");
     module("mock.modalService");
     module("mock.wsApi");
+    module("mock.userService");
 
     installPromiseMatchers();
     initializeVariables();

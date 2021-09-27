@@ -33,6 +33,7 @@ describe("directive: repositoryViewVerification", function () {
     module("cap");
     module("templates");
     module("mock.repositoryViewRepo");
+    module("mock.userService");
 
     installPromiseMatchers();
     initializeVariables();
