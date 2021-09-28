@@ -26,6 +26,7 @@ describe("directive: fileSelected", function () {
     module("core");
     module("cap");
     module("templates");
+    module("mock.userService");
 
     installPromiseMatchers();
     initializeVariables();

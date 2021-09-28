@@ -76,6 +76,7 @@ describe("controller: RepositoryViewContextController", function () {
     });
     module("mock.schemaRepo");
     module("mock.wsApi");
+    module("mock.userService")
 
     installPromiseMatchers();
     initializeVariables();

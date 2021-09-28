@@ -26,6 +26,7 @@ describe("service: abstractAppRepo", function () {
   beforeEach(function () {
     module("core");
     module("cap");
+    module("mock.userService");
     module("mock.wsApi");
 
     initializeVariables();
