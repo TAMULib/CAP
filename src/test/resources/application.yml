@@ -39,6 +39,8 @@ spring:
   thymeleaf:
     cache: false
     model: LEGACYHTML5
+  # TODO: figure out how to use profiles in Spring-Boot 2.6.6
+  # profiles: test
   # messaging
   # to enable messaging, include profile weaver-messaging and update activemq broker-url, username and password
   activemq:
@@ -67,7 +69,7 @@ logging:
 
 info:
   build:
-    # figure out why the pom.xml properties are no longer read
+    # TODO: figure out why the pom.xml properties are no longer read
     # production: '@production@'
     production: false
     artifact: '@project.artifactId@'
