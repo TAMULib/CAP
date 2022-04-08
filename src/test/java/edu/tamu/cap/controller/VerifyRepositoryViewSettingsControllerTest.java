@@ -15,6 +15,8 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Optional;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.junit.Before;
 import org.junit.Test;
@@ -98,8 +100,8 @@ public final class VerifyRepositoryViewSettingsControllerTest {
       mockRepositoryView.setUsername("");
       mockRepositoryView.setPassword("");
 
-      when(repositoryViewRepo.getOne(mockRepositoryView.getId())).thenReturn(mockRepositoryView);
-      when(repositoryViewRepo.findOne(mockRepositoryView.getId())).thenReturn(mockRepositoryView);
+      when(repositoryViewRepo.getById(mockRepositoryView.getId())).thenReturn(mockRepositoryView);
+      when(repositoryViewRepo.findById(mockRepositoryView.getId())).thenReturn(Optional.of(mockRepositoryView));
 
       ProceedingJoinPoint mockJoinPoint = mock(ProceedingJoinPoint.class);
 
@@ -118,7 +120,7 @@ public final class VerifyRepositoryViewSettingsControllerTest {
         mockMvc.perform(
             post(CONTROLLER_PATH + "/ping", TEST_REPOSITORY_VIEW_TYPE)
                 .content(objectMapper.writeValueAsString(mockRepositoryView))
-                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
         )
         .andExpect(status().isOk())
         .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
@@ -134,7 +136,7 @@ public final class VerifyRepositoryViewSettingsControllerTest {
         mockMvc.perform(
             post(CONTROLLER_PATH + "/auth", TEST_REPOSITORY_VIEW_TYPE)
                 .content(objectMapper.writeValueAsString(mockRepositoryView))
-                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
         )
         .andExpect(status().isOk())
         .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
@@ -150,7 +152,7 @@ public final class VerifyRepositoryViewSettingsControllerTest {
         mockMvc.perform(
             post(CONTROLLER_PATH + "/content", TEST_REPOSITORY_VIEW_TYPE)
                 .content(objectMapper.writeValueAsString(mockRepositoryView))
-                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
         )
         .andExpect(status().isOk())
         .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),

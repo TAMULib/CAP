@@ -79,10 +79,10 @@ public class RepositoryViewController {
             logger.info("Updating Repository View:  " + repositoryView.getName());
 
             List<User> originalCurators = new ArrayList<User>();
-            originalCurators.addAll(repositoryViewRepo.getOne(repositoryView.getId()).getCurators());
+            originalCurators.addAll(repositoryViewRepo.getById(repositoryView.getId()).getCurators());
 
             RepositoryView updatedRepositoryView = repositoryViewRepo.update(repositoryView);
-            List<User> updatedCurators = repositoryViewRepo.getOne(repositoryView.getId()).getCurators();
+            List<User> updatedCurators = repositoryViewRepo.getById(repositoryView.getId()).getCurators();
 
             HashMap<String, String> emailData = new HashMap<String, String>();
             emailData.put("REPOSITORY_VIEW", repositoryView.getName());

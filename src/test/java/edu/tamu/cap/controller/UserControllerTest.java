@@ -1,6 +1,6 @@
 package edu.tamu.cap.controller;
 
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -170,7 +170,7 @@ public final class UserControllerTest {
          mockMvc.perform(
              get(CONTROLLER_PATH + "/delete")
                  .content(objectMapper.writeValueAsString(mockAggieJack))
-                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                 .contentType(MediaType.APPLICATION_JSON_VALUE)
          )
          .andExpect(status().isOk())
 // FIXME: andWithPrefix() not working as expected when following documentation.

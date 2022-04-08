@@ -15,12 +15,12 @@
   <parent>
     <groupId>edu.tamu.weaver</groupId>
     <artifactId>webservice-parent</artifactId>
-    <version>2.0.3</version>
+    <version>2.1.1-RC5</version>
   </parent>
 
   <properties>
     <production>false</production>
-    <java.version>1.8</java.version>
+    <java.version>11</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -32,37 +32,37 @@
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>auth</artifactId>
-      <version>2.0.3</version>
+      <version>2.1.1-RC5</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>token-provider</artifactId>
-      <version>2.0.3</version>
+      <version>2.1.1-RC5</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>validation</artifactId>
-      <version>2.0.3</version>
+      <version>2.1.1-RC5</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>wro</artifactId>
-      <version>2.0.3</version>
+      <version>2.1.1-RC5</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>reporting</artifactId>
-      <version>2.0.3</version>
+      <version>2.1.1-RC5</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>messaging</artifactId>
-      <version>2.0.3</version>
+      <version>2.1.1-RC5</version>
     </dependency>
 
     <dependency>
@@ -154,6 +154,17 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-devtools</artifactId>
       <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-validation</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+      <version>2.3.3</version>
     </dependency>
 
     <dependency>
@@ -256,7 +267,7 @@
         <directory>src/main/resources</directory>
         <filtering>true</filtering>
         <includes>
-          <include>application.properties</include>
+          <include>application.yml</include>
         </includes>
         <excludes>
           <exclude>**/*.jks</exclude>
@@ -342,7 +353,7 @@
                 <directory>src/main/resources</directory>
                 <targetPath>WEB-INF</targetPath>
                 <includes>
-                  <include>application.properties</include>
+                  <include>application.yml</include>
                 </includes>
                 <excludes>
                   <exclude>**/*.xls</exclude>
@@ -352,7 +363,7 @@
                 <filtering>false</filtering>
                 <directory>src/main/resources</directory>
                 <targetPath>WEB-INF/classes</targetPath>
-                <exclude>application.properties</exclude>
+                <exclude>application.yml</exclude>
               </webResource>
               <webResource>
                 <filtering>false</filtering>
@@ -402,7 +413,7 @@
                 <directory>src/main/resources</directory>
                 <targetPath>WEB-INF</targetPath>
                 <includes>
-                  <include>application.properties</include>
+                  <include>application.yml</include>
                 </includes>
                 <excludes>
                   <exclude>**/*.xls</exclude>
@@ -412,7 +423,7 @@
                 <filtering>false</filtering>
                 <directory>src/main/resources</directory>
                 <targetPath>WEB-INF/classes</targetPath>
-                <exclude>application.properties</exclude>
+                <exclude>application.yml</exclude>
               </webResource>
               <webResource>
                 <filtering>false</filtering>
@@ -458,7 +469,7 @@
           </executions>
           <configuration>
             <files>
-              <file>src/main/resources/application.properties</file>
+              <file>src/main/resources/application.yml</file>
             </files>
           </configuration>
         </plugin>

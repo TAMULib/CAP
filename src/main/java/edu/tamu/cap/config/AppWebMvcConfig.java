@@ -10,7 +10,7 @@ import org.apache.catalina.connector.Connector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -19,7 +19,7 @@ import org.springframework.mail.javamail.ConfigurableMimeFileTypeMap;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.ResourceUrlEncodingFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,7 +36,7 @@ import edu.tamu.weaver.validation.resolver.WeaverValidatedModelMethodProcessor;
 @Configuration
 @EntityScan(basePackages = { "edu.tamu.cap.model" })
 @EnableJpaRepositories(basePackages = { "edu.tamu.cap.model.repo" })
-public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
+public class AppWebMvcConfig implements WebMvcConfigurer {
 
     @Value("${app.ui.path}")
     private String path;
@@ -97,8 +97,8 @@ public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public TomcatEmbeddedServletContainerFactory tomcatEmbeddedServletContainerFactory() {
-        return new TomcatEmbeddedServletContainerFactory() {
+    public TomcatServletWebServerFactory tomcatEmbeddedServletContainerFactory() {
+        return new TomcatServletWebServerFactory() {
             @Override
             protected void customizeConnector(Connector connector) {
                 super.customizeConnector(connector);
