@@ -50,7 +50,6 @@ spring:
   thymeleaf:
     cache: false
     model: LEGACYHTML5
-  profiles: production, development, test
   # messaging
   # to enable messaging, include profile weaver-messaging and update activemq broker-url, username and password
   activemq:
@@ -75,11 +74,13 @@ logging:
     ro:
       isdc:
         wro: INFO
-  file: logs/cap.log
+  file.name: logs/cap.log
 
 info:
   build:
-    production: '@production@'
+    # figure out why the pom.xml properties are no longer read
+    # production: '@production@'
+    production: false
     artifact: '@project.artifactId@'
     name: '@project.name@'
     description: '@project.description@'
