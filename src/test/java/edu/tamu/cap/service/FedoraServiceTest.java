@@ -23,6 +23,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import edu.tamu.cap.CapApplication;
@@ -32,6 +33,7 @@ import edu.tamu.cap.model.response.Triple;
 import edu.tamu.cap.model.response.Version;
 import edu.tamu.cap.service.repositoryview.FedoraService;
 
+@ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = { CapApplication.class }, webEnvironment = WebEnvironment.DEFINED_PORT)
 public final class FedoraServiceTest {
@@ -79,7 +81,7 @@ public final class FedoraServiceTest {
 
         when(request.getInputStream()).thenReturn(null);
 
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         fedoraService.setRepositoryView(new RepositoryView(RepositoryViewType.FEDORA, "Mock Fedora", "http://localhost:9100/mock/fcrepo/rest"));
 
