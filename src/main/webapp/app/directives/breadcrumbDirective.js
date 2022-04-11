@@ -3,7 +3,8 @@ cap.directive("breadcrumbs", function ($filter) {
     templateUrl: "views/directives/breadcrumbs.html",
     restrict: "E",
     scope: {
-      context: "="
+      context: "=",
+      copyToClipboard: "&"
     },
     link: function ($scope, attr, elem) {
       $scope.breadcrumbs = [];
