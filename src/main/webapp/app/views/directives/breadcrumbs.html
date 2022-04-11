@@ -6,4 +6,9 @@
   <li class="active">
     <h3><span ng-if="breadcrumbs.length" class="glyphicon glyphicon-share-alt"></span> {{trimName(context, breadcrumbs.length)}}</h3>
   </li>
+  <br/>
+  <li class="breadcrumb-uri">
+    <a href="{{context.repositoryView.rootUri + context.uri}}">{{context.repositoryView.rootUri + context.uri}}</a>
+    <span ng-click="copyToClipboard({text:context.repositoryView.rootUri + context.uri, target:'URI'})" class="glyphicon glyphicon-copy clickable"></span>
+  </li>
 </ol>

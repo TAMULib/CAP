@@ -46,7 +46,7 @@
     <h1>{{repositoryView.name}} <small class="clickable" ng-click="repositoryView.loadContext('')">(<span class="glyphicon glyphicon-home"></span> {{repositoryView.rootUri}})</small></h1>
   </div>
 
-  <breadcrumbs ng-if="context.hasParent !== undefined" context="context"></breadcrumbs>
+  <breadcrumbs ng-if="context.hasParent !== undefined" context="context" copy-to-clipboard="copyToClipboard(text, target)"></breadcrumbs>
 
   <div ng-if="context.isVersion && context.features.versioning" class="alert alert-warning clearfix" role="alert">
     <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
