@@ -47,7 +47,7 @@ public class AppWebSecurityConfig extends AuthWebSecurityConfig<User, UserRepo, 
         for (int i = 0; i <= roles.length - 2; i++) {
             roleHierarchy.append(roles[i] + " > " + roles[i + 1]);
             if (i < roles.length - 2) {
-                roleHierarchy.append(" ");
+                roleHierarchy.append("\n");
             }
         }
         return roleHierarchy.toString();
