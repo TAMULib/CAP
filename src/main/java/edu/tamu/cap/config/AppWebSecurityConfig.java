@@ -42,15 +42,15 @@ public class AppWebSecurityConfig extends AuthWebSecurityConfig<User, UserRepo, 
 
     @Override
     protected String buildRoleHierarchy() {
-        StringBuilder roleHeirarchy = new StringBuilder();
+        StringBuilder roleHierarchy = new StringBuilder();
         Role[] roles = Role.values();
         for (int i = 0; i <= roles.length - 2; i++) {
-            roleHeirarchy.append(roles[i] + " > " + roles[i + 1]);
+            roleHierarchy.append(roles[i] + " > " + roles[i + 1]);
             if (i < roles.length - 2) {
-                roleHeirarchy.append(" ");
+                roleHierarchy.append(" ");
             }
         }
-        return roleHeirarchy.toString();
+        return roleHierarchy.toString();
     }
 
 }

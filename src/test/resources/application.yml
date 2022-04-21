@@ -17,9 +17,10 @@ spring:
     multipart:
       maxFileSize: 100MB
       maxRequestSize: 100MB
+  sql:
+    init:
+      platform: h2
   datasource:
-    # H2
-    platform: h2
     url: jdbc:h2:mem:AZ;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driverClassName: org.h2.Driver
     jpa:
@@ -33,12 +34,10 @@ spring:
   jpa:
     generate-ddl: true
     show-sql: false
+    open-in-view: true
     hibernate:
       ddl-auto: create-drop
       event.merge.entity_copy_observer: allow
-  thymeleaf:
-    cache: false
-    model: LEGACYHTML5
   # TODO: figure out how to use profiles in Spring-Boot 2.6.6
   # profiles: test
   # messaging
@@ -85,7 +84,7 @@ app:
     path: /app
   messaging:
     channel: cap
-# edu.tamu.weaver.auth.service.UserCredentialsService
+  # edu.tamu.weaver.auth.service.UserCredentialsService
   authority:
     admins: admin@tdl.org,aggieJack@tamu.edu
   security:
@@ -143,4 +142,4 @@ theme:
     css: sass/app.scss
     # Define the location of default themes config file, if used
     location: config/theme-defaults.json
-  reloadUrl: ${app.url}/wro/wroAPI/reloadCache
+  reloadUrl: '@app.url@/wro/wroAPI/reloadCache'

@@ -17,17 +17,19 @@ spring:
     multipart:
       maxFileSize: 20MB
       maxRequestSize: 20MB
+  sql:
+    init:
+      platform: h2
+      # platform: postgresql
+      # platform: mysql
   datasource:
     # H2
-    platform: h2
     url: jdbc:h2:mem:AZ;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driverClassName: org.h2.Driver
     # PostgreSQL
-    # platform: postgresql
     # url: jdbc:postgresql://localhost:5432/cap
     # driverClassName: org.postgresql.Driver
     # MySQL
-    # platform: mysql
     # url: jdbc:mysql://localhost/cap
     # driverClassName: com.mysql.jdbc.Driver
     jpa:
@@ -44,14 +46,14 @@ spring:
   jpa:
     generate-ddl: true
     show-sql: false
+    open-in-view: true
     hibernate:
       ddl-auto: create-drop
       event.merge.entity_copy_observer: allow
-  thymeleaf:
-    cache: false
-    model: LEGACYHTML5
   # TODO: figure out how to use profiles in Spring-Boot 2.6.6
-  # profiles: production, development, test
+  config:
+    activate:
+      on-profile: production, development, test, default
   # messaging
   # to enable messaging, include profile weaver-messaging and update activemq broker-url, username and password
   activemq:
@@ -89,14 +91,14 @@ info:
     version: '@project.version@'
 
 app:
-  url: http://localhost:9000
+  url: http://localhost:@server.port@@server.contextPath@
   cvcache:
     duration: 3600000
   ui:
     path: /app
   messaging:
     channel: cap
-# edu.tamu.weaver.auth.service.UserCredentialsService
+  # edu.tamu.weaver.auth.service.UserCredentialsService
   authority:
     admins: 
   security:
@@ -155,4 +157,4 @@ theme:
     css: sass/app.scss
     # Define the location of default themes config file, if used
     location: config/theme-defaults.json
-  reloadUrl: ${app.url}/wro/wroAPI/reloadCache
+  reloadUrl: '@app.url@/wro/wroAPI/reloadCache'

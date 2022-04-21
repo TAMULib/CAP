@@ -51,7 +51,7 @@ public final class AppUserCredentialsServiceTest {
 
     @BeforeEach
     public void setup() throws JsonParseException, JsonMappingException, IOException {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         setField(credentialsService, "admins", new String[] { "123456789", "987654321" });
 
