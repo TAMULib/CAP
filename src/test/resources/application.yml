@@ -106,6 +106,9 @@ app:
   # edu.tamu.weaver.utility.HttpUtility
   http:
     timeout: 10000
+  thymeleaf:
+    cache: false
+    model: LEGACYHTML5
 
 # edu.tamu.weaver.token.provider.controller.TokenController
 authenticationStrategies: emailRegistration
@@ -142,4 +145,4 @@ theme:
     css: sass/app.scss
     # Define the location of default themes config file, if used
     location: config/theme-defaults.json
-  reloadUrl: '@app.url@/wro/wroAPI/reloadCache'
+  reloadUrl: '${app.url}/wro/wroAPI/reloadCache'
