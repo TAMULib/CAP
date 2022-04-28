@@ -111,7 +111,7 @@
       <groupId>org.apache.jena</groupId>
       <artifactId>apache-jena-libs</artifactId>
       <type>pom</type>
-      <version>4.4.0</version>
+      <version>3.17.0</version>
       <exclusions>
         <exclusion>
           <groupId>com.github.jsonld-java</groupId>
