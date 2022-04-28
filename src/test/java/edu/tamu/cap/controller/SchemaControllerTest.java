@@ -6,19 +6,21 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.transaction.annotation.Isolation.READ_COMMITTED;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -28,8 +30,9 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,7 +45,7 @@ import edu.tamu.weaver.response.ApiStatus;
 
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs(outputDir="target/generated-snippets")
 
@@ -80,7 +83,7 @@ public final class SchemaControllerTest {
   
   private static long currentId = 0L;
 
-  @Before
+  @BeforeEach
   public void setUp() throws JsonProcessingException {
 
     // We should be mocking responses
@@ -123,7 +126,7 @@ public final class SchemaControllerTest {
                 fieldWithPath("name").description("Schema name"),
                 fieldWithPath("abbreviation").description("Schema abbreviation"),
                 fieldWithPath("namespace").description("Schema namespace"),
-                fieldWithPath("properties").description("Schema properties"),
+                subsectionWithPath("properties").description("Schema properties"),
                 fieldWithPath("namespaces").description("Included namespaces"))));
   }
 
@@ -142,6 +145,7 @@ public final class SchemaControllerTest {
 
   @Test
   @WithMockUser(roles = "ADMIN")
+  @Transactional(isolation = READ_COMMITTED)
   public void getSchema() throws Exception {
 
     Schema testSchema = schemaRepo
@@ -225,7 +229,7 @@ public final class SchemaControllerTest {
 
   }
   
-  @After
+  @AfterEach
   public void cleanUp() {
       schemaRepo.deleteAll();
   }

@@ -68,19 +68,19 @@
     <dependency>
       <groupId>org.fcrepo.client</groupId>
       <artifactId>fcrepo-java-client</artifactId>
-      <version>0.3.0</version>
+      <version>6.1.0</version>
     </dependency>
 
     <dependency>
       <groupId>org.codehaus.mojo</groupId>
       <artifactId>properties-maven-plugin</artifactId>
-      <version>1.0.0</version>
+      <version>1.1.0</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-csv</artifactId>
-      <version>1.1</version>
+      <version>1.9.0</version>
     </dependency>
 
     <dependency>
@@ -98,20 +98,20 @@
     <dependency>
       <groupId>xml-apis</groupId>
       <artifactId>xml-apis</artifactId>
-      <version>1.4.01</version><!--$NO-MVN-MAN-VER$ -->
+      <version>2.0.2</version><!--$NO-MVN-MAN-VER$ -->
     </dependency>
 
     <dependency>
       <groupId>com.github.jsonld-java.jsonld-java</groupId>
       <artifactId>jsonld-java</artifactId>
-      <version>0.12.5</version>
+      <version>0.13.4</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.jena</groupId>
       <artifactId>apache-jena-libs</artifactId>
       <type>pom</type>
-      <version>3.17.0</version>
+      <version>4.4.0</version>
       <exclusions>
         <exclusion>
           <groupId>com.github.jsonld-java</groupId>
@@ -123,7 +123,7 @@
     <dependency>
       <groupId>org.apache.tika</groupId>
       <artifactId>tika-core</artifactId>
-      <version>1.22</version>
+      <version>1.28.1</version>
       <exclusions>
         <exclusion>
           <groupId>xom</groupId>
@@ -161,13 +161,18 @@
     <dependency>
       <groupId>jakarta.xml.bind</groupId>
       <artifactId>jakarta.xml.bind-api</artifactId>
-      <version>2.3.3</version>
     </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.junit.vintage</groupId>
+          <artifactId>junit-vintage-engine</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -252,7 +257,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.22.1</version>
+          <version>2.22.2</version>
           <configuration>
             <useSystemClassLoader>false</useSystemClassLoader>
             <!--<parallel>classes</parallel>
@@ -267,13 +272,13 @@
             <dependency>
               <groupId>org.apache.maven.shared</groupId>
               <artifactId>maven-filtering</artifactId>
-              <version>3.2.0</version>
+              <version>3.2.2</version>
             </dependency>
           </dependencies>
           <configuration>
             <failOnMissingWebXml>false</failOnMissingWebXml>
-            <webResources>
-              <webResource>
+            <resources>
+              <resource>
                 <filtering>true</filtering>
                 <directory>src/main/resources</directory>
                 <targetPath>WEB-INF</targetPath>
@@ -283,31 +288,31 @@
                 <excludes>
                   <exclude>**/*.xls</exclude>
                 </excludes>
-              </webResource>
-              <webResource>
+              </resource>
+              <resource>
                 <filtering>false</filtering>
                 <directory>src/main/resources</directory>
                 <targetPath>WEB-INF/classes</targetPath>
                 <exclude>application.yml</exclude>
-              </webResource>
-              <webResource>
+              </resource>
+              <resource>
                 <filtering>false</filtering>
                 <directory>src/main/webapp/app/resources/styles</directory>
                 <targetPath>WEB-INF/classes</targetPath>
                 <excludes>
                   <exclude>**/*.css</exclude>
                 </excludes>
-              </webResource>
-            </webResources>
-            <webResource>
+              </resource>
+            </resources>
+            <resource>
               <filtering>false</filtering>
               <directory>node_modules/@wvr/core/app/resources/styles</directory>
               <targetPath>WEB-INF/classes</targetPath>
               <excludes>
                 <exclude>**/*.css</exclude>
               </excludes>
-            </webResource>
-            <webResource>
+            </resource>
+            <resource>
               <filtering>false</filtering>
               <directory>node_modules/bootstrap-sass/assets</directory>
               <targetPath>WEB-INF/classes</targetPath>
@@ -316,7 +321,7 @@
                 <exclude>images/**</exclude>
                 <exclude>javascript/**</exclude>
               </excludes>
-            </webResource>
+            </resource>
           </configuration>
         </plugin>
 
@@ -327,7 +332,7 @@
             <dependency>
               <groupId>org.apache.maven.shared</groupId>
               <artifactId>maven-filtering</artifactId>
-              <version>3.1.1</version>
+              <version>3.2.0</version>
             </dependency>
           </dependencies>
           <configuration>
