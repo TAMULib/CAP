@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>edu.tamu</groupId>
@@ -23,6 +23,7 @@
     <java.version>11</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
+    <maven-plugins.version>2.22.2</maven-plugins.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <start-class>edu.tamu.cap.CapApplication</start-class>
   </properties>
@@ -98,7 +99,7 @@
     <dependency>
       <groupId>xml-apis</groupId>
       <artifactId>xml-apis</artifactId>
-      <version>2.0.2</version><!--$NO-MVN-MAN-VER$ -->
+      <version>2.0.2</version>      <!--$NO-MVN-MAN-VER$ -->
     </dependency>
 
     <dependency>
@@ -159,11 +160,6 @@
     </dependency>
 
     <dependency>
-      <groupId>jakarta.xml.bind</groupId>
-      <artifactId>jakarta.xml.bind-api</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
@@ -181,10 +177,10 @@
       <scope>test</scope>
     </dependency>
 
-    <dependency> 
-        <groupId>org.springframework.restdocs</groupId>
-        <artifactId>spring-restdocs-mockmvc</artifactId>
-        <scope>test</scope>
+    <dependency>
+      <groupId>org.springframework.restdocs</groupId>
+      <artifactId>spring-restdocs-mockmvc</artifactId>
+      <scope>test</scope>
     </dependency>
 
   </dependencies>
@@ -233,177 +229,6 @@
 
     <pluginManagement>
       <plugins>
-
-        <plugin>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-maven-plugin</artifactId>
-          <configuration>
-            <mainClass>edu.tamu.cap.CapApplication</mainClass>
-            <addResources>false</addResources>
-          </configuration>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-resources-plugin</artifactId>
-          <configuration>
-            <includeEmptyDirs>true</includeEmptyDirs>
-            <delimiters>
-              <delimiter>@</delimiter>
-            </delimiters>
-          </configuration>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.22.2</version>
-          <configuration>
-            <useSystemClassLoader>false</useSystemClassLoader>
-            <!--<parallel>classes</parallel>
-            <threadCount>4</threadCount>-->
-          </configuration>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-jar-plugin</artifactId>
-          <dependencies>
-            <dependency>
-              <groupId>org.apache.maven.shared</groupId>
-              <artifactId>maven-filtering</artifactId>
-              <version>3.2.2</version>
-            </dependency>
-          </dependencies>
-          <configuration>
-            <failOnMissingWebXml>false</failOnMissingWebXml>
-            <resources>
-              <resource>
-                <filtering>true</filtering>
-                <directory>src/main/resources</directory>
-                <targetPath>WEB-INF</targetPath>
-                <includes>
-                  <include>application.yml</include>
-                </includes>
-                <excludes>
-                  <exclude>**/*.xls</exclude>
-                </excludes>
-              </resource>
-              <resource>
-                <filtering>false</filtering>
-                <directory>src/main/resources</directory>
-                <targetPath>WEB-INF/classes</targetPath>
-                <exclude>application.yml</exclude>
-              </resource>
-              <resource>
-                <filtering>false</filtering>
-                <directory>src/main/webapp/app/resources/styles</directory>
-                <targetPath>WEB-INF/classes</targetPath>
-                <excludes>
-                  <exclude>**/*.css</exclude>
-                </excludes>
-              </resource>
-            </resources>
-            <resource>
-              <filtering>false</filtering>
-              <directory>node_modules/@wvr/core/app/resources/styles</directory>
-              <targetPath>WEB-INF/classes</targetPath>
-              <excludes>
-                <exclude>**/*.css</exclude>
-              </excludes>
-            </resource>
-            <resource>
-              <filtering>false</filtering>
-              <directory>node_modules/bootstrap-sass/assets</directory>
-              <targetPath>WEB-INF/classes</targetPath>
-              <excludes>
-                <exclude>fonts/**</exclude>
-                <exclude>images/**</exclude>
-                <exclude>javascript/**</exclude>
-              </excludes>
-            </resource>
-          </configuration>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-war-plugin</artifactId>
-          <dependencies>
-            <dependency>
-              <groupId>org.apache.maven.shared</groupId>
-              <artifactId>maven-filtering</artifactId>
-              <version>3.2.0</version>
-            </dependency>
-          </dependencies>
-          <configuration>
-            <failOnMissingWebXml>false</failOnMissingWebXml>
-            <webResources>
-              <webResource>
-                <filtering>true</filtering>
-                <directory>src/main/resources</directory>
-                <targetPath>WEB-INF</targetPath>
-                <includes>
-                  <include>application.yml</include>
-                </includes>
-                <excludes>
-                  <exclude>**/*.xls</exclude>
-                </excludes>
-              </webResource>
-              <webResource>
-                <filtering>false</filtering>
-                <directory>src/main/resources</directory>
-                <targetPath>WEB-INF/classes</targetPath>
-                <exclude>application.yml</exclude>
-              </webResource>
-              <webResource>
-                <filtering>false</filtering>
-                <directory>src/main/webapp/app/resources/styles</directory>
-                <targetPath>WEB-INF/classes</targetPath>
-                <excludes>
-                  <exclude>**/*.css</exclude>
-                </excludes>
-              </webResource>
-            </webResources>
-            <webResource>
-              <filtering>false</filtering>
-              <directory>node_modules/@wvr/core/app/resources/styles</directory>
-              <targetPath>WEB-INF/classes</targetPath>
-              <excludes>
-                <exclude>**/*.css</exclude>
-              </excludes>
-            </webResource>
-            <webResource>
-              <filtering>false</filtering>
-              <directory>node_modules/bootstrap-sass/assets</directory>
-              <targetPath>WEB-INF/classes</targetPath>
-              <excludes>
-                <exclude>fonts/**</exclude>
-                <exclude>images/**</exclude>
-                <exclude>javascript/**</exclude>
-              </excludes>
-            </webResource>
-          </configuration>
-        </plugin>
-
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>properties-maven-plugin</artifactId>
-          <version>1.0.0</version>
-          <executions>
-            <execution>
-              <phase>initialize</phase>
-              <goals>
-                <goal>read-project-properties</goal>
-              </goals>
-            </execution>
-          </executions>
-          <configuration>
-            <files>
-              <file>src/main/resources/application.yml</file>
-            </files>
-          </configuration>
-        </plugin>
-
         <!--This plugin's configuration is used to store Eclipse m2e settings 
           only. It has no influence on the Maven build itself. -->
         <plugin>
@@ -415,11 +240,11 @@
               <pluginExecutions>
                 <pluginExecution>
                   <pluginExecutionFilter>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>exec-maven-plugin</artifactId>
-                    <versionRange>[1.6.0,)</versionRange>
+                    <groupId>org.asciidoctor</groupId>
+                    <artifactId>asciidoctor-maven-plugin</artifactId>
+                    <versionRange>[1.5.3,)</versionRange>
                     <goals>
-                      <goal>exec</goal>
+                      <goal>process-asciidoc</goal>
                     </goals>
                   </pluginExecutionFilter>
                   <action>
@@ -430,59 +255,241 @@
             </lifecycleMappingMetadata>
           </configuration>
         </plugin>
-        <plugin>
-          <groupId>org.jacoco</groupId>
-          <artifactId>jacoco-maven-plugin</artifactId>
-          <executions>
-            <execution>
-              <id>prepare-agent</id>
-              <goals>
-                <goal>prepare-agent</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
-          <groupId>org.eluder.coveralls</groupId>
-          <artifactId>coveralls-maven-plugin</artifactId>
-          <configuration>
-            <repoToken></repoToken>
-          </configuration>
-          <dependencies>
-            <dependency>
-              <groupId>javax.xml.bind</groupId>
-              <artifactId>jaxb-api</artifactId>
-              <version>2.3.1</version>
-            </dependency>
-          </dependencies>
-        </plugin>
       </plugins>
     </pluginManagement>
 
     <plugins>
-      <plugin> 
+
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <mainClass>edu.tamu.cap.CapApplication</mainClass>
+          <addResources>false</addResources>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <configuration>
+          <includeEmptyDirs>true</includeEmptyDirs>
+          <delimiters>
+            <delimiter>@</delimiter>
+          </delimiters>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${maven-plugins.version}</version>
+        <configuration>
+          <useSystemClassLoader>false</useSystemClassLoader>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>${maven-plugins.version}</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven.shared</groupId>
+            <artifactId>maven-filtering</artifactId>
+            <version>3.2.2</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+          <resources>
+            <resource>
+              <filtering>true</filtering>
+              <directory>src/main/resources</directory>
+              <targetPath>WEB-INF</targetPath>
+              <includes>
+                <include>application.yml</include>
+              </includes>
+              <excludes>
+                <exclude>**/*.xls</exclude>
+              </excludes>
+            </resource>
+            <resource>
+              <filtering>false</filtering>
+              <directory>src/main/resources</directory>
+              <targetPath>WEB-INF/classes</targetPath>
+              <exclude>application.yml</exclude>
+            </resource>
+            <resource>
+              <filtering>false</filtering>
+              <directory>src/main/webapp/app/resources/styles</directory>
+              <targetPath>WEB-INF/classes</targetPath>
+              <excludes>
+                <exclude>**/*.css</exclude>
+              </excludes>
+            </resource>
+          </resources>
+          <resource>
+            <filtering>false</filtering>
+            <directory>node_modules/@wvr/core/app/resources/styles</directory>
+            <targetPath>WEB-INF/classes</targetPath>
+            <excludes>
+              <exclude>**/*.css</exclude>
+            </excludes>
+          </resource>
+          <resource>
+            <filtering>false</filtering>
+            <directory>node_modules/bootstrap-sass/assets</directory>
+            <targetPath>WEB-INF/classes</targetPath>
+            <excludes>
+              <exclude>fonts/**</exclude>
+              <exclude>images/**</exclude>
+              <exclude>javascript/**</exclude>
+            </excludes>
+          </resource>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven.shared</groupId>
+            <artifactId>maven-filtering</artifactId>
+            <version>3.2.0</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+          <webResources>
+            <webResource>
+              <filtering>true</filtering>
+              <directory>src/main/resources</directory>
+              <targetPath>WEB-INF</targetPath>
+              <includes>
+                <include>application.yml</include>
+              </includes>
+              <excludes>
+                <exclude>**/*.xls</exclude>
+              </excludes>
+            </webResource>
+            <webResource>
+              <filtering>false</filtering>
+              <directory>src/main/resources</directory>
+              <targetPath>WEB-INF/classes</targetPath>
+              <exclude>application.yml</exclude>
+            </webResource>
+            <webResource>
+              <filtering>false</filtering>
+              <directory>src/main/webapp/app/resources/styles</directory>
+              <targetPath>WEB-INF/classes</targetPath>
+              <excludes>
+                <exclude>**/*.css</exclude>
+              </excludes>
+            </webResource>
+          </webResources>
+          <webResource>
+            <filtering>false</filtering>
+            <directory>node_modules/@wvr/core/app/resources/styles</directory>
+            <targetPath>WEB-INF/classes</targetPath>
+            <excludes>
+              <exclude>**/*.css</exclude>
+            </excludes>
+          </webResource>
+          <webResource>
+            <filtering>false</filtering>
+            <directory>node_modules/bootstrap-sass/assets</directory>
+            <targetPath>WEB-INF/classes</targetPath>
+            <excludes>
+              <exclude>fonts/**</exclude>
+              <exclude>images/**</exclude>
+              <exclude>javascript/**</exclude>
+            </excludes>
+          </webResource>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>properties-maven-plugin</artifactId>
+        <version>1.0.0</version>
+        <executions>
+          <execution>
+            <phase>initialize</phase>
+            <goals>
+              <goal>read-project-properties</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <files>
+            <file>src/main/resources/application.yml</file>
+          </files>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>prepare-agent</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.eluder.coveralls</groupId>
+        <artifactId>coveralls-maven-plugin</artifactId>
+        <configuration>
+          <repoToken></repoToken>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.1</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+
+      <plugin>
         <groupId>org.asciidoctor</groupId>
         <artifactId>asciidoctor-maven-plugin</artifactId>
         <version>1.5.7.1</version>
         <executions>
           <execution>
             <id>generate-docs</id>
-            <phase>test</phase> 
+            <phase>test</phase>
             <goals>
               <goal>process-asciidoc</goal>
             </goals>
             <configuration>
-              <backend>html5</backend>
+              <backend>html</backend>
               <doctype>book</doctype>
-              <attributes>
-                <snippets>${project.build.directory}/generated-snippets</snippets>
-                <project-version>${project.version}</project-version>
-              </attributes>
+              <sourceDocumentName>index.adoc</sourceDocumentName>
             </configuration>
           </execution>
         </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.springframework.restdocs</groupId>
+            <artifactId>spring-restdocs-asciidoctor</artifactId>
+            <version>2.0.3.RELEASE</version>
+          </dependency>
+        </dependencies>
       </plugin>
-      <plugin> 
+
+      <plugin>
         <artifactId>maven-resources-plugin</artifactId>
         <executions>
           <execution>
@@ -491,7 +498,7 @@
             <goals>
               <goal>copy-resources</goal>
             </goals>
-            <configuration> 
+            <configuration>
               <outputDirectory>
                 ${project.build.outputDirectory}/static/docs
               </outputDirectory>
@@ -509,21 +516,6 @@
     </plugins>
 
   </build>
-
-  <reporting>
-    <plugins>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>2.7</version>
-        <configuration>
-          <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
-        </configuration>
-      </plugin>
-
-    </plugins>
-  </reporting>
 
   <profiles>
 
@@ -634,19 +626,19 @@
 
             </executions>
           </plugin>
-	        <plugin>
-	            <groupId>org.apache.maven.plugins</groupId>
-	            <artifactId>maven-dependency-plugin</artifactId>
-	            <dependencies>
-	                <dependency>
-	                    <groupId>org.apache.felix</groupId>
-	                    <artifactId>maven-bundle-plugin</artifactId>
-	                    <version>2.4.0</version>
-	                    <type>maven-plugin</type>
-	                </dependency>
-	            </dependencies>
-	            <extensions>true</extensions>
-	        </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <dependencies>
+              <dependency>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>2.4.0</version>
+                <type>maven-plugin</type>
+              </dependency>
+            </dependencies>
+            <extensions>true</extensions>
+          </plugin>
         </plugins>
       </build>
     </profile>
@@ -716,19 +708,19 @@
 
             </executions>
           </plugin>
-	        <plugin>
-	            <groupId>org.apache.maven.plugins</groupId>
-	            <artifactId>maven-dependency-plugin</artifactId>
-	            <dependencies>
-	                <dependency>
-	                    <groupId>org.apache.felix</groupId>
-	                    <artifactId>maven-bundle-plugin</artifactId>
-	                    <version>2.4.0</version>
-	                    <type>maven-plugin</type>
-	                </dependency>
-	            </dependencies>
-	            <extensions>true</extensions>
-	        </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <dependencies>
+              <dependency>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>2.4.0</version>
+                <type>maven-plugin</type>
+              </dependency>
+            </dependencies>
+            <extensions>true</extensions>
+          </plugin>
         </plugins>
       </build>
     </profile>
@@ -810,37 +802,59 @@
 
             </executions>
           </plugin>
-	        <plugin>
-	            <groupId>org.apache.maven.plugins</groupId>
-	            <artifactId>maven-dependency-plugin</artifactId>
-	            <dependencies>
-	                <dependency>
-	                    <groupId>org.apache.felix</groupId>
-	                    <artifactId>maven-bundle-plugin</artifactId>
-	                    <version>2.4.0</version>
-	                    <type>maven-plugin</type>
-	                </dependency>
-	            </dependencies>
-	            <extensions>true</extensions>
-	        </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <dependencies>
+              <dependency>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>2.4.0</version>
+                <type>maven-plugin</type>
+              </dependency>
+            </dependencies>
+            <extensions>true</extensions>
+          </plugin>
         </plugins>
       </build>
     </profile>
 
   </profiles>
 
+  <reporting>
+    <outputDirectory>${project.build.directory}/site</outputDirectory>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>3.2.2</version>
+        <configuration>
+          <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
+
   <repositories>
     <repository>
       <id>tamu-releases</id>
       <url>https://artifacts.library.tamu.edu/repository/maven-releases</url>
-      <releases><enabled>true</enabled></releases>
-      <snapshots><enabled>false</enabled></snapshots>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
     </repository>
     <repository>
       <id>tamu-snapshots</id>
       <url>https://artifacts.library.tamu.edu/repository/maven-snapshots</url>
-      <releases><enabled>false</enabled></releases>
-      <snapshots><enabled>true</enabled></snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
     </repository>
     <repository>
       <id>jitpack.io</id>
