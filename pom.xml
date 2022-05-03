@@ -569,6 +569,7 @@
                   <arguments>
                     <argument>unlink</argument>
                     <argument>${link}</argument>
+                    <argument>-g</argument>
                     <argument>--no-save</argument>
                   </arguments>
                 </configuration>
@@ -667,6 +668,7 @@
                   <arguments>
                     <argument>unlink</argument>
                     <argument>${link}</argument>
+                    <argument>-g</argument>
                     <argument>--no-save</argument>
                   </arguments>
                 </configuration>
@@ -749,6 +751,7 @@
                   <arguments>
                     <argument>unlink</argument>
                     <argument>${link}</argument>
+                    <argument>-g</argument>
                     <argument>--no-save</argument>
                   </arguments>
                 </configuration>
