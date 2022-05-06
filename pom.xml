@@ -6,7 +6,7 @@
   <groupId>edu.tamu</groupId>
   <artifactId>cap</artifactId>
   <version>0.6.3-SNAPSHOT</version>
-  <packaging>war</packaging>
+  <packaging>${packaging}</packaging>
 
   <name>Cap</name>
 
@@ -26,6 +26,7 @@
     <maven-plugins.version>2.22.2</maven-plugins.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <start-class>edu.tamu.cap.CapApplication</start-class>
+    <packaging>war</packaging>
   </properties>
 
   <dependencies>
@@ -302,7 +303,7 @@
           <dependency>
             <groupId>org.apache.maven.shared</groupId>
             <artifactId>maven-filtering</artifactId>
-            <version>3.2.2</version>
+            <version>3.2.0</version>
           </dependency>
         </dependencies>
         <configuration>

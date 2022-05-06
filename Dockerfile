@@ -24,23 +24,24 @@ RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y nodejs
 RUN apt-get install -y npm
 
-RUN npm --version
-
 # Set deployment directory.
 WORKDIR $SOURCE_DIR
 
 # Copy files over.
 COPY ./pom.xml ./pom.xml
 COPY ./src ./src
+COPY ./package.json ./package.json
+COPY ./Gruntfile.js ./Gruntfile.js
+COPY ./.jshintrc ./.jshintrc
 
 # Assign file permissions.
 RUN chown -R ${USER_ID}:${USER_ID} ${SOURCE_DIR}
 
-# Login as user.
-USER $USER_NAME
+# Install grunt
+RUN npm install -g grunt-cli
 
 # Build.
-RUN ["mvn", "package", "-DskipTests=true"]
+RUN ["mvn", "package", "-DskipTests=true", "-Dproduction=true", "-Dpackaging=jar"]
 
 # Switch to Normal JRE Stage.
 FROM openjdk:11-jre-slim
