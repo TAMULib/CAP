@@ -82,8 +82,7 @@ logging:
 
 info:
   build:
-    # TODO: figure out why the pom.xml properties are no longer read
-    production: '@properties.production@'
+    production: '@is-production@'
     artifact: '@project.artifactId@'
     name: '@project.name@'
     description: '@project.description@'
