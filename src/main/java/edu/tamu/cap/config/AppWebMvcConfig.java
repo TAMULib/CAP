@@ -41,9 +41,6 @@ public class AppWebMvcConfig implements WebMvcConfigurer {
     @Value("${app.ui.path}")
     private String path;
 
-    @Value("${info.build.production:false}")
-    private boolean production;
-
     @Autowired
     private List<HttpMessageConverter<?>> converters;
 
@@ -79,12 +76,7 @@ public class AppWebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        if (!production) {
-            registry.addResourceHandler("/node_modules/**").addResourceLocations("file:node_modules/");
-        }
-        registry.addResourceHandler("/**").addResourceLocations(path + "/");
-        registry.addResourceHandler("/public/**").addResourceLocations("file:public/");
-        registry.addResourceHandler("/docs/**").addResourceLocations("classpath:static/docs/");
+        registry.addResourceHandler("/**").addResourceLocations("classpath:");
         registry.setOrder(Integer.MAX_VALUE - 2);
     }
 

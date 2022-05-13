@@ -151,12 +151,6 @@
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-devtools</artifactId>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-validation</artifactId>
     </dependency>
 
@@ -196,12 +190,17 @@
         <includes>
           <include>application.yml</include>
         </includes>
-        <excludes>
-          <exclude>**/*.jks</exclude>
-        </excludes>
       </resource>
       <resource>
         <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+        <excludes>
+          <exclude>application.yml</exclude>
+        </excludes>
+      </resource>
+      <resource>
+        <directory>src/main/webapp/app</directory>
+        <filtering>false</filtering>
       </resource>
       <resource>
         <directory>src/main/webapp/app/resources/styles</directory>
@@ -215,6 +214,7 @@
         <filtering>false</filtering>
         <excludes>
           <exclude>**/*.css</exclude>
+          <exclude>application.yml</exclude>
         </excludes>
       </resource>
       <resource>
@@ -287,6 +287,27 @@
             <delimiter>@</delimiter>
           </delimiters>
         </configuration>
+        <executions>
+          <execution>
+            <id>copy-docs-git</id>
+            <phase>test</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>
+                ${project.build.outputDirectory}/docs
+              </outputDirectory>
+              <resources>
+                <resource>
+                  <directory>
+                    ${project.build.directory}/generated-docs
+                  </directory>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
 
       <plugin>
@@ -344,51 +365,6 @@
             </manifest>
           </archive>
           <failOnMissingWebXml>false</failOnMissingWebXml>
-          <resources>
-            <resource>
-              <filtering>true</filtering>
-              <directory>src/main/resources</directory>
-              <targetPath>WEB-INF</targetPath>
-              <includes>
-                <include>application.yml</include>
-              </includes>
-              <excludes>
-                <exclude>**/*.xls</exclude>
-              </excludes>
-            </resource>
-            <resource>
-              <filtering>false</filtering>
-              <directory>src/main/resources</directory>
-              <targetPath>WEB-INF/classes</targetPath>
-              <exclude>application.yml</exclude>
-            </resource>
-            <resource>
-              <filtering>false</filtering>
-              <directory>src/main/webapp/app/resources/styles</directory>
-              <targetPath>WEB-INF/classes</targetPath>
-              <excludes>
-                <exclude>**/*.css</exclude>
-              </excludes>
-            </resource>
-            <resource>
-              <filtering>false</filtering>
-              <directory>node_modules/@wvr/core/app/resources/styles</directory>
-              <targetPath>WEB-INF/classes</targetPath>
-              <excludes>
-                <exclude>**/*.css</exclude>
-              </excludes>
-            </resource>
-            <resource>
-              <filtering>false</filtering>
-              <directory>node_modules/bootstrap-sass/assets</directory>
-              <targetPath>WEB-INF/classes</targetPath>
-              <excludes>
-                <exclude>fonts/**</exclude>
-                <exclude>images/**</exclude>
-                <exclude>javascript/**</exclude>
-              </excludes>
-            </resource>
-          </resources>
         </configuration>
       </plugin>
 
@@ -412,51 +388,6 @@
             </manifest>
           </archive>
           <failOnMissingWebXml>false</failOnMissingWebXml>
-          <webResources>
-            <webResource>
-              <filtering>true</filtering>
-              <directory>src/main/resources</directory>
-              <targetPath>WEB-INF</targetPath>
-              <includes>
-                <include>application.yml</include>
-              </includes>
-              <excludes>
-                <exclude>**/*.xls</exclude>
-              </excludes>
-            </webResource>
-            <webResource>
-              <filtering>false</filtering>
-              <directory>src/main/resources</directory>
-              <targetPath>WEB-INF/classes</targetPath>
-              <exclude>application.yml</exclude>
-            </webResource>
-            <webResource>
-              <filtering>false</filtering>
-              <directory>src/main/webapp/app/resources/styles</directory>
-              <targetPath>WEB-INF/classes</targetPath>
-              <excludes>
-                <exclude>**/*.css</exclude>
-              </excludes>
-            </webResource>
-            <webResource>
-              <filtering>false</filtering>
-              <directory>node_modules/@wvr/core/app/resources/styles</directory>
-              <targetPath>WEB-INF/classes</targetPath>
-              <excludes>
-                <exclude>**/*.css</exclude>
-              </excludes>
-            </webResource>
-            <webResource>
-              <filtering>false</filtering>
-              <directory>node_modules/bootstrap-sass/assets</directory>
-              <targetPath>WEB-INF/classes</targetPath>
-              <excludes>
-                <exclude>fonts/**</exclude>
-                <exclude>images/**</exclude>
-                <exclude>javascript/**</exclude>
-              </excludes>
-            </webResource>
-          </webResources>
         </configuration>
       </plugin>
 
@@ -534,31 +465,6 @@
         </dependencies>
       </plugin>
 
-      <!-- <plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>copy-docs-git</id>
-            <phase>test</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>
-                ${project.build.outputDirectory}/static/docs
-              </outputDirectory>
-              <resources>
-                <resource>
-                  <directory>
-                    ${project.build.directory}/generated-docs
-                  </directory>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin> -->
-
     </plugins>
 
   </build>
@@ -595,7 +501,7 @@
       <id>development</id>
       <activation>
         <property>
-          <name>!prod</name>
+          <name>!production</name>
         </property>
       </activation>
       <build>
@@ -673,19 +579,6 @@
 
             </executions>
           </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <dependencies>
-              <dependency>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <version>2.4.0</version>
-                <type>maven-plugin</type>
-              </dependency>
-            </dependencies>
-            <extensions>true</extensions>
-          </plugin>
         </plugins>
       </build>
     </profile>
@@ -694,7 +587,7 @@
       <id>production</id>
       <activation>
         <property>
-          <name>prod</name>
+          <name>production</name>
         </property>
       </activation>
       <build>
@@ -755,19 +648,6 @@
               </execution>
 
             </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <dependencies>
-              <dependency>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <version>2.4.0</version>
-                <type>maven-plugin</type>
-              </dependency>
-            </dependencies>
-            <extensions>true</extensions>
           </plugin>
         </plugins>
       </build>
@@ -850,19 +730,6 @@
               </execution>
 
             </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <dependencies>
-              <dependency>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <version>2.4.0</version>
-                <type>maven-plugin</type>
-              </dependency>
-            </dependencies>
-            <extensions>true</extensions>
           </plugin>
         </plugins>
       </build>

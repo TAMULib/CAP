@@ -41,7 +41,7 @@ RUN chown -R ${USER_ID}:${USER_ID} ${SOURCE_DIR}
 RUN npm install -g grunt-cli
 
 # Build.
-RUN mvn package -DskipTests=true -Dprod -Dpackaging=jar
+RUN mvn package -DskipTests=true -Dproduction -Dpackaging=jar
 
 # Switch to Normal JRE Stage.
 FROM openjdk:11-jre-slim
