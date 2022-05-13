@@ -201,6 +201,20 @@
       <resource>
         <directory>src/main/webapp/app</directory>
         <filtering>false</filtering>
+        <!-- would be better to exclude what is causing CI to fail -->
+        <includes>
+          <include>**/*.html</include>
+          <include>**/*.scss</include>
+          <include>**/*.js</include>
+          <include>**/*.js.map</include>
+          <include>**/*.gif</include>
+          <include>**/*.png</include>
+          <include>**/*.svg</include>
+          <include>**/*.eot</include>
+          <include>**/*.ttf</include>
+          <include>**/*.woff</include>
+          <include>**/*.woff2</include>
+        </includes>
       </resource>
       <resource>
         <directory>src/main/webapp/app/resources/styles</directory>
