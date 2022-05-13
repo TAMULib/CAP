@@ -1,6 +1,6 @@
 # Settings.
 ARG USER_ID=3001
-ARG USER_NAME=capserver
+ARG USER_NAME=cap
 ARG HOME_DIR=/$USER_NAME
 ARG SOURCE_DIR=$HOME_DIR/source
 
@@ -20,7 +20,7 @@ RUN useradd -d $HOME_DIR -m -u $USER_ID -g $USER_ID $USER_NAME
 # Update the system.
 RUN apt-get update && apt-get upgrade -y
 
-# Install Nodejs and npm
+# Install Nodejs and npm.
 RUN apt-get install -y nodejs
 RUN apt-get install -y npm
 
@@ -37,11 +37,11 @@ COPY ./.jshintrc ./.jshintrc
 # Assign file permissions.
 RUN chown -R ${USER_ID}:${USER_ID} ${SOURCE_DIR}
 
-# Install grunt
+# Install grunt.
 RUN npm install -g grunt-cli
 
 # Build.
-RUN ["mvn", "package", "-DskipTests=true", "-Dproduction=true", "-Dpackaging=jar"]
+RUN mvn package -DskipTests=true -Dprod -Dpackaging=jar
 
 # Switch to Normal JRE Stage.
 FROM openjdk:11-jre-slim
@@ -62,8 +62,9 @@ USER $USER_NAME
 # Set deployment directory.
 WORKDIR $HOME_DIR
 
-# Copy over the built artifact from the maven image.
+# Copy over the built artifact and library from the maven image.
 COPY --from=maven $SOURCE_DIR/target/ROOT.jar ./cap.jar
+COPY --from=maven $SOURCE_DIR/target/libs ./libs
 
 # Run java command.
 CMD ["java", "-jar", "./cap.jar"]

@@ -82,7 +82,7 @@ logging:
 
 info:
   build:
-    production: '@is-production@'
+    production: '@prod@'
     artifact: '@project.artifactId@'
     name: '@project.name@'
     description: '@project.description@'

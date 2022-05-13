@@ -15,7 +15,7 @@
   <parent>
     <groupId>edu.tamu.weaver</groupId>
     <artifactId>webservice-parent</artifactId>
-    <version>2.1.1-RC8</version>
+    <version>2.1.1-RC9</version>
   </parent>
 
   <properties>
@@ -34,37 +34,37 @@
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>auth</artifactId>
-      <version>2.1.1-RC8</version>
+      <version>2.1.1-RC9</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>token-provider</artifactId>
-      <version>2.1.1-RC8</version>
+      <version>2.1.1-RC9</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>validation</artifactId>
-      <version>2.1.1-RC8</version>
+      <version>2.1.1-RC9</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>wro</artifactId>
-      <version>2.1.1-RC8</version>
+      <version>2.1.1-RC9</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>reporting</artifactId>
-      <version>2.1.1-RC8</version>
+      <version>2.1.1-RC9</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>messaging</artifactId>
-      <version>2.1.1-RC8</version>
+      <version>2.1.1-RC9</version>
     </dependency>
 
     <dependency>
@@ -280,6 +280,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
+        <version>3.2.0</version>
         <configuration>
           <includeEmptyDirs>true</includeEmptyDirs>
           <delimiters>
@@ -305,7 +306,28 @@
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.3.0</version>
+        <executions>
+          <execution>
+            <id>copy-dependencies</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>
+                    ${project.build.directory}/libs
+              </outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
+        <version>3.2.2</version>
         <dependencies>
           <dependency>
             <groupId>org.apache.maven.shared</groupId>
@@ -317,7 +339,7 @@
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-              <classpathPrefix>lib/</classpathPrefix>
+              <classpathPrefix>libs/</classpathPrefix>
               <mainClass>edu.tamu.cap.CapApplication</mainClass>
             </manifest>
           </archive>
@@ -348,31 +370,32 @@
                 <exclude>**/*.css</exclude>
               </excludes>
             </resource>
+            <resource>
+              <filtering>false</filtering>
+              <directory>node_modules/@wvr/core/app/resources/styles</directory>
+              <targetPath>WEB-INF/classes</targetPath>
+              <excludes>
+                <exclude>**/*.css</exclude>
+              </excludes>
+            </resource>
+            <resource>
+              <filtering>false</filtering>
+              <directory>node_modules/bootstrap-sass/assets</directory>
+              <targetPath>WEB-INF/classes</targetPath>
+              <excludes>
+                <exclude>fonts/**</exclude>
+                <exclude>images/**</exclude>
+                <exclude>javascript/**</exclude>
+              </excludes>
+            </resource>
           </resources>
-          <resource>
-            <filtering>false</filtering>
-            <directory>node_modules/@wvr/core/app/resources/styles</directory>
-            <targetPath>WEB-INF/classes</targetPath>
-            <excludes>
-              <exclude>**/*.css</exclude>
-            </excludes>
-          </resource>
-          <resource>
-            <filtering>false</filtering>
-            <directory>node_modules/bootstrap-sass/assets</directory>
-            <targetPath>WEB-INF/classes</targetPath>
-            <excludes>
-              <exclude>fonts/**</exclude>
-              <exclude>images/**</exclude>
-              <exclude>javascript/**</exclude>
-            </excludes>
-          </resource>
         </configuration>
       </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
+        <version>3.2.2</version>
         <dependencies>
           <dependency>
             <groupId>org.apache.maven.shared</groupId>
@@ -381,6 +404,13 @@
           </dependency>
         </dependencies>
         <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <classpathPrefix>libs/</classpathPrefix>
+              <mainClass>edu.tamu.cap.CapApplication</mainClass>
+            </manifest>
+          </archive>
           <failOnMissingWebXml>false</failOnMissingWebXml>
           <webResources>
             <webResource>
@@ -408,25 +438,25 @@
                 <exclude>**/*.css</exclude>
               </excludes>
             </webResource>
+            <webResource>
+              <filtering>false</filtering>
+              <directory>node_modules/@wvr/core/app/resources/styles</directory>
+              <targetPath>WEB-INF/classes</targetPath>
+              <excludes>
+                <exclude>**/*.css</exclude>
+              </excludes>
+            </webResource>
+            <webResource>
+              <filtering>false</filtering>
+              <directory>node_modules/bootstrap-sass/assets</directory>
+              <targetPath>WEB-INF/classes</targetPath>
+              <excludes>
+                <exclude>fonts/**</exclude>
+                <exclude>images/**</exclude>
+                <exclude>javascript/**</exclude>
+              </excludes>
+            </webResource>
           </webResources>
-          <webResource>
-            <filtering>false</filtering>
-            <directory>node_modules/@wvr/core/app/resources/styles</directory>
-            <targetPath>WEB-INF/classes</targetPath>
-            <excludes>
-              <exclude>**/*.css</exclude>
-            </excludes>
-          </webResource>
-          <webResource>
-            <filtering>false</filtering>
-            <directory>node_modules/bootstrap-sass/assets</directory>
-            <targetPath>WEB-INF/classes</targetPath>
-            <excludes>
-              <exclude>fonts/**</exclude>
-              <exclude>images/**</exclude>
-              <exclude>javascript/**</exclude>
-            </excludes>
-          </webResource>
         </configuration>
       </plugin>
 
@@ -504,7 +534,7 @@
         </dependencies>
       </plugin>
 
-      <plugin>
+      <!-- <plugin>
         <artifactId>maven-resources-plugin</artifactId>
         <executions>
           <execution>
@@ -527,7 +557,8 @@
             </configuration>
           </execution>
         </executions>
-      </plugin>
+      </plugin> -->
+
     </plugins>
 
   </build>
@@ -564,7 +595,7 @@
       <id>development</id>
       <activation>
         <property>
-          <name>!production</name>
+          <name>!prod</name>
         </property>
       </activation>
       <build>
@@ -663,7 +694,7 @@
       <id>production</id>
       <activation>
         <property>
-          <name>production</name>
+          <name>prod</name>
         </property>
       </activation>
       <build>
