@@ -4,31 +4,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import edu.tamu.cap.model.Role;
+import edu.tamu.cap.model.User;
+import edu.tamu.cap.model.repo.UserRepo;
+import edu.tamu.cap.utility.MockUserUtility;
+import edu.tamu.weaver.auth.model.Credentials;
 import java.io.IOException;
 import java.util.Optional;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-
-import edu.tamu.cap.utility.MockUserUtility;
-import edu.tamu.cap.model.Role;
-import edu.tamu.cap.model.User;
-import edu.tamu.cap.model.repo.UserRepo;
-import edu.tamu.weaver.auth.model.Credentials;
-
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public final class AppUserCredentialsServiceTest {
 

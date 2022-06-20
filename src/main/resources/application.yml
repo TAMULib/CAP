@@ -32,11 +32,6 @@ spring:
     # MySQL
     # url: jdbc:mysql://localhost/cap
     # driverClassName: com.mysql.jdbc.Driver
-    jpa:
-      database-platform: org.hibernate.dialect.H2Dialect
-      # database-platform: org.hibernate.dialect.PostgreSQLDialect
-      # database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-      # database username and password
     username: cap
     password: cap
     # common database config -- might be needed for postgres
@@ -50,6 +45,10 @@ spring:
     hibernate:
       ddl-auto: create-drop
       event.merge.entity_copy_observer: allow
+    database-platform: org.hibernate.dialect.H2Dialect
+    # database-platform: org.hibernate.dialect.PostgreSQLDialect
+    # database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    # database username and password
   # TODO: figure out how to use profiles in Spring-Boot 2.6.6
   config:
     activate:
@@ -97,7 +96,7 @@ app:
     channel: cap
   # edu.tamu.weaver.auth.service.UserCredentialsService
   authority:
-    admins: 
+    admins:
   security:
     # edu.tamu.weaver.auth.service.CryptoService
     secret: verysecretsecret
@@ -110,7 +109,7 @@ app:
     replyTo: dev@library.tamu.edu
   # edu.tamu.weaver.reporting.controller.ReportingController
   reporting:
-    address: dev@tdl.or
+    address: dev@tdl.org
   # edu.tamu.weaver.validation.controller.ValidationsController
   model:
     packages: edu.tamu.cap.model

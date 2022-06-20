@@ -64,7 +64,7 @@ logging:
     ro:
       isdc:
         wro: INFO
-  file.name: logs/cap.log
+  file.name: logs/cap-test.log
 
 info:
   build:
@@ -96,7 +96,7 @@ app:
     replyTo: dev@library.tamu.edu
   # edu.tamu.weaver.reporting.controller.ReportingController
   reporting:
-    address: dev@tdl.or
+    address: dev@tdl.org
   # edu.tamu.weaver.validation.controller.ValidationsController
   model:
     packages: edu.tamu.cap.model

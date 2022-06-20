@@ -1,15 +1,15 @@
 package edu.tamu.cap.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
+import edu.tamu.cap.CapApplication;
+import edu.tamu.cap.model.RepositoryView;
+import edu.tamu.cap.model.response.RepositoryViewContext;
+import edu.tamu.cap.model.response.Triple;
+import edu.tamu.cap.model.response.Version;
+import edu.tamu.cap.service.repositoryview.FedoraService;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.OWL;
@@ -18,23 +18,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import edu.tamu.cap.CapApplication;
-import edu.tamu.cap.model.RepositoryView;
-import edu.tamu.cap.model.response.RepositoryViewContext;
-import edu.tamu.cap.model.response.Triple;
-import edu.tamu.cap.model.response.Version;
-import edu.tamu.cap.service.repositoryview.FedoraService;
 
 @ActiveProfiles("test")
-@ExtendWith(SpringExtension.class)
+@ExtendWith(MockitoExtension.class)
 @SpringBootTest(classes = { CapApplication.class }, webEnvironment = WebEnvironment.DEFINED_PORT)
 public final class FedoraServiceTest {
 
@@ -55,8 +45,6 @@ public final class FedoraServiceTest {
 
     private final static String TEST_OBJECT_2 = "\"\\\"TestObject2\\\"\"";
 
-    private HttpServletRequest request;
-
     @InjectMocks
     private FedoraService fedoraService;
 
@@ -66,22 +54,6 @@ public final class FedoraServiceTest {
 
     @BeforeEach
     public void setup() throws IOException {
-
-        request = mock(HttpServletRequest.class);
-
-        when(request.getMethod()).thenReturn("POST");
-        when(request.getUserPrincipal()).thenReturn(new UsernamePasswordAuthenticationToken("aggieJack", ""));
-        when(request.getAttribute(Mockito.any(String.class))).thenReturn(new HashMap<String, String>() {
-            private static final long serialVersionUID = 3185237776585513150L;
-            {
-                put("type", "fedora");
-                put("rvid", "fedora");
-            }
-        });
-
-        when(request.getInputStream()).thenReturn(null);
-
-        MockitoAnnotations.openMocks(this);
 
         fedoraService.setRepositoryView(new RepositoryView(RepositoryViewType.FEDORA, "Mock Fedora", "http://localhost:9100/mock/fcrepo/rest"));
 

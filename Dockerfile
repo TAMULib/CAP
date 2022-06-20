@@ -37,11 +37,17 @@ COPY ./.jshintrc ./.jshintrc
 # Assign file permissions.
 RUN chown -R ${USER_ID}:${USER_ID} ${SOURCE_DIR}
 
-# Install grunt.
+# Install grunt globally.
 RUN npm install -g grunt-cli
 
+# Assign file permissions.
+RUN chown -R ${USER_ID}:${USER_ID} ${SOURCE_DIR}
+
+# Login as user.
+USER $USER_NAME
+
 # Build.
-RUN mvn package -DskipTests=true -Dproduction -Dpackaging=jar
+RUN mvn package -Pjar -DskipTests=true
 
 # Switch to Normal JRE Stage.
 FROM openjdk:11-jre-slim

@@ -6,10 +6,8 @@
   <groupId>edu.tamu</groupId>
   <artifactId>cap</artifactId>
   <version>0.6.3-SNAPSHOT</version>
-  <packaging>${packaging}</packaging>
 
   <name>Cap</name>
-
   <description>Weaver IR Management Service</description>
 
   <parent>
@@ -23,60 +21,62 @@
     <java.version>11</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
-    <maven-plugins.version>2.22.2</maven-plugins.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <maven-plugins.version>2.22.2</maven-plugins.version>
     <start-class>edu.tamu.cap.CapApplication</start-class>
-    <packaging>war</packaging>
+    <maven.packaging>war</maven.packaging>
   </properties>
 
-  <dependencies>
+  <packaging>${maven.packaging}</packaging>
 
+  <dependencies>
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>auth</artifactId>
-      <version>2.1.1-RC9</version>
+      <version>${project.parent.version}</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>token-provider</artifactId>
-      <version>2.1.1-RC9</version>
+      <version>${project.parent.version}</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>validation</artifactId>
-      <version>2.1.1-RC9</version>
+      <version>${project.parent.version}</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>wro</artifactId>
-      <version>2.1.1-RC9</version>
+      <version>${project.parent.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.webjars.npm</groupId>
+          <artifactId>jshint</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>reporting</artifactId>
-      <version>2.1.1-RC9</version>
+      <version>${project.parent.version}</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>messaging</artifactId>
-      <version>2.1.1-RC9</version>
+      <version>${project.parent.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.fcrepo.client</groupId>
       <artifactId>fcrepo-java-client</artifactId>
       <version>6.1.0</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.codehaus.mojo</groupId>
-      <artifactId>properties-maven-plugin</artifactId>
-      <version>1.1.0</version>
     </dependency>
 
     <dependency>
@@ -100,7 +100,8 @@
     <dependency>
       <groupId>xml-apis</groupId>
       <artifactId>xml-apis</artifactId>
-      <version>2.0.2</version>      <!--$NO-MVN-MAN-VER$ -->
+      <!-- 2.0.2 is actually older than 1.4.01 and the 2.0.X versions should not be used! -->
+      <version>1.4.01</version><!--$NO-MVN-MAN-VER$ -->
     </dependency>
 
     <dependency>
@@ -112,8 +113,8 @@
     <dependency>
       <groupId>org.apache.jena</groupId>
       <artifactId>apache-jena-libs</artifactId>
+      <version>4.5.0</version>
       <type>pom</type>
-      <version>3.17.0</version>
       <exclusions>
         <exclusion>
           <groupId>com.github.jsonld-java</groupId>
@@ -123,9 +124,25 @@
     </dependency>
 
     <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-logging</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-log4j2</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>org.apache.tika</groupId>
       <artifactId>tika-core</artifactId>
-      <version>1.28.1</version>
+      <version>1.28.2</version>
       <exclusions>
         <exclusion>
           <groupId>xom</groupId>
@@ -158,12 +175,12 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.junit.vintage</groupId>
-          <artifactId>junit-vintage-engine</artifactId>
-        </exclusion>
-      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -178,6 +195,17 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -190,6 +218,9 @@
         <includes>
           <include>application.yml</include>
         </includes>
+        <excludes>
+          <exclude>**/*.jks</exclude>
+        </excludes>
       </resource>
       <resource>
         <directory>src/main/resources</directory>
@@ -215,6 +246,9 @@
           <include>**/*.woff</include>
           <include>**/*.woff2</include>
         </includes>
+        <excludes>
+          <exclude>**/sha.js/</exclude>
+        </excludes>
       </resource>
       <resource>
         <directory>src/main/webapp/app/resources/styles</directory>
@@ -274,7 +308,6 @@
     </pluginManagement>
 
     <plugins>
-
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
@@ -294,7 +327,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>3.2.0</version>
         <configuration>
           <includeEmptyDirs>true</includeEmptyDirs>
           <delimiters>
@@ -341,6 +373,16 @@
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.10.1</version>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <version>3.3.0</version>
         <executions>
@@ -367,7 +409,7 @@
           <dependency>
             <groupId>org.apache.maven.shared</groupId>
             <artifactId>maven-filtering</artifactId>
-            <version>3.2.0</version>
+            <version>3.2.2</version>
           </dependency>
         </dependencies>
         <configuration>
@@ -385,7 +427,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
-        <version>3.2.2</version>
+        <version>3.3.2</version>
         <dependencies>
           <dependency>
             <groupId>org.apache.maven.shared</groupId>
@@ -474,16 +516,27 @@
           <dependency>
             <groupId>org.springframework.restdocs</groupId>
             <artifactId>spring-restdocs-asciidoctor</artifactId>
-            <version>2.0.3.RELEASE</version>
+            <version>2.0.6.RELEASE</version>
           </dependency>
         </dependencies>
       </plugin>
-
     </plugins>
-
   </build>
 
   <profiles>
+    <profile>
+      <id>war</id>
+      <properties>
+        <maven.packaging>war</maven.packaging>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>jar</id>
+      <properties>
+        <maven.packaging>jar</maven.packaging>
+      </properties>
+    </profile>
 
     <profile>
       <id>windows-profile</id>
@@ -523,26 +576,8 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>1.6.0</version>
+            <version>3.0.0</version>
             <executions>
-
-              <!-- NPM Unlink -->
-              <execution>
-                <id>exec-npm-unlink</id>
-                <phase>generate-sources</phase>
-                <configuration>
-                  <executable>npm${npm-extension}</executable>
-                  <arguments>
-                    <argument>unlink</argument>
-                    <argument>${link}</argument>
-                    <argument>-g</argument>
-                    <argument>--no-save</argument>
-                  </arguments>
-                </configuration>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-              </execution>
 
               <!-- NPM Install -->
               <execution>
@@ -575,22 +610,6 @@
                 </goals>
               </execution>
 
-              <!-- NPM Link -->
-              <execution>
-                <id>exec-npm-link</id>
-                <phase>process-classes</phase>
-                <configuration>
-                  <executable>npm${npm-extension}</executable>
-                  <arguments>
-                    <argument>link</argument>
-                    <argument>${link}</argument>
-                  </arguments>
-                </configuration>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-              </execution>
-
             </executions>
           </plugin>
         </plugins>
@@ -609,26 +628,8 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>1.6.0</version>
+            <version>3.0.0</version>
             <executions>
-
-              <!-- NPM Unlink -->
-              <execution>
-                <id>exec-npm-unlink</id>
-                <phase>generate-sources</phase>
-                <configuration>
-                  <executable>npm${npm-extension}</executable>
-                  <arguments>
-                    <argument>unlink</argument>
-                    <argument>${link}</argument>
-                    <argument>-g</argument>
-                    <argument>--no-save</argument>
-                  </arguments>
-                </configuration>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-              </execution>
 
               <!-- NPM Install -->
               <execution>
@@ -679,26 +680,8 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>1.6.0</version>
+            <version>3.0.0</version>
             <executions>
-
-              <!-- NPM Unlink -->
-              <execution>
-                <id>exec-npm-unlink</id>
-                <phase>generate-sources</phase>
-                <configuration>
-                  <executable>npm${npm-extension}</executable>
-                  <arguments>
-                    <argument>unlink</argument>
-                    <argument>${link}</argument>
-                    <argument>-g</argument>
-                    <argument>--no-save</argument>
-                  </arguments>
-                </configuration>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-              </execution>
 
               <!-- NPM Install -->
               <execution>
@@ -742,13 +725,11 @@
                   <goal>exec</goal>
                 </goals>
               </execution>
-
             </executions>
           </plugin>
         </plugins>
       </build>
     </profile>
-
   </profiles>
 
   <reporting>
@@ -757,7 +738,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>3.2.2</version>
+        <version>3.3.0</version>
         <configuration>
           <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
         </configuration>
@@ -776,6 +757,7 @@
         <enabled>false</enabled>
       </snapshots>
     </repository>
+
     <repository>
       <id>tamu-snapshots</id>
       <url>https://artifacts.library.tamu.edu/repository/maven-snapshots</url>
@@ -786,6 +768,7 @@
         <enabled>true</enabled>
       </snapshots>
     </repository>
+
     <repository>
       <id>jitpack.io</id>
       <name>JitPack for Maven</name>
