@@ -96,11 +96,11 @@ public class UserController {
     public ApiResponse update(@RequestBody User user) {
         Optional<User> currentUser = userRepo.findByUsername(user.getUsername());
         if (currentUser.isPresent()) {
-            IRole originalRole = userRepo.getOne(user.getId()).getRole();
+            IRole originalRole = userRepo.getById(user.getId()).getRole();
 
             user.setPassword(currentUser.get().getPassword());
             user = userRepo.update(user);
-            IRole updatedRole = userRepo.getOne(user.getId()).getRole();
+            IRole updatedRole = userRepo.getById(user.getId()).getRole();
 
             if (originalRole != updatedRole) {
                 HashMap<String, String> emailData = new HashMap<String, String>();

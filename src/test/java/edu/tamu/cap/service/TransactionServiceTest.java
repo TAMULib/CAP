@@ -1,12 +1,12 @@
 package edu.tamu.cap.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Duration;
 
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -56,7 +56,7 @@ public class TransactionServiceTest {
         assertEquals(0, transactionService.count());
     }
 
-    @After
+    @AfterEach
     public void clear() {
         transactionService.clear();
     }

@@ -1,13 +1,13 @@
 package edu.tamu.cap.controller.repositoryviewcontext;
 
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.fileUpload;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
@@ -15,6 +15,8 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Optional;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.junit.jupiter.api.BeforeEach;
@@ -90,8 +92,8 @@ public class RepositoryViewContextResourceControllerTest {
         mockRepositoryView.setUsername("");
         mockRepositoryView.setPassword("");
 
-        when(repositoryViewRepo.getOne(mockRepositoryView.getId())).thenReturn(mockRepositoryView);
-        when(repositoryViewRepo.findOne(mockRepositoryView.getId())).thenReturn(mockRepositoryView);
+        when(repositoryViewRepo.getById(mockRepositoryView.getId())).thenReturn(mockRepositoryView);
+        when(repositoryViewRepo.findById(mockRepositoryView.getId())).thenReturn(Optional.of(mockRepositoryView));
 
         Object[] args = new Object[] { mockFedoraService, TEST_CONTEXT_ORG_URI };
         when(mockProceedingJoinPoint.getArgs()).thenReturn(args);
@@ -107,7 +109,7 @@ public class RepositoryViewContextResourceControllerTest {
         when(mockFedoraService.createResource(any(String.class), any(MultipartFile.class))).thenReturn(mockRepositoryViewContext);
 
         mockMvc.perform(
-            fileUpload(CONTROLLER_PATH, TEST_REPOSITORY_VIEW_TYPE, mockRepositoryView.getId())
+            multipart(CONTROLLER_PATH, TEST_REPOSITORY_VIEW_TYPE, mockRepositoryView.getId())
                 .file(mockMultipartFile)
                 .param("contextUri", TEST_CONTEXT_ORG_URI)
                 .characterEncoding("UTF-8")

@@ -1,7 +1,7 @@
 package edu.tamu.cap.controller;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
@@ -73,8 +73,8 @@ public class RepositoryViewControllerTest {
     public void setUp() throws IOException {
         mockRV = new RepositoryView(RepositoryViewType.FEDORA, TEST_REPOSITORY_VIEW_NAME, TEST_REPOSITORY_VIEW_URI);
         mockRV.setId(1L);
-        when(repositoryViewRepo.getOne(1L)).thenReturn(mockRV);
-        when(repositoryViewRepo.findOne(1L)).thenReturn(mockRV);
+        when(repositoryViewRepo.getById(1L)).thenReturn(mockRV);
+        when(repositoryViewRepo.findById(1L)).thenReturn(Optional.of(mockRV));
         when(repositoryViewRepo.update(any(RepositoryView.class))).thenReturn(mockRV);
 
         Credentials aggiejackCredentials = mockUserUtility.getMockAggieJackCredentials();
@@ -132,7 +132,7 @@ public class RepositoryViewControllerTest {
     @Test
     @WithMockUser(roles = "CURATOR")
     public void updateRepositoryView() throws Exception {
-        RepositoryView mockRV = repositoryViewRepo.getOne(1L);
+        RepositoryView mockRV = repositoryViewRepo.getById(1L);
         mockRV.setName(TEST_REPOSITORY_VIEW_NAME + "_UPDATE");
 
         mockMvc.perform(

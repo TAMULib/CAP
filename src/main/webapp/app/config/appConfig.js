@@ -7,7 +7,7 @@ var appConfig = {
 
   'authStrategies': ['emailRegistration'],
 
-  'authService': window.location.protocol + '//' + window.location.host + window.location.base + '/auth',
+  'authService': 'https://labs.library.tamu.edu/authfix',
   'webService': window.location.protocol + '//' + window.location.host + window.location.base,
 
   'storageType': 'session',

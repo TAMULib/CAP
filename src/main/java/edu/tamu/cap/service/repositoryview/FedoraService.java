@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.NodeIterator;
@@ -29,6 +31,7 @@ import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateRequest;
 import org.apache.jena.vocabulary.DC;
+import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.RDFS;
 import org.fcrepo.client.DeleteBuilder;
 import org.fcrepo.client.FcrepoClient;
@@ -43,8 +46,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.tamu.cap.exceptions.RepositoryViewVerificationException;
 import edu.tamu.cap.model.RepositoryView;
@@ -522,18 +523,12 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
             Triple triple = Triple.fromJenaTriple(statement.asTriple());
 
-            // System.out.println();
-            // System.out.println(" SUBJECT: " + triple.getSubject());
-            // System.out.println(" PREDICATE: " + triple.getPredicate());
-            // System.out.println(" OBJECT: " + triple.getObject());
-            // System.out.println();
-
             {
                 String predicate = triple.getPredicate();
 
                 switch (predicate) {
                 case FEDORA_HAS_PARENT_PREDICATE:
-                    repositoryViewContext.setParent(triple);
+                        repositoryViewContext.setParent(triple);
                     break;
                 case LDP_CONTAINS_PREDICATE:
                     repositoryViewContext.addChild(new RepositoryViewContext(triple));
@@ -550,7 +545,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
                     for (String prefix : PROPERTY_PREFIXES) {
                         if (predicate.startsWith(prefix)) {
-                            repositoryViewContext.addProperty(triple);
+                                repositoryViewContext.addProperty(triple);
                             unassociatedPredicate = false;
                             break;
                         }
@@ -558,7 +553,7 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
                     for (String prefix : repositoryView.getMetadataPrefixes()) {
                         if (predicate.startsWith(prefix)) {
-                            repositoryViewContext.addMetadatum(triple);
+                                repositoryViewContext.addMetadatum(triple);
                             unassociatedPredicate = false;
                             break;
                         }
@@ -592,27 +587,34 @@ public class FedoraService implements RepositoryViewService<Model>, VersioningRe
 
         });
 
+        // Start by setting the context's name as "Root" in case it's the root, or the
+        // node's URI for other nodes
         if (longContextUri.equals(repositoryView.getRootUri())) {
             repositoryViewContext.setName("Root");
         } else {
             repositoryViewContext.setName(longContextUri);
         }
 
+        // Look for our preferred title fields that could replace the node URI
         Optional<String> title = getLiteralForProperty(model, RDFS.label);
         if (!title.isPresent()) {
             title = getLiteralForProperty(model, DC.title);
-
-            if (!title.isPresent()) {
-                if (repositoryViewContext.isResource()) {
-                    title = getLiteralForProperty(model, model.createProperty(EBU_FILENAME_PREDICATE));
-                }
-            }
+        }
+        if (!title.isPresent()) {
+            title = getLiteralForProperty(model, DCTerms.title);
+        }
+        // A filename can be used as a title
+        if (!title.isPresent() && repositoryViewContext.isResource()) {
+            title = getLiteralForProperty(model, model.createProperty(EBU_FILENAME_PREDICATE));
         }
 
+        // If a title was found, use that as the context node name
         if (title.isPresent()) {
             repositoryViewContext.setName(title.get());
         }
 
+        // Finally, whatever the context node's name was determined to be, append the
+        // version number if available
         if (repositoryViewContext.getIsVersion()) {
             repositoryViewContext.setName(repositoryViewContext.getName() + " (" + repositoryViewContext.getVersion() + ")");
         }

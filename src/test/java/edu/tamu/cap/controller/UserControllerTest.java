@@ -1,17 +1,19 @@
 package edu.tamu.cap.controller;
 
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.tamu.cap.model.User;
+import edu.tamu.cap.model.repo.UserRepo;
+import edu.tamu.cap.utility.MockUserUtility;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,17 +22,9 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import edu.tamu.cap.model.User;
-import edu.tamu.cap.model.repo.UserRepo;
-import edu.tamu.cap.utility.MockUserUtility;
-
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs(outputDir = "target/generated-snippets")
 public final class UserControllerTest {
@@ -86,7 +80,7 @@ public final class UserControllerTest {
 
   private List<User> mockUsers;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
 //      mockAggieJackCredentials = mockUserUtility.getMockAggieJackCredentials();
       mockAggieJack = mockUserUtility.getMockAggieJackUser();
@@ -170,7 +164,7 @@ public final class UserControllerTest {
          mockMvc.perform(
              get(CONTROLLER_PATH + "/delete")
                  .content(objectMapper.writeValueAsString(mockAggieJack))
-                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                 .contentType(MediaType.APPLICATION_JSON_VALUE)
          )
          .andExpect(status().isOk())
 // FIXME: andWithPrefix() not working as expected when following documentation.

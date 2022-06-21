@@ -15,10 +15,16 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.tamu.cap.model.RepositoryView;
+import edu.tamu.cap.model.repo.RepositoryViewRepo;
+import edu.tamu.cap.service.RepositoryViewType;
+import edu.tamu.cap.service.repositoryview.FedoraService;
+import edu.tamu.cap.utility.ConstraintDescriptionsHelper;
+import java.util.Optional;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -29,19 +35,9 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.request.ParameterDescriptor;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import edu.tamu.cap.model.RepositoryView;
-import edu.tamu.cap.model.repo.RepositoryViewRepo;
-import edu.tamu.cap.service.RepositoryViewType;
-import edu.tamu.cap.service.repositoryview.FedoraService;
-import edu.tamu.cap.utility.ConstraintDescriptionsHelper;
-
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs(outputDir = "target/generated-snippets")
 public final class VerifyRepositoryViewSettingsControllerTest {
@@ -91,15 +87,15 @@ public final class VerifyRepositoryViewSettingsControllerTest {
 
   private RepositoryView mockRepositoryView;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
       mockRepositoryView = new RepositoryView(TEST_REPOSITORY_VIEW_TYPE, TEST_REPOSITORY_VIEW_NAME, TEST_REPOSITORY_VIEW_URI);
       mockRepositoryView.setId(1L);
       mockRepositoryView.setUsername("");
       mockRepositoryView.setPassword("");
 
-      when(repositoryViewRepo.getOne(mockRepositoryView.getId())).thenReturn(mockRepositoryView);
-      when(repositoryViewRepo.findOne(mockRepositoryView.getId())).thenReturn(mockRepositoryView);
+      when(repositoryViewRepo.getById(mockRepositoryView.getId())).thenReturn(mockRepositoryView);
+      when(repositoryViewRepo.findById(mockRepositoryView.getId())).thenReturn(Optional.of(mockRepositoryView));
 
       ProceedingJoinPoint mockJoinPoint = mock(ProceedingJoinPoint.class);
 
@@ -118,7 +114,7 @@ public final class VerifyRepositoryViewSettingsControllerTest {
         mockMvc.perform(
             post(CONTROLLER_PATH + "/ping", TEST_REPOSITORY_VIEW_TYPE)
                 .content(objectMapper.writeValueAsString(mockRepositoryView))
-                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
         )
         .andExpect(status().isOk())
         .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
@@ -134,7 +130,7 @@ public final class VerifyRepositoryViewSettingsControllerTest {
         mockMvc.perform(
             post(CONTROLLER_PATH + "/auth", TEST_REPOSITORY_VIEW_TYPE)
                 .content(objectMapper.writeValueAsString(mockRepositoryView))
-                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
         )
         .andExpect(status().isOk())
         .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
@@ -150,7 +146,7 @@ public final class VerifyRepositoryViewSettingsControllerTest {
         mockMvc.perform(
             post(CONTROLLER_PATH + "/content", TEST_REPOSITORY_VIEW_TYPE)
                 .content(objectMapper.writeValueAsString(mockRepositoryView))
-                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
         )
         .andExpect(status().isOk())
         .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),

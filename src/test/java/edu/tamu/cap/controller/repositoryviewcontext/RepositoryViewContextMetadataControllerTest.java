@@ -1,6 +1,6 @@
 package edu.tamu.cap.controller.repositoryviewcontext;
 
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
@@ -17,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.junit.jupiter.api.BeforeEach;
@@ -93,8 +94,8 @@ public class RepositoryViewContextMetadataControllerTest {
         mockRepositoryView.setUsername("");
         mockRepositoryView.setPassword("");
 
-        when(repositoryViewRepo.getOne(mockRepositoryView.getId())).thenReturn(mockRepositoryView);
-        when(repositoryViewRepo.findOne(mockRepositoryView.getId())).thenReturn(mockRepositoryView);
+        when(repositoryViewRepo.getById(mockRepositoryView.getId())).thenReturn(mockRepositoryView);
+        when(repositoryViewRepo.findById(mockRepositoryView.getId())).thenReturn(Optional.of(mockRepositoryView));
 
         Object[] args = new Object[] { mockFedoraService, TEST_CONTEXT_ORG_URI };
         when(mockProceedingJoinPoint.getArgs()).thenReturn(args);
@@ -112,7 +113,7 @@ public class RepositoryViewContextMetadataControllerTest {
             post(CONTROLLER_PATH, TEST_REPOSITORY_VIEW_TYPE, mockRepositoryView.getId())
                 .param("contextUri", TEST_CONTEXT_ORG_URI)
                 .content(objectMapper.writeValueAsString(TEST_TRIPLE))
-                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
         )
         .andExpect(status().isOk())
         .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
@@ -151,7 +152,7 @@ public class RepositoryViewContextMetadataControllerTest {
                 .param("contextUri", TEST_CONTEXT_ORG_URI)
                 .param("value", mockValue)
                 .content(objectMapper.writeValueAsString(TEST_TRIPLE))
-                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
         )
         .andExpect(status().isOk())
         .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
@@ -172,7 +173,7 @@ public class RepositoryViewContextMetadataControllerTest {
             delete(CONTROLLER_PATH, TEST_REPOSITORY_VIEW_TYPE, mockRepositoryView.getId())
                 .param("contextUri", TEST_CONTEXT_ORG_URI)
                 .content(objectMapper.writeValueAsString(TEST_TRIPLE))
-                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
         )
         .andExpect(status().isOk())
         .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),

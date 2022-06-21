@@ -1,0 +1,160 @@
+server:
+  port: 9000
+  servlet:
+    context-path:
+
+# use this as the security key for encryption
+security:
+  user:
+    password: 81d56928-891a-41b2-8dd2-132593e6d057
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+    allow-circular-references: true
+  template:
+    cache: false
+  thymeleaf:
+    cache: false
+    model: LEGACYHTML5
+  http:
+    multipart:
+      maxFileSize: 20MB
+      maxRequestSize: 20MB
+  sql:
+    init:
+      platform: h2
+      # platform: postgresql
+      # platform: mysql
+  datasource:
+    # H2
+    url: jdbc:h2:mem:AZ;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driverClassName: org.h2.Driver
+    # PostgreSQL
+    # url: jdbc:postgresql://localhost:5432/cap
+    # driverClassName: org.postgresql.Driver
+    # MySQL
+    # url: jdbc:mysql://localhost/cap
+    # driverClassName: com.mysql.jdbc.Driver
+    username: cap
+    password: cap
+    # common database config -- might be needed for postgres
+    defaultAutoCommit: false
+    test-on-borrow: true
+    validation-query: select version();
+  jpa:
+    generate-ddl: true
+    show-sql: false
+    open-in-view: true
+    hibernate:
+      ddl-auto: create-drop
+      event.merge.entity_copy_observer: allow
+    database-platform: org.hibernate.dialect.H2Dialect
+    # database-platform: org.hibernate.dialect.PostgreSQLDialect
+    # database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    # database username and password
+  # TODO: figure out how to use profiles in Spring-Boot 2.6.6
+  config:
+    activate:
+      on-profile: production, development, test, default
+  # messaging
+  # to enable messaging, include profile weaver-messaging and update activemq broker-url, username and password
+  activemq:
+    broker-url: tcp://localhost:61616
+    user: username
+    password: password
+
+multipart:
+  # File size limit
+  maxFileSize: 100Mb
+  # Total request size for a multipart/form-data
+  maxRequestSize: 1000Mb
+
+# logging
+logging:
+  level:
+    edu:
+      tamu: INFO
+    org:
+      hibernate: INFO
+      springframework: INFO
+    ro:
+      isdc:
+        wro: INFO
+  file.name: logs/cap.log
+
+info:
+  build:
+    artifact: '@project.artifactId@'
+    name: '@project.name@'
+    description: '@project.description@'
+    version: '@project.version@'
+
+app:
+  url: http://localhost:${server.port}${server.servlet.context-path}
+  cvcache:
+    duration: 3600000
+  ui:
+    path: /app
+  messaging:
+    channel: cap
+  # edu.tamu.weaver.auth.service.UserCredentialsService
+  authority:
+    admins:
+  security:
+    # edu.tamu.weaver.auth.service.CryptoService
+    secret: verysecretsecret
+    # edu.tamu.weaver.filter.CorsFilter
+    allow-access: http://localhost:9000,http://localhost:8080
+  # edu.tamu.weaver.email.config.WeaverEmailConfig
+  email:
+    host: relay.tamu.edu
+    from: noreply@library.tamu.edu
+    replyTo: dev@library.tamu.edu
+  # edu.tamu.weaver.reporting.controller.ReportingController
+  reporting:
+    address: helpdesk@library.tamu.edu
+  # edu.tamu.weaver.validation.controller.ValidationsController
+  model:
+    packages: edu.tamu.cap.model
+  # edu.tamu.weaver.utility.HttpUtility
+  http:
+    timeout: 10000
+
+# edu.tamu.weaver.token.provider.controller.TokenController
+#authenticationStrategies: weaverAuth,emailRegistration
+authenticationStrategies: weaverAuth
+shib:
+  keys: netid,uin,lastName,firstName,email
+  subject: email
+  netid: edupersonprincipalnameunscoped
+  uin: tamuuin
+  lastName: tdl-sn
+  firstName: tdl-givenname
+  email: tdl-mail
+
+auth:
+  path: /auth
+  # edu.tamu.weaver.token.service.TokenService
+  security:
+    jwt:
+      secret: verysecretsecret
+      issuer: localhost
+      duration: 1
+
+wro:
+  managerFactoryClassName: edu.tamu.weaver.wro.manager.factory.WeaverConfigurableWroManagerFactory
+  # Define which preProcessors should be used to process SASS
+  preProcessors: lessCssImport
+  # Define which postProcessors should be used to process SASS
+  postProcessors: rubySassCss
+
+# edu.tamu.weaver.wro.service.ThemeManagerService
+theme:
+  manager: false
+  reloadUrl: '${app.url}/wro/wroAPI/reloadCache'
+  default:
+    # Define the locations of SASS files to be processed
+    css: sass/app.scss
+    # Define the location of default themes config file, if used
+    location: config/theme-defaults.json

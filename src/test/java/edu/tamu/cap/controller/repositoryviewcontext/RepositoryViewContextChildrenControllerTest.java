@@ -1,7 +1,7 @@
 package edu.tamu.cap.controller.repositoryviewcontext;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyListOf;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.junit.jupiter.api.BeforeEach;
@@ -94,8 +95,8 @@ public class RepositoryViewContextChildrenControllerTest {
         mockRepositoryView.setUsername("");
         mockRepositoryView.setPassword("");
 
-        when(repositoryViewRepo.getOne(1L)).thenReturn(mockRepositoryView);
-        when(repositoryViewRepo.findOne(1L)).thenReturn(mockRepositoryView);
+        when(repositoryViewRepo.getById(1L)).thenReturn(mockRepositoryView);
+        when(repositoryViewRepo.findById(1L)).thenReturn(Optional.of(mockRepositoryView));
 
         Object[] args = new Object[] { mockFedoraService, TEST_CONTEXT_ORG_URI };
         when(mockProceedingJoinPoint.getArgs()).thenReturn(args);
@@ -119,13 +120,13 @@ public class RepositoryViewContextChildrenControllerTest {
             Arrays.asList(mockHashMap)
         );
 
-        when(mockFedoraService.createChild(any(String.class), anyListOf(Triple.class))).thenReturn(mockRepositoryViewContext);
+        when(mockFedoraService.createChild(any(String.class), anyList())).thenReturn(mockRepositoryViewContext);
 
         mockMvc.perform(
             post(CONTROLLER_PATH, TEST_REPOSITORY_VIEW_TYPE, mockRepositoryView.getId())
                 .param("contextUri", TEST_CONTEXT_ORG_URI)
                 .content(objectMapper.writeValueAsString(mockTripleMap))
-                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
         )
         .andExpect(status().isOk())
         .andDo(document("{method-name}/", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),

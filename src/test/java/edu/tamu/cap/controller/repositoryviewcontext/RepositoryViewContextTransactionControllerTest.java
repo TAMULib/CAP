@@ -1,6 +1,6 @@
 package edu.tamu.cap.controller.repositoryviewcontext;
 
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -87,7 +87,7 @@ public class RepositoryViewContextTransactionControllerTest {
         mockRepositoryView.setUsername("");
         mockRepositoryView.setPassword("");
 
-        when(repositoryViewRepo.getOne(any())).thenReturn(mockRepositoryView);
+        when(repositoryViewRepo.getById(any())).thenReturn(mockRepositoryView);
         when(mockFedoraService.getRepositoryView()).thenReturn(mockRepositoryView);
 
         Object[] args = new Object[] { mockFedoraService, TEST_CONTEXT_ORG_URI };

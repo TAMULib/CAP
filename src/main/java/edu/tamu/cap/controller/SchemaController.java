@@ -62,7 +62,7 @@ public class SchemaController {
     @PreAuthorize("hasRole('ADMIN')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, joins = { RepositoryView.class }, path = { "schemas" }) })
     public ApiResponse deleteSchema(@RequestBody @WeaverValidatedModel Schema schema) {
-        logger.info("Deleating schema:  " + schema.getName());
+        logger.info("Deleting schema:  " + schema.getName());
         schemaRepo.delete(schema);
         return new ApiResponse(SUCCESS);
     }
