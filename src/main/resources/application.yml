@@ -1,6 +1,7 @@
 server:
   port: 9000
-  contextPath: 
+  servlet:
+    context-path:
 
 # use this as the security key for encryption
 security:
@@ -87,7 +88,7 @@ info:
     version: '@project.version@'
 
 app:
-  url: http://localhost:${server.port}${server.contextPath}
+  url: http://localhost:${server.port}${server.servlet.context-path}
   cvcache:
     duration: 3600000
   ui:
@@ -109,7 +110,7 @@ app:
     replyTo: dev@library.tamu.edu
   # edu.tamu.weaver.reporting.controller.ReportingController
   reporting:
-    address: dev@tdl.org
+    address: helpdesk@library.tamu.edu
   # edu.tamu.weaver.validation.controller.ValidationsController
   model:
     packages: edu.tamu.cap.model

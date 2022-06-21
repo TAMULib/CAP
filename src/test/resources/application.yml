@@ -1,6 +1,7 @@
 server:
   port: 9100
-  contextPath: 
+  servlet:
+    context-path:
 
 # use this as the security key for encryption
 security:
@@ -83,7 +84,7 @@ app:
     channel: cap
   # edu.tamu.weaver.auth.service.UserCredentialsService
   authority:
-    admins: admin@tdl.org,aggieJack@tamu.edu
+    admins: aggieJack@tamu.edu
   security:
     # edu.tamu.weaver.auth.service.CryptoService
     secret: verysecretsecret
@@ -96,7 +97,7 @@ app:
     replyTo: dev@library.tamu.edu
   # edu.tamu.weaver.reporting.controller.ReportingController
   reporting:
-    address: dev@tdl.org
+    address: helpdesk@library.tamu.edu
   # edu.tamu.weaver.validation.controller.ValidationsController
   model:
     packages: edu.tamu.cap.model

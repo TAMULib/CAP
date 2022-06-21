@@ -34,9 +34,6 @@ COPY ./package.json ./package.json
 COPY ./Gruntfile.js ./Gruntfile.js
 COPY ./.jshintrc ./.jshintrc
 
-# Assign file permissions.
-RUN chown -R ${USER_ID}:${USER_ID} ${SOURCE_DIR}
-
 # Install grunt globally.
 RUN npm install -g grunt-cli
 
