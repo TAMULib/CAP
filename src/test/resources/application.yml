@@ -14,6 +14,9 @@ spring:
     allow-circular-references: true
   template:
     cache: false
+  thymeleaf:
+    cache: false
+    model: LEGACYHTML5
   http:
     multipart:
       maxFileSize: 100MB
@@ -104,9 +107,6 @@ app:
   # edu.tamu.weaver.utility.HttpUtility
   http:
     timeout: 10000
-  thymeleaf:
-    cache: false
-    model: LEGACYHTML5
 
 # edu.tamu.weaver.token.provider.controller.TokenController
 authenticationStrategies: emailRegistration
