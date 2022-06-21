@@ -5,7 +5,7 @@
 
   <groupId>edu.tamu</groupId>
   <artifactId>cap</artifactId>
-  <version>0.6.3-SNAPSHOT</version>
+  <version>0.6.3-RC1</version>
 
   <name>Cap</name>
   <description>Weaver IR Management Service</description>
