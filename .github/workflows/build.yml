@@ -75,7 +75,7 @@ jobs:
         uses: MikeEdgar/github-action@raw_coverage_file
         with:
           github-token: ${{ secrets.github_token }}
-          path-to-file:  'repo/coveralls.json'
+          path-to-file: repo/coveralls.json
           coverage-format: raw
 
       - name: "Lighthouse Report"
@@ -91,6 +91,6 @@ jobs:
         with:
           github_token: ${{ secrets.github_token }}
           branch: gh-pages
-          folder: $GITHUB_WORKSPACE/repo/target/gh-pages
+          folder: repo/target/gh-pages
           clean: true
           single_commit: true
