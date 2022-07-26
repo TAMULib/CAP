@@ -552,10 +552,10 @@
     </profile>
 
     <profile>
-      <id>development</id>
+      <id>build-client</id>
       <activation>
         <property>
-          <name>!production</name>
+          <name>!testClient</name>
         </property>
       </activation>
       <build>
@@ -583,59 +583,7 @@
 
               <!-- Webpack Build -->
               <execution>
-                <id>exec-npm-run-grunt</id>
-                <phase>generate-sources</phase>
-                <configuration>
-                  <executable>npm${npm-extension}</executable>
-                  <arguments>
-                    <argument>run</argument>
-                    <argument>build</argument>
-                  </arguments>
-                </configuration>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-              </execution>
-
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-    <profile>
-      <id>production</id>
-      <activation>
-        <property>
-          <name>production</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>3.0.0</version>
-            <executions>
-
-              <!-- NPM Install -->
-              <execution>
-                <id>exec-npm-install</id>
-                <phase>generate-sources</phase>
-                <configuration>
-                  <executable>npm${npm-extension}</executable>
-                  <arguments>
-                    <argument>install</argument>
-                  </arguments>
-                </configuration>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-              </execution>
-
-              <!-- Webpack Build -->
-              <execution>
-                <id>exec-npm-run-grunt-deploy</id>
+                <id>exec-npm-run-build</id>
                 <phase>generate-sources</phase>
                 <configuration>
                   <executable>npm${npm-extension}</executable>

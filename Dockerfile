@@ -25,12 +25,15 @@ RUN groupadd --non-unique -g $USER_ID $USER_NAME
 # Create the user (use a high ID to attempt to avoid conflits).
 RUN useradd --non-unique -d $HOME_DIR -m -u $USER_ID -g $USER_ID $USER_NAME
 
-# Update the system.
-RUN apt-get update && apt-get upgrade -y
-
-# Install Nodejs and npm.
-RUN apt-get install -y nodejs
-RUN apt-get install -y npm
+# Install stable Nodejs and npm.
+RUN \
+  apt-get update \
+  && apt-get -y install nodejs npm \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/* \
+  && npm cache clean -f \
+  && npm install -g n \
+  && n stable
 
 # Set deployment directory.
 WORKDIR $SOURCE_DIR
@@ -39,8 +42,8 @@ WORKDIR $SOURCE_DIR
 COPY ./pom.xml ./pom.xml
 COPY ./.wvr/build-config.js ./.wvr/build-config.js
 COPY ./src ./src
+COPY ./build ./build
 COPY ./package.json ./package.json
-COPY ./.jshintrc ./.jshintrc
 
 # Copy NPM registry helper script.
 COPY build/docker-npmrc.sh ${SOURCE_DIR}/docker-npmrc.sh
@@ -56,7 +59,7 @@ RUN echo $NPM_REGISTRY_URL
 RUN bash ${SOURCE_DIR}/docker-npmrc.sh $NPM_REGISTRY_URL
 
 # Build.
-RUN mvn package -D${PROFILE} -Pjar -DskipTests=true
+RUN mvn package -Pjar -DskipTests
 
 # Switch to Normal JRE Stage.
 FROM openjdk:11-jre-slim
