@@ -59,6 +59,8 @@ jobs:
           java-version: 11
 
       - name: "Maven Tests"
+        env:
+          NPM_CONFIG_REGISTRY: http://localhost:4873
         run: |
           cd $GITHUB_WORKSPACE/repo
           mvn clean test jacoco:report coveralls:report -DdryRun=true -DtestClient
