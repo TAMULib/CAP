@@ -13,9 +13,9 @@
     "install-dev-local": "npm install --registry http://localhost:4873",
     "install-dev-docker-host": "npm install --registry http://host.docker.internal:4873",
     "pretest": "npm run build",
-    "test": "karma start src/main/webapp/tests/karma.conf.js --single-run --browsers Firefox,ChromeHeadlessNoSandbox",
-    "test:watch": "karma start src/main/webapp/tests/karma.conf.js",
-    "test:ci": "karma start src/main/webapp/tests/karma.conf.js --no-auto-watch --single-run --browsers=ChromeHeadlessNoSandbox",
+    "test": "karma start ./karma.conf.js --single-run --browsers Firefox,ChromeHeadlessNoSandbox",
+    "test:watch": "karma start ./karma.conf.js",
+    "test:ci": "karma start ./karma.conf.js --no-auto-watch --single-run --browsers=ChromeHeadlessNoSandbox",
     "test:audit": "rimraf .lighthouseci && lhci autorun --upload.target=temporary-public-storage --config=./lighthouserc.json && node scripts/build-cap-lighthouse-badges.js",
     "update-webdriver": "webdriver-manager update",
     "preprotractor": "npm run update-webdriver",
@@ -31,11 +31,7 @@
     "ng-table": "3.0.1",
     "openseadragon": "2.4.0"
   },
-  "devDependencies": {
-    "@lhci/cli": "^0.9.0",
-    "lighthouse": "^9.6.3",
-    "lighthouse-badges": "^1.1.23"
-  },
+  "devDependencies": {},
   "overrides": {
     "glob-stream": "^7.0.0"
   }

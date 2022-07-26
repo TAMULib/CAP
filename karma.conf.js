@@ -2,77 +2,77 @@ module.exports = function (config) {
   config.set({
 
     preprocessors: {
-      "app/!(node_modules)/**/*.js": "coverage",
-      "app/views/**/*.html": ["ng-html2js"]
+      "src/main/webapp/app/**/*.js": "coverage",
+      "src/main/webapp/app/views/**/*.html": ["ng-html2js"]
     },
 
     reporters: ["progress", "coverage"],
 
-    basePath: "../",
+    basePath: "./",
 
     files: [
-      "app/config/appConfig.js",
-      "app/config/apiMapping.js",
+      "dist/appConfig.js",
+      "src/main/webapp/app/config/apiMapping.js",
 
-      "app/node_modules/jquery/dist/jquery.js",
-      "app/node_modules/bootstrap/dist/js/bootstrap.js",
+      "node_modules/jquery/dist/jquery.js",
+      "node_modules/bootstrap/dist/js/bootstrap.js",
 
-      "app/node_modules/sockjs-client/dist/sockjs.js",
-      "app/node_modules/stompjs/lib/stomp.js",
+      "node_modules/sockjs-client/dist/sockjs.js",
+      "node_modules/stompjs/lib/stomp.js",
 
-      "app/node_modules/angular/angular.js",
+      "node_modules/angular/angular.js",
 
-      "app/node_modules/angular-sanitize/angular-sanitize.js",
-      "app/node_modules/angular-route/angular-route.js",
-      "app/node_modules/angular-loader/angular-loader.js",
-      "app/node_modules/angular-messages/angular-messages.js",
-      "app/node_modules/angular-mocks/angular-mocks.js",
+      "node_modules/angular-sanitize/angular-sanitize.js",
+      "node_modules/angular-route/angular-route.js",
+      "node_modules/angular-loader/angular-loader.js",
+      "node_modules/angular-messages/angular-messages.js",
+      "node_modules/angular-mocks/angular-mocks.js",
 
-      "app/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js",
+      "node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js",
 
-      "app/node_modules/ng-table/bundles/ng-table.js",
+      "node_modules/ng-table/bundles/ng-table.js",
 
-      "app/node_modules/ng-file-upload/dist/ng-file-upload-shim.js",
-      "app/node_modules/ng-file-upload/dist/ng-file-upload.js",
+      "node_modules/ng-file-upload/dist/ng-file-upload-shim.js",
+      "node_modules/ng-file-upload/dist/ng-file-upload.js",
 
-      "app/node_modules/openseadragon/build/openseadragon/openseadragon.js",
-      "app/node_modules/ng-openseadragon/build/angular-openseadragon.js",
+      "node_modules/openseadragon/build/openseadragon/openseadragon.js",
+      "node_modules/ng-openseadragon/build/angular-openseadragon.js",
 
-      "app/node_modules/jasmine-promise-matchers/dist/jasmine-promise-matchers.js",
+      "node_modules/jasmine-promise-matchers/dist/jasmine-promise-matchers.js",
 
-      "app/node_modules/@wvr/core/app/config/coreConfig.js",
+      "node_modules/@wvr/core/app/config/coreConfig.js",
 
-      "app/node_modules/@wvr/core/app/components/**/*.js",
+      "node_modules/@wvr/core/app/components/**/*.js",
 
-      "app/node_modules/@wvr/core/app/core.js",
+      "node_modules/@wvr/core/app/core.js",
 
-      "app/node_modules/@wvr/core/app/**/*.js",
+      "node_modules/@wvr/core/app/**/*.js",
 
-      "tests/testSetup.js",
+      "src/main/webapp/tests/testSetup.js",
 
-      "app/app.js",
+      "src/main/webapp/app/app.js",
 
-      "app/components/**/*.js",
+      "src/main/webapp/app/components/**/*.js",
 
-      "app/config/runTime.js",
+      "src/main/webapp/app/config/runTime.js",
 
-      "app/controllers/**/*.js",
+      "src/main/webapp/app/controllers/**/*.js",
 
-      "app/directives/**/*.js",
+      "src/main/webapp/app/directives/**/*.js",
 
-      "app/filters/**/*.js",
+      "src/main/webapp/app/filters/**/*.js",
 
-      "app/model/**/*.js",
+      "src/main/webapp/app/model/**/*.js",
 
-      "app/repo/**/*.js",
+      "src/main/webapp/app/repo/**/*.js",
 
-      "app/views/**/*.html",
+      "src/main/webapp/app/views/**/*.html",
 
-      "tests/core/**/*.js",
+      "src/main/webapp/tests/core/**/*.js",
 
-      "tests/mock/**/*.js",
+      "src/main/webapp/tests/mock/**/*.js",
 
-      "tests/unit/**/*.js"
+      "src/main/webapp/tests/unit/**/*.js"
     ],
 
     autoWatch: true,
@@ -103,7 +103,7 @@ module.exports = function (config) {
     },
 
     ngHtml2JsPreprocessor: {
-      stripPrefix: "app/",
+      stripPrefix: "src/main/webapp/app/",
       moduleName: "templates"
     },
 

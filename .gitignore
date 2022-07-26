@@ -33,3 +33,4 @@ package-lock.json
 
 .wvr/tmp/
 dist/
+coverage/
