@@ -92,7 +92,7 @@ COPY --from=maven $SOURCE_DIR/target/ROOT.jar ./cap.jar
 COPY --from=maven $SOURCE_DIR/target/libs ./libs
 
 # Copy app config.
-COPY build/appConfig.js.template /user/local/cap/templates/appConfig.js.template
+COPY build/appConfig.js.template /usr/local/app/templates/appConfig.js.template
 
 # Copy of docker entrypoint to user local binary directory.
 COPY build/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh

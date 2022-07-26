@@ -6,7 +6,7 @@ set -e
 printenv
 
 echo "Templating appConfig.js"
-envsubst < /user/local/cap/templates/appConfig.js.template > appConfig.js
+envsubst < /usr/local/app/templates/appConfig.js.template > appConfig.js
 echo "Done"
 head -n 20 appConfig.js
 
