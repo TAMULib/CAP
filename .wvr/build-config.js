@@ -1,5 +1,5 @@
 const config = {
-  path: 'dist',
+  path: './dist',
 
   // webpack dev server public path
   publicPath: '/cap',
