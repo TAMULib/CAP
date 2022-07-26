@@ -12,6 +12,7 @@ module.exports = function (config) {
 
     files: [
       "dist/appConfig.js",
+
       "src/main/webapp/app/config/apiMapping.js",
 
       "node_modules/jquery/dist/jquery.js",
