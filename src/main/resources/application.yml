@@ -1,7 +1,7 @@
 server:
   port: 9000
   servlet:
-    context-path: /cap
+    context-path:
 
 # use this as the security key for encryption
 security:
