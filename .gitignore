@@ -31,3 +31,5 @@ package-lock.json
 
 .lighthouseci/
 
+.wvr/tmp/
+dist/

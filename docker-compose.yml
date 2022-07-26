@@ -1,0 +1,23 @@
+version: '3.7'
+
+networks:
+  default:
+    name: weaver
+
+services:
+
+  service:
+    container_name: cap
+    hostname: cap
+    build:
+      dockerfile: Dockerfile
+      context: './'
+      args:
+        - NPM_REGISTRY_URL=${NPM_REGISTRY_URL}
+        - NODE_ENV=${NODE_ENV}
+        - PROFILE=${PROFILE}
+    image: ${IMAGE_HOST}/${SERVICE_PROJECT}/cap:${IMAGE_VERSION}
+    ports:
+      - 9000:9000
+    env_file:
+      - .env

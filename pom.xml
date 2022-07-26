@@ -224,14 +224,18 @@
         </excludes>
       </resource>
       <resource>
+        <directory>dist</directory>
+        <filtering>false</filtering>
+        <excludes>
+          <exclude>appConfig.js</exclude>
+        </excludes>
+      </resource>
+      <resource>
         <directory>src/main/webapp/app</directory>
         <filtering>false</filtering>
         <!-- would be better to exclude what is causing CI to fail -->
         <includes>
           <include>**/*.html</include>
-          <include>**/*.scss</include>
-          <include>**/*.js</include>
-          <include>**/*.js.map</include>
           <include>**/*.gif</include>
           <include>**/*.png</include>
           <include>**/*.svg</include>
@@ -247,23 +251,15 @@
       <resource>
         <directory>src/main/webapp/app/resources/styles</directory>
         <filtering>false</filtering>
-        <excludes>
-          <exclude>**/*.css</exclude>
-        </excludes>
       </resource>
       <resource>
         <directory>node_modules/@wvr/core/app/resources/styles</directory>
         <filtering>false</filtering>
-        <excludes>
-          <exclude>**/*.css</exclude>
-          <exclude>application.yml</exclude>
-        </excludes>
       </resource>
       <resource>
         <directory>node_modules/bootstrap-sass/assets</directory>
         <filtering>false</filtering>
         <excludes>
-          <exclude>fonts/**</exclude>
           <exclude>images/**</exclude>
           <exclude>javascript/**</exclude>
         </excludes>
@@ -588,7 +584,7 @@
                 </goals>
               </execution>
 
-              <!-- Grunt Default -->
+              <!-- Webpack Build -->
               <execution>
                 <id>exec-npm-run-grunt</id>
                 <phase>generate-sources</phase>
@@ -596,7 +592,7 @@
                   <executable>npm${npm-extension}</executable>
                   <arguments>
                     <argument>run</argument>
-                    <argument>grunt</argument>
+                    <argument>build</argument>
                   </arguments>
                 </configuration>
                 <goals>
@@ -640,7 +636,7 @@
                 </goals>
               </execution>
 
-              <!-- Grunt Deploy -->
+              <!-- Webpack Build -->
               <execution>
                 <id>exec-npm-run-grunt-deploy</id>
                 <phase>generate-sources</phase>
@@ -648,7 +644,7 @@
                   <executable>npm${npm-extension}</executable>
                   <arguments>
                     <argument>run</argument>
-                    <argument>grunt:deploy</argument>
+                    <argument>build</argument>
                   </arguments>
                 </configuration>
                 <goals>
@@ -692,18 +688,6 @@
                 </goals>
               </execution>
 
-              <!-- Grunt Default -->
-              <execution>
-                <id>exec-grunt-deploy</id>
-                <phase>generate-sources</phase>
-                <configuration>
-                  <executable>grunt${grunt-extension}</executable>
-                </configuration>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-              </execution>
-
               <!-- Karma Testing for AngularJS -->
               <execution>
                 <id>exec-npm-run-test</id>
@@ -712,7 +696,7 @@
                   <executable>npm${npm-extension}</executable>
                   <arguments>
                     <argument>run</argument>
-                    <argument>test-ci</argument>
+                    <argument>test:ci</argument>
                   </arguments>
                 </configuration>
                 <goals>

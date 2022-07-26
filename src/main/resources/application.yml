@@ -1,7 +1,7 @@
 server:
   port: 9000
   servlet:
-    context-path:
+    context-path: /cap
 
 # use this as the security key for encryption
 security:
@@ -94,13 +94,11 @@ app:
   url: http://localhost:${server.port}${server.servlet.context-path}
   cvcache:
     duration: 3600000
-  ui:
-    path: /app
   messaging:
     channel: cap
   # edu.tamu.weaver.auth.service.UserCredentialsService
   authority:
-    admins:
+    admins: wwelling@tamu.edu
   security:
     # edu.tamu.weaver.auth.service.CryptoService
     secret: verysecretsecret
@@ -120,6 +118,8 @@ app:
   # edu.tamu.weaver.utility.HttpUtility
   http:
     timeout: 10000
+  config:
+    path: classpath:/appConfig.js
 
 # edu.tamu.weaver.token.provider.controller.TokenController
 #authenticationStrategies: weaverAuth,emailRegistration
