@@ -31,6 +31,8 @@ module.exports = function (config) {
 
       'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
 
+      "node_modules/ng-csv/build/ng-csv.js",
+
       'node_modules/ng-table/bundles/ng-table.js',
 
       'node_modules/ng-file-upload/dist/ng-file-upload-shim.js',

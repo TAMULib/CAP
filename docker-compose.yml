@@ -15,7 +15,6 @@ services:
       args:
         - NPM_REGISTRY_URL=${NPM_REGISTRY_URL}
         - NODE_ENV=${NODE_ENV}
-        - PROFILE=${PROFILE}
     image: ${IMAGE_HOST}/${SERVICE_PROJECT}/cap:${IMAGE_VERSION}
     ports:
       - 9000:9000

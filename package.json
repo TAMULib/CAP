@@ -15,8 +15,9 @@
     "pretest": "npm run build",
     "test": "karma start ./karma.conf.js --single-run --browsers Firefox,ChromeHeadlessNoSandbox",
     "test:watch": "karma start ./karma.conf.js",
+    "pretest:ci": "npm run pretest",
     "test:ci": "karma start ./karma.conf.js --no-auto-watch --single-run --browsers=ChromeHeadlessNoSandbox",
-    "test:audit": "rimraf .lighthouseci && lhci autorun --upload.target=temporary-public-storage --config=./lighthouserc.json && node scripts/build-cap-lighthouse-badges.js",
+    "test:audit": "rimraf .lighthouseci && lhci autorun --upload.target=temporary-public-storage --config=./lighthouserc.json && node scripts/build-lighthouse-badges.js",
     "update-webdriver": "webdriver-manager update",
     "preprotractor": "npm run update-webdriver",
     "protractor": "protractor tests/e2e/protractor.conf.js",
@@ -26,7 +27,6 @@
   "dependencies": {
     "@wvr/core": "2.2.2-rc.8",
     "ng-csv": "0.3.6",
-    "ng-file-upload": "12.2.13",
     "ng-openseadragon": "1.3.5",
     "ng-table": "3.0.1",
     "openseadragon": "2.4.0"
