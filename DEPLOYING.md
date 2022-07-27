@@ -7,9 +7,7 @@
 docker-compose up
 ```
 
-* Copy the `example.env` file and call it `.env`. These are build args used in docker-compose.yml.
-* Copy the `example.env.client` file and call it `.env.client`.
-* Copy the `example.env.service` file and call it `.env.service`.
+* Copy the `example.env` file and call it `.env`. These are build args and container environment variables used in docker-compose.yml.
 * Change variables as needed.
 * Run `docker-compose` commands.
 
