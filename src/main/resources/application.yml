@@ -98,7 +98,7 @@ app:
     channel: cap
   # edu.tamu.weaver.auth.service.UserCredentialsService
   authority:
-    admins: wwelling@tamu.edu
+    admins:
   security:
     # edu.tamu.weaver.auth.service.CryptoService
     secret: verysecretsecret
