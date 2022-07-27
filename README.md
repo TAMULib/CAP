@@ -18,6 +18,16 @@ Currently CAP has support for Fedora 4x through use of the [fcrepo-java-client](
 
 CAP user documentation can be found in [this repos wiki](https://github.com/TAMULib/CAP/wiki/User-Documentation).
 
+### Deployment
+
+* Copy the `example.env` file and call it `.env`. These are build args used in docker-compose.yml.
+* Change variables as needed.
+* Run `docker-compose` commands.
+
+```sh
+docker-compose up
+```
+
 ### Developer Documentation
 
 - [Contributors Documentation](https://github.com/TAMULib/Cap/blob/master/CONTRIBUTING.md)
