@@ -115,4 +115,4 @@ EXPOSE 9000
 ENTRYPOINT ["docker-entrypoint.sh"]
 
 # Run java command.
-CMD ["java", "-jar", "cap.jar"]
+CMD ["java", "-jar", "./cap.jar"]
