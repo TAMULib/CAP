@@ -35,15 +35,6 @@ RUN \
   && npm install -g n \
   && n stable
 
-# Copy files from outside docker to inside.
-COPY build/appConfig.js.template /usr/local/app/templates/appConfig.js.template
-COPY build/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-
-# Enable execute of docker entrypoint for root user.
-RUN \
-  chmod ugo+r /usr/local/app/templates/appConfig.js.template \
-  && chmod ugo+rx /usr/local/bin/docker-entrypoint.sh
-
 # Set deployment directory.
 WORKDIR $SOURCE_DIR
 
@@ -82,6 +73,15 @@ RUN \
   && apt-get -y install gettext-base \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
+
+# Copy files from outside docker to inside.
+COPY build/appConfig.js.template /usr/local/app/templates/appConfig.js.template
+COPY build/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+
+# Enable execute of docker entrypoint for root user.
+RUN \
+  chmod ugo+r /usr/local/app/templates/appConfig.js.template \
+  && chmod ugo+rx /usr/local/bin/docker-entrypoint.sh
 
 # Create the group (use a high ID to attempt to avoid conflits).
 RUN groupadd --non-unique -g $USER_ID $USER_NAME
