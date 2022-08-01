@@ -35,6 +35,15 @@ RUN \
   && npm install -g n \
   && n stable
 
+# Copy files from outside docker to inside.
+COPY build/appConfig.js.template /usr/local/app/templates/appConfig.js.template
+COPY build/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+
+# Enable execute of docker entrypoint for root user.
+RUN \
+  chmod ugo+r /usr/local/app/templates/appConfig.js.template \
+  && chmod ugo+rx /usr/local/bin/docker-entrypoint.sh
+
 # Set deployment directory.
 WORKDIR $SOURCE_DIR
 
@@ -86,16 +95,9 @@ USER $USER_NAME
 # Set deployment directory.
 WORKDIR $HOME_DIR
 
-
 # Copy over the built artifact and library from the maven image.
 COPY --from=maven $SOURCE_DIR/target/ROOT.jar ./cap.jar
 COPY --from=maven $SOURCE_DIR/target/libs ./libs
-
-# Copy app config.
-COPY build/appConfig.js.template /usr/local/app/templates/appConfig.js.template
-
-# Copy of docker entrypoint to user local binary directory.
-COPY build/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
 ENV AUTH_STRATEGY weaverAuth
 
