@@ -24,12 +24,10 @@ node_modules/
 logs/
 
 .DS_Store
-
-src/main/webapp/app/resources/scripts/
-
 package-lock.json
 
 .lighthouseci/
+src/main/resources/gh-pages
 
 .env
 
