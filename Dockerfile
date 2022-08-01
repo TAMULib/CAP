@@ -28,7 +28,7 @@ RUN useradd --non-unique -d $HOME_DIR -m -u $USER_ID -g $USER_ID $USER_NAME
 # Install stable Nodejs and npm.
 RUN \
   apt-get update \
-  && apt-get -y install nodejs npm \
+  && apt-get -y install nodejs npm iproute2 \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* \
   && npm cache clean -f \
