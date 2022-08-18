@@ -8,7 +8,7 @@
   <version>0.6.3-RC1</version>
 
   <name>Cap</name>
-  <description>Weaver IR Management Service</description>
+  <description>Curator's Administration Platform service.</description>
 
   <parent>
     <groupId>edu.tamu.weaver</groupId>
