@@ -8,7 +8,7 @@
   <version>0.6.3-RC1</version>
 
   <name>Cap</name>
-  <description>Curator's Administration Platform service.</description>
+  <description>Curators Administration Platform service.</description>
 
   <parent>
     <groupId>edu.tamu.weaver</groupId>
