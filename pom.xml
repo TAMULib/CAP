@@ -8,12 +8,12 @@
   <version>0.6.3-RC1</version>
 
   <name>Cap</name>
-  <description>Weaver IR Management Service</description>
+  <description>Curators Administration Platform service.</description>
 
   <parent>
     <groupId>edu.tamu.weaver</groupId>
     <artifactId>webservice-parent</artifactId>
-    <version>2.1.1-RC10</version>
+    <version>2.1.1-RC11</version>
   </parent>
 
   <properties>
@@ -224,14 +224,15 @@
         </excludes>
       </resource>
       <resource>
+        <directory>dist</directory>
+        <filtering>false</filtering>
+      </resource>
+      <resource>
         <directory>src/main/webapp/app</directory>
         <filtering>false</filtering>
         <!-- would be better to exclude what is causing CI to fail -->
         <includes>
           <include>**/*.html</include>
-          <include>**/*.scss</include>
-          <include>**/*.js</include>
-          <include>**/*.js.map</include>
           <include>**/*.gif</include>
           <include>**/*.png</include>
           <include>**/*.svg</include>
@@ -247,23 +248,15 @@
       <resource>
         <directory>src/main/webapp/app/resources/styles</directory>
         <filtering>false</filtering>
-        <excludes>
-          <exclude>**/*.css</exclude>
-        </excludes>
       </resource>
       <resource>
         <directory>node_modules/@wvr/core/app/resources/styles</directory>
         <filtering>false</filtering>
-        <excludes>
-          <exclude>**/*.css</exclude>
-          <exclude>application.yml</exclude>
-        </excludes>
       </resource>
       <resource>
         <directory>node_modules/bootstrap-sass/assets</directory>
         <filtering>false</filtering>
         <excludes>
-          <exclude>fonts/**</exclude>
           <exclude>images/**</exclude>
           <exclude>javascript/**</exclude>
         </excludes>
@@ -559,10 +552,10 @@
     </profile>
 
     <profile>
-      <id>development</id>
+      <id>build-client</id>
       <activation>
         <property>
-          <name>!production</name>
+          <name>!testClient</name>
         </property>
       </activation>
       <build>
@@ -588,67 +581,15 @@
                 </goals>
               </execution>
 
-              <!-- Grunt Default -->
+              <!-- Webpack Build -->
               <execution>
-                <id>exec-npm-run-grunt</id>
+                <id>exec-npm-run-build</id>
                 <phase>generate-sources</phase>
                 <configuration>
                   <executable>npm${npm-extension}</executable>
                   <arguments>
                     <argument>run</argument>
-                    <argument>grunt</argument>
-                  </arguments>
-                </configuration>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-              </execution>
-
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-    <profile>
-      <id>production</id>
-      <activation>
-        <property>
-          <name>production</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>3.0.0</version>
-            <executions>
-
-              <!-- NPM Install -->
-              <execution>
-                <id>exec-npm-install</id>
-                <phase>generate-sources</phase>
-                <configuration>
-                  <executable>npm${npm-extension}</executable>
-                  <arguments>
-                    <argument>install</argument>
-                  </arguments>
-                </configuration>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-              </execution>
-
-              <!-- Grunt Deploy -->
-              <execution>
-                <id>exec-npm-run-grunt-deploy</id>
-                <phase>generate-sources</phase>
-                <configuration>
-                  <executable>npm${npm-extension}</executable>
-                  <arguments>
-                    <argument>run</argument>
-                    <argument>grunt:deploy</argument>
+                    <argument>build</argument>
                   </arguments>
                 </configuration>
                 <goals>
@@ -692,12 +633,16 @@
                 </goals>
               </execution>
 
-              <!-- Grunt Default -->
+              <!-- Webpack Build -->
               <execution>
-                <id>exec-grunt-deploy</id>
+                <id>exec-npm-run-build</id>
                 <phase>generate-sources</phase>
                 <configuration>
-                  <executable>grunt${grunt-extension}</executable>
+                  <executable>npm${npm-extension}</executable>
+                  <arguments>
+                    <argument>run</argument>
+                    <argument>build</argument>
+                  </arguments>
                 </configuration>
                 <goals>
                   <goal>exec</goal>
@@ -712,7 +657,7 @@
                   <executable>npm${npm-extension}</executable>
                   <arguments>
                     <argument>run</argument>
-                    <argument>test-ci</argument>
+                    <argument>test:ci</argument>
                   </arguments>
                 </configuration>
                 <goals>

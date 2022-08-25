@@ -94,8 +94,6 @@ app:
   url: http://localhost:${server.port}${server.servlet.context-path}
   cvcache:
     duration: 3600000
-  ui:
-    path: /app
   messaging:
     channel: cap
   # edu.tamu.weaver.auth.service.UserCredentialsService
@@ -120,6 +118,8 @@ app:
   # edu.tamu.weaver.utility.HttpUtility
   http:
     timeout: 10000
+  config:
+    path: classpath:/appConfig.js
 
 # edu.tamu.weaver.token.provider.controller.TokenController
 #authenticationStrategies: weaverAuth,emailRegistration

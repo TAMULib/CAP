@@ -1,13 +1,11 @@
 var appConfig = {
 
-  'version': '1.0.x',
-
   'allowAnonymous': true,
   'anonymousRole': 'ROLE_ANONYMOUS',
 
-  'authStrategies': ['emailRegistration'],
+  'authStrategies': ['${AUTH_STRATEGY}'],
 
-  'authService': 'https://labs.library.tamu.edu/authfix',
+  'authService': '${AUTH_SERVICE_URL}',
   'webService': window.location.protocol + '//' + window.location.host + window.location.base,
 
   'storageType': 'session',
@@ -20,7 +18,7 @@ var appConfig = {
     'debug': true
   },
 
-  'stompDebug': false,
+  'stompDebug': ${STOMP_DEBUG},
 
   /*
     Determines the type of connection stomp will attempt to make with the service.
@@ -44,10 +42,10 @@ var appConfig = {
     "pdf": ["application/pdf"]
   },
 
-  'fedoraPath': '/fcrepo/rest/',
+  'fedoraPath': '${FEDORA_PATH}',
 
-  'cantaloupeBaseUrl': 'https://api-dev.library.tamu.edu/iiif/2/',
+  'cantaloupeBaseUrl': '${CANTALOUPE_BASE_URL}',
 
-  'iiifServiceUrl': 'https://api-dev.library.tamu.edu/iiif-service/'
+  'iiifServiceUrl': '${IIIF_SERVICE_URL}'
 
 };
