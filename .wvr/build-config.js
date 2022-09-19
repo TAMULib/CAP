@@ -15,6 +15,12 @@ const config = {
     module: false
   },
 
+  stats: {},
+
+  client: {
+    overlay: false,
+  },
+
   copy: [
     {
       from: './node_modules/@wvr/core/app/resources/images',
@@ -31,7 +37,7 @@ const config = {
         return content
           .toString()
           .replace('${AUTH_STRATEGY}', 'weaverAuth')
-          .replace('${AUTH_SERVICE_URL}', 'https://labs.library.tamu.edu/authfix')
+          .replace('${AUTH_SERVICE_URL}', 'https://labs.library.tamu.edu/auth/2x')
           .replace('${STOMP_DEBUG}', 'false')
           .replace('${FEDORA_PATH}', '/fcrepo/rest')
           .replace('${CANTALOUPE_BASE_URL}', 'https://api-dev.library.tamu.edu/iiif/2/')
