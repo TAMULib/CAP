@@ -103,7 +103,7 @@ app:
     # edu.tamu.weaver.auth.service.CryptoService
     secret: verysecretsecret
     # edu.tamu.weaver.filter.CorsFilter
-    allow-access: http://localhost:9000,http://localhost:8080
+    allow-access: http://localhost:${server.port},https://labs.library.tamu.edu,http://labs.library.tamu.edu
   # edu.tamu.weaver.email.config.WeaverEmailConfig
   email:
     host: relay.tamu.edu
