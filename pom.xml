@@ -62,6 +62,19 @@
     </dependency>
 
     <dependency>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.solr</groupId>
+      <artifactId>solr-core</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>messaging</artifactId>
       <version>${project.parent.version}</version>
