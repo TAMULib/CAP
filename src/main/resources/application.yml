@@ -27,21 +27,26 @@ spring:
       # platform: postgresql
       # platform: mysql
   datasource:
+    username: cap
+    password: cap
+
     # H2
     url: jdbc:h2:mem:AZ;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driverClassName: org.h2.Driver
+
     # PostgreSQL
     # url: jdbc:postgresql://localhost:5432/cap
     # driverClassName: org.postgresql.Driver
+
     # MySQL
     # url: jdbc:mysql://localhost/cap
     # driverClassName: com.mysql.jdbc.Driver
-    username: cap
-    password: cap
+    
     # common database config -- might be needed for postgres
     defaultAutoCommit: false
     test-on-borrow: true
     validation-query: select version();
+
   jpa:
     generate-ddl: true
     show-sql: false
@@ -49,10 +54,11 @@ spring:
     hibernate:
       ddl-auto: create-drop
       event.merge.entity_copy_observer: allow
+
     database-platform: org.hibernate.dialect.H2Dialect
-    # database-platform: org.hibernate.dialect.PostgreSQLDialect
+    # database-platform: org.hibernate.dialect.PostgreSQL10Dialect
     # database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    # database username and password
+
   # TODO: figure out how to use profiles in Spring-Boot 2.6.6
   config:
     activate:
