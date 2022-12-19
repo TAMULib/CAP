@@ -1,7 +1,7 @@
 {
   "name": "cap",
   "private": true,
-  "version": "0.6.4-rc.2",
+  "version": "0.6.4-rc.3",
   "description": "Fedora User Interface",
   "repository": "https://github.com/TAMULib/Cap",
   "license": "MIT",
