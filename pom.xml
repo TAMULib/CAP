@@ -70,7 +70,7 @@
     <dependency>
       <groupId>org.fcrepo.client</groupId>
       <artifactId>fcrepo-java-client</artifactId>
-      <version>6.1.0</version>
+      <version>6.2.0</version>
     </dependency>
 
     <dependency>
@@ -284,7 +284,7 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <ignore></ignore>
+                    <ignore/>
                   </action>
                 </pluginExecution>
               </pluginExecutions>
@@ -470,7 +470,7 @@
         <groupId>org.eluder.coveralls</groupId>
         <artifactId>coveralls-maven-plugin</artifactId>
         <configuration>
-          <repoToken></repoToken>
+          <repoToken/>
         </configuration>
         <dependencies>
           <dependency>
@@ -546,8 +546,8 @@
         </os>
       </activation>
       <properties>
-        <npm-extension></npm-extension>
-        <grunt-extension></grunt-extension>
+        <npm-extension/>
+        <grunt-extension/>
       </properties>
     </profile>
 
