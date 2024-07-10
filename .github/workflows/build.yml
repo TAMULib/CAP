@@ -37,8 +37,6 @@ jobs:
           cache: 'maven'
 
       - name: "Maven Test"
-        env:
-          NPM_CONFIG_REGISTRY: http://localhost:4873
         run: |
           cd $GITHUB_WORKSPACE/repo
           mvn clean test jacoco:report coveralls:report -DdryRun=true -DtestClient
